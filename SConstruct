@@ -14,7 +14,7 @@ env = Environment(
     CXXFLAGS=cxxFlags,
     CPPPATH=[Dir("source"), Dir(F"library/{PLATFORM}/include/")],
     LIBPATH=[Dir(F"library/{PLATFORM}/lib/")],
-    LIBS=["SDL2"]
+    LIBS=["SDL2"],
     COMPILATIONDB_USE_ABSPATH=False,
     COMPILATIONDB_PATH_FILTER=F"build/native/*"
 )
