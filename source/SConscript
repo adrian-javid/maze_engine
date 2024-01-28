@@ -1,0 +1,7 @@
+Import("env")
+
+program = env.Program(target="solve_maze", source=Glob("*.cpp"))
+
+compilationDatabase = env.CompilationDatabase()
+
+Return("program", "compilationDatabase")
