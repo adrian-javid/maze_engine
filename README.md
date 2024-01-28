@@ -9,7 +9,7 @@ It is a program that solves mazes.
 
 To build, you need to [install the neccessary dependencies for your platform](#dependencies).
 
-Run `scons` on the command-line to build the executable in the generated `build` directory, regardless of the platform.
+Run `scons` on the command-line in the root of the porject to build the executable in the generated `build` directory, regardless of the platform.
 
 ## Dependencies
 
