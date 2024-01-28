@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from urllib.request import urlretrieve as download
 from pathlib import Path
 from zipfile import ZipFile
