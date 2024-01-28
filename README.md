@@ -3,30 +3,33 @@ It is a program that solves mazes.
 
 ## Dependencies
 
-This project uses [SCons](https://scons.org/) as its build system, so [Python](https://www.python.org/) is required to build.
+### Build System: SCons (**S**oftware **Cons**truction)
+This project uses [SCons](https://scons.org/) as its build system, so [Python](https://www.python.org/) is required to build it.
 
 SCons and other Python dependencies are listed in [`requirements.txt`](./requirements.txt) at the root of the project. You can use [`pip`](https://pip.pypa.io/en/stable/) to install them.
 
-Unix:
-```bash
-python3 -m pip install --requirement requirements.txt
-```
-
-Windows:
+#### Windows
 ```PowerShell
 py -m pip install --requirement requirements.txt
 ```
 
-This project requires [Simple DirectMedia Layer](https://www.libsdl.org/) (SDL). The method of downloading SDL depends on the platform.
+#### Linux & Unix
+```bash
+python3 -m pip install --requirement requirements.txt
+```
 
-### SDL on 64-bit Windows
-Run the [`fetch_libraries.py`](./fetch_libraries.py) Python script from the root of the project to fetch the SDL2 library for Windows. This command runs a script that fetches and unpacks [`SDL2-devel-2.28.5-VC.zip` from GitHub](https://github.com/libsdl-org/SDL/releases/release-2.28.5/).
+### SDL (**S**imple **D**irectMedia **L**ayer)
+This project requires [SDL](https://www.libsdl.org/). The method of downloading SDL depends on the platform.
+
+#### 64-bit Windows
+
+Run the [`fetch_libraries.py`](./fetch_libraries.py) Python script from the root of the project to fetch the SDL2 library for Windows. This script fetches and unpacks [`SDL2-devel-2.28.5-VC.zip`](https://github.com/libsdl-org/SDL/releases/release-2.28.5/) from GitHub.
 
 ```PowerShell
 py fetch_libraries.py
 ```
 
-## SDL on Linux/Unix
+#### Linux & Unix
 
 These commands are copied from the [official SDL installation guide](https://wiki.libsdl.org/SDL2/Installation).
 
