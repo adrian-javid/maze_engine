@@ -45,6 +45,6 @@ for url, includeDir, libDir, platform, simpleName in (
         if not (libraryPath := Path(F"library/{platform}/include/{simpleName}")).exists():
             copyRecursively(dst=str(libraryPath), src=F"cache/{includeDir}/")
 
-        # Copy library binaries to relevant directory
+        # Copy library binaries to relevant directory.
         if not (libraryPath := Path(F"library/{platform}/lib/{simpleName}")).exists():    
             copyRecursively(dst=libraryPath, src=F"cache/{libDir}/")
