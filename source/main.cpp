@@ -1,4 +1,3 @@
-
 #include <iostream>
 
 #ifdef _WIN64
@@ -9,9 +8,21 @@
 static_assert(false, "Unsupported platform.");
 #endif
 
+#include "SquareGrid.hpp"
+
 int main(int argc, char* argv[]) {
+    using namespace csm4880;
+
     SDL_Init(0);
+
     std::cout << "Begin.\n";
-    return EXIT_SUCCESS;
+
+    SquareGrid<3, 3> grid;
+
+    std::cout << grid.flatData << '\n';
+    std::cout << grid << '\n';
+    std::cout << "Done.\n";
+
     SDL_Quit();
+    return EXIT_SUCCESS;
 }
