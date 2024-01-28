@@ -1,7 +1,8 @@
 
 #include <iostream>
-#include "sdl2/SDL.h"
+#include "SDL2/SDL.h"
 
-int main() {
+int main(int argc, char **argv) {
     std::cout << "Begin.\n";
+    return EXIT_SUCCESS;
 }
