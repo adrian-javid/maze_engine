@@ -1,3 +1,4 @@
 build
-temp
+cache
+library
 .sconsign.dblite
