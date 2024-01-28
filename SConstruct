@@ -2,9 +2,9 @@ from platform import system as getPlatform
 
 NATIVE_PLATFORM = getPlatform()
 
-
 libs = ["SDL2"]
 linkFlags = []
+
 match NATIVE_PLATFORM:
     case 'Windows':
         cxxFlags = ["/std:c++17", "/EHsc"]
@@ -24,7 +24,9 @@ env = Environment(
     COMPILATIONDB_USE_ABSPATH=False,
     COMPILATIONDB_PATH_FILTER=F"build/native/*"
 )
+
 env.Tool('compilation_db')
+
 if NATIVE_PLATFORM == "Linux": env.ParseConfig('sdl2-config --cflags --libs')
 
 program, compilationDatabase = SConscript(
@@ -35,4 +37,4 @@ program, compilationDatabase = SConscript(
     duplicate=0,
 )
 
-Default(program, compilationDatabase)
+Default(program)
