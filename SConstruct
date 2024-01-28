@@ -22,7 +22,7 @@ env = Environment(
     LIBPATH=[*Glob(F"library/{NATIVE_PLATFORM}/lib/*")],
     LIBS=libs,
     COMPILATIONDB_USE_ABSPATH=False,
-    COMPILATIONDB_PATH_FILTER=F"build/native/*"
+    COMPILATIONDB_PATH_FILTER=F"build/{NATIVE_PLATFORM}/*"
 )
 
 env.Tool('compilation_db')
@@ -32,7 +32,7 @@ if NATIVE_PLATFORM == 'Linux': env.ParseConfig('sdl2-config --cflags --libs')
 program, compilationDatabase = SConscript(
     "source/SConscript",
     exports={"env": env, "PLATFORM": NATIVE_PLATFORM},
-    variant_dir=F"build/native",
+    variant_dir=F"build/{NATIVE_PLATFORM}",
     must_exist=True,
     duplicate=0,
 )
