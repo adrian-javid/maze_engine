@@ -3,7 +3,6 @@ from platform import system as getPlatform
 NATIVE_PLATFORM = getPlatform()
 
 libs = ["SDL2"]
-linkFlags = []
 
 match NATIVE_PLATFORM:
     case 'Windows':
@@ -12,6 +11,7 @@ match NATIVE_PLATFORM:
         libs = [*libs, "SDL2main", "shell32"]
     case 'Linux':
         cxxFlags = ["-std=c++17"]
+        linkFlags = []
     case _:
         raise RuntimeError(F"Unsupported platform: \"{NATIVE_PLATFORM}\"")
 
