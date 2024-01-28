@@ -18,7 +18,7 @@ match NATIVE_PLATFORM:
 env = Environment(
     CXXFLAGS=cxxFlags,
     LINKFLAGS=linkFlags,
-    CPPPATH=[Dir("source"), Dir(F"library/{NATIVE_PLATFORM}/include/"), Glob(F"library/{NATIVE_PLATFORM}/include/*")],
+    CPPPATH=[Dir("source"), Dir(F"library/{NATIVE_PLATFORM}/include/")],
     LIBPATH=[*Glob(F"library/{NATIVE_PLATFORM}/lib/*")],
     LIBS=libs,
     COMPILATIONDB_USE_ABSPATH=False,
