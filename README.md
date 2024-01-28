@@ -1,7 +1,28 @@
 # Maze Solver
 It is a program that solves mazes.
 
+## Running
+
+...
+
+## Building
+
+To build, you need to [install the neccessary dependencies](##Dependencies).
+
+Run `scons` on the command-line to build the executable in the [`build`](./build/) directory, regardless of the platform.
+
 ## Dependencies
+
+### C++ Compiler
+
+The following are the C++ compilers that can build successfully for each platform. Other untested C++ compilers may work.
+
+#### Windows
+
+The Windows build uses the command-line toolset from the
+[Build Tools for Visual Studio](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
+
+#### Linux & Unix
 
 ### Build System: SCons (**S**oftware **Cons**truction)
 This project uses [SCons](https://scons.org/) as its build system, so [Python](https://www.python.org/) is required to build it.
