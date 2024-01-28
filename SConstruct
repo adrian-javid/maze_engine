@@ -25,6 +25,7 @@ env = Environment(
     COMPILATIONDB_PATH_FILTER=F"build/native/*"
 )
 env.Tool('compilation_db')
+if NATIVE_PLATFORM == "Linux": env.ParseConfig('sdl2-config --cflags --libs')
 
 program, compilationDatabase = SConscript(
     "source/SConscript",
