@@ -17,7 +17,13 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Begin.\n";
 
-    SquareGrid<3, 3> grid;
+    SquareGrid<3, 10> grid;
+
+    std::cout << "Size: " << grid.getSize() << '\n';
+
+    grid.at(0, 0) = true;
+    grid.at(1, 1) = true;
+    grid.at(2, 2) = true;
 
     std::cout << grid.flatData << '\n';
     std::cout << grid << '\n';
