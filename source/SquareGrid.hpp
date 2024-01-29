@@ -6,7 +6,10 @@
 #include <vector>
 #include <type_traits>
 
-namespace csm4880 { class SquareGrid; }
+namespace csm4880 {
+  class SquareGrid;
+  std::ostream& operator<<(std::ostream &outputStream, SquareGrid const &squareGrid);
+}
 
 class csm4880::SquareGrid {
 
@@ -14,10 +17,10 @@ class csm4880::SquareGrid {
 
     using Tile = uint_fast8_t;
     using Table = std::vector<Tile>;
-    static_assert(! std::is_same_v<Table, std::vector<bool>>);
+    static_assert(not std::is_same_v<Table, std::vector<bool>>);
 
-    constexpr static Tile EMPTY = 1 >> 1;
-    constexpr static Tile WALL  = 1 << 0;
+    constexpr static Tile EMPTY = 0;
+    constexpr static Tile WALL = 1 << 0;
 
   private:
 
@@ -36,8 +39,6 @@ class csm4880::SquareGrid {
     Tile const &at(size_t const row, size_t const column) const;
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
-
-    friend std::ostream& operator<<(std::ostream &outputStream, SquareGrid const &squareGrid);
 
 };
 
