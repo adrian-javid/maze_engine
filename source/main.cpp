@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include <limits>
+#include "convenience.hpp"
 
 #ifdef _WIN64
 #include "SDL2/SDL.h"
@@ -22,13 +22,6 @@ namespace csm4880::sdl {
 
 using namespace csm4880;
 
-static inline int safeInt(size_t const value) {
-    if (value <= static_cast<size_t>(std::numeric_limits<int>::max()))
-        return static_cast<int>(value);
-    else
-        return std::numeric_limits<int>::max();
-}
-
 static void sdl::renderSquareGrid(SquareGrid const &grid) {
     SDL_SetRenderDrawColor(sdl::renderer, 128, 128, 128, 255);
     SDL_RenderClear(sdl::renderer);
@@ -45,7 +38,7 @@ static void sdl::renderSquareGrid(SquareGrid const &grid) {
             rectangle.h = rectangleHeight;
 
             Uint8 green = 0x20;
-            if (grid.isWall(row, column)) green *= 5;
+            if (not grid.isWall(row, column)) green *= 5;
 
             SDL_SetRenderDrawColor(sdl::renderer, 0x20, green, 0x95, 0xFF);
             SDL_RenderFillRect(sdl::renderer, &rectangle);
