@@ -2,6 +2,9 @@
 
 using csm4880::Vector2;
 
+Vector2 Vector2::wrap(size_t const rowCount, size_t const columnCount) const {
+    return {row % rowCount, col % columnCount};
+}
 
 size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
     static std::hash<size_t> constexpr hash;
