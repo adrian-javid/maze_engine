@@ -10,6 +10,8 @@ match NATIVE_PLATFORM:
             "/permissive-", # stricter conformance to C++ standard
             "/std:c++17",
             "/EHsc",
+        ] + [
+            "/W4"
         ]
         linkFlags = ["/SUBSYSTEM:CONSOLE"]
         libs = [*libs, "SDL2main", "shell32"]
