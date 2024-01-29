@@ -7,6 +7,9 @@ using namespace csm4880;
 std::optional<std::vector<Vector2>> csm4880::breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end) {
     static Vector2 const directionList[] = {NORTH, SOUTH, EAST, WEST};
 
+    int const rowCount = safeInt(grid.getRowCount());
+    int const columnCount = safeInt(grid.getColumnCount());
+
     std::queue<Vector2> queue;
     std::unordered_map<Vector2, Vector2, Vector2::Hash> map;
 
@@ -27,9 +30,7 @@ std::optional<std::vector<Vector2>> csm4880::breadthFirstSearch(SquareGrid const
         }
 
         for (int index{0}; index < 4; ++index) {
-            Vector2 const neighbor = (vector + directionList[index]).wrap(
-                safeInt(grid.getRowCount()), safeInt(grid.getColumnCount())
-            );
+            Vector2 const neighbor = (vector + directionList[index]).wrap(rowCount, columnCount);
 
             bool const neighborIsWall = grid.isWall(neighbor.row, neighbor.col);
 
