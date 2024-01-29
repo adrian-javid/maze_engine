@@ -38,6 +38,7 @@ class csm4880::SquareGrid {
     Tile &at(size_t const row, size_t const column);
     Tile const &at(size_t const row, size_t const column) const;
     bool isWall(size_t const row, size_t const column) const;
+    void putWall(size_t const row, size_t const column);
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 

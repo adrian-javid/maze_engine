@@ -86,7 +86,8 @@ int main(int argc, char* argv[]) {
     break;}
     case 1: {
         for (size_t row{0}; row < grid.getRowCount(); ++row) {
-            grid.at(row, 3) = grid.at(row, 6) = SquareGrid::WALL;
+            grid.putWall(row, 3);
+            grid.putWall(row, 6);
         }
         grid.at(grid.getRowCount()-1, 3) = SquareGrid::NONE;
         grid.at(0, 6) = SquareGrid::NONE;
