@@ -6,7 +6,11 @@ libs = ["SDL2"]
 
 match NATIVE_PLATFORM:
     case 'Windows':
-        cxxFlags = ["/permissive-", "/std:c++17", "/EHsc"]
+        cxxFlags = [
+            "/permissive-", # stricter conformance to C++ standard
+            "/std:c++17",
+            "/EHsc",
+        ]
         linkFlags = ["/SUBSYSTEM:CONSOLE"]
         libs = [*libs, "SDL2main", "shell32"]
     case 'Linux':
