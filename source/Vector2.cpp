@@ -2,8 +2,26 @@
 
 using csm4880::Vector2;
 
-Vector2 Vector2::wrap(size_t const rowCount, size_t const columnCount) const {
-    return {row % rowCount, col % columnCount};
+
+Vector2 const csm4880::NORTH =  {-1,  0};
+Vector2 const csm4880::SOUTH =  { 1,  0};
+Vector2 const csm4880::EAST  =  { 0,  1};
+Vector2 const csm4880::WEST  =  { 0, -1};
+
+constexpr Vector2::Vector2(): Vector2(0, 0) {}
+constexpr Vector2::Vector2(int row, int column): row{row}, col{column} {}
+
+Vector2 Vector2::operator+(Vector2 const &vector) const { return {row + vector.row, col + vector.col}; }
+Vector2 Vector2::operator-(Vector2 const &vector) const { return {row - vector.row, col - vector.col}; }
+
+bool Vector2::operator==(Vector2 const &vector) const { return row == vector.row && col == vector.col; }
+bool Vector2::operator!=(Vector2 const &vector) const { return not(*this == vector); }
+
+Vector2 Vector2::wrap(int const rowCount, int const columnCount) const {
+    Vector2 vector(row % rowCount, col % columnCount);
+    if (vector.row < 0) vector.row += rowCount;
+    if (vector.col < 0) vector.col += columnCount;
+    return vector;
 }
 
 size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
