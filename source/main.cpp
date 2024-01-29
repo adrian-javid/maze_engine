@@ -24,7 +24,9 @@ namespace csm4880::sdl {
 using namespace csm4880;
 
 static void sdl::renderSquareGrid(SquareGrid const &grid, std::vector<Vector2> const &path) {
-    SDL_SetRenderDrawColor(sdl::renderer, 128, 128, 128, 255);
+    struct { Uint8 red, green, blue, alpha; } static constexpr color{0x20, 0x20, 0x95, 0xFF};
+
+    SDL_SetRenderDrawColor(sdl::renderer, color.red, color.green, color.blue, color.alpha);
     SDL_RenderClear(sdl::renderer);
 
     int const rectangleWidth = windowWidth / safeInt(grid.getColumnCount());
@@ -33,21 +35,19 @@ static void sdl::renderSquareGrid(SquareGrid const &grid, std::vector<Vector2> c
     SDL_Rect rectangle{};
     rectangle.w = rectangleWidth;
     rectangle.h = rectangleHeight;
+
     for (size_t row{0}; row < grid.getRowCount(); ++row) {
         for (size_t column{0}; column < grid.getColumnCount(); ++column) {
             rectangle.x = safeInt(column) * rectangleWidth;
             rectangle.y = safeInt(row) * rectangleHeight;
-
-            Uint8 green = 0x20;
-            if (not grid.isWall(row, column)) green *= 5;
-
-            SDL_SetRenderDrawColor(sdl::renderer, 0x20, green, 0x95, 0xFF);
+            Uint8 const greenSubstitute = (grid.isWall(row, column) ? color.green : color.green * 5); 
+            SDL_SetRenderDrawColor(sdl::renderer, color.red, greenSubstitute, color.blue, color.alpha);
             SDL_RenderFillRect(sdl::renderer, &rectangle);
         }
     }
 
     SDL_SetRenderDrawColor(sdl::renderer, 0xFF, 0x00, 0x00, 0xFF);
-    for (auto const & vector : path) {
+    for (auto const &vector : path) {
         rectangle.x = safeInt(vector.col) * rectangleWidth;
         rectangle.y = safeInt(vector.row) * rectangleHeight;
         SDL_RenderFillRect(sdl::renderer, &rectangle);
