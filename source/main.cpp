@@ -18,12 +18,12 @@ namespace csm4880::sdl {
     static int windowWidth = 430;
     static int windowHeight = 420;
     static SDL_Renderer *renderer = nullptr;
-    static void renderSquareGrid(SquareGrid const &grid);
+    static void renderSquareGrid(SquareGrid const &grid, std::vector<Vector2> const &path={});
 }
 
 using namespace csm4880;
 
-static void sdl::renderSquareGrid(SquareGrid const &grid) {
+static void sdl::renderSquareGrid(SquareGrid const &grid, std::vector<Vector2> const &path) {
     SDL_SetRenderDrawColor(sdl::renderer, 128, 128, 128, 255);
     SDL_RenderClear(sdl::renderer);
 
@@ -31,12 +31,12 @@ static void sdl::renderSquareGrid(SquareGrid const &grid) {
     int const rectangleHeight = windowHeight / safeInt(grid.getRowCount());
 
     SDL_Rect rectangle{};
+    rectangle.w = rectangleWidth;
+    rectangle.h = rectangleHeight;
     for (size_t row{0}; row < grid.getRowCount(); ++row) {
         for (size_t column{0}; column < grid.getColumnCount(); ++column) {
             rectangle.x = safeInt(column) * rectangleWidth;
             rectangle.y = safeInt(row) * rectangleHeight;
-            rectangle.w = rectangleWidth;
-            rectangle.h = rectangleHeight;
 
             Uint8 green = 0x20;
             if (not grid.isWall(row, column)) green *= 5;
@@ -44,6 +44,13 @@ static void sdl::renderSquareGrid(SquareGrid const &grid) {
             SDL_SetRenderDrawColor(sdl::renderer, 0x20, green, 0x95, 0xFF);
             SDL_RenderFillRect(sdl::renderer, &rectangle);
         }
+    }
+
+    SDL_SetRenderDrawColor(sdl::renderer, 0xFF, 0x00, 0x00, 0xFF);
+    for (auto const & vector : path) {
+        rectangle.x = safeInt(vector.col) * rectangleWidth;
+        rectangle.y = safeInt(vector.row) * rectangleHeight;
+        SDL_RenderFillRect(sdl::renderer, &rectangle);
     }
 
     SDL_RenderPresent(sdl::renderer);
@@ -102,7 +109,7 @@ int main(int argc, char* argv[]) {
     assert(sdl::window != nullptr);
     assert(sdl::renderer != nullptr);
 
-    sdl::renderSquareGrid(grid);
+    sdl::renderSquareGrid(grid, *path);
 
     SDL_Event event;
     while (true) {
@@ -113,7 +120,7 @@ int main(int argc, char* argv[]) {
                 case SDL_WINDOWEVENT_RESIZED:
                     sdl::windowWidth = event.window.data1;
                     sdl::windowHeight = event.window.data2;
-                    sdl::renderSquareGrid(grid);
+                    sdl::renderSquareGrid(grid, *path);
                     break;
             } break;
             case SDL_QUIT:
