@@ -14,19 +14,39 @@ static_assert(false, "Unsupported platform.");
 #include "SquareGrid.hpp"
 
 namespace csm4880::sdl {
+
     static SDL_Window *window = nullptr;
     static int windowWidth = 430;
     static int windowHeight = 420;
     static SDL_Renderer *renderer = nullptr;
-    static void renderSquareGrid(SquareGrid const &grid, std::vector<Vector2> const &path={});
+    
+    static struct Color {
+        Uint8 red, green, blue, alpha;
+        inline void SetRenderDrawColor() const { SDL_SetRenderDrawColor(sdl::renderer, red, green, blue, alpha); }
+        inline constexpr Color withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
+        inline constexpr Color withGreen(Uint8 const green) const { return {red, green, blue, alpha}; }
+        inline constexpr Color withBlue (Uint8 const blue)  const { return {red, green, blue, alpha}; }
+        inline constexpr Color withAlpha(Uint8 const alpha) const { return {red, green, blue, alpha}; }
+    }
+        constexpr PATH_COLOR{0xFF, 0x00, 0x00, 0xFF};
+
+        static void renderSquareGrid(SquareGrid const &grid, Vector2::Map<Color> const &colorMap);
+
+    static void exitHandler() {
+        if (sdl::window) SDL_DestroyWindow(sdl::window);
+        if (sdl::renderer) SDL_DestroyRenderer(sdl::renderer);
+        SDL_Quit();
+    }
+
 }
 
 using namespace csm4880;
 
-static void sdl::renderSquareGrid(SquareGrid const &grid, std::vector<Vector2> const &path) {
-    struct { Uint8 red, green, blue, alpha; } static constexpr color{0x20, 0x20, 0x95, 0xFF};
+static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::Map<Color> const &colorMap) {
+    static constexpr sdl::Color wallColor{0x20, 0x20, 0x95, 0xFF};
+    static constexpr sdl::Color defaultColor = wallColor.withGreen(wallColor.green * 5);
 
-    SDL_SetRenderDrawColor(sdl::renderer, color.red, color.green, color.blue, color.alpha);
+    wallColor.SetRenderDrawColor();
     SDL_RenderClear(sdl::renderer);
 
     int const rectangleWidth = windowWidth / safeInt(grid.getColumnCount());
@@ -36,32 +56,23 @@ static void sdl::renderSquareGrid(SquareGrid const &grid, std::vector<Vector2> c
     rectangle.w = rectangleWidth;
     rectangle.h = rectangleHeight;
 
-    for (size_t row{0}; row < grid.getRowCount(); ++row) {
-        for (size_t column{0}; column < grid.getColumnCount(); ++column) {
-            rectangle.x = safeInt(column) * rectangleWidth;
-            rectangle.y = safeInt(row) * rectangleHeight;
-            Uint8 const greenSubstitute = (grid.isWall(row, column) ? color.green : color.green * 5); 
-            SDL_SetRenderDrawColor(sdl::renderer, color.red, greenSubstitute, color.blue, color.alpha);
+    for (Vector2 vector(0, 0); vector.row < grid.getRowCount(); ++vector.row) {
+        for (vector.col = 0; vector.col < grid.getColumnCount(); ++vector.col) {
+            rectangle.x = vector.col * rectangleWidth;
+            rectangle.y = vector.row * rectangleHeight;
+            
+            if (colorMap.count(vector))
+                colorMap.at(vector).SetRenderDrawColor();
+            else if (grid.isWall(vector.row, vector.col))
+                wallColor.SetRenderDrawColor();
+            else
+                defaultColor.SetRenderDrawColor();
+
             SDL_RenderFillRect(sdl::renderer, &rectangle);
         }
     }
 
-    SDL_SetRenderDrawColor(sdl::renderer, 0xFF, 0x00, 0x00, 0xFF);
-    for (auto const &vector : path) {
-        rectangle.x = safeInt(vector.col) * rectangleWidth;
-        rectangle.y = safeInt(vector.row) * rectangleHeight;
-        SDL_RenderFillRect(sdl::renderer, &rectangle);
-    }
-
     SDL_RenderPresent(sdl::renderer);
-}
-
-static void exitHandler() {
-    if (sdl::window) SDL_DestroyWindow(sdl::window);
-
-    if (sdl::renderer) SDL_DestroyRenderer(sdl::renderer);
-
-    SDL_Quit();
 }
 
 static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
@@ -91,14 +102,18 @@ int main(int argc, char* argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
     SDL_Init(SDL_INIT_VIDEO);
-    std::atexit(&exitHandler);
+    std::atexit(&sdl::exitHandler);
 
     SquareGrid grid = makeGrid();
 
-    auto path = breadthFirstSearch(grid, {1, 1}, {
-        safeInt(grid.getRowCount())-1 - 1,
-        safeInt(grid.getColumnCount())-1 - 1
-    });
+    int const lastRow = safeInt(grid.getRowCount())-1;
+    int const lastColumn = safeInt(grid.getColumnCount())-1;
+    auto const path = breadthFirstSearch(grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
+
+    Vector2::Map<sdl::Color> colorMap;
+    for (auto &vector : path.value()) {
+        colorMap.insert({vector, sdl::PATH_COLOR});
+    }
 
     SDL_CreateWindowAndRenderer(
         sdl::windowWidth, sdl::windowHeight,
@@ -109,7 +124,7 @@ int main(int argc, char* argv[]) {
     assert(sdl::window != nullptr);
     assert(sdl::renderer != nullptr);
 
-    sdl::renderSquareGrid(grid, *path);
+    sdl::renderSquareGrid(grid, colorMap);
 
     SDL_Event event;
     while (true) {
@@ -120,7 +135,7 @@ int main(int argc, char* argv[]) {
                 case SDL_WINDOWEVENT_RESIZED:
                     sdl::windowWidth = event.window.data1;
                     sdl::windowHeight = event.window.data2;
-                    sdl::renderSquareGrid(grid, *path);
+                    sdl::renderSquareGrid(grid, colorMap);
                     break;
             } break;
             case SDL_QUIT:
