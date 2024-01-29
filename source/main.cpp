@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "convenience.hpp"
+#include "breadth_first_search.hpp"
 
 #ifdef _WIN64
 #include "SDL2/SDL.h"
@@ -56,11 +57,41 @@ static void exitHandler() {
     SDL_Quit();
 }
 
+static SquareGrid makeGrid(size_t rowCount=30, size_t columnCount=30) {
+    SquareGrid grid(rowCount, columnCount);
+    size_t const quarter = grid.getColumnCount() / 4;
+    size_t const thirdQuarter = quarter * 3;
+    for (size_t row{0}; row < grid.getRowCount(); ++row) {
+        grid.putWall(row, quarter);
+        grid.putWall(row, thirdQuarter);
+        
+        grid.putWall(row, 0);
+        grid.putWall(row, grid.getColumnCount()-1);
+    }
+
+    grid.at(grid.getRowCount()-1 - 1, quarter) = SquareGrid::NONE;
+    grid.at(1, thirdQuarter) = SquareGrid::NONE;
+
+    for (size_t col{0}; col < grid.getRowCount(); ++col) {
+        grid.putWall(0, col);
+        grid.putWall(grid.getColumnCount()-1, col);
+    }
+
+    return grid;
+}
+
 int main(int argc, char* argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
     SDL_Init(SDL_INIT_VIDEO);
     std::atexit(&exitHandler);
+
+    SquareGrid grid = makeGrid();
+
+    auto path = breadthFirstSearch(grid, {1, 1}, {
+        safeInt(grid.getRowCount())-1 - 1,
+        safeInt(grid.getColumnCount())-1 - 1
+    });
 
     SDL_CreateWindowAndRenderer(
         sdl::windowWidth, sdl::windowHeight,
@@ -70,22 +101,6 @@ int main(int argc, char* argv[]) {
 
     assert(sdl::window != nullptr);
     assert(sdl::renderer != nullptr);
-
-    SquareGrid grid(10, 10);
-    switch (1) {
-    case 0: {
-        for (size_t index{0}; index < grid.getRowCount() && index < grid.getColumnCount(); ++index)
-            grid.at(index, index) = SquareGrid::NONE;
-    break;}
-    case 1: {
-        for (size_t row{0}; row < grid.getRowCount(); ++row) {
-            grid.putWall(row, 3);
-            grid.putWall(row, 6);
-        }
-        grid.at(grid.getRowCount()-1, 3) = SquareGrid::NONE;
-        grid.at(0, 6) = SquareGrid::NONE;
-    break;}
-    }
 
     sdl::renderSquareGrid(grid);
 
