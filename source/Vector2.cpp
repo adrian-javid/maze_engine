@@ -1,4 +1,5 @@
 #include "Vector2.hpp"
+#include <sstream>
 
 using csm4880::Vector2;
 
@@ -33,4 +34,14 @@ size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
         https://www.boost.org/doc/libs/1_55_0/doc/html/hash/reference.html#boost.hash_combine
     */
     return hashRow ^ (hashCol + 0x9e3779b9 + (hashRow << 6) + (hashRow >> 2));
+}
+
+std::string Vector2::toString() const {
+    std::stringstream buffer;
+    buffer << '(' << row << ", " << col << ")";
+    return buffer.str();
+}
+
+std::ostream& csm4880::operator<<(std::ostream &outputStream, Vector2 const &vector) {
+    outputStream << vector.toString(); return outputStream;
 }
