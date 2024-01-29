@@ -11,6 +11,7 @@ std::optional<std::vector<Vector2>> csm4880::breadthFirstSearch(SquareGrid const
     std::unordered_map<Vector2, Vector2, Vector2::Hash> map;
 
     queue.push(start);
+    map.insert({start, start});
 
     while (not queue.empty()) {
         Vector2 const &vector = queue.front();
@@ -18,8 +19,10 @@ std::optional<std::vector<Vector2>> csm4880::breadthFirstSearch(SquareGrid const
 
         if (vector == end) {
             std::vector<Vector2> path;
-            for (auto iterator = map.find(vector); iterator != map.end(); iterator = map.find(iterator->second))
+            for (auto iterator = map.find(vector); iterator->first != start; iterator = map.find(iterator->second)) {
                 path.push_back(iterator->first);
+            }
+            path.push_back(start);
             return path;
         }
 
