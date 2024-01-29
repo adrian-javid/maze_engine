@@ -14,18 +14,13 @@ static_assert(false, "Unsupported platform.");
 
 namespace csm4880::sdl {
     static SDL_Window *window = nullptr;
+    static int windowWidth = 430;
+    static int windowHeight = 420;
     static SDL_Renderer *renderer = nullptr;
+    static void renderSquareGrid(SquareGrid const &grid);
 }
 
 using namespace csm4880;
-    
-static void exitHandler() {
-    if (sdl::window) SDL_DestroyWindow(sdl::window);
-
-    if (sdl::renderer) SDL_DestroyRenderer(sdl::renderer);
-
-    SDL_Quit();
-}
 
 static inline int safeInt(size_t const value) {
     if (value <= static_cast<size_t>(std::numeric_limits<int>::max()))
@@ -34,21 +29,12 @@ static inline int safeInt(size_t const value) {
         return std::numeric_limits<int>::max();
 }
 
-int main(int argc, char* argv[]) {
-    static_cast<void>(argc); static_cast<void>(argv);
+static void sdl::renderSquareGrid(SquareGrid const &grid) {
+    SDL_SetRenderDrawColor(sdl::renderer, 128, 128, 128, 255);
+    SDL_RenderClear(sdl::renderer);
 
-    SDL_Init(SDL_INIT_VIDEO);
-    std::atexit(&exitHandler);
-
-    SDL_CreateWindowAndRenderer(430, 420, 0, &sdl::window, &sdl::renderer);
-    assert(sdl::window != nullptr); assert(sdl::renderer != nullptr);
-    SDL_SetRenderDrawColor(sdl::renderer, 128, 128, 128, 255); SDL_RenderClear(sdl::renderer);
-
-    SquareGrid grid(10, 10);
-    for (size_t index{0}; index < grid.getRowCount() && index < grid.getColumnCount(); ++index)
-        grid.at(index, index) = true;
-
-    int constexpr rectangleWidth = 30; int constexpr rectangleHeight = 30;
+    int const rectangleWidth = windowWidth / safeInt(grid.getColumnCount());
+    int const rectangleHeight = windowHeight / safeInt(grid.getRowCount());
 
     SDL_Rect rectangle{};
     for (size_t row{0}; row < grid.getRowCount(); ++row) {
@@ -67,11 +53,47 @@ int main(int argc, char* argv[]) {
     }
 
     SDL_RenderPresent(sdl::renderer);
+}
+
+static void exitHandler() {
+    if (sdl::window) SDL_DestroyWindow(sdl::window);
+
+    if (sdl::renderer) SDL_DestroyRenderer(sdl::renderer);
+
+    SDL_Quit();
+}
+
+int main(int argc, char* argv[]) {
+    static_cast<void>(argc); static_cast<void>(argv);
+
+    SDL_Init(SDL_INIT_VIDEO);
+    std::atexit(&exitHandler);
+
+    SDL_CreateWindowAndRenderer(sdl::windowWidth, sdl::windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE, &sdl::window, &sdl::renderer);
+    assert(sdl::window != nullptr); assert(sdl::renderer != nullptr);
+
+    SquareGrid grid(10, 10);
+    for (size_t index{0}; index < grid.getRowCount() && index < grid.getColumnCount(); ++index)
+        grid.at(index, index) = true;
+
+    sdl::renderSquareGrid(grid);
 
     SDL_Event event;
     while (true) {
-        while (SDL_PollEvent(&event))
-            switch (event.type) { case SDL_QUIT: case SDL_KEYDOWN: exit(EXIT_SUCCESS); }
+        while (SDL_PollEvent(&event)) switch (event.type) {
+            case SDL_KEYDOWN:
+                break;
+            case SDL_WINDOWEVENT: switch (event.window.event) {
+                case SDL_WINDOWEVENT_RESIZED:
+                    sdl::windowWidth = event.window.data1;
+                    sdl::windowHeight = event.window.data2;
+                    sdl::renderSquareGrid(grid);
+                    break;
+            } break;
+            case SDL_QUIT:
+                exit(EXIT_SUCCESS);
+                break;
+        }
         SDL_Delay(1);
     }
 
