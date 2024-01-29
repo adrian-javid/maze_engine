@@ -45,7 +45,7 @@ static void sdl::renderSquareGrid(SquareGrid const &grid) {
             rectangle.h = rectangleHeight;
 
             Uint8 green = 0x20;
-            switch (grid.at(row, column)) { case SquareGrid::WALL: green *= 5; }
+            if (grid.isWall(row, column)) green *= 5;
 
             SDL_SetRenderDrawColor(sdl::renderer, 0x20, green, 0x95, 0xFF);
             SDL_RenderFillRect(sdl::renderer, &rectangle);
@@ -69,12 +69,29 @@ int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     std::atexit(&exitHandler);
 
-    SDL_CreateWindowAndRenderer(sdl::windowWidth, sdl::windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE, &sdl::window, &sdl::renderer);
-    assert(sdl::window != nullptr); assert(sdl::renderer != nullptr);
+    SDL_CreateWindowAndRenderer(
+        sdl::windowWidth, sdl::windowHeight,
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
+        &sdl::window, &sdl::renderer
+    );
+
+    assert(sdl::window != nullptr);
+    assert(sdl::renderer != nullptr);
 
     SquareGrid grid(10, 10);
-    for (size_t index{0}; index < grid.getRowCount() && index < grid.getColumnCount(); ++index)
-        grid.at(index, index) = true;
+    switch (1) {
+    case 0: {
+        for (size_t index{0}; index < grid.getRowCount() && index < grid.getColumnCount(); ++index)
+            grid.at(index, index) = SquareGrid::NONE;
+    break;}
+    case 1: {
+        for (size_t row{0}; row < grid.getRowCount(); ++row) {
+            grid.at(row, 3) = grid.at(row, 6) = SquareGrid::WALL;
+        }
+        grid.at(grid.getRowCount()-1, 3) = SquareGrid::NONE;
+        grid.at(0, 6) = SquareGrid::NONE;
+    break;}
+    }
 
     sdl::renderSquareGrid(grid);
 

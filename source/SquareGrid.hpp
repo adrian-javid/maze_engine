@@ -19,7 +19,7 @@ class csm4880::SquareGrid {
     using Table = std::vector<Tile>;
     static_assert(not std::is_same_v<Table, std::vector<bool>>);
 
-    constexpr static Tile EMPTY = 0;
+    constexpr static Tile NONE = 0;
     constexpr static Tile WALL = 1 << 0;
 
   private:
@@ -37,6 +37,7 @@ class csm4880::SquareGrid {
 
     Tile &at(size_t const row, size_t const column);
     Tile const &at(size_t const row, size_t const column) const;
+    bool isWall(size_t const row, size_t const column) const;
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
