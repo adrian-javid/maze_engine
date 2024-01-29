@@ -64,7 +64,7 @@ static void exitHandler() {
     SDL_Quit();
 }
 
-static SquareGrid makeGrid(size_t rowCount=30, size_t columnCount=30) {
+static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     SquareGrid grid(rowCount, columnCount);
     size_t const quarter = grid.getColumnCount() / 4;
     size_t const thirdQuarter = quarter * 3;
