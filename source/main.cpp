@@ -11,21 +11,27 @@ static_assert(false, "Unsupported platform.");
 #include "SquareGrid.hpp"
 
 int main(int argc, char* argv[]) {
+    static_cast<void>(argc);
+    static_cast<void>(argv);
+
     using namespace csm4880;
 
     SDL_Init(0);
 
     std::cout << "Begin.\n";
 
-    SquareGrid<3, 10> grid;
+    SquareGrid grid(10, 10);
 
-    std::cout << "Size: " << grid.getSize() << '\n';
+    for (size_t index{0}; index < grid.getRowCount() && index < grid.getColumnCount(); ++index) {
+        std::cout << index << " | " << static_cast<unsigned int>(grid.at(index, index)) << '\n';
+        grid.at(index, index) = true;
+    }
 
-    grid.at(0, 0) = true;
-    grid.at(1, 1) = true;
-    grid.at(2, 2) = true;
+    for (auto &tile : grid.getFlatData()) {
+        std::cout << static_cast<unsigned short>(tile);
+    }
+    std::cout << '\n';
 
-    std::cout << grid.flatData << '\n';
     std::cout << grid << '\n';
     std::cout << "Done.\n";
 

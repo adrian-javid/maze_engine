@@ -2,41 +2,51 @@
 #define SquareGrid_hpp
 
 #include <string>
-#include <bitset>
-#include <sstream> 
+#include <sstream>
+#include <vector>
+#include <type_traits>
 
-namespace csm4880 { template<size_t, size_t> class SquareGrid; }
+namespace csm4880 { class SquareGrid; }
 
-template<size_t rowCount, size_t columnCount> class csm4880::SquareGrid {
-
-  public:
-
-    constexpr static size_t getRowCount() { return rowCount; }
-    constexpr static size_t getColumnCount() { return columnCount; }
-    constexpr static size_t getSize() { return rowCount * columnCount; }
-
-    using BitSet = std::bitset<getSize()>;
+class csm4880::SquareGrid {
 
   public:
 
-    BitSet flatData;
+    using Tile = uint_fast8_t;
+    using Table = std::vector<Tile>;
+    static_assert(! std::is_same_v<Table, std::vector<bool>>);
 
-    constexpr explicit SquareGrid(): flatData() {}
+    constexpr static Tile EMPTY = 1 >> 1;
+    constexpr static Tile WALL  = 1 << 0;
 
-    bool at(size_t const row, size_t const column) const {
-      return flatData[row * columnCount + column];
-    }
+  private:
 
-    typename BitSet::reference at(size_t const row, size_t const column) {
-      return flatData[row * columnCount + column];
-    }
+    Table flatData;
+    size_t rowCount;
+    size_t columnCount;
 
-    std::string toString(char const trueSymbol='#', char const falseSymbol='.') const {
+  public:
+
+    explicit SquareGrid(size_t const rowCount, size_t const columnCount):
+      flatData(rowCount * columnCount), rowCount{rowCount}, columnCount{columnCount}
+    {}
+
+    size_t getRowCount() const { return rowCount; }
+    size_t getColumnCount() const { return columnCount; }
+    Table const &getFlatData() const { return flatData; }
+
+    Tile &at(size_t const row, size_t const column) { return flatData.at(row * columnCount + column); }
+    Tile const &at(size_t const row, size_t const column) const { return flatData.at(row * columnCount + column); }
+
+    std::string toString(char const wallSymbol='#', char const emptySymbol='.') const {
       std::stringstream buffer;
 
       for (size_t row{0}; row < rowCount; ++row) {
-        for (size_t column{0}; column < columnCount; ++column)
-          buffer << ' ' << (at(row, column) ? trueSymbol : falseSymbol);
+        for (size_t column{0}; column < columnCount; ++column) {
+          Tile const tile = at(row, column);
+          char const symbol = (tile ? wallSymbol : emptySymbol);
+          buffer << ' ' << symbol;
+        }
         buffer << ' ' << '\n';
       }
 
