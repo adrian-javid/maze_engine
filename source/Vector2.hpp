@@ -16,11 +16,11 @@ struct csm4880::Vector2 {
     constexpr Vector2();
     constexpr Vector2(int row, int column);
 
-    Vector2 operator+(Vector2 const&) const;
-    Vector2 operator-(Vector2 const&) const;
+    Vector2 operator+(Vector2 const &) const;
+    Vector2 operator-(Vector2 const &) const;
 
-    bool operator==(Vector2 const&) const;
-    bool operator!=(Vector2 const&) const;
+    bool operator==(Vector2 const &) const;
+    bool operator!=(Vector2 const &) const;
 
     bool operator<(Vector2 const &) const;
     bool operator>=(Vector2 const &) const;
