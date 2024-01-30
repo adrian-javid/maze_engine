@@ -30,7 +30,7 @@ namespace csm4880::sdl {
     }
         constexpr PATH_COLOR{0xFF, 0x00, 0x00, 0xFF};
 
-        static void renderSquareGrid(SquareGrid const &grid, Vector2::Map<Color> const &colorMap);
+        static void renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap);
 
     static void exitHandler() {
         if (sdl::window) SDL_DestroyWindow(sdl::window);
@@ -42,7 +42,7 @@ namespace csm4880::sdl {
 
 using namespace csm4880;
 
-static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::Map<Color> const &colorMap) {
+static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap) {
     static constexpr sdl::Color wallColor{0x20, 0x20, 0x95, 0xFF};
     static constexpr sdl::Color defaultColor = wallColor.withGreen(wallColor.green * 5);
 
@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
     int const lastColumn = safeInt(grid.getColumnCount()) - 1;
     auto const path = breadthFirstSearch(grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
-    Vector2::Map<sdl::Color> colorMap;
+    Vector2::HashMap<sdl::Color> colorMap;
     for (auto &vector : path.value()) {
         colorMap.insert({vector, sdl::PATH_COLOR});
     }

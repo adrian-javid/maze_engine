@@ -1,6 +1,7 @@
 #include "breadth_first_search.hpp"
 #include <queue>
 #include "convenience.hpp"
+#include <map>
 
 using namespace csm4880;
 
@@ -11,7 +12,7 @@ std::optional<std::vector<Vector2>> csm4880::breadthFirstSearch(SquareGrid const
     int const columnCount = safeInt(grid.getColumnCount());
 
     std::queue<Vector2> queue;
-    std::unordered_map<Vector2, Vector2, Vector2::Hash> map;
+    Vector2::HashMap<Vector2> map;
 
     queue.push(start);
     map.insert({start, start});
