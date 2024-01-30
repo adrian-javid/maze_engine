@@ -22,6 +22,11 @@ struct csm4880::Vector2 {
     bool operator==(Vector2 const&) const;
     bool operator!=(Vector2 const&) const;
 
+    bool operator<(Vector2 const &) const;
+    bool operator>=(Vector2 const &) const;
+    bool operator>(Vector2 const &) const;
+    bool operator<=(Vector2 const &) const;
+
     Vector2 wrap(int const rowCount, int const columnCount) const;
 
     struct Hash { size_t operator()(Vector2 const &vector) const noexcept; };

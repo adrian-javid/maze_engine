@@ -18,6 +18,19 @@ Vector2 Vector2::operator-(Vector2 const &vector) const { return {row - vector.r
 bool Vector2::operator==(Vector2 const &vector) const { return row == vector.row && col == vector.col; }
 bool Vector2::operator!=(Vector2 const &vector) const { return not(*this == vector); }
 
+bool Vector2::operator<(Vector2 const &vector) const {
+    if (row != vector.row)
+        return row < vector.row;
+    else
+        return col < vector.col;
+}
+
+bool Vector2::operator>=(Vector2 const &vector) const { return not(*this < vector); }
+
+bool Vector2::operator>(Vector2 const &vector) const { return vector < *this; }
+
+bool Vector2::operator<=(Vector2 const &vector) const { return not(vector < *this); }
+
 Vector2 Vector2::wrap(int const rowCount, int const columnCount) const {
     Vector2 vector(row % rowCount, col % columnCount);
     if (vector.row < 0) vector.row += rowCount;
