@@ -1,6 +1,6 @@
 #include "breadth_first_search.hpp"
-#include <queue>
 #include "convenience.hpp"
+#include <queue>
 #include <map>
 
 using namespace csm4880;
