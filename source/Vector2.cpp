@@ -4,10 +4,10 @@
 using csm4880::Vector2;
 
 
-Vector2 const csm4880::NORTH =  {-1,  0};
-Vector2 const csm4880::SOUTH =  { 1,  0};
-Vector2 const csm4880::EAST  =  { 0,  1};
-Vector2 const csm4880::WEST  =  { 0, -1};
+Vector2 const csm4880::NORTH = {-1,  0};
+Vector2 const csm4880::SOUTH = { 1,  0};
+Vector2 const csm4880::EAST  = { 0,  1};
+Vector2 const csm4880::WEST  = { 0, -1};
 
 constexpr Vector2::Vector2(): Vector2(0, 0) {}
 constexpr Vector2::Vector2(int row, int column): row{row}, col{column} {}
