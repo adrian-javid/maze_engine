@@ -3,9 +3,10 @@
 #include <queue>
 #include <map>
 
-using namespace csm4880;
 
-std::optional<std::vector<Vector2>> csm4880::breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end) {
+std::optional<std::vector<csm4880::Vector2>> csm4880::breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end) {
+    using namespace csm4880;
+
     static Vector2 const directionList[] = {NORTH, SOUTH, EAST, WEST};
 
     int const rowCount = safeInt(grid.getRowCount());
