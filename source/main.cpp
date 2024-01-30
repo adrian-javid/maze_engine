@@ -84,15 +84,15 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
         grid.putWall(row, thirdQuarter);
         
         grid.putWall(row, 0);
-        grid.putWall(row, grid.getColumnCount()-1);
+        grid.putWall(row, grid.getColumnCount() - 1);
     }
 
-    grid.at(grid.getRowCount()-1 - 1, quarter) = SquareGrid::NONE;
+    grid.at((grid.getRowCount() - 1) - 1, quarter) = SquareGrid::NONE;
     grid.at(1, thirdQuarter) = SquareGrid::NONE;
 
     for (size_t col{0}; col < grid.getRowCount(); ++col) {
         grid.putWall(0, col);
-        grid.putWall(grid.getColumnCount()-1, col);
+        grid.putWall(grid.getColumnCount() - 1, col);
     }
 
     return grid;
@@ -106,8 +106,8 @@ int main(int argc, char* argv[]) {
 
     SquareGrid grid = makeGrid();
 
-    int const lastRow = safeInt(grid.getRowCount())-1;
-    int const lastColumn = safeInt(grid.getColumnCount())-1;
+    int const lastRow = safeInt(grid.getRowCount()) - 1;
+    int const lastColumn = safeInt(grid.getColumnCount()) - 1;
     auto const path = breadthFirstSearch(grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
     Vector2::Map<sdl::Color> colorMap;
