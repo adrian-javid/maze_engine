@@ -27,10 +27,11 @@ namespace csm4880::sdl {
         inline constexpr Color withGreen(Uint8 const green) const { return {red, green, blue, alpha}; }
         inline constexpr Color withBlue (Uint8 const blue)  const { return {red, green, blue, alpha}; }
         inline constexpr Color withAlpha(Uint8 const alpha) const { return {red, green, blue, alpha}; }
-    }
-        constexpr PATH_COLOR{0xFF, 0x00, 0x00, 0xFF};
+    };
 
-        static void renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap);
+    constexpr Color PATH_COLOR{0xFF, 0x00, 0x00, 0xFF};
+
+    static void renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap);
 
     static void exitHandler() {
         if (sdl::window) SDL_DestroyWindow(sdl::window);
