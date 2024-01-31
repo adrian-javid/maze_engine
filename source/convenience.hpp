@@ -3,10 +3,8 @@
 
 #include <cstddef>
 
-namespace csm4880 {
-    int safeInt(size_t const value);   
+namespace csm4880::cast {
+    int toInt(size_t value);
 }
-
-
 
 #endif
