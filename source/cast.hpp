@@ -1,5 +1,5 @@
-#ifndef convenience_hpp
-#define convenience_hpp
+#ifndef cast_hpp
+#define cast_hpp
 
 #include <cstddef>
 

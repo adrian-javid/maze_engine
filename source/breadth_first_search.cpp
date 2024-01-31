@@ -1,5 +1,5 @@
 #include "breadth_first_search.hpp"
-#include "convenience.hpp"
+#include "cast.hpp"
 #include <queue>
 #include <map>
 

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "convenience.hpp"
+#include "cast.hpp"
 #include "breadth_first_search.hpp"
 
 #ifdef _WIN64
