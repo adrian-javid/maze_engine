@@ -19,12 +19,12 @@ std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) 
     std::stringstream buffer;
 
     for (size_t row{0}; row < rowCount; ++row) {
-    for (size_t column{0}; column < columnCount; ++column) {
-        Tile const tile = at(row, column);
-        char const symbol = (tile ? wallSymbol : emptySymbol);
-        buffer << ' ' << symbol;
-    }
-    buffer << ' ' << '\n';
+        for (size_t column{0}; column < columnCount; ++column) {
+            Tile const tile = at(row, column);
+            char const symbol = (tile ? wallSymbol : emptySymbol);
+            buffer << ' ' << symbol;
+        }
+        buffer << ' ' << '\n';
     }
 
     return buffer.str();
