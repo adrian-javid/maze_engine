@@ -29,7 +29,8 @@ namespace csm4880::sdl {
         inline constexpr Color withAlpha(Uint8 const alpha) const { return {red, green, blue, alpha}; }
     };
 
-    constexpr Color PATH_COLOR{0xFF, 0x00, 0x00, 0xFF};
+    constexpr Color BLACK{0x00, 0x00, 0x00, 0xFF};
+    constexpr Color PATH_COLOR = BLACK.withRed(0xFF);
 
     static void renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap);
 
@@ -47,7 +48,7 @@ static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color
     static constexpr sdl::Color wallColor{0x20, 0x20, 0x95, 0xFF};
     static constexpr sdl::Color defaultColor = wallColor.withGreen(wallColor.green * 5);
 
-    wallColor.SetRenderDrawColor();
+    sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(sdl::renderer);
 
     int const rectangleWidth = windowWidth / cast::toInt(grid.getColumnCount());
