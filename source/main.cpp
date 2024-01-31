@@ -16,9 +16,9 @@ static_assert(false, "Unsupported platform.");
 namespace csm4880::sdl {
 
     static SDL_Window *window = nullptr;
+    static SDL_Renderer *renderer = nullptr;
     static int windowWidth = 420;
     static int windowHeight = 420;
-    static SDL_Renderer *renderer = nullptr;
     
     static struct Color {
         Uint8 red, green, blue, alpha;
