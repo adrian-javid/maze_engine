@@ -16,7 +16,7 @@ static_assert(false, "Unsupported platform.");
 namespace csm4880::sdl {
 
     static SDL_Window *window = nullptr;
-    static int windowWidth = 430;
+    static int windowWidth = 420;
     static int windowHeight = 420;
     static SDL_Renderer *renderer = nullptr;
     
