@@ -7,10 +7,10 @@
 std::optional<std::vector<csm4880::Vector2>> csm4880::breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end) {
     using namespace csm4880;
 
-    static Vector2 const directionList[] = {Vector2::NORTH, Vector2::SOUTH, Vector2::EAST, Vector2::WEST};
+    static Vector2 const directionList[] = {Vector2_NORTH, Vector2_SOUTH, Vector2_EAST, Vector2_WEST};
 
-    int const rowCount = safeInt(grid.getRowCount());
-    int const columnCount = safeInt(grid.getColumnCount());
+    int const rowCount = cast::toInt(grid.getRowCount());
+    int const columnCount = cast::toInt(grid.getColumnCount());
 
     std::queue<Vector2> queue;
     Vector2::HashMap<Vector2> map;

@@ -20,7 +20,7 @@ namespace csm4880::sdl {
     static int windowWidth = 420;
     static int windowHeight = 420;
     
-    static struct Color {
+    struct Color {
         Uint8 red, green, blue, alpha;
         inline void SetRenderDrawColor() const { SDL_SetRenderDrawColor(sdl::renderer, red, green, blue, alpha); }
         inline constexpr Color withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
@@ -50,15 +50,18 @@ static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color
     wallColor.SetRenderDrawColor();
     SDL_RenderClear(sdl::renderer);
 
-    int const rectangleWidth = windowWidth / safeInt(grid.getColumnCount());
-    int const rectangleHeight = windowHeight / safeInt(grid.getRowCount());
+    int const rectangleWidth = windowWidth / cast::toInt(grid.getColumnCount());
+    int const rectangleHeight = windowHeight / cast::toInt(grid.getRowCount());
 
     SDL_Rect rectangle{};
     rectangle.w = rectangleWidth;
     rectangle.h = rectangleHeight;
 
-    for (Vector2 vector(0, 0); vector.row < grid.getRowCount(); ++vector.row) {
-        for (vector.col = 0; vector.col < grid.getColumnCount(); ++vector.col) {
+    int rowCount = cast::toInt(grid.getRowCount());
+    int columnCount = cast::toInt(grid.getColumnCount());
+
+    for (Vector2 vector(0, 0); vector.row < rowCount; ++vector.row) {
+        for (vector.col = 0; vector.col < columnCount; ++vector.col) {
             rectangle.x = vector.col * rectangleWidth;
             rectangle.y = vector.row * rectangleHeight;
             
@@ -107,8 +110,8 @@ int main(int argc, char* argv[]) {
 
     SquareGrid grid = makeGrid();
 
-    int const lastRow = safeInt(grid.getRowCount()) - 1;
-    int const lastColumn = safeInt(grid.getColumnCount()) - 1;
+    int const lastRow = cast::toInt(grid.getRowCount()) - 1;
+    int const lastColumn = cast::toInt(grid.getColumnCount()) - 1;
     auto const path = breadthFirstSearch(grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
     Vector2::HashMap<sdl::Color> colorMap;
