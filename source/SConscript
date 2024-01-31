@@ -1,7 +1,17 @@
-Import("env")
+Import("mainEnv", "libEnv")
 
-program = env.Program(target="solve_maze", source=Glob("*.cpp"))
+rootSourceList = Glob("*.cpp")
 
-compilationDatabase = env.CompilationDatabase()
+mainSourceList = Glob("main/*.cpp")
 
-Return("program", "compilationDatabase")
+mainProgram = mainEnv.Program(target="solve_maze", source=[*rootSourceList, *mainSourceList])
+
+catch2Object = libEnv.StaticObject(File("test/catch2/catch_amalgamated.cpp"))
+
+testSourceList = Glob("test/*.cpp")
+
+testProgram = mainEnv.Program(target="test/suite", source=[*mainSourceList, *testSourceList, catch2Object])
+
+compilationDatabase = mainEnv.CompilationDatabase()
+
+Return("mainProgram", "testProgram", "compilationDatabase")

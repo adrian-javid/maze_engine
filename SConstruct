@@ -2,21 +2,39 @@ from platform import system as getPlatform
 
 NATIVE_PLATFORM = getPlatform()
 
-libs = ["SDL2"]
+if NATIVE_PLATFORM not in ('Windows', 'Linux'):
+    raise RuntimeError(F"Unsupported platform: \"{NATIVE_PLATFORM}\"")
+
+baseEnv = Environment(
+    CPPPATH=[Dir("source"), Dir("source/main"), Dir(F"library/{NATIVE_PLATFORM}/include/")],
+    LIBPATH=[*Glob(F"library/{NATIVE_PLATFORM}/lib/*")],
+    COMPILATIONDB_USE_ABSPATH=False,
+    COMPILATIONDB_PATH_FILTER=F"build/{NATIVE_PLATFORM}/*"
+)
+baseEnv.Tool('compilation_db')
 
 match NATIVE_PLATFORM:
     case 'Windows':
-        cxxFlags = [
+        baseEnv.Append(CXXFLAGS=[
             "/permissive-", # stricter conformance to C++ standard
             "/std:c++17",
             "/EHsc",
-        ] + [
-            "/W4"
-        ]
-        linkFlags = ["/SUBSYSTEM:CONSOLE"]
-        libs = [*libs, "SDL2main", "shell32"]
+        ])
+        baseEnv.Append(LINKFLAGS=["/SUBSYSTEM:CONSOLE"])
     case 'Linux':
-        cxxFlags = ["-std=c++17"] + [
+        baseEnv.Append(CXXFLAGS=["-std=c++17"])
+
+mainEnv = baseEnv.Clone()
+libEnv = baseEnv.Clone()
+
+mainEnv['LIBS'] = ["SDL2"]
+match NATIVE_PLATFORM:
+    case 'Windows':
+        mainEnv.Append(LIBS=["SDL2main", "shell32"])
+        mainEnv.Append(CXXFLAGS=["/W4"])
+    case 'Linux':
+        mainEnv.ParseConfig("sdl2-config --cflags --libs")
+        mainEnv.Append(CXXFLAGS=[
             '-Wall', '-Wextra', '-Wpedantic', '-Wdeprecated',
             '-Wconversion', '-Wunused', '-Wformat=2', '-Wreorder', '-Wuninitialized',
 
@@ -30,31 +48,14 @@ match NATIVE_PLATFORM:
             '-Wimplicit-fallthrough', # unannotated fall-through between switch labels
 
             '-Wno-error=deprecated-declarations',
-        ]
-        linkFlags = []
-    case _:
-        raise RuntimeError(F"Unsupported platform: \"{NATIVE_PLATFORM}\"")
+        ])
 
-env = Environment(
-    CXXFLAGS=cxxFlags,
-    LINKFLAGS=linkFlags,
-    CPPPATH=[Dir("source"), Dir(F"library/{NATIVE_PLATFORM}/include/")],
-    LIBPATH=[*Glob(F"library/{NATIVE_PLATFORM}/lib/*")],
-    LIBS=libs,
-    COMPILATIONDB_USE_ABSPATH=False,
-    COMPILATIONDB_PATH_FILTER=F"build/{NATIVE_PLATFORM}/*"
-)
-
-env.Tool('compilation_db')
-
-if NATIVE_PLATFORM == 'Linux': env.ParseConfig('sdl2-config --cflags --libs')
-
-program, compilationDatabase = SConscript(
+mainProgram, testProgram, compilationDatabase = SConscript(
     "source/SConscript",
-    exports={"env": env, "PLATFORM": NATIVE_PLATFORM},
+    exports={"mainEnv": mainEnv, "libEnv": libEnv, "PLATFORM": NATIVE_PLATFORM},
     variant_dir=F"build/{NATIVE_PLATFORM}",
     must_exist=True,
     duplicate=0,
 )
 
-Default(program)
+Default(mainProgram)

@@ -3,6 +3,10 @@
 #include <queue>
 #include <map>
 
+#if true
+#include <iostream>
+static auto &O = std::cout;
+#endif
 
 std::optional<std::vector<csm4880::Vector2>> csm4880::breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end) {
     using namespace csm4880;
@@ -11,6 +15,8 @@ std::optional<std::vector<csm4880::Vector2>> csm4880::breadthFirstSearch(SquareG
 
     int const rowCount = cast::toInt(grid.getRowCount());
     int const columnCount = cast::toInt(grid.getColumnCount());
+
+    O << "row count: " << rowCount << ", column count: " << columnCount << "\n";
 
     std::queue<Vector2> queue;
     Vector2::HashMap<Vector2> map;
@@ -22,6 +28,8 @@ std::optional<std::vector<csm4880::Vector2>> csm4880::breadthFirstSearch(SquareG
         Vector2 const &vector = queue.front();
         queue.pop();
 
+        O << "" << vector << ": ";
+
         if (vector == end) {
             std::vector<Vector2> path;
             for (auto iterator = map.find(vector); iterator->first != start; iterator = map.find(iterator->second)) {
@@ -31,16 +39,19 @@ std::optional<std::vector<csm4880::Vector2>> csm4880::breadthFirstSearch(SquareG
             return path;
         }
 
+        O << "";
         for (int index{0}; index < 4; ++index) {
             Vector2 const neighbor = (vector + directionList[index]).wrap(rowCount, columnCount);
 
             bool const neighborIsWall = grid.isWall(neighbor.row, neighbor.col);
 
             if (not neighborIsWall && not map.count(neighbor)) {
+                O << neighbor << " ";
                 map.insert({neighbor, vector});
                 queue.push(neighbor);
             }
         }
+        O << "\n";
     }
 
     return std::nullopt;
