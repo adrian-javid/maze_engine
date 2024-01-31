@@ -9,10 +9,6 @@
 namespace csm4880 { struct Vector2; }
 
 struct csm4880::Vector2 {
-    static Vector2 const NORTH;
-    static Vector2 const SOUTH;
-    static Vector2 const EAST;
-    static Vector2 const WEST;
 
     int row;
     int col;
@@ -43,7 +39,14 @@ struct csm4880::Vector2 {
 };
 
 namespace csm4880 {
+
+    Vector2 constexpr Vector2_NORTH = {-1,  0};
+    Vector2 constexpr Vector2_SOUTH = { 1,  0};
+    Vector2 constexpr Vector2_EAST  = { 0,  1};
+    Vector2 constexpr Vector2_WEST  = { 0, -1};
+
     std::ostream& operator<<(std::ostream &outputStream, Vector2 const &vector);
+
 }
 
 #endif
