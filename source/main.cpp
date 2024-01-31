@@ -5,7 +5,7 @@
 
 #ifdef _WIN64
 #include "SDL2/SDL.h"
-#elif defined(__linux__)
+#elif defined(__unix__)
 #include <SDL.h>
 #else
 static_assert(false, "Unsupported platform.");
@@ -19,7 +19,7 @@ namespace csm4880::sdl {
     static SDL_Renderer *renderer = nullptr;
     static int windowWidth = 420;
     static int windowHeight = 420;
-    
+
     struct Color {
         Uint8 red, green, blue, alpha;
         inline void SetRenderDrawColor() const { SDL_SetRenderDrawColor(sdl::renderer, red, green, blue, alpha); }
