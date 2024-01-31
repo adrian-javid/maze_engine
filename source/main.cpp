@@ -81,18 +81,27 @@ static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color
 
 static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     SquareGrid grid(rowCount, columnCount);
-    size_t const quarter = grid.getColumnCount() / 4;
-    size_t const thirdQuarter = quarter * 3;
+    size_t const secondQuarter = grid.getColumnCount() / 4;
+    size_t const fourthQuarter = secondQuarter * 3;
     for (size_t row{0}; row < grid.getRowCount(); ++row) {
-        grid.putWall(row, quarter);
-        grid.putWall(row, thirdQuarter);
+        grid.putWall(row, secondQuarter);
+        grid.putWall(row, fourthQuarter);
         
         grid.putWall(row, 0);
         grid.putWall(row, grid.getColumnCount() - 1);
     }
 
-    grid.at((grid.getRowCount() - 1) - 1, quarter) = SquareGrid::NONE;
-    grid.at(1, thirdQuarter) = SquareGrid::NONE;
+    grid.at((grid.getRowCount() - 1) - 1, secondQuarter) = SquareGrid::NONE;
+    grid.at(1, fourthQuarter) = SquareGrid::NONE;
+
+    for (int offset = 0; offset < 8; ++offset) {
+        grid.putWall(16, secondQuarter + offset);
+        grid.putWall(3, fourthQuarter - offset);
+
+    }
+
+    grid.at((grid.getRowCount() - 1) - 2, secondQuarter) = SquareGrid::NONE;
+    grid.at(2, fourthQuarter) = SquareGrid::NONE;
 
     for (size_t col{0}; col < grid.getRowCount(); ++col) {
         grid.putWall(0, col);
