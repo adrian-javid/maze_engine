@@ -1,4 +1,9 @@
 build
 cache
 library
+
+# SCons cache
 .sconsign.dblite
+
+# Python cache
+__pycache__
