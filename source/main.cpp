@@ -41,8 +41,14 @@ namespace Project::Sdl {
 
     static void tick() {
         while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
-            case SDL_KEYDOWN:
-                break;
+            case SDL_KEYDOWN: switch (Sdl::event.key.keysym.sym) {
+                case SDLK_BACKQUOTE:
+                    SDL_SetWindowFullscreen(Sdl::window, SDL_WINDOW_FULLSCREEN);
+                    break;
+                case SDLK_ESCAPE:
+                    SDL_SetWindowFullscreen(Sdl::window, 0);
+                    break;
+            } break;
             case SDL_WINDOWEVENT: switch (Sdl::event.window.event) {
                 case SDL_WINDOWEVENT_RESIZED:
                     Sdl::windowWidth = Sdl::event.window.data1;
