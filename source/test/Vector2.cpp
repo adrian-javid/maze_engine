@@ -1,7 +1,7 @@
 #include "catch2/catch_amalgamated.hpp"
 #include "Vector2.hpp"
 
-using namespace csm4880;
+using namespace Project;
 
 TEST_CASE("Neighbors", "[Vector2]") {
     int constexpr rowCount = 20; int constexpr columnCount = 20;

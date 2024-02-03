@@ -15,7 +15,7 @@
 
 #include "SquareGrid.hpp"
 
-namespace csm4880::sdl {
+namespace Project::sdl {
 
     static SDL_Window *window = nullptr;
     static SDL_Renderer *renderer = nullptr;
@@ -45,13 +45,13 @@ namespace csm4880::sdl {
 
 }
 
-namespace csm4880 {
+namespace Project {
     struct Context {
 
     };
 }
 
-using namespace csm4880;
+using namespace Project;
 
 static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap) {
     static constexpr sdl::Color wallColor{0x20, 0x20, 0x95, 0xFF};

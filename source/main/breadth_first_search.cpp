@@ -3,8 +3,8 @@
 #include <queue>
 #include <map>
 
-std::optional<std::vector<csm4880::Vector2>> csm4880::breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end) {
-    using namespace csm4880;
+std::optional<std::vector<Project::Vector2>> Project::breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end) {
+    using namespace Project;
 
     static Vector2 const directionList[] = {Vector2_NORTH, Vector2_SOUTH, Vector2_EAST, Vector2_WEST};
 

@@ -1,7 +1,7 @@
 #include "Vector2.hpp"
 #include <sstream>
 
-using csm4880::Vector2;
+using Project::Vector2;
 
 Vector2 Vector2::operator+(Vector2 const &vector) const { return {row + vector.row, col + vector.col}; }
 Vector2 Vector2::operator-(Vector2 const &vector) const { return {row - vector.row, col - vector.col}; }
@@ -46,6 +46,6 @@ std::string Vector2::toString() const {
     return buffer.str();
 }
 
-std::ostream& csm4880::operator<<(std::ostream &outputStream, Vector2 const &vector) {
+std::ostream& Project::operator<<(std::ostream &outputStream, Vector2 const &vector) {
     outputStream << vector.toString(); return outputStream;
 }

@@ -5,7 +5,7 @@
 #include "Vector2.hpp"
 #include <optional>
 
-namespace csm4880 {
+namespace Project {
     std::optional<std::vector<Vector2>> breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end);
 }
 

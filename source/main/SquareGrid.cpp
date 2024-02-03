@@ -1,6 +1,6 @@
 #include "SquareGrid.hpp"
 
-using csm4880::SquareGrid;
+using Project::SquareGrid;
 
 SquareGrid::SquareGrid(size_t const rowCount, size_t const columnCount):
     flatData(rowCount * columnCount), rowCount{rowCount}, columnCount{columnCount}
@@ -30,6 +30,6 @@ std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) 
     return buffer.str();
 }
 
-std::ostream& csm4880::operator<<(std::ostream &outputStream, SquareGrid const &squareGrid) {
+std::ostream& Project::operator<<(std::ostream &outputStream, SquareGrid const &squareGrid) {
     outputStream << squareGrid.toString(); return outputStream;
 }

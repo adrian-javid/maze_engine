@@ -6,12 +6,12 @@
 #include <vector>
 #include <type_traits>
 
-namespace csm4880 {
+namespace Project {
   class SquareGrid;
   std::ostream& operator<<(std::ostream &outputStream, SquareGrid const &squareGrid);
 }
 
-class csm4880::SquareGrid {
+class Project::SquareGrid {
 
   public:
 

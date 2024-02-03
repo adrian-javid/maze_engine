@@ -6,9 +6,9 @@
 #include <unordered_set>
 #include <unordered_map>
 
-namespace csm4880 { struct Vector2; }
+namespace Project { struct Vector2; }
 
-struct csm4880::Vector2 {
+struct Project::Vector2 {
 
     int row;
     int col;
@@ -38,7 +38,7 @@ struct csm4880::Vector2 {
 
 };
 
-namespace csm4880 {
+namespace Project {
 
     Vector2 constexpr Vector2_NORTH = {-1,  0};
     Vector2 constexpr Vector2_SOUTH = { 1,  0};

@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-namespace csm4880::cast {
+namespace Project::cast {
     int toInt(size_t value);
 }
 
