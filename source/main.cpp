@@ -35,6 +35,8 @@ namespace Project::Sdl {
     constexpr Color BLACK{0x00, 0x00, 0x00, 0xFF};
     constexpr Color PATH_COLOR = BLACK.withRed(0xFF);
 
+    static SquareGrid grid;
+    static Vector2::HashMap<Sdl::Color> colorMap;
     static void renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap);
 
     static void exitHandler() {
@@ -43,12 +45,6 @@ namespace Project::Sdl {
         SDL_Quit();
     }
 
-}
-
-namespace Project {
-    struct Context {
-
-    };
 }
 
 using namespace Project;
@@ -127,15 +123,14 @@ int main(int argc, char *argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     std::atexit(&Sdl::exitHandler);
 
-    SquareGrid grid = makeGrid();
+    Sdl::grid = makeGrid();
 
-    int const lastRow = Cast::toInt(grid.getRowCount()) - 1;
-    int const lastColumn = Cast::toInt(grid.getColumnCount()) - 1;
-    auto const path = breadthFirstSearch(grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
+    int const lastRow = Cast::toInt(Sdl::grid.getRowCount()) - 1;
+    int const lastColumn = Cast::toInt(Sdl::grid.getColumnCount()) - 1;
+    auto const path = breadthFirstSearch(Sdl::grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
-    Vector2::HashMap<Sdl::Color> colorMap;
     for (auto &vector : path.value()) {
-        colorMap.insert({vector, Sdl::PATH_COLOR});
+        Sdl::colorMap.insert({vector, Sdl::PATH_COLOR});
     }
 
     SDL_CreateWindowAndRenderer(
@@ -144,10 +139,12 @@ int main(int argc, char *argv[]) {
         &Sdl::window, &Sdl::renderer
     );
 
+    SDL_SetWindowTitle(Sdl::window, "Maze Solver");
+
     assert(Sdl::window != nullptr);
     assert(Sdl::renderer != nullptr);
 
-    Sdl::renderSquareGrid(grid, colorMap);
+    Sdl::renderSquareGrid(Sdl::grid, Sdl::colorMap);
 
     #ifdef __EMSCRIPTEN__
     // emscripten_set_main_loop([]() {
@@ -163,7 +160,7 @@ int main(int argc, char *argv[]) {
                 case SDL_WINDOWEVENT_RESIZED:
                     Sdl::windowWidth = Sdl::event.window.data1;
                     Sdl::windowHeight = Sdl::event.window.data2;
-                    Sdl::renderSquareGrid(grid, colorMap);
+                    Sdl::renderSquareGrid(Sdl::grid, Sdl::colorMap);
                     break;
             } break;
             case SDL_QUIT:

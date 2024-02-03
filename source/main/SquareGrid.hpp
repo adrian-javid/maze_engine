@@ -30,7 +30,7 @@ class Project::SquareGrid {
 
   public:
 
-    explicit SquareGrid(size_t const rowCount, size_t const columnCount);
+    explicit SquareGrid(size_t const rowCount=0, size_t const columnCount=0);
     size_t getRowCount() const;
     size_t getColumnCount() const;
     Table const &getFlatData() const;
