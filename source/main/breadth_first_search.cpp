@@ -8,8 +8,8 @@ std::optional<std::vector<Project::Vector2>> Project::breadthFirstSearch(SquareG
 
     static Vector2 const directionList[] = {Vector2_NORTH, Vector2_SOUTH, Vector2_EAST, Vector2_WEST};
 
-    int const rowCount = cast::toInt(grid.getRowCount());
-    int const columnCount = cast::toInt(grid.getColumnCount());
+    int const rowCount = Cast::toInt(grid.getRowCount());
+    int const columnCount = Cast::toInt(grid.getColumnCount());
 
     std::queue<Vector2> queue;
     Vector2::HashMap<Vector2> map;

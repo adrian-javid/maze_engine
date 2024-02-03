@@ -60,15 +60,15 @@ static void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
 
-    int const rectangleWidth = windowWidth / cast::toInt(grid.getColumnCount());
-    int const rectangleHeight = windowHeight / cast::toInt(grid.getRowCount());
+    int const rectangleWidth = windowWidth / Cast::toInt(grid.getColumnCount());
+    int const rectangleHeight = windowHeight / Cast::toInt(grid.getRowCount());
 
     SDL_Rect rectangle{};
     rectangle.w = rectangleWidth;
     rectangle.h = rectangleHeight;
 
-    int rowCount = cast::toInt(grid.getRowCount());
-    int columnCount = cast::toInt(grid.getColumnCount());
+    int rowCount = Cast::toInt(grid.getRowCount());
+    int columnCount = Cast::toInt(grid.getColumnCount());
 
     for (Vector2 vector(0, 0); vector.row < rowCount; ++vector.row) {
         for (vector.col = 0; vector.col < columnCount; ++vector.col) {
@@ -129,8 +129,8 @@ int main(int argc, char *argv[]) {
 
     SquareGrid grid = makeGrid();
 
-    int const lastRow = cast::toInt(grid.getRowCount()) - 1;
-    int const lastColumn = cast::toInt(grid.getColumnCount()) - 1;
+    int const lastRow = Cast::toInt(grid.getRowCount()) - 1;
+    int const lastColumn = Cast::toInt(grid.getColumnCount()) - 1;
     auto const path = breadthFirstSearch(grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
     Vector2::HashMap<Sdl::Color> colorMap;

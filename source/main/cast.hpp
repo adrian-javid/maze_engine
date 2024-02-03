@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-namespace Project::cast {
+namespace Project::Cast {
     int toInt(size_t value);
 }
 
