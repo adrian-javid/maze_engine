@@ -5,10 +5,12 @@
 
 #ifdef _WIN64
 #include "SDL2/SDL.h"
-#elif defined(__unix__)
-#include <SDL.h>
 #else
-static_assert(false, "Unsupported platform.");
+#include <SDL.h>
+#endif
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
 #endif
 
 #include "SquareGrid.hpp"
@@ -19,6 +21,7 @@ namespace csm4880::sdl {
     static SDL_Renderer *renderer = nullptr;
     static int windowWidth = 420;
     static int windowHeight = 420;
+    static SDL_Event event;
 
     struct Color {
         Uint8 red, green, blue, alpha;
@@ -40,6 +43,12 @@ namespace csm4880::sdl {
         SDL_Quit();
     }
 
+}
+
+namespace csm4880 {
+    struct Context {
+
+    };
 }
 
 using namespace csm4880;
@@ -95,7 +104,7 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     grid.at((grid.getRowCount() - 1) - 1, secondQuarter) = SquareGrid::NONE;
     grid.at(1, fourthQuarter) = SquareGrid::NONE;
 
-    for (int offset = 0; offset < 8; ++offset) {
+    for (size_t offset = 0; offset < 8; ++offset) {
         grid.putWall(16, secondQuarter + offset);
         grid.putWall(3, fourthQuarter - offset);
 
@@ -112,7 +121,7 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     return grid;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
     SDL_Init(SDL_INIT_VIDEO);
@@ -140,15 +149,20 @@ int main(int argc, char* argv[]) {
 
     sdl::renderSquareGrid(grid, colorMap);
 
-    SDL_Event event;
+    #ifdef __EMSCRIPTEN__
+    // emscripten_set_main_loop([]() {
+    //     sdl::Color{}.SetRenderDrawColor();
+    // }, -1, true);
+    #endif
+
     while (true) {
-        while (SDL_PollEvent(&event)) switch (event.type) {
+        while (SDL_PollEvent(&sdl::event)) switch (sdl::event.type) {
             case SDL_KEYDOWN:
                 break;
-            case SDL_WINDOWEVENT: switch (event.window.event) {
+            case SDL_WINDOWEVENT: switch (sdl::event.window.event) {
                 case SDL_WINDOWEVENT_RESIZED:
-                    sdl::windowWidth = event.window.data1;
-                    sdl::windowHeight = event.window.data2;
+                    sdl::windowWidth = sdl::event.window.data1;
+                    sdl::windowHeight = sdl::event.window.data2;
                     sdl::renderSquareGrid(grid, colorMap);
                     break;
             } break;
