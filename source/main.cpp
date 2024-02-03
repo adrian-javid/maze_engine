@@ -15,7 +15,7 @@
 
 #include "SquareGrid.hpp"
 
-namespace Project::sdl {
+namespace Project::Sdl {
 
     static SDL_Window *window = nullptr;
     static SDL_Renderer *renderer = nullptr;
@@ -25,7 +25,7 @@ namespace Project::sdl {
 
     struct Color {
         Uint8 red, green, blue, alpha;
-        inline void SetRenderDrawColor() const { SDL_SetRenderDrawColor(sdl::renderer, red, green, blue, alpha); }
+        inline void SetRenderDrawColor() const { SDL_SetRenderDrawColor(Sdl::renderer, red, green, blue, alpha); }
         inline constexpr Color withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
         inline constexpr Color withGreen(Uint8 const green) const { return {red, green, blue, alpha}; }
         inline constexpr Color withBlue (Uint8 const blue)  const { return {red, green, blue, alpha}; }
@@ -38,8 +38,8 @@ namespace Project::sdl {
     static void renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap);
 
     static void exitHandler() {
-        if (sdl::window) SDL_DestroyWindow(sdl::window);
-        if (sdl::renderer) SDL_DestroyRenderer(sdl::renderer);
+        if (Sdl::window) SDL_DestroyWindow(Sdl::window);
+        if (Sdl::renderer) SDL_DestroyRenderer(Sdl::renderer);
         SDL_Quit();
     }
 
@@ -53,12 +53,12 @@ namespace Project {
 
 using namespace Project;
 
-static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap) {
-    static constexpr sdl::Color wallColor{0x20, 0x20, 0x95, 0xFF};
-    static constexpr sdl::Color defaultColor = wallColor.withGreen(wallColor.green * 5);
+static void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap) {
+    static constexpr Sdl::Color wallColor{0x20, 0x20, 0x95, 0xFF};
+    static constexpr Sdl::Color defaultColor = wallColor.withGreen(wallColor.green * 5);
 
-    sdl::BLACK.SetRenderDrawColor();
-    SDL_RenderClear(sdl::renderer);
+    Sdl::BLACK.SetRenderDrawColor();
+    SDL_RenderClear(Sdl::renderer);
 
     int const rectangleWidth = windowWidth / cast::toInt(grid.getColumnCount());
     int const rectangleHeight = windowHeight / cast::toInt(grid.getRowCount());
@@ -82,11 +82,11 @@ static void sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color
             else
                 defaultColor.SetRenderDrawColor();
 
-            SDL_RenderFillRect(sdl::renderer, &rectangle);
+            SDL_RenderFillRect(Sdl::renderer, &rectangle);
         }
     }
 
-    SDL_RenderPresent(sdl::renderer);
+    SDL_RenderPresent(Sdl::renderer);
 }
 
 static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
     SDL_Init(SDL_INIT_VIDEO);
-    std::atexit(&sdl::exitHandler);
+    std::atexit(&Sdl::exitHandler);
 
     SquareGrid grid = makeGrid();
 
@@ -133,21 +133,21 @@ int main(int argc, char *argv[]) {
     int const lastColumn = cast::toInt(grid.getColumnCount()) - 1;
     auto const path = breadthFirstSearch(grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
-    Vector2::HashMap<sdl::Color> colorMap;
+    Vector2::HashMap<Sdl::Color> colorMap;
     for (auto &vector : path.value()) {
-        colorMap.insert({vector, sdl::PATH_COLOR});
+        colorMap.insert({vector, Sdl::PATH_COLOR});
     }
 
     SDL_CreateWindowAndRenderer(
-        sdl::windowWidth, sdl::windowHeight,
+        Sdl::windowWidth, Sdl::windowHeight,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
-        &sdl::window, &sdl::renderer
+        &Sdl::window, &Sdl::renderer
     );
 
-    assert(sdl::window != nullptr);
-    assert(sdl::renderer != nullptr);
+    assert(Sdl::window != nullptr);
+    assert(Sdl::renderer != nullptr);
 
-    sdl::renderSquareGrid(grid, colorMap);
+    Sdl::renderSquareGrid(grid, colorMap);
 
     #ifdef __EMSCRIPTEN__
     // emscripten_set_main_loop([]() {
@@ -156,14 +156,14 @@ int main(int argc, char *argv[]) {
     #endif
 
     while (true) {
-        while (SDL_PollEvent(&sdl::event)) switch (sdl::event.type) {
+        while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
             case SDL_KEYDOWN:
                 break;
-            case SDL_WINDOWEVENT: switch (sdl::event.window.event) {
+            case SDL_WINDOWEVENT: switch (Sdl::event.window.event) {
                 case SDL_WINDOWEVENT_RESIZED:
-                    sdl::windowWidth = sdl::event.window.data1;
-                    sdl::windowHeight = sdl::event.window.data2;
-                    sdl::renderSquareGrid(grid, colorMap);
+                    Sdl::windowWidth = Sdl::event.window.data1;
+                    Sdl::windowHeight = Sdl::event.window.data2;
+                    Sdl::renderSquareGrid(grid, colorMap);
                     break;
             } break;
             case SDL_QUIT:
