@@ -39,7 +39,7 @@ namespace Project::Sdl {
     static Vector2::HashMap<Sdl::Color> colorMap;
     static void renderSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<Color> const &colorMap=Sdl::colorMap);
 
-    static void tick() {
+    static void mainLoop() {
         while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
             case SDL_KEYDOWN: switch (Sdl::event.key.keysym.sym) {
                 case SDLK_BACKQUOTE:
@@ -171,9 +171,9 @@ int main(int argc, char *argv[]) {
     Sdl::renderSquareGrid(Sdl::grid, Sdl::colorMap);
 
     #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(&Sdl::tick, -1, true);
+    emscripten_set_main_loop(&Sdl::mainLoop, -1, true);
     #else
-    while (true) Sdl::tick();
+    while (true) Sdl::mainLoop();
     #endif
 
     return EXIT_SUCCESS;
