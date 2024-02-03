@@ -37,7 +37,25 @@ namespace Project::Sdl {
 
     static SquareGrid grid;
     static Vector2::HashMap<Sdl::Color> colorMap;
-    static void renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap);
+    static void renderSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<Color> const &colorMap=Sdl::colorMap);
+
+    static void tick() {
+        while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
+            case SDL_KEYDOWN:
+                break;
+            case SDL_WINDOWEVENT: switch (Sdl::event.window.event) {
+                case SDL_WINDOWEVENT_RESIZED:
+                    Sdl::windowWidth = Sdl::event.window.data1;
+                    Sdl::windowHeight = Sdl::event.window.data2;
+                    Sdl::renderSquareGrid();
+                    break;
+            } break;
+            case SDL_QUIT:
+                std::exit(EXIT_SUCCESS);
+                break;
+        }
+        SDL_Delay(1);
+    }
 
     static void exitHandler() {
         if (Sdl::window) SDL_DestroyWindow(Sdl::window);
@@ -139,36 +157,18 @@ int main(int argc, char *argv[]) {
         &Sdl::window, &Sdl::renderer
     );
 
-    SDL_SetWindowTitle(Sdl::window, "Maze Solver");
-
     assert(Sdl::window != nullptr);
     assert(Sdl::renderer != nullptr);
+
+    SDL_SetWindowTitle(Sdl::window, "Maze Solver");
 
     Sdl::renderSquareGrid(Sdl::grid, Sdl::colorMap);
 
     #ifdef __EMSCRIPTEN__
-    // emscripten_set_main_loop([]() {
-    //     sdl::Color{}.SetRenderDrawColor();
-    // }, -1, true);
+    emscripten_set_main_loop(&Sdl::tick, -1, true);
+    #else
+    while (true) Sdl::tick();
     #endif
-
-    while (true) {
-        while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
-            case SDL_KEYDOWN:
-                break;
-            case SDL_WINDOWEVENT: switch (Sdl::event.window.event) {
-                case SDL_WINDOWEVENT_RESIZED:
-                    Sdl::windowWidth = Sdl::event.window.data1;
-                    Sdl::windowHeight = Sdl::event.window.data2;
-                    Sdl::renderSquareGrid(Sdl::grid, Sdl::colorMap);
-                    break;
-            } break;
-            case SDL_QUIT:
-                std::exit(EXIT_SUCCESS);
-                break;
-        }
-        SDL_Delay(1);
-    }
 
     return EXIT_SUCCESS;
 }
