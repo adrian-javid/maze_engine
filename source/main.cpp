@@ -1,4 +1,3 @@
-#include <iostream>
 #include <cassert>
 #include "cast.hpp"
 #include "breadth_first_search.hpp"
@@ -53,7 +52,6 @@ namespace Project::Sdl {
                 case SDL_WINDOWEVENT_RESIZED:
                     Sdl::windowWidth = Sdl::event.window.data1;
                     Sdl::windowHeight = Sdl::event.window.data2;
-                    std::cout << Sdl::windowWidth << ", " << Sdl::windowHeight << "\n";
                     Sdl::renderSquareGrid();
                     break;
             } break;
