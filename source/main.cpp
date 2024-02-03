@@ -153,7 +153,7 @@ int main(int argc, char* argv[]) {
                     break;
             } break;
             case SDL_QUIT:
-                exit(EXIT_SUCCESS);
+                std::exit(EXIT_SUCCESS);
                 break;
         }
         SDL_Delay(1);
