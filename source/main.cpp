@@ -53,6 +53,7 @@ namespace Project::Sdl {
                 case SDL_WINDOWEVENT_RESIZED:
                     Sdl::windowWidth = Sdl::event.window.data1;
                     Sdl::windowHeight = Sdl::event.window.data2;
+                    std::cout << Sdl::windowWidth << ", " << Sdl::windowHeight << "\n";
                     Sdl::renderSquareGrid();
                     break;
             } break;
@@ -167,6 +168,7 @@ int main(int argc, char *argv[]) {
     assert(Sdl::renderer != nullptr);
 
     SDL_SetWindowTitle(Sdl::window, "Maze Solver");
+    SDL_SetWindowMinimumSize(Sdl::window, 250, 150);
 
     Sdl::renderSquareGrid(Sdl::grid, Sdl::colorMap);
 
