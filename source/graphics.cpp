@@ -8,17 +8,14 @@ int Sdl::windowWidth = 420;
 int Sdl::windowHeight = 420;
 SDL_Event Sdl::event;
 
-inline void Sdl::Color::SetRenderDrawColor() const { SDL_SetRenderDrawColor(renderer, red, green, blue, alpha); }
+void Sdl::Color::SetRenderDrawColor() const { SDL_SetRenderDrawColor(renderer, red, green, blue, alpha); }
 
 SquareGrid Sdl::grid;
 Vector2::HashMap<Sdl::Color> Sdl::colorMap;
 
 void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap) {
-    static constexpr Sdl::Color wallColor{0x20, 0x20, 0x95, 0xFF};
+    static constexpr Sdl::Color wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
     static constexpr Sdl::Color defaultColor = wallColor.withGreen(wallColor.green * 5);
-
-    Sdl::BLACK.SetRenderDrawColor();
-    SDL_RenderClear(Sdl::renderer);
 
     int const rectangleWidth = windowWidth / Cast::toInt(grid.getColumnCount());
     int const rectangleHeight = windowHeight / Cast::toInt(grid.getRowCount());
@@ -45,13 +42,13 @@ void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const
             SDL_RenderFillRect(Sdl::renderer, &rectangle);
         }
     }
-
-    SDL_RenderPresent(Sdl::renderer);
 }
 
-void Sdl::drawHexagon(SDL_FPoint const &center, float const size) {
-    drawHexagon(center, std::sqrt(3) * size, 2 * size);
+void Sdl::drawHexagon(float const size, SDL_FPoint const &center) {
+    Sdl::drawHexagon(center, std::sqrt(3) * size, 2 * size);
 }
+
+#include <iostream>
 
 void Sdl::drawHexagon(SDL_FPoint const &center, float const width, float const height) {
     float const halfWidth = width / 2;
@@ -68,25 +65,40 @@ void Sdl::drawHexagon(SDL_FPoint const &center, float const width, float const h
 
     std::vector<SDL_Vertex> const vertexList = {
         // Top triangle.
-        {topPoint        , SDL_Color{255, 0, 0, 255}, SDL_FPoint{0}},
-        {topLeftPoint    , SDL_Color{0, 0, 255, 255}, SDL_FPoint{0}},
-        {topRightPoint   , SDL_Color{0, 255, 0, 255}, SDL_FPoint{0}},
+        {topPoint        , SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {topLeftPoint    , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
 
         // Middle triangles, (rectangle).
-        {topLeftPoint    , SDL_Color{0, 0, 255, 255}, SDL_FPoint{0}},
-        {topRightPoint   , SDL_Color{0, 255, 0, 255}, SDL_FPoint{0}},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, 255}, SDL_FPoint{0}},
-        {topRightPoint   , SDL_Color{0, 255, 0, 255}, SDL_FPoint{0}},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, 255}, SDL_FPoint{0}},
-        {bottomRightPoint, SDL_Color{0, 255, 0, 255}, SDL_FPoint{0}},
+        {topLeftPoint    , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {bottomRightPoint, SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
 
         // Bottom triangle.
-        {bottomPoint     , SDL_Color{255, 0, 0, 255}, SDL_FPoint{0}},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, 255}, SDL_FPoint{0}},
-        {bottomRightPoint, SDL_Color{0, 255, 0, 255}, SDL_FPoint{0}},
+        {bottomPoint     , SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
+        {bottomRightPoint, SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, SDL_FPoint{0}},
    };
 
-    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), vertexList.size(), nullptr, 0);
+    int const result = SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), vertexList.size(), nullptr, 0);
+}
+
+void Sdl::refreshPresentation() {
+    Sdl::BLACK.SetRenderDrawColor();
+    SDL_RenderClear(Sdl::renderer);
+
+    Sdl::renderSquareGrid();
+    
+    SDL_FPoint const center{
+        static_cast<float>(Sdl::windowWidth) / 2.0f,
+        static_cast<float>(Sdl::windowHeight) / 2.0f
+    };
+    Sdl::drawHexagon(center, Sdl::windowWidth, Sdl::windowHeight);
+    
+    SDL_RenderPresent(Sdl::renderer);
 }
 
 void Sdl::mainLoop() {
@@ -103,7 +115,7 @@ void Sdl::mainLoop() {
             case SDL_WINDOWEVENT_RESIZED:
                 Sdl::windowWidth = Sdl::event.window.data1;
                 Sdl::windowHeight = Sdl::event.window.data2;
-                Sdl::renderSquareGrid();
+                Sdl::refreshPresentation();
                 break;
         } break;
         case SDL_QUIT:

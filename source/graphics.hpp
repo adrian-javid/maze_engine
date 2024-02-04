@@ -21,7 +21,7 @@ namespace Project::Sdl {
 
     struct Color {
         Uint8 red, green, blue, alpha;
-        inline void SetRenderDrawColor() const;
+        void SetRenderDrawColor() const;
         constexpr Color withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
         constexpr Color withGreen(Uint8 const green) const { return {red, green, blue, alpha}; }
         constexpr Color withBlue (Uint8 const blue)  const { return {red, green, blue, alpha}; }
@@ -34,9 +34,11 @@ namespace Project::Sdl {
     extern SquareGrid grid;
     extern Vector2::HashMap<Sdl::Color> colorMap;
 
+    void refreshPresentation();
+
     void renderSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<Color> const &colorMap=Sdl::colorMap);
 
-    void drawHexagon(SDL_FPoint const &center, float const size);
+    void drawHexagon(float const size, SDL_FPoint const &center);
     void drawHexagon(SDL_FPoint const &center, float const width, float const height);
 
     void mainLoop();

@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     SDL_SetWindowTitle(Sdl::window, "Maze Solver");
     SDL_SetWindowMinimumSize(Sdl::window, 250, 150);
 
-    Sdl::renderSquareGrid(Sdl::grid, Sdl::colorMap);
+    Sdl::refreshPresentation();
 
     #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(&Sdl::mainLoop, -1, true);
