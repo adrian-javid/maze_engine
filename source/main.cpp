@@ -1,112 +1,15 @@
 #include <cassert>
-#include "cast.hpp"
-#include "breadth_first_search.hpp"
-
-#ifdef _WIN64
-#include "SDL2/SDL.h"
-#else
-#include <SDL.h>
-#endif
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
+#include "breadth_first_search.hpp"
+#include "cast.hpp"
+#include "graphics.hpp"
 #include "SquareGrid.hpp"
 
-namespace Project::Sdl {
-
-    static SDL_Window *window = nullptr;
-    static SDL_Renderer *renderer = nullptr;
-    static int windowWidth = 420;
-    static int windowHeight = 420;
-    static SDL_Event event;
-
-    struct Color {
-        Uint8 red, green, blue, alpha;
-        inline void SetRenderDrawColor() const { SDL_SetRenderDrawColor(Sdl::renderer, red, green, blue, alpha); }
-        inline constexpr Color withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
-        inline constexpr Color withGreen(Uint8 const green) const { return {red, green, blue, alpha}; }
-        inline constexpr Color withBlue (Uint8 const blue)  const { return {red, green, blue, alpha}; }
-        inline constexpr Color withAlpha(Uint8 const alpha) const { return {red, green, blue, alpha}; }
-    };
-
-    constexpr Color BLACK{0x00, 0x00, 0x00, 0xFF};
-    constexpr Color PATH_COLOR = BLACK.withRed(0xFF);
-
-    static SquareGrid grid;
-    static Vector2::HashMap<Sdl::Color> colorMap;
-    static void renderSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<Color> const &colorMap=Sdl::colorMap);
-
-    static void mainLoop() {
-        while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
-            case SDL_KEYDOWN: switch (Sdl::event.key.keysym.sym) {
-                case SDLK_BACKQUOTE:
-                    SDL_SetWindowFullscreen(Sdl::window, SDL_WINDOW_FULLSCREEN);
-                    break;
-                case SDLK_ESCAPE:
-                    SDL_SetWindowFullscreen(Sdl::window, 0);
-                    break;
-            } break;
-            case SDL_WINDOWEVENT: switch (Sdl::event.window.event) {
-                case SDL_WINDOWEVENT_RESIZED:
-                    Sdl::windowWidth = Sdl::event.window.data1;
-                    Sdl::windowHeight = Sdl::event.window.data2;
-                    Sdl::renderSquareGrid();
-                    break;
-            } break;
-            case SDL_QUIT:
-                std::exit(EXIT_SUCCESS);
-                break;
-        }
-        SDL_Delay(1);
-    }
-
-    static void exitHandler() {
-        if (Sdl::window) SDL_DestroyWindow(Sdl::window);
-        if (Sdl::renderer) SDL_DestroyRenderer(Sdl::renderer);
-        SDL_Quit();
-    }
-
-}
-
 using namespace Project;
-
-static void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const &colorMap) {
-    static constexpr Sdl::Color wallColor{0x20, 0x20, 0x95, 0xFF};
-    static constexpr Sdl::Color defaultColor = wallColor.withGreen(wallColor.green * 5);
-
-    Sdl::BLACK.SetRenderDrawColor();
-    SDL_RenderClear(Sdl::renderer);
-
-    int const rectangleWidth = windowWidth / Cast::toInt(grid.getColumnCount());
-    int const rectangleHeight = windowHeight / Cast::toInt(grid.getRowCount());
-
-    SDL_Rect rectangle{};
-    rectangle.w = rectangleWidth;
-    rectangle.h = rectangleHeight;
-
-    int rowCount = Cast::toInt(grid.getRowCount());
-    int columnCount = Cast::toInt(grid.getColumnCount());
-
-    for (Vector2 vector(0, 0); vector.row < rowCount; ++vector.row) {
-        for (vector.col = 0; vector.col < columnCount; ++vector.col) {
-            rectangle.x = vector.col * rectangleWidth;
-            rectangle.y = vector.row * rectangleHeight;
-
-            if (colorMap.count(vector))
-                colorMap.at(vector).SetRenderDrawColor();
-            else if (grid.isWall(vector.row, vector.col))
-                wallColor.SetRenderDrawColor();
-            else
-                defaultColor.SetRenderDrawColor();
-
-            SDL_RenderFillRect(Sdl::renderer, &rectangle);
-        }
-    }
-
-    SDL_RenderPresent(Sdl::renderer);
-}
 
 static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     SquareGrid grid(rowCount, columnCount);
@@ -126,7 +29,6 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     for (size_t offset = 0; offset < 8; ++offset) {
         grid.putWall(16, secondQuarter + offset);
         grid.putWall(3, fourthQuarter - offset);
-
     }
 
     grid.at((grid.getRowCount() - 1) - 2, secondQuarter) = SquareGrid::NONE;
