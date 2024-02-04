@@ -93,7 +93,7 @@ static void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color
         for (vector.col = 0; vector.col < columnCount; ++vector.col) {
             rectangle.x = vector.col * rectangleWidth;
             rectangle.y = vector.row * rectangleHeight;
-            
+
             if (colorMap.count(vector))
                 colorMap.at(vector).SetRenderDrawColor();
             else if (grid.isWall(vector.row, vector.col))
