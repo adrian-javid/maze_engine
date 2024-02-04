@@ -38,8 +38,8 @@ namespace Project::Sdl {
 
     void renderSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<Color> const &colorMap=Sdl::colorMap);
 
-    void drawHexagon(float const size, SDL_FPoint const &center);
-    void drawHexagon(SDL_FPoint const &center, float const width, float const height);
+    void drawPointyTopHexagon(float const size, SDL_FPoint const &center);
+    void drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height);
 
     void mainLoop();
     void exitHandler();

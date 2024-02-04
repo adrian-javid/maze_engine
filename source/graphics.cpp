@@ -44,13 +44,11 @@ void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<Color> const
     }
 }
 
-void Sdl::drawHexagon(float const size, SDL_FPoint const &center) {
-    Sdl::drawHexagon(center, std::sqrt(3) * size, 2 * size);
+void Sdl::drawPointyTopHexagon(float const size, SDL_FPoint const &center) {
+    Sdl::drawPointyTopHexagon(center, std::sqrt(3) * size, 2 * size);
 }
 
-#include <iostream>
-
-void Sdl::drawHexagon(SDL_FPoint const &center, float const width, float const height) {
+void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height) {
     float const halfWidth = width / 2;
     float const halfHeight = height / 2;
     float const quarterHeight = height / 4;
@@ -90,14 +88,14 @@ void Sdl::refreshPresentation() {
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
 
-    // Sdl::renderSquareGrid();
+    if (false) Sdl::renderSquareGrid();
     
     SDL_FPoint const center{
         static_cast<float>(Sdl::windowWidth) / 2.0f,
         static_cast<float>(Sdl::windowHeight) / 2.0f
     };
 
-    /* render hexagon grid */ {
+    if (true) /* render hexagon grid */ {
 
         float hexagonWidth = 2.0f * (static_cast<float>(Sdl::windowWidth) / 5.0f);
         float hexagonHeight = 4.0f * (static_cast<float>(Sdl::windowHeight) / 7.0f);
@@ -105,10 +103,10 @@ void Sdl::refreshPresentation() {
         SDL_FPoint row0StartCenter{hexagonWidth, hexagonHeight / 2.0f};
         SDL_FPoint row1StartCenter{hexagonWidth / 2, hexagonHeight + hexagonHeight / 4.0f};
 
-        Sdl::drawHexagon(row0StartCenter, hexagonWidth, hexagonHeight);
-        Sdl::drawHexagon(row1StartCenter, hexagonWidth, hexagonHeight);
-        Sdl::drawHexagon(SDL_FPoint{row0StartCenter.x + hexagonWidth, row0StartCenter.y}, hexagonWidth, hexagonHeight);
-        Sdl::drawHexagon(SDL_FPoint{row1StartCenter.x + hexagonWidth, row1StartCenter.y}, hexagonWidth, hexagonHeight);
+        Sdl::drawPointyTopHexagon(row0StartCenter, hexagonWidth, hexagonHeight);
+        Sdl::drawPointyTopHexagon(row1StartCenter, hexagonWidth, hexagonHeight);
+        Sdl::drawPointyTopHexagon(SDL_FPoint{row0StartCenter.x + hexagonWidth, row0StartCenter.y}, hexagonWidth, hexagonHeight);
+        Sdl::drawPointyTopHexagon(SDL_FPoint{row1StartCenter.x + hexagonWidth, row1StartCenter.y}, hexagonWidth, hexagonHeight);
 
     }
     
