@@ -90,13 +90,26 @@ void Sdl::refreshPresentation() {
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
 
-    Sdl::renderSquareGrid();
+    // Sdl::renderSquareGrid();
     
     SDL_FPoint const center{
         static_cast<float>(Sdl::windowWidth) / 2.0f,
         static_cast<float>(Sdl::windowHeight) / 2.0f
     };
-    Sdl::drawHexagon(center, Sdl::windowWidth, Sdl::windowHeight);
+
+    /* render hexagon grid */ {
+
+        float hexagonWidth = 2.0f * (static_cast<float>(Sdl::windowWidth) / 5.0f);
+        float hexagonHeight = 4.0f * (static_cast<float>(Sdl::windowHeight) / 7.0f);
+
+        SDL_FPoint row0StartCenter{hexagonWidth, hexagonHeight / 2.0f};
+        SDL_FPoint row1StartCenter{hexagonWidth / 2, hexagonHeight + hexagonHeight / 4.0f};
+
+        Sdl::drawHexagon(row0StartCenter, hexagonWidth, hexagonHeight);
+        Sdl::drawHexagon(row1StartCenter, hexagonWidth, hexagonHeight);
+        Sdl::drawHexagon(SDL_FPoint{row0StartCenter.x + hexagonWidth, row0StartCenter.y}, hexagonWidth, hexagonHeight);
+        Sdl::drawHexagon(SDL_FPoint{row1StartCenter.x + hexagonWidth, row1StartCenter.y}, hexagonWidth, hexagonHeight);
+    }
     
     SDL_RenderPresent(Sdl::renderer);
 }
