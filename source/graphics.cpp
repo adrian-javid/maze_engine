@@ -109,6 +109,7 @@ void Sdl::refreshPresentation() {
         Sdl::drawHexagon(row1StartCenter, hexagonWidth, hexagonHeight);
         Sdl::drawHexagon(SDL_FPoint{row0StartCenter.x + hexagonWidth, row0StartCenter.y}, hexagonWidth, hexagonHeight);
         Sdl::drawHexagon(SDL_FPoint{row1StartCenter.x + hexagonWidth, row1StartCenter.y}, hexagonWidth, hexagonHeight);
+
     }
     
     SDL_RenderPresent(Sdl::renderer);
