@@ -1,5 +1,6 @@
 #include "graphics.hpp"
 #include <cmath>
+#include <cassert>
 
 using namespace Project;
 
@@ -9,19 +10,37 @@ int Sdl::windowWidth = 420;
 int Sdl::windowHeight = 420;
 SDL_Event Sdl::event;
 
+// Sdl::RgbaColor::RgbaColor(Uint8 const red, Uint8 const green, Uint8 const blue, Uint8 const alpha):
+//     this->red{red}, this->green{green}, this->blue{blue}, this->alpha{alpha}
+// {}
+
 void Sdl::RgbaColor::SetRenderDrawColor() const { SDL_SetRenderDrawColor(renderer, red, green, blue, alpha); }
 
 std::string Sdl::RgbaColor::toString() const {
     std::stringstream buffer;
-    buffer << "(R=" << red << ", G=" << green << ", B=" << blue << ", A=" << alpha << ")";
+    buffer << "(R=" << +red << ", G=" << +green << ", B=" << +blue << ", A=" << +alpha << ")";
     return buffer.str();
 }
 
-Sdl::RgbaColor Sdl::HslaColor::toRgbaColor() const {
+// RgbaColor(double const hue, double const saturation, double const luminance, double const alpha=1.0):
+//     hue{hue}, saturation{saturation}, luminance{luminance}, alpha{alpha}
+// {}
 
-    auto const chroma = (1 - std::fabs(2 * luminance - 1)) * saturation;
+#include <iostream>
+
+Sdl::RgbaColor Sdl::HslaColor::toRgbaColor() const {
+    static auto &O = std::cout;
+
+    assert(0 <= hue and hue < 360);
+    assert(0 <= saturation and saturation <= 1);
+    assert(0 <= luminance and saturation <= 1);
+    assert(0 <= alpha and alpha <= 1);
+
+    auto const chroma = (1.0 - std::fabs(2.0 * luminance - 1.0)) * saturation;
+    O << "chroma: " << chroma << '\n';
 
     auto const X = chroma * (1 - std::fabs(std::fmod(hue / 60.0, 2) - 1));
+    O << "X: " << X << '\n';
 
     struct Rgb { double r, g, b; } color{};
 
@@ -33,12 +52,27 @@ Sdl::RgbaColor Sdl::HslaColor::toRgbaColor() const {
     else if (300 <= hue and hue < 360) color = Rgb{chroma,    0.0,      X};
 
     auto const m = luminance - chroma / 2.0;
+    O << "m: " << m << '\n';
+
+    O << color.r << " " << color.g << " " << color.b << '\n';
+
+    O <<
+    (color.r + m) * 0xFF << ' ' <<
+    (color.g + m) * 0xFF << ' ' <<
+    (color.b + m) * 0xFF << ' ' <<
+    (      alpha) * 0xFF << '\n';
+
+    O <<
+    +static_cast<Uint8>((color.r + m) * 0xFF) << ' ' <<
+    +static_cast<Uint8>((color.g + m) * 0xFF) << ' ' <<
+    +static_cast<Uint8>((color.b + m) * 0xFF) << ' ' <<
+    +static_cast<Uint8>((      alpha) * 0xFF) << '\n';
 
     return {
         static_cast<Uint8>((color.r + m) * 0xFF),
         static_cast<Uint8>((color.g + m) * 0xFF),
         static_cast<Uint8>((color.b + m) * 0xFF),
-        static_cast<Uint8>((      alpha) * 0xFF)
+        static_cast<Uint8>((      alpha) * 0xFF),
     };
 }
 
@@ -99,26 +133,26 @@ void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, floa
     SDL_FPoint const bottomLeftPoint{center.x - halfWidth, center.y + quarterHeight};
     SDL_FPoint const bottomRightPoint{center.x + halfWidth, center.y + quarterHeight};
 
-    static constexpr SDL_FPoint defaultNormalizedTextureCoordinates = {0, 0};
+    static constexpr SDL_FPoint zeroPoint = {0, 0};
 
     std::vector<SDL_Vertex> const vertexList = {
         // Top triangle.
-        {topPoint        , SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {topLeftPoint    , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
+        {topPoint        , SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {topLeftPoint    , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
 
         // Middle triangles, (rectangle).
-        {topLeftPoint    , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {bottomRightPoint, SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
+        {topLeftPoint    , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {bottomRightPoint, SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
 
         // Bottom triangle.
-        {bottomPoint     , SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
-        {bottomRightPoint, SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, defaultNormalizedTextureCoordinates},
+        {bottomPoint     , SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
+        {bottomRightPoint, SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
    };
 
     SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), Cast::toInt(vertexList.size()), nullptr, 0);

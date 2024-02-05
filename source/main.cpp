@@ -42,11 +42,22 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     return grid;
 }
 
+#if true
+#include <iostream>
+#endif
+
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
+    static auto &O = std::cout;
 
     SDL_Init(SDL_INIT_VIDEO);
     std::atexit(&Sdl::exitHandler);
+
+    if (true) /* debug */ {
+        Sdl::HslaColor color{210, 0.79, 0.3, 0.5};
+        O << color.toString() << "\n";
+        O << color.toRgbaColor().toString() << "\n";
+    }
 
     Sdl::grid = makeGrid();
 
