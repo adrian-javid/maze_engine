@@ -2,6 +2,11 @@
 #include <cmath>
 #include <cassert>
 
+#if true
+#include <iostream>
+static auto &O = std::cout;
+#endif
+
 using namespace Project;
 
 SDL_Window *Sdl::window = nullptr;
@@ -148,7 +153,9 @@ void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, floa
 
 void Sdl::refreshPresentation() {
     static Sdl::HslaColor baseColor{240.0, 1.0, 0.5, 1.0};
-    baseColor.addHue(deltaTime / 4); // TODO: need a safe cast from `Uint8` to `double`
+    double const deltaHue = static_cast<double>(deltaTime) / 4.0; // TODO: need a safe cast from `Uint8` to `double`
+    baseColor.addHue(deltaHue);
+    // O << "delta time: " << deltaTime << ", " << baseColor.toString() << '\n';
 
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
@@ -172,11 +179,6 @@ void Sdl::refreshPresentation() {
     
     SDL_RenderPresent(Sdl::renderer);
 }
-
-#if true
-#include <iostream>
-static auto &O = std::cout;
-#endif
 
 void Sdl::mainLoop() {
     static Uint64 lastTime = 0;
