@@ -10,10 +10,6 @@ int Sdl::windowWidth = 420;
 int Sdl::windowHeight = 420;
 SDL_Event Sdl::event;
 
-// Sdl::RgbaColor::RgbaColor(Uint8 const red, Uint8 const green, Uint8 const blue, Uint8 const alpha):
-//     this->red{red}, this->green{green}, this->blue{blue}, this->alpha{alpha}
-// {}
-
 void Sdl::RgbaColor::SetRenderDrawColor() const { SDL_SetRenderDrawColor(renderer, red, green, blue, alpha); }
 
 std::string Sdl::RgbaColor::toString() const {
@@ -21,10 +17,6 @@ std::string Sdl::RgbaColor::toString() const {
     buffer << "(R=" << +red << ", G=" << +green << ", B=" << +blue << ", A=" << +alpha << ")";
     return buffer.str();
 }
-
-// RgbaColor(double const hue, double const saturation, double const luminance, double const alpha=1.0):
-//     hue{hue}, saturation{saturation}, luminance{luminance}, alpha{alpha}
-// {}
 
 Sdl::RgbaColor Sdl::HslaColor::toRgbaColor() const {
     assert(0 <= hue and hue < 360);
