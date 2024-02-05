@@ -19,24 +19,31 @@ namespace Project::Sdl {
     extern int windowHeight;
     extern SDL_Event event;
 
-    struct Color {
+    struct RgbaColor {
         Uint8 red, green, blue, alpha;
         void SetRenderDrawColor() const;
-        constexpr Color withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
-        constexpr Color withGreen(Uint8 const green) const { return {red, green, blue, alpha}; }
-        constexpr Color withBlue (Uint8 const blue)  const { return {red, green, blue, alpha}; }
-        constexpr Color withAlpha(Uint8 const alpha) const { return {red, green, blue, alpha}; }
+        constexpr RgbaColor withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
+        constexpr RgbaColor withGreen(Uint8 const green) const { return {red, green, blue, alpha}; }
+        constexpr RgbaColor withBlue (Uint8 const blue)  const { return {red, green, blue, alpha}; }
+        constexpr RgbaColor withAlpha(Uint8 const alpha) const { return {red, green, blue, alpha}; }
+        std::string toString() const;
     };
 
-    constexpr Color BLACK{0x00, 0x00, 0x00, 0xFF};
-    constexpr Color PATH_COLOR = BLACK.withRed(0xFF);
+    struct HslaColor {
+        double hue, saturation, luminance, alpha;
+        RgbaColor toRgbaColor() const;
+        std::string toString() const;
+    };
+
+    constexpr RgbaColor BLACK{0x00, 0x00, 0x00, 0xFF};
+    constexpr RgbaColor PATH_COLOR = BLACK.withRed(0xFF);
 
     extern SquareGrid grid;
-    extern Vector2::HashMap<Sdl::Color> colorMap;
+    extern Vector2::HashMap<Sdl::RgbaColor> colorMap;
 
     void refreshPresentation();
 
-    void renderSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<Color> const &colorMap=Sdl::colorMap);
+    void renderSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<RgbaColor> const &colorMap=Sdl::colorMap);
 
     void drawPointyTopHexagon(float const size, SDL_FPoint const &center);
     void drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height);
