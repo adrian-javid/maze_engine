@@ -159,7 +159,25 @@ void Sdl::refreshPresentation() {
     SDL_RenderPresent(Sdl::renderer);
 }
 
+#if true
+#include <iostream>
+static auto &O = std::cout;
+#endif
+
 void Sdl::mainLoop() {
+    static Uint64 lastTime = 0;
+    static Uint64 timer = 0, counter = 0;
+
+    Uint32 const currentTime = SDL_GetTicks();
+    Uint32 const deltaTime = currentTime - lastTime;
+
+    lastTime = currentTime;
+
+    if ((timer += deltaTime) >= 1 * 1000.0 /* one second */) {
+        std::cout << "Hello " << ++counter << "." << '\n';
+        timer = 0; // reset timer
+    }
+
     while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
         case SDL_KEYDOWN: switch (Sdl::event.key.keysym.sym) {
             case SDLK_BACKQUOTE:
