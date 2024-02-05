@@ -47,6 +47,12 @@ SDL_Color Sdl::HslaColor::toRgbaColor() const {
     };
 }
 
+void Sdl::HslaColor::addHue(double const hueSupplement) {
+    hue = std::fmod(hue + hueSupplement, 360.0);
+    if (hue < 0) hue += 360.0;
+    if (hue >= 360.0) hue = 0.0;
+}
+
 std::string Sdl::HslaColor::toString() const {
     std::stringstream buffer;
     buffer << "(H=" << hue << ", S=" << saturation << ", L=" << luminance << ", A=" << alpha << ")";
@@ -173,18 +179,8 @@ static auto &O = std::cout;
 
 void Sdl::mainLoop() {
     static Uint64 lastTime = 0;
-
-    static Uint64 timer = 0, counter = 0;
-
     Uint64 const currentTime = SDL_GetTicks64();
     Uint64 const deltaTime = currentTime - lastTime;
-
-    lastTime = currentTime;
-
-    if ((timer += deltaTime) >= 1 * 1000.0 /* one second */) {
-        std::cout << "Hello " << ++counter << "." << '\n';
-        timer = 0; // reset timer
-    }
 
     while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
         case SDL_KEYDOWN: switch (Sdl::event.key.keysym.sym) {
@@ -199,13 +195,22 @@ void Sdl::mainLoop() {
             case SDL_WINDOWEVENT_RESIZED:
                 Sdl::windowWidth = Sdl::event.window.data1;
                 Sdl::windowHeight = Sdl::event.window.data2;
-                Sdl::refreshPresentation();
                 break;
         } break;
         case SDL_QUIT:
             std::exit(EXIT_SUCCESS);
             break;
     }
+
+    Sdl::refreshPresentation();
+
+    static Uint64 timer = 0, counter = 0;
+    if ((timer += deltaTime) >= 1 * 1000.0 /* one second */) {
+        std::cout << "Hello " << ++counter << "." << '\n';
+        timer = 0; // reset timer
+    }
+
+    lastTime = currentTime;
     SDL_Delay(1);
 }
 

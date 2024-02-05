@@ -32,6 +32,7 @@ namespace Project::Sdl {
     struct HslaColor {
         double hue, saturation, luminance, alpha;
         SDL_Color toRgbaColor() const;
+        void addHue(double const hueSupplement);
         std::string toString() const;
     };
 
