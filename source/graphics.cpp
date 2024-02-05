@@ -153,7 +153,7 @@ void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, floa
 
 void Sdl::refreshPresentation() {
     static Sdl::HslaColor baseColor{240.0, 1.0, 0.5, 1.0};
-    double const deltaHue = static_cast<double>(deltaTime) / 4.0; // TODO: need a safe cast from `Uint8` to `double`
+    double const deltaHue = static_cast<double>(deltaTime) / 32.0; // TODO: need a safe cast from `Uint8` to `double`
     baseColor.addHue(deltaHue);
     // O << "delta time: " << deltaTime << ", " << baseColor.toString() << '\n';
 
