@@ -8,7 +8,7 @@ SDL_Window *Sdl::window = nullptr;
 SDL_Renderer *Sdl::renderer = nullptr;
 int Sdl::windowWidth = 420;
 int Sdl::windowHeight = 420;
-SDL_Event Sdl::event;
+Uint64 Sdl::deltaTime = 0;
 
 void Sdl::RgbaColor::SetRenderDrawColor() const { SDL_SetRenderDrawColor(renderer, red, green, blue, alpha); }
 
@@ -18,24 +18,26 @@ std::string Sdl::RgbaColor::toString() const {
     return buffer.str();
 }
 
-SDL_Color Sdl::HslaColor::toRgbaColor() const {
-    assert(0 <= hue and hue < 360);
+SDL_Color Sdl::HslaColor::toRgbaColor(double hueSupplement) const {
+    double const hueMix = HslaColor::wrapHue(hue + hueSupplement);
+
+    assert(0 <= hueMix and hueMix < 360);
     assert(0 <= saturation and saturation <= 1);
     assert(0 <= luminance and saturation <= 1);
     assert(0 <= alpha and alpha <= 1);
 
     auto const chroma = (1.0 - std::fabs(2.0 * luminance - 1.0)) * saturation;
 
-    auto const X = chroma * (1 - std::fabs(std::fmod(hue / 60.0, 2) - 1));
+    auto const X = chroma * (1 - std::fabs(std::fmod(hueMix / 60.0, 2) - 1));
 
     struct Rgb { double r, g, b; } color{};
 
-    /**/ if (  0 <= hue and hue <  60) color = Rgb{chroma,      X,    0.0}; 
-    else if ( 60 <= hue and hue < 120) color = Rgb{     X, chroma,    0.0};
-    else if (120 <= hue and hue < 180) color = Rgb{   0.0, chroma,      X};
-    else if (180 <= hue and hue < 240) color = Rgb{   0.0,      X, chroma};
-    else if (240 <= hue and hue < 300) color = Rgb{     X,    0.0, chroma};
-    else if (300 <= hue and hue < 360) color = Rgb{chroma,    0.0,      X};
+    /**/ if (  0 <= hueMix and hueMix <  60) color = Rgb{chroma,      X,    0.0}; 
+    else if ( 60 <= hueMix and hueMix < 120) color = Rgb{     X, chroma,    0.0};
+    else if (120 <= hueMix and hueMix < 180) color = Rgb{   0.0, chroma,      X};
+    else if (180 <= hueMix and hueMix < 240) color = Rgb{   0.0,      X, chroma};
+    else if (240 <= hueMix and hueMix < 300) color = Rgb{     X,    0.0, chroma};
+    else if (300 <= hueMix and hueMix < 360) color = Rgb{chroma,    0.0,      X};
 
     auto const m = luminance - chroma / 2.0;
 
@@ -47,10 +49,15 @@ SDL_Color Sdl::HslaColor::toRgbaColor() const {
     };
 }
 
-void Sdl::HslaColor::addHue(double const hueSupplement) {
-    hue = std::fmod(hue + hueSupplement, 360.0);
+double Sdl::HslaColor::wrapHue(double hue) {
+    hue = std::fmod(hue, 360.0);
     if (hue < 0) hue += 360.0;
     if (hue >= 360.0) hue = 0.0;
+    return hue;
+}
+
+void Sdl::HslaColor::addHue(double const hueSupplement) {
+    hue = wrapHue(hue + hueSupplement);
 }
 
 std::string Sdl::HslaColor::toString() const {
@@ -93,17 +100,14 @@ void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> c
     }
 }
 
-void Sdl::drawPointyTopHexagon(float const size, SDL_FPoint const &center) {
-    Sdl::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2 * size);
+void Sdl::drawPointyTopHexagon(float const size, SDL_FPoint const &center, Sdl::HslaColor const &baseColor) {
+    Sdl::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2 * size, baseColor);
 }
 
-void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height) {
-    Sdl::HslaColor baseColor{240.0, 1.0, 0.5, 1.0};
+void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height, Sdl::HslaColor const &baseColor) {
     SDL_Color const firstColor = baseColor.toRgbaColor();
-    baseColor.hue -= 20;
-    SDL_Color const secondColor = baseColor.toRgbaColor();
-    baseColor.hue -= 20;
-    SDL_Color const thirdColor = baseColor.toRgbaColor();
+    SDL_Color const secondColor = baseColor.toRgbaColor(-20.0);
+    SDL_Color const thirdColor = baseColor.toRgbaColor(-40.0);
 
     float const halfWidth = width / 2;
     float const halfHeight = height / 2;
@@ -143,16 +147,13 @@ void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, floa
 }
 
 void Sdl::refreshPresentation() {
+    static Sdl::HslaColor baseColor{240.0, 1.0, 0.5, 1.0};
+    baseColor.addHue(deltaTime / 4); // TODO: need a safe cast from `Uint8` to `double`
+
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
 
     if (false) Sdl::renderSquareGrid();
-    
-    SDL_FPoint const center{
-        static_cast<float>(Sdl::windowWidth) / 2.0f,
-        static_cast<float>(Sdl::windowHeight) / 2.0f
-    };
-    static_cast<void>(center);
 
     if (true) /* render hexagon grid */ {
 
@@ -162,10 +163,10 @@ void Sdl::refreshPresentation() {
         SDL_FPoint row0StartCenter{hexagonWidth, hexagonHeight / 2.0f};
         SDL_FPoint row1StartCenter{hexagonWidth / 2, hexagonHeight + hexagonHeight / 4.0f};
 
-        Sdl::drawPointyTopHexagon(row0StartCenter, hexagonWidth, hexagonHeight);
-        Sdl::drawPointyTopHexagon(row1StartCenter, hexagonWidth, hexagonHeight);
-        Sdl::drawPointyTopHexagon(SDL_FPoint{row0StartCenter.x + hexagonWidth, row0StartCenter.y}, hexagonWidth, hexagonHeight);
-        Sdl::drawPointyTopHexagon(SDL_FPoint{row1StartCenter.x + hexagonWidth, row1StartCenter.y}, hexagonWidth, hexagonHeight);
+        Sdl::drawPointyTopHexagon(row0StartCenter, hexagonWidth, hexagonHeight, baseColor);
+        Sdl::drawPointyTopHexagon(row1StartCenter, hexagonWidth, hexagonHeight, baseColor);
+        Sdl::drawPointyTopHexagon(SDL_FPoint{row0StartCenter.x + hexagonWidth, row0StartCenter.y}, hexagonWidth, hexagonHeight, baseColor);
+        Sdl::drawPointyTopHexagon(SDL_FPoint{row1StartCenter.x + hexagonWidth, row1StartCenter.y}, hexagonWidth, hexagonHeight, baseColor);
 
     }
     
@@ -180,10 +181,11 @@ static auto &O = std::cout;
 void Sdl::mainLoop() {
     static Uint64 lastTime = 0;
     Uint64 const currentTime = SDL_GetTicks64();
-    Uint64 const deltaTime = currentTime - lastTime;
+    deltaTime = currentTime - lastTime;
 
-    while (SDL_PollEvent(&Sdl::event)) switch (Sdl::event.type) {
-        case SDL_KEYDOWN: switch (Sdl::event.key.keysym.sym) {
+    static SDL_Event event;
+    while (SDL_PollEvent(&event)) switch (event.type) {
+        case SDL_KEYDOWN: switch (event.key.keysym.sym) {
             case SDLK_BACKQUOTE:
                 SDL_SetWindowFullscreen(Sdl::window, SDL_WINDOW_FULLSCREEN);
                 break;
@@ -191,10 +193,10 @@ void Sdl::mainLoop() {
                 SDL_SetWindowFullscreen(Sdl::window, 0);
                 break;
         } break;
-        case SDL_WINDOWEVENT: switch (Sdl::event.window.event) {
+        case SDL_WINDOWEVENT: switch (event.window.event) {
             case SDL_WINDOWEVENT_RESIZED:
-                Sdl::windowWidth = Sdl::event.window.data1;
-                Sdl::windowHeight = Sdl::event.window.data2;
+                Sdl::windowWidth = event.window.data1;
+                Sdl::windowHeight = event.window.data2;
                 break;
         } break;
         case SDL_QUIT:

@@ -17,7 +17,7 @@ namespace Project::Sdl {
     extern SDL_Renderer *renderer;
     extern int windowWidth;
     extern int windowHeight;
-    extern SDL_Event event;
+    extern Uint64 deltaTime;
 
     struct [[deprecated("Use `SDL_Color` instead.")]] RgbaColor {
         Uint8 red, green, blue, alpha;
@@ -31,7 +31,8 @@ namespace Project::Sdl {
 
     struct HslaColor {
         double hue, saturation, luminance, alpha;
-        SDL_Color toRgbaColor() const;
+        SDL_Color toRgbaColor(double hueSupplement=0.0) const;
+        static double wrapHue(double hue);
         void addHue(double const hueSupplement);
         std::string toString() const;
     };
@@ -46,8 +47,8 @@ namespace Project::Sdl {
 
     void renderSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<RgbaColor> const &colorMap=Sdl::colorMap);
 
-    void drawPointyTopHexagon(float const size, SDL_FPoint const &center);
-    void drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height);
+    void drawPointyTopHexagon(float const size, SDL_FPoint const &center, Sdl::HslaColor const &baseColor);
+    void drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height, Sdl::HslaColor const &baseColor);
 
     void mainLoop();
     void exitHandler();
