@@ -18,7 +18,7 @@ std::string Sdl::RgbaColor::toString() const {
     return buffer.str();
 }
 
-Sdl::RgbaColor Sdl::HslaColor::toRgbaColor() const {
+SDL_Color Sdl::HslaColor::toRgbaColor() const {
     assert(0 <= hue and hue < 360);
     assert(0 <= saturation and saturation <= 1);
     assert(0 <= luminance and saturation <= 1);
@@ -92,6 +92,13 @@ void Sdl::drawPointyTopHexagon(float const size, SDL_FPoint const &center) {
 }
 
 void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height) {
+    Sdl::HslaColor baseColor{240.0, 1.0, 0.5, 1.0};
+    SDL_Color const firstColor = baseColor.toRgbaColor();
+    baseColor.hue -= 20;
+    SDL_Color const secondColor = baseColor.toRgbaColor();
+    baseColor.hue -= 20;
+    SDL_Color const thirdColor = baseColor.toRgbaColor();
+
     float const halfWidth = width / 2;
     float const halfHeight = height / 2;
     float const quarterHeight = height / 4;
@@ -106,24 +113,24 @@ void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, floa
 
     static constexpr SDL_FPoint zeroPoint = {0, 0};
 
+    SDL_Vertex const topVertex{topPoint, firstColor, zeroPoint};
+    SDL_Vertex const topLeftVertex{topLeftPoint, firstColor, zeroPoint};
+    SDL_Vertex const topRightVertex{topRightPoint, secondColor, zeroPoint};
+
+    SDL_Vertex const bottomLeftVertex{bottomLeftPoint, secondColor, zeroPoint};
+    SDL_Vertex const bottomRightVertex{bottomRightPoint, thirdColor, zeroPoint};
+    SDL_Vertex const bottomVertex{bottomPoint, thirdColor, zeroPoint};
+
     std::vector<SDL_Vertex> const vertexList = {
         // Top triangle.
-        {topPoint        , SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {topLeftPoint    , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
+        topVertex, topLeftVertex, topRightVertex,
 
         // Middle triangles, (rectangle).
-        {topLeftPoint    , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {topRightPoint   , SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {bottomRightPoint, SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
+        topLeftVertex, topRightVertex, bottomLeftVertex,
+        topRightVertex, bottomLeftVertex, bottomRightVertex,
 
         // Bottom triangle.
-        {bottomPoint     , SDL_Color{255, 0, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {bottomLeftPoint , SDL_Color{0, 0, 255, SDL_ALPHA_OPAQUE}, zeroPoint},
-        {bottomRightPoint, SDL_Color{0, 255, 0, SDL_ALPHA_OPAQUE}, zeroPoint},
+        bottomLeftVertex, bottomRightVertex, bottomVertex,
    };
 
     SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), Cast::toInt(vertexList.size()), nullptr, 0);
@@ -166,10 +173,11 @@ static auto &O = std::cout;
 
 void Sdl::mainLoop() {
     static Uint64 lastTime = 0;
+
     static Uint64 timer = 0, counter = 0;
 
-    Uint32 const currentTime = SDL_GetTicks();
-    Uint32 const deltaTime = currentTime - lastTime;
+    Uint64 const currentTime = SDL_GetTicks64();
+    Uint64 const deltaTime = currentTime - lastTime;
 
     lastTime = currentTime;
 

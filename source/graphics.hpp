@@ -19,7 +19,7 @@ namespace Project::Sdl {
     extern int windowHeight;
     extern SDL_Event event;
 
-    struct RgbaColor {
+    struct [[deprecated("Use `SDL_Color` instead.")]] RgbaColor {
         Uint8 red, green, blue, alpha;
         void SetRenderDrawColor() const;
         constexpr RgbaColor withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
@@ -31,7 +31,7 @@ namespace Project::Sdl {
 
     struct HslaColor {
         double hue, saturation, luminance, alpha;
-        RgbaColor toRgbaColor() const;
+        SDL_Color toRgbaColor() const;
         std::string toString() const;
     };
 
