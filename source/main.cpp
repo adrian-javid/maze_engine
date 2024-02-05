@@ -42,24 +42,28 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     return grid;
 }
 
-#if true
+#ifndef NDEBUG
 #include <iostream>
 #endif
 
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
+
+    #ifndef NDEBUG
     static auto &O = std::cout;
+    #endif
 
     SDL_Init(SDL_INIT_VIDEO);
     std::atexit(&Sdl::exitHandler);
 
-    if (true) /* debug */ {
-        Sdl::HslaColor color{210, 0.79, 0.3, 0.5};
-        O << color.toString() << "\n";
-        O << color.toRgbaColor().toString() << "\n";
-        O << Sdl::HslaColor{240.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
-        O << Sdl::HslaColor{120.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
-    }
+    #ifndef NDEBUG
+    Sdl::HslaColor color{210, 0.79, 0.3, 0.5};
+    O << color.toString() << "\n";
+    O << color.toRgbaColor().toString() << "\n";
+    O << Sdl::HslaColor{240.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
+    O << Sdl::HslaColor{120.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
+    O << Sdl::HslaColor{60.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
+    #endif
 
     Sdl::grid = makeGrid();
 

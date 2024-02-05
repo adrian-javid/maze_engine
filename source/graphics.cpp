@@ -26,21 +26,15 @@ std::string Sdl::RgbaColor::toString() const {
 //     hue{hue}, saturation{saturation}, luminance{luminance}, alpha{alpha}
 // {}
 
-#include <iostream>
-
 Sdl::RgbaColor Sdl::HslaColor::toRgbaColor() const {
-    static auto &O = std::cout;
-
     assert(0 <= hue and hue < 360);
     assert(0 <= saturation and saturation <= 1);
     assert(0 <= luminance and saturation <= 1);
     assert(0 <= alpha and alpha <= 1);
 
     auto const chroma = (1.0 - std::fabs(2.0 * luminance - 1.0)) * saturation;
-    O << "chroma: " << chroma << '\n';
 
     auto const X = chroma * (1 - std::fabs(std::fmod(hue / 60.0, 2) - 1));
-    O << "X: " << X << '\n';
 
     struct Rgb { double r, g, b; } color{};
 
@@ -52,21 +46,6 @@ Sdl::RgbaColor Sdl::HslaColor::toRgbaColor() const {
     else if (300 <= hue and hue < 360) color = Rgb{chroma,    0.0,      X};
 
     auto const m = luminance - chroma / 2.0;
-    O << "m: " << m << '\n';
-
-    O << color.r << " " << color.g << " " << color.b << '\n';
-
-    O <<
-    (color.r + m) * 0xFF << ' ' <<
-    (color.g + m) * 0xFF << ' ' <<
-    (color.b + m) * 0xFF << ' ' <<
-    (      alpha) * 0xFF << '\n';
-
-    O <<
-    +static_cast<Uint8>((color.r + m) * 0xFF) << ' ' <<
-    +static_cast<Uint8>((color.g + m) * 0xFF) << ' ' <<
-    +static_cast<Uint8>((color.b + m) * 0xFF) << ' ' <<
-    +static_cast<Uint8>((      alpha) * 0xFF) << '\n';
 
     return {
         static_cast<Uint8>((color.r + m) * 0xFF),
