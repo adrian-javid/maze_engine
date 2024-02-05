@@ -72,7 +72,7 @@ Sdl::RgbaColor Sdl::HslaColor::toRgbaColor() const {
         static_cast<Uint8>((color.r + m) * 0xFF),
         static_cast<Uint8>((color.g + m) * 0xFF),
         static_cast<Uint8>((color.b + m) * 0xFF),
-        static_cast<Uint8>((      alpha) * 0xFF),
+        static_cast<Uint8>((alpha   + 0) * 0xFF),
     };
 }
 
