@@ -156,24 +156,24 @@ static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius,
     // Radius of 0 draws 1 hexagon.
     assert(radius >= 0);
 
-    int const rowSize = radius + 1 + radius;
+    int const diameter = radius + 1 + radius;
+    int const diameterValue = static_cast<float>(diameter);
 
-    float const hexagonWidth = width / rowSize;
-    float const hexagonHeight = hexagonWidth; // TODO: change to scale with window height
-
-    int verticalIndex = 0;
-
-    float const halfHexagonWidth = hexagonWidth / 2;
+    float const hexagonWidth = width / diameterValue;
+    float const hexagonHeight = height / (1.0f + (3.0f * (diameterValue - 1.0f)) / 4.0f);
 
     float const threeQuartersHexagonHeight = (3 * hexagonHeight) / 4;
+    float const halfHexagonWidth = hexagonWidth / 2;
 
     for (int verticalIndex = 0; verticalIndex <= radius; ++verticalIndex) {
-        float const topHexagonCenterY = center.y - static_cast<float>(verticalIndex) * threeQuartersHexagonHeight;
-        float const bottomHexagonCenterY = center.y + static_cast<float>(verticalIndex) * threeQuartersHexagonHeight;
+        float const verticalIndexValue = static_cast<float>(verticalIndex);
+
+        float const topHexagonCenterY = center.y - verticalIndexValue * threeQuartersHexagonHeight;
+        float const bottomHexagonCenterY = center.y + verticalIndexValue * threeQuartersHexagonHeight;
 
         float const horizontalOffset = halfHexagonWidth + verticalIndex * halfHexagonWidth;
 
-        for (int horizontalIndex = 0; horizontalIndex < rowSize - verticalIndex; ++horizontalIndex) {
+        for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = static_cast<float>(horizontalIndex) * hexagonWidth + horizontalOffset;
 
             Sdl::drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, baseColor);
@@ -215,7 +215,7 @@ void Sdl::refreshPresentation() {
                 static_cast<float>(Sdl::windowWidth) / 2.0f,
                 static_cast<float>(Sdl::windowHeight) / 2.0f
             },
-            /* radius */ 25,
+            /* radius */ 1,
             Sdl::windowWidth,
             Sdl::windowHeight,
             baseColor
