@@ -151,12 +151,25 @@ void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, floa
     SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), Cast::toInt(vertexList.size()), nullptr, 0);
 }
 
-static void drawHexagonGrid(SDL_FPoint const &center, int radius, float const width, float const height, Sdl::HslaColor const &baseColor) {
+static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius, float const width, float const height, Sdl::HslaColor const &baseColor) {
     
     // Radius of 0 draws 1 hexagon.
     assert(radius >= 0);
 
+    int const rowSize = radius + 1 + radius;
 
+    float const hexagonWidth = width / rowSize;
+    float const hexagonHeight = height;
+
+    for (int index = 0; index <= radius; ++index) {
+        float const offsetX = static_cast<float>(index) * hexagonWidth;
+
+        float const leftHexagonX = center.x - offsetX;
+        float const rightHexagonX = center.x + offsetX;
+
+        Sdl::drawPointyTopHexagon({leftHexagonX, center.y}, hexagonWidth, hexagonHeight, baseColor);
+        Sdl::drawPointyTopHexagon({rightHexagonX, center.y}, hexagonWidth, hexagonHeight, baseColor);
+    }
 
 }
 
@@ -171,7 +184,7 @@ void Sdl::refreshPresentation() {
 
     if (false) Sdl::drawSquareGrid();
 
-    if (true) /* render hexagon grid */ {
+    if (false) /* draw four hexagons */ {
 
         float hexagonWidth = 2.0f * (static_cast<float>(Sdl::windowWidth) / 5.0f);
         float hexagonHeight = 4.0f * (static_cast<float>(Sdl::windowHeight) / 7.0f);
@@ -184,6 +197,19 @@ void Sdl::refreshPresentation() {
         Sdl::drawPointyTopHexagon(SDL_FPoint{row0StartCenter.x + hexagonWidth, row0StartCenter.y}, hexagonWidth, hexagonHeight, baseColor);
         Sdl::drawPointyTopHexagon(SDL_FPoint{row1StartCenter.x + hexagonWidth, row1StartCenter.y}, hexagonWidth, hexagonHeight, baseColor);
 
+    }
+
+    if (true) /* draw hexagon grid */ {
+        drawPointyTopHexagonGrid(
+            /* center */ {
+                static_cast<float>(Sdl::windowWidth) / 2.0f,
+                static_cast<float>(Sdl::windowHeight) / 2.0f
+            },
+            /* radius */ 2,
+            Sdl::windowWidth,
+            Sdl::windowHeight,
+            baseColor
+        );
     }
     
     SDL_RenderPresent(Sdl::renderer);
