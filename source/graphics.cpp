@@ -212,8 +212,8 @@ void Sdl::refreshPresentation() {
     if (true) /* draw hexagon grid */ {
         drawPointyTopHexagonGrid(
             /* center */ {
-                static_cast<float>(Sdl::windowWidth) * 3.0f / 4.0f,
-                static_cast<float>(Sdl::windowHeight) * 3.0f / 4.0f
+                static_cast<float>(Sdl::windowWidth) * 2.0f / 4.0f,
+                static_cast<float>(Sdl::windowHeight) * 2.0f / 4.0f
             },
             /* radius */ 5,
             Sdl::windowWidth,
