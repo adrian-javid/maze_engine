@@ -32,7 +32,7 @@ namespace Project::Sdl {
     struct HslaColor {
         double hue, saturation, luminance, alpha;
         SDL_Color toRgbaColor(double hueSupplement=0.0) const;
-        static double wrapHue(double hue);
+        static double wrapHue(double hue, double const bound=360.0);
         void addHue(double const hueSupplement);
         std::string toString() const;
     };
@@ -52,6 +52,10 @@ namespace Project::Sdl {
 
     void mainLoop();
     void exitHandler();
+}
+
+namespace Project::Graphics {
+    /////////
 }
 
 #endif
