@@ -215,7 +215,7 @@ void Sdl::refreshPresentation() {
                 static_cast<float>(Sdl::windowWidth) / 2.0f,
                 static_cast<float>(Sdl::windowHeight) / 2.0f
             },
-            /* radius */ 5,
+            /* radius */ 3,
             Sdl::windowWidth,
             Sdl::windowHeight,
             baseColor
