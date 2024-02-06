@@ -50,7 +50,7 @@ SDL_Color Sdl::HslaColor::toRgbaColor(double hueSupplement) const {
         static_cast<Uint8>((color.r + m) * 0xFF),
         static_cast<Uint8>((color.g + m) * 0xFF),
         static_cast<Uint8>((color.b + m) * 0xFF),
-        static_cast<Uint8>((alpha   + 0) * 0xFF),
+        static_cast<Uint8>((alpha      ) * 0xFF),
     };
 }
 
