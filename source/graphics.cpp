@@ -159,16 +159,21 @@ static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius,
     int const rowSize = radius + 1 + radius;
 
     float const hexagonWidth = width / rowSize;
-    float const hexagonHeight = height;
+    float const hexagonHeight = hexagonWidth; // TODO: change to scale with window height
 
-    for (int index = 0; index <= radius; ++index) {
-        float const offsetX = static_cast<float>(index) * hexagonWidth;
+    int verticalIndex = 0;
 
-        float const leftHexagonX = center.x - offsetX;
-        float const rightHexagonX = center.x + offsetX;
+    for (int verticalIndex = 0; verticalIndex <= radius; ++verticalIndex) {
+        float const rowOffset = hexagonWidth / 2;
+        float const topHexagonCenterY = center.y - static_cast<float>(verticalIndex) * hexagonHeight;
+        float const bottomHexagonCenterY = center.y + static_cast<float>(verticalIndex) * hexagonHeight;
 
-        Sdl::drawPointyTopHexagon({leftHexagonX, center.y}, hexagonWidth, hexagonHeight, baseColor);
-        Sdl::drawPointyTopHexagon({rightHexagonX, center.y}, hexagonWidth, hexagonHeight, baseColor);
+        for (int horizontalIndex = 0; horizontalIndex < rowSize - verticalIndex; ++horizontalIndex) {
+            float const hexagonCenterX = static_cast<float>(horizontalIndex) * hexagonWidth + rowOffset;
+
+            Sdl::drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, baseColor);
+            Sdl::drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, baseColor);
+        }
     }
 
 }
