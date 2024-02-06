@@ -172,7 +172,7 @@ static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius,
         float const topHexagonCenterY = center.y - verticalIndexValue * threeQuartersHexagonHeight;
         float const bottomHexagonCenterY = center.y + verticalIndexValue * threeQuartersHexagonHeight;
 
-        float const horizontalOffset = halfHexagonWidth + verticalIndex * halfHexagonWidth;
+        float const horizontalOffset = verticalIndex * halfHexagonWidth;
 
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
@@ -212,8 +212,8 @@ void Sdl::refreshPresentation() {
     if (true) /* draw hexagon grid */ {
         drawPointyTopHexagonGrid(
             /* center */ {
-                static_cast<float>(Sdl::windowWidth) * 2.0f / 4.0f,
-                static_cast<float>(Sdl::windowHeight) * 2.0f / 4.0f
+                static_cast<float>(Sdl::windowWidth) / 2.0f,
+                static_cast<float>(Sdl::windowHeight) / 2.0f
             },
             /* radius */ 5,
             Sdl::windowWidth,
