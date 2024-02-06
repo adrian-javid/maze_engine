@@ -163,13 +163,18 @@ static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius,
 
     int verticalIndex = 0;
 
+    float const halfHexagonWidth = hexagonWidth / 2;
+
+    float const threeQuartersHexagonHeight = (3 * hexagonHeight) / 4;
+
     for (int verticalIndex = 0; verticalIndex <= radius; ++verticalIndex) {
-        float const rowOffset = hexagonWidth / 2;
-        float const topHexagonCenterY = center.y - static_cast<float>(verticalIndex) * hexagonHeight;
-        float const bottomHexagonCenterY = center.y + static_cast<float>(verticalIndex) * hexagonHeight;
+        float const topHexagonCenterY = center.y - static_cast<float>(verticalIndex) * threeQuartersHexagonHeight;
+        float const bottomHexagonCenterY = center.y + static_cast<float>(verticalIndex) * threeQuartersHexagonHeight;
+
+        float const horizontalOffset = halfHexagonWidth + verticalIndex * halfHexagonWidth;
 
         for (int horizontalIndex = 0; horizontalIndex < rowSize - verticalIndex; ++horizontalIndex) {
-            float const hexagonCenterX = static_cast<float>(horizontalIndex) * hexagonWidth + rowOffset;
+            float const hexagonCenterX = static_cast<float>(horizontalIndex) * hexagonWidth + horizontalOffset;
 
             Sdl::drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, baseColor);
             Sdl::drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, baseColor);
@@ -210,7 +215,7 @@ void Sdl::refreshPresentation() {
                 static_cast<float>(Sdl::windowWidth) / 2.0f,
                 static_cast<float>(Sdl::windowHeight) / 2.0f
             },
-            /* radius */ 2,
+            /* radius */ 25,
             Sdl::windowWidth,
             Sdl::windowHeight,
             baseColor
