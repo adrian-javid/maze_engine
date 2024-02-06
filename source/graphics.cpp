@@ -160,6 +160,7 @@ static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius,
     int const diameterValue = static_cast<float>(diameter);
 
     float const hexagonWidth = width / diameterValue;
+    // For height, first hexagon counts as 1, other hexagons count as 3/4.
     float const hexagonHeight = height / (1.0f + (3.0f * (diameterValue - 1.0f)) / 4.0f);
 
     float const threeQuartersHexagonHeight = (3 * hexagonHeight) / 4;
