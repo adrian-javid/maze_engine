@@ -74,7 +74,7 @@ std::string Sdl::HslaColor::toString() const {
 SquareGrid Sdl::grid;
 Vector2::HashMap<Sdl::RgbaColor> Sdl::colorMap;
 
-void Sdl::renderSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> const &colorMap) {
+void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> const &colorMap) {
     static constexpr Sdl::RgbaColor wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
     static constexpr Sdl::RgbaColor defaultColor = wallColor.withGreen(wallColor.green * 5);
 
@@ -151,6 +151,15 @@ void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, floa
     SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), Cast::toInt(vertexList.size()), nullptr, 0);
 }
 
+static void drawHexagonGrid(SDL_FPoint const &center, int radius, float const width, float const height, Sdl::HslaColor const &baseColor) {
+    
+    // Radius of 0 draws 1 hexagon.
+    assert(radius >= 0);
+
+
+
+}
+
 void Sdl::refreshPresentation() {
     static Sdl::HslaColor baseColor{240.0, 1.0, 0.5, 1.0};
     double const deltaHue = static_cast<double>(deltaTime) / 32.0; // TODO: need a safe cast from `Uint8` to `double`
@@ -160,7 +169,7 @@ void Sdl::refreshPresentation() {
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
 
-    if (false) Sdl::renderSquareGrid();
+    if (false) Sdl::drawSquareGrid();
 
     if (true) /* render hexagon grid */ {
 
