@@ -65,14 +65,14 @@ int main(int argc, char *argv[]) {
     // O << Sdl::HslaColor{60.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
     #endif
 
-    Sdl::grid = makeGrid();
+    Sdl::globalGrid = makeGrid();
 
-    int const lastRow = Cast::toInt(Sdl::grid.getRowCount()) - 1;
-    int const lastColumn = Cast::toInt(Sdl::grid.getColumnCount()) - 1;
-    auto const path = breadthFirstSearch(Sdl::grid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
+    int const lastRow = Cast::toInt(Sdl::globalGrid.getRowCount()) - 1;
+    int const lastColumn = Cast::toInt(Sdl::globalGrid.getColumnCount()) - 1;
+    auto const path = breadthFirstSearch(Sdl::globalGrid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
     for (auto &vector : path.value()) {
-        Sdl::colorMap.insert({vector, Sdl::PATH_COLOR});
+        Sdl::globalColorMap.insert({vector, Sdl::PATH_COLOR});
     }
 
     SDL_CreateWindowAndRenderer(

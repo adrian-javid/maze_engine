@@ -40,12 +40,12 @@ namespace Project::Sdl {
     constexpr RgbaColor BLACK{0x00, 0x00, 0x00, 0xFF};
     constexpr RgbaColor PATH_COLOR = BLACK.withRed(0xFF);
 
-    extern SquareGrid grid;
-    extern Vector2::HashMap<Sdl::RgbaColor> colorMap;
+    extern SquareGrid globalGrid;
+    extern Vector2::HashMap<Sdl::RgbaColor> globalColorMap;
 
     void refreshPresentation();
 
-    void drawSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<RgbaColor> const &colorMap=Sdl::colorMap);
+    void drawSquareGrid(SquareGrid const &grid=Sdl::globalGrid, Vector2::HashMap<RgbaColor> const &colorMap=Sdl::globalColorMap);
 
     void drawPointyTopHexagon(
         float const size,

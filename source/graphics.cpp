@@ -71,8 +71,8 @@ std::string Sdl::HslaColor::toString() const {
     return buffer.str();
 }
 
-SquareGrid Sdl::grid;
-Vector2::HashMap<Sdl::RgbaColor> Sdl::colorMap;
+SquareGrid Sdl::globalGrid;
+Vector2::HashMap<Sdl::RgbaColor> Sdl::globalColorMap;
 
 void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> const &colorMap) {
     static constexpr Sdl::RgbaColor wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
