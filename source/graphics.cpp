@@ -105,11 +105,11 @@ void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> con
     }
 }
 
-static void drawRectangle(SDL_FPoint const &position, float const width, float const height, Sdl::HslaColor const &baseColor) {
-    SDL_Color const firstColor = baseColor.toRgbaColor();
-    SDL_Color const secondColor = baseColor.toRgbaColor(20.0);
-    SDL_Color const thirdColor = baseColor.toRgbaColor(40.0);
-
+static void drawRectangle(
+    SDL_FPoint const &position,
+    float const width, float const height,
+    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+) {
     SDL_FPoint const topRightPoint{position.x + width, position.y};
     SDL_FPoint const bottomLeftPoint{position.x, position.y + height};
     SDL_FPoint const bottomRightPoint{position.x + width, position.y + height};
@@ -136,7 +136,7 @@ static void drawRectangleGrid(
     SDL_FPoint const &position,
     int const rowCount, int columnCount,
     float const width, float const height,
-    Sdl::HslaColor const &baseColor
+    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
 ) {
     float const rectangleWidth = width / static_cast<float>(columnCount);
     float const rectangleHeight = height / static_cast<float>(rowCount);
@@ -146,7 +146,7 @@ static void drawRectangleGrid(
             drawRectangle(
                 {column * rectangleWidth + position.x, row * rectangleHeight + position.y},
                 rectangleWidth, rectangleHeight,
-                baseColor
+                firstColor, secondColor, thirdColor
             );
 }
 
@@ -251,9 +251,10 @@ static double asHue(
 }
 
 void Sdl::refreshPresentation() {
-    static Sdl::HslaColor firstColor{240.0, 1.0, 0.5, 1.0};
-    static Sdl::HslaColor secondColor{0.0, 1.0, 0.5, 1.0};
-    static Sdl::HslaColor thirdColor{57.0, 1.0, 0.5, 1.0};
+    static Sdl::HslaColor firstColor{0.0, 1.0, 0.5, 1.0};
+    static Sdl::HslaColor secondColor = firstColor;
+    static Sdl::HslaColor thirdColor = secondColor;
+
     static double hueOffset = 0.0;
 
     double constexpr hueLowerBound = 180.0;
@@ -294,7 +295,7 @@ void Sdl::refreshPresentation() {
             /* column count */ 5,
             static_cast<float>(Sdl::windowWidth) / 2.0f,
             static_cast<float>(Sdl::windowHeight) / 2.0f,
-            firstColor
+            firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
         drawRectangleGrid(
             /* position */ {static_cast<float>(Sdl::windowWidth) / 2.0f, static_cast<float>(Sdl::windowHeight) / 2.0f},
@@ -302,7 +303,7 @@ void Sdl::refreshPresentation() {
             /* column count */ 5,
             static_cast<float>(Sdl::windowWidth) / 2.0f,
             static_cast<float>(Sdl::windowHeight) / 2.0f,
-            firstColor
+            firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
         drawPointyTopHexagonGrid(
             /* center */ {
