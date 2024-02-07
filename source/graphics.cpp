@@ -107,8 +107,8 @@ void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> con
 
 static void drawRectangle(SDL_FPoint const &position, float const width, float const height, Sdl::HslaColor const &baseColor) {
     SDL_Color const firstColor = baseColor.toRgbaColor();
-    SDL_Color const secondColor = baseColor.toRgbaColor(-20.0);
-    SDL_Color const thirdColor = baseColor.toRgbaColor(-40.0);
+    SDL_Color const secondColor = baseColor.toRgbaColor(20.0);
+    SDL_Color const thirdColor = baseColor.toRgbaColor(40.0);
 
     SDL_FPoint const topRightPoint{position.x + width, position.y};
     SDL_FPoint const bottomLeftPoint{position.x, position.y + height};
@@ -155,9 +155,9 @@ void Sdl::drawPointyTopHexagon(float const size, SDL_FPoint const &center, Sdl::
 }
 
 void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height, Sdl::HslaColor const &baseColor) {
-    SDL_Color const firstColor = baseColor.toRgbaColor();
-    SDL_Color const secondColor = baseColor.toRgbaColor(-20.0);
-    SDL_Color const thirdColor = baseColor.toRgbaColor(-40.0);
+    SDL_Color const firstColor = baseColor.toRgbaColor(-10.0);
+    SDL_Color const secondColor = baseColor.toRgbaColor();
+    SDL_Color const thirdColor = baseColor.toRgbaColor(+100.0);
 
     float const halfWidth = width / 2;
     float const halfHeight = height / 2;
@@ -252,8 +252,6 @@ void Sdl::refreshPresentation() {
         baseColor.hue = Sdl::HslaColor::wrapHue(hueUpperBound - (hueSupplement - colorCycleLength));
     }
 
-    O << baseColor.hue << '\n';
-
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
 
@@ -343,7 +341,8 @@ void Sdl::mainLoop() {
     Sdl::refreshPresentation();
 
     static Uint64 timer = 0, counter = 0;
-    if ((timer += deltaTime) >= 1 * 1000.0 /* one second */) {
+    static Uint64 constexpr oneSecond = 1000;
+    if ((timer += deltaTime) >= 1 * oneSecond / 2) {
         std::cout << "Hello " << ++counter << "." << '\n';
         timer = 0; // reset timer
     }
