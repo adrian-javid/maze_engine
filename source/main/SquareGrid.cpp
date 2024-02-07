@@ -10,8 +10,8 @@ size_t SquareGrid::getRowCount() const { return rowCount; }
 size_t SquareGrid::getColumnCount() const { return columnCount; }
 auto SquareGrid::getFlatData() const -> Table const & { return flatData; }
 
-auto SquareGrid::at(size_t const row, size_t const column) -> Tile & { return flatData.at(row * columnCount + column); }
-auto SquareGrid::at(size_t const row, size_t const column) const -> Tile const & { return flatData.at(row * columnCount + column); }
+auto SquareGrid::at(Grid::Index const row, Grid::Index const column) -> Tile & { return flatData.at(row * columnCount + column); }
+auto SquareGrid::at(Grid::Index const row, Grid::Index const column) const -> Tile const & { return flatData.at(row * columnCount + column); }
 
 std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) const {
     std::stringstream buffer;

@@ -33,8 +33,8 @@ class Project::SquareGrid : public Project::Grid {
     size_t getColumnCount() const;
     Table const &getFlatData() const;
 
-    Tile &at(size_t const row, size_t const column);
-    Tile const &at(size_t const row, size_t const column) const;
+    Tile &at(Grid::Index const row, Grid::Index const column) override;
+    Tile const &at(Grid::Index const row, Grid::Index const column) const override;
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 

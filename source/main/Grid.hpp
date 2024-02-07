@@ -15,11 +15,11 @@ class Project::Grid {
     constexpr static Tile NONE = 0;
     constexpr static Tile WALL = 1 << 0;
 
-    virtual Tile &at(size_t const row, size_t const column) = 0;
-    virtual Tile const &at(size_t const row, size_t const column) const = 0;
+    virtual Tile &at(Index const row, Index const column) = 0;
+    virtual Tile const &at(Index const row, Index const column) const = 0;
 
-    bool isWall(size_t const row, size_t const column) const;
-    void putWall(size_t const row, size_t const column);
+    bool isWall(Index const row, Index const column) const;
+    void putWall(Index const row, Index const column);
 
 };
 
