@@ -12,8 +12,6 @@ auto SquareGrid::getFlatData() const -> Table const & { return flatData; }
 
 auto SquareGrid::at(size_t const row, size_t const column) -> Tile & { return flatData.at(row * columnCount + column); }
 auto SquareGrid::at(size_t const row, size_t const column) const -> Tile const & { return flatData.at(row * columnCount + column); }
-bool SquareGrid::isWall(size_t const row, size_t const column) const { return at(row, column) & SquareGrid::WALL; }
-void SquareGrid::putWall(size_t const row, size_t const column) { at(row, column) |= SquareGrid::WALL; }
 
 std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) const {
     std::stringstream buffer;
