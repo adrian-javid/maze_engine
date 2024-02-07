@@ -257,7 +257,7 @@ void Sdl::refreshPresentation() {
 
     static double hueOffset = 0.0;
 
-    double constexpr hueLowerBound = 180.0;
+    double constexpr hueLowerBound = 210.0;
     double constexpr hueUpperBound = 240.0;
     static_assert(0 <= hueLowerBound);
     static_assert(hueLowerBound < hueUpperBound);
