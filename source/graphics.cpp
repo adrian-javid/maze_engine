@@ -54,10 +54,10 @@ SDL_Color Sdl::HslaColor::toRgbaColor(double hueSupplement) const {
     };
 }
 
-double Sdl::HslaColor::wrapHue(double hue) {
-    hue = std::fmod(hue, 360.0);
-    if (hue < 0) hue += 360.0;
-    if (hue >= 360.0) hue = 0.0;
+double Sdl::HslaColor::wrapHue(double hue, double const bound) {
+    hue = std::fmod(hue, bound);
+    if (hue < 0) hue += bound;
+    if (hue >= bound) hue = 0.0;
     return hue;
 }
 
@@ -78,8 +78,8 @@ void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> con
     static constexpr Sdl::RgbaColor wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
     static constexpr Sdl::RgbaColor defaultColor = wallColor.withGreen(wallColor.green * 5);
 
-    int const rectangleWidth = windowWidth / Cast::toInt(grid.getColumnCount());
-    int const rectangleHeight = windowHeight / Cast::toInt(grid.getRowCount());
+    int const rectangleWidth = Sdl::windowWidth / Cast::toInt(grid.getColumnCount());
+    int const rectangleHeight = Sdl::windowHeight / Cast::toInt(grid.getRowCount());
 
     SDL_Rect rectangle{};
     rectangle.w = rectangleWidth;
@@ -103,6 +103,51 @@ void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> con
             SDL_RenderFillRect(Sdl::renderer, &rectangle);
         }
     }
+}
+
+static void drawRectangle(SDL_FPoint const &position, float const width, float const height, Sdl::HslaColor const &baseColor) {
+    SDL_Color const firstColor = baseColor.toRgbaColor();
+    SDL_Color const secondColor = baseColor.toRgbaColor(-20.0);
+    SDL_Color const thirdColor = baseColor.toRgbaColor(-40.0);
+
+    SDL_FPoint const topRightPoint{position.x + width, position.y};
+    SDL_FPoint const bottomLeftPoint{position.x, position.y + height};
+    SDL_FPoint const bottomRightPoint{position.x + width, position.y + height};
+
+    static constexpr SDL_FPoint zeroPoint = {0, 0};
+
+    SDL_Vertex const topLeftVertex{position, firstColor, zeroPoint};
+    SDL_Vertex const topRightVertex{topRightPoint, secondColor, zeroPoint};
+    SDL_Vertex const bottomLeftVertex{bottomLeftPoint, secondColor, zeroPoint};
+    SDL_Vertex const bottomRightVertex{bottomRightPoint, thirdColor, zeroPoint};
+
+    std::vector<SDL_Vertex> const vertexList = {
+        // Top left triangle.
+        topLeftVertex, topRightVertex, bottomLeftVertex,
+        
+        // Bottom right triangle.
+        topRightVertex, bottomLeftVertex, bottomRightVertex,
+    };
+
+    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), Cast::toInt(vertexList.size()), nullptr, 0);
+}
+
+static void drawRectangleGrid(
+    SDL_FPoint const &position,
+    int const rowCount, int columnCount,
+    float const width, float const height,
+    Sdl::HslaColor const &baseColor
+) {
+    float const rectangleWidth = width / static_cast<float>(columnCount);
+    float const rectangleHeight = height / static_cast<float>(rowCount);
+
+    for (int row = 0; row < rowCount; ++row)
+        for (int column = 0; column < columnCount; ++column)
+            drawRectangle(
+                {column * rectangleWidth + position.x, row * rectangleHeight + position.y},
+                rectangleWidth, rectangleHeight,
+                baseColor
+            );
 }
 
 void Sdl::drawPointyTopHexagon(float const size, SDL_FPoint const &center, Sdl::HslaColor const &baseColor) {
@@ -185,43 +230,87 @@ static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius,
 
 void Sdl::refreshPresentation() {
     static Sdl::HslaColor baseColor{240.0, 1.0, 0.5, 1.0};
+    static double hueSupplement = 0.0;
+
+    double constexpr hueLowerBound = 180.0;
+    double constexpr hueUpperBound = 240.0;
+    static_assert(0 <= hueLowerBound);
+    static_assert(hueLowerBound < hueUpperBound);
+    static_assert(hueUpperBound < 360.0);
+
+    double constexpr colorCycleLength = hueUpperBound - hueLowerBound;
+    static_assert(colorCycleLength > 0);
+
     double const deltaHue = static_cast<double>(deltaTime) / 32.0; // TODO: need a safe cast from `Uint8` to `double`
-    baseColor.addHue(deltaHue);
-    // O << "delta time: " << deltaTime << ", " << baseColor.toString() << '\n';
+
+    hueSupplement = Sdl::HslaColor::wrapHue(hueSupplement + deltaHue, 2 * colorCycleLength);
+
+    if (hueSupplement < colorCycleLength) {
+        baseColor.hue = Sdl::HslaColor::wrapHue(hueLowerBound + hueSupplement);
+    } else {
+        // mirror
+        baseColor.hue = Sdl::HslaColor::wrapHue(hueUpperBound - (hueSupplement - colorCycleLength));
+    }
+
+    O << baseColor.hue << '\n';
 
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
 
     if (false) Sdl::drawSquareGrid();
 
-    if (false) /* draw four hexagons */ {
-
-        float hexagonWidth = 2.0f * (static_cast<float>(Sdl::windowWidth) / 5.0f);
-        float hexagonHeight = 4.0f * (static_cast<float>(Sdl::windowHeight) / 7.0f);
-
-        SDL_FPoint row0StartCenter{hexagonWidth, hexagonHeight / 2.0f};
-        SDL_FPoint row1StartCenter{hexagonWidth / 2, hexagonHeight + hexagonHeight / 4.0f};
-
-        Sdl::drawPointyTopHexagon(row0StartCenter, hexagonWidth, hexagonHeight, baseColor);
-        Sdl::drawPointyTopHexagon(row1StartCenter, hexagonWidth, hexagonHeight, baseColor);
-        Sdl::drawPointyTopHexagon(SDL_FPoint{row0StartCenter.x + hexagonWidth, row0StartCenter.y}, hexagonWidth, hexagonHeight, baseColor);
-        Sdl::drawPointyTopHexagon(SDL_FPoint{row1StartCenter.x + hexagonWidth, row1StartCenter.y}, hexagonWidth, hexagonHeight, baseColor);
-
-    }
-
-    if (true) /* draw hexagon grid */ {
+    if (true) /* draw rectangle grid */ {
+        drawRectangleGrid(
+            /* position */ {0.0f, 0.0f},
+            /* row count */ 5,
+            /* column count */ 5,
+            static_cast<float>(Sdl::windowWidth) / 2.0f,
+            static_cast<float>(Sdl::windowHeight) / 2.0f,
+            baseColor
+        );
+        drawRectangleGrid(
+            /* position */ {static_cast<float>(Sdl::windowWidth) / 2.0f, static_cast<float>(Sdl::windowHeight) / 2.0f},
+            /* row count */ 5,
+            /* column count */ 5,
+            static_cast<float>(Sdl::windowWidth) / 2.0f,
+            static_cast<float>(Sdl::windowHeight) / 2.0f,
+            baseColor
+        );
         drawPointyTopHexagonGrid(
             /* center */ {
-                static_cast<float>(Sdl::windowWidth) / 2.0f,
-                static_cast<float>(Sdl::windowHeight) / 2.0f
+                static_cast<float>(Sdl::windowWidth) * 3.0f / 4.0f,
+                static_cast<float>(Sdl::windowHeight) * 1.0f / 4.0f
             },
             /* radius */ 3,
-            Sdl::windowWidth,
-            Sdl::windowHeight,
+            static_cast<float>(Sdl::windowWidth) / 2.0f,
+            static_cast<float>(Sdl::windowHeight) / 2.0f,
+            baseColor
+        );
+        drawPointyTopHexagonGrid(
+            /* center */ {
+                static_cast<float>(Sdl::windowWidth) * 1.0f / 4.0f,
+                static_cast<float>(Sdl::windowHeight) * 3.0f / 4.0f
+            },
+            /* radius */ 3,
+            static_cast<float>(Sdl::windowWidth) / 2.0f,
+            static_cast<float>(Sdl::windowHeight) / 2.0f,
             baseColor
         );
     }
-    
+
+    if (false) /* draw hexagon grid */ {
+        drawPointyTopHexagonGrid(
+            /* center */ {
+                static_cast<float>(Sdl::windowWidth) * 3.0f / 4.0f,
+                static_cast<float>(Sdl::windowHeight) * 2.0f / 4.0f
+            },
+            /* radius */ 3,
+            static_cast<float>(Sdl::windowWidth) / 2.0f,
+            static_cast<float>(Sdl::windowHeight),
+            baseColor
+        );
+    }
+
     SDL_RenderPresent(Sdl::renderer);
 }
 
