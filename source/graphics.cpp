@@ -150,14 +150,19 @@ static void drawRectangleGrid(
             );
 }
 
-void Sdl::drawPointyTopHexagon(float const size, SDL_FPoint const &center, Sdl::HslaColor const &baseColor) {
-    Sdl::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2 * size, baseColor);
+void Sdl::drawPointyTopHexagon(
+    float const size,
+    SDL_FPoint const &center,
+    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+) {
+    Sdl::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2 * size, firstColor, secondColor, thirdColor);
 }
 
-void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height, Sdl::HslaColor const &baseColor) {
-    SDL_Color const firstColor = baseColor.toRgbaColor(-10.0);
-    SDL_Color const secondColor = baseColor.toRgbaColor();
-    SDL_Color const thirdColor = baseColor.toRgbaColor(+100.0);
+void Sdl::drawPointyTopHexagon(
+    SDL_FPoint const &center,
+    float const width, float const height,
+    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+) {
 
     float const halfWidth = width / 2;
     float const halfHeight = height / 2;
@@ -196,8 +201,13 @@ void Sdl::drawPointyTopHexagon(SDL_FPoint const &center, float const width, floa
     SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), Cast::toInt(vertexList.size()), nullptr, 0);
 }
 
-static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius, float const width, float const height, Sdl::HslaColor const &baseColor) {
-    
+static void drawPointyTopHexagonGrid(
+    SDL_FPoint const &center,
+    int const radius,
+    float const width, float const height,
+    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+) {
+
     // Radius of 0 draws 1 hexagon.
     assert(radius >= 0);
 
@@ -221,16 +231,30 @@ static void drawPointyTopHexagonGrid(SDL_FPoint const &center, int const radius,
 
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
-            Sdl::drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, baseColor);
-            Sdl::drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, baseColor);
+            Sdl::drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
+            Sdl::drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
         }
     }
 
 }
 
+static double asHue(
+    double const hueOffset,
+    double const hueLowerBound,
+    double const hueUpperBound,
+    double const colorCycleLength
+) {
+    if (hueOffset < colorCycleLength)
+        return Sdl::HslaColor::wrapHue(hueLowerBound + hueOffset);
+    else /* mirror */
+        return Sdl::HslaColor::wrapHue(hueUpperBound - (hueOffset - colorCycleLength));
+}
+
 void Sdl::refreshPresentation() {
-    static Sdl::HslaColor baseColor{240.0, 1.0, 0.5, 1.0};
-    static double hueSupplement = 0.0;
+    static Sdl::HslaColor firstColor{240.0, 1.0, 0.5, 1.0};
+    static Sdl::HslaColor secondColor{0.0, 1.0, 0.5, 1.0};
+    static Sdl::HslaColor thirdColor{57.0, 1.0, 0.5, 1.0};
+    static double hueOffset = 0.0;
 
     double constexpr hueLowerBound = 180.0;
     double constexpr hueUpperBound = 240.0;
@@ -243,14 +267,20 @@ void Sdl::refreshPresentation() {
 
     double const deltaHue = static_cast<double>(deltaTime) / 32.0; // TODO: need a safe cast from `Uint8` to `double`
 
-    hueSupplement = Sdl::HslaColor::wrapHue(hueSupplement + deltaHue, 2 * colorCycleLength);
+    firstColor.hue = asHue(
+        hueOffset = Sdl::HslaColor::wrapHue(hueOffset + deltaHue, 2 * colorCycleLength),
+        hueLowerBound, hueUpperBound, colorCycleLength
+    );
 
-    if (hueSupplement < colorCycleLength) {
-        baseColor.hue = Sdl::HslaColor::wrapHue(hueLowerBound + hueSupplement);
-    } else {
-        // mirror
-        baseColor.hue = Sdl::HslaColor::wrapHue(hueUpperBound - (hueSupplement - colorCycleLength));
-    }
+    secondColor.hue = asHue(
+        Sdl::HslaColor::wrapHue(hueOffset - 20.0, 2.0 * colorCycleLength),
+        hueLowerBound, hueUpperBound, colorCycleLength
+    );
+
+    thirdColor.hue = asHue(
+        Sdl::HslaColor::wrapHue(hueOffset - 40.0, 2.0 * colorCycleLength),
+        hueLowerBound, hueUpperBound, colorCycleLength
+    );
 
     Sdl::BLACK.SetRenderDrawColor();
     SDL_RenderClear(Sdl::renderer);
@@ -264,7 +294,7 @@ void Sdl::refreshPresentation() {
             /* column count */ 5,
             static_cast<float>(Sdl::windowWidth) / 2.0f,
             static_cast<float>(Sdl::windowHeight) / 2.0f,
-            baseColor
+            firstColor
         );
         drawRectangleGrid(
             /* position */ {static_cast<float>(Sdl::windowWidth) / 2.0f, static_cast<float>(Sdl::windowHeight) / 2.0f},
@@ -272,7 +302,7 @@ void Sdl::refreshPresentation() {
             /* column count */ 5,
             static_cast<float>(Sdl::windowWidth) / 2.0f,
             static_cast<float>(Sdl::windowHeight) / 2.0f,
-            baseColor
+            firstColor
         );
         drawPointyTopHexagonGrid(
             /* center */ {
@@ -282,7 +312,7 @@ void Sdl::refreshPresentation() {
             /* radius */ 3,
             static_cast<float>(Sdl::windowWidth) / 2.0f,
             static_cast<float>(Sdl::windowHeight) / 2.0f,
-            baseColor
+            firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
         drawPointyTopHexagonGrid(
             /* center */ {
@@ -292,7 +322,7 @@ void Sdl::refreshPresentation() {
             /* radius */ 3,
             static_cast<float>(Sdl::windowWidth) / 2.0f,
             static_cast<float>(Sdl::windowHeight) / 2.0f,
-            baseColor
+            firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
     }
 
@@ -305,7 +335,7 @@ void Sdl::refreshPresentation() {
             /* radius */ 3,
             static_cast<float>(Sdl::windowWidth) / 2.0f,
             static_cast<float>(Sdl::windowHeight),
-            baseColor
+            firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
     }
 

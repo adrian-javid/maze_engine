@@ -47,8 +47,16 @@ namespace Project::Sdl {
 
     void drawSquareGrid(SquareGrid const &grid=Sdl::grid, Vector2::HashMap<RgbaColor> const &colorMap=Sdl::colorMap);
 
-    void drawPointyTopHexagon(float const size, SDL_FPoint const &center, Sdl::HslaColor const &baseColor);
-    void drawPointyTopHexagon(SDL_FPoint const &center, float const width, float const height, Sdl::HslaColor const &baseColor);
+    void drawPointyTopHexagon(
+        float const size,
+        SDL_FPoint const &center,
+        SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+    );
+    void drawPointyTopHexagon(
+        SDL_FPoint const &center,
+        float const width, float const height,
+        SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+    );
 
     void mainLoop();
     void exitHandler();
