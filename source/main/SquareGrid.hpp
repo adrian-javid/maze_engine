@@ -8,7 +8,7 @@
 
 namespace Project {
   class SquareGrid;
-  std::ostream& operator<<(std::ostream &outputStream, SquareGrid const &squareGrid);
+  std::ostream &operator<<(std::ostream &outputStream, SquareGrid const &squareGrid);
 }
 
 class Project::SquareGrid {
