@@ -28,6 +28,6 @@ std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) 
     return buffer.str();
 }
 
-std::ostream& Project::operator<<(std::ostream &outputStream, SquareGrid const &squareGrid) {
+std::ostream &Project::operator<<(std::ostream &outputStream, SquareGrid const &squareGrid) {
     outputStream << squareGrid.toString(); return outputStream;
 }
