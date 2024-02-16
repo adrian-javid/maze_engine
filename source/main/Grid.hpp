@@ -1,7 +1,8 @@
 #ifndef Grid_hpp
 #define Grid_hpp
 
-#include  <cstdint>
+#include <cstdint>
+#include <functional>
 
 namespace Project { class Grid; }
 
@@ -20,6 +21,11 @@ class Project::Grid {
 
     bool isWall(Index const row, Index const column) const;
     void putWall(Index const row, Index const column);
+
+    // virtual void forNeighbor(
+    //   Index const row, Index const column,
+    //   std::function<void(Index const, Index const)> const 
+    // ) const;
 
 };
 
