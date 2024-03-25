@@ -27,17 +27,14 @@ for url, includeDir, libDir, platform, simpleName in (
 
     with ZipFile(zipFilePath) as zipFile:
 
-        includeMembers = []; libMembers = []
+        libraryCore: tuple[str, ...] = tuple(
+            member
+            for member in zipFile.namelist()
+            if member.startswith(includeDir) or member.startswith(libDir)
+        )
 
-        for member in zipFile.namelist():
-            if member.startswith(includeDir): includeMembers.append(member)
-            if member.startswith(libDir): includeMembers.append(member)
-
-        # Extract all header files.
-        zipFile.extractall(members=includeMembers, path="cache/")
-
-        # Extract all library binaries.
-        zipFile.extractall(members=libMembers, path="cache/")
+        # Extract all header files and library binaries.
+        zipFile.extractall(members=libraryCore, path="cache/")
 
         # Copy header files to relevant directory.
         if not (libraryPath := Path(F"library/{platform}/include/{simpleName}")).exists():
