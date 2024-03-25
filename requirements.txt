@@ -1,1 +1,3 @@
+# `scons` is the Python PIP package required to build this project.
+
 scons
