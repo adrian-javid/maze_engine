@@ -23,16 +23,16 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
         grid.putWall(row, grid.getColumnCount() - 1);
     }
 
-    grid.at((grid.getRowCount() - 1) - 1, secondQuarter) = SquareGrid::NONE;
-    grid.at(1, fourthQuarter) = SquareGrid::NONE;
+    grid.at((grid.getRowCount() - 1) - 1, secondQuarter) = SquareGrid::emptyTile;
+    grid.at(1, fourthQuarter) = SquareGrid::emptyTile;
 
     for (size_t offset = 0; offset < 8; ++offset) {
         grid.putWall(16, secondQuarter + offset);
         grid.putWall(3, fourthQuarter - offset);
     }
 
-    grid.at((grid.getRowCount() - 1) - 2, secondQuarter) = SquareGrid::NONE;
-    grid.at(2, fourthQuarter) = SquareGrid::NONE;
+    grid.at((grid.getRowCount() - 1) - 2, secondQuarter) = SquareGrid::emptyTile;
+    grid.at(2, fourthQuarter) = SquareGrid::emptyTile;
 
     for (size_t col{0}; col < grid.getRowCount(); ++col) {
         grid.putWall(0, col);
