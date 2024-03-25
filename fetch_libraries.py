@@ -35,10 +35,10 @@ for url, includeDir, libDir, platform, simpleName in (
 
         # Extract all header files.
         zipFile.extractall(members=includeMembers, path="cache/")
-        
+
         # Extract all library binaries.
         zipFile.extractall(members=libMembers, path="cache/")
-        
+
         # Copy header files to relevant directory.
         if not (libraryPath := Path(F"library/{platform}/include/{simpleName}")).exists():
             copyRecursively(dst=str(libraryPath), src=F"cache/{includeDir}/")
