@@ -6,7 +6,7 @@
 std::optional<std::vector<Project::Vector2>> Project::breadthFirstSearch(SquareGrid const &grid, Vector2 const &start, Vector2 const &end) {
     using namespace Project;
 
-    static Vector2 const directionList[] = {Vector2_NORTH, Vector2_SOUTH, Vector2_EAST, Vector2_WEST};
+    static Vector2 const directionList[] = {Vector2::north, Vector2::south, Vector2::east, Vector2::west};
 
     int const rowCount = Cast::toInt(grid.getRowCount());
     int const columnCount = Cast::toInt(grid.getColumnCount());

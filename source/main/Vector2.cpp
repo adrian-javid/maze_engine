@@ -3,6 +3,11 @@
 
 using Project::Vector2;
 
+Vector2 const Vector2::north(-1,  0);
+Vector2 const Vector2::south( 1,  0);
+Vector2 const Vector2::east(  0,  1);
+Vector2 const Vector2::west(  0, -1);
+
 Vector2 Vector2::operator+(Vector2 const &vector) const { return {row + vector.row, col + vector.col}; }
 Vector2 Vector2::operator-(Vector2 const &vector) const { return {row - vector.row, col - vector.col}; }
 
