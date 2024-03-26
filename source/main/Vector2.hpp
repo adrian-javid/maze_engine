@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include <unordered_map>
 
+#include "CommonInt.hpp"
+
 namespace Project { struct Vector2; }
 
 /**
@@ -18,8 +20,8 @@ struct Project::Vector2 {
     static Vector2 const east;
     static Vector2 const west;
 
-    int row;
-    int col;
+    CommonInt row;
+    CommonInt col;
 
     /// @brief Create a vector with `row` `0` and `col` `0`.
     constexpr Vector2(): Vector2(0, 0) {}
@@ -29,7 +31,7 @@ struct Project::Vector2 {
      * @param row assign `row`
      * @param column assign `col`
     */
-    constexpr Vector2(int row, int column): row{row}, col{column} {}
+    constexpr Vector2(CommonInt row, CommonInt column): row{row}, col{column} {}
 
     Vector2 operator+(Vector2 const &) const;
     Vector2 operator-(Vector2 const &) const;
@@ -42,7 +44,7 @@ struct Project::Vector2 {
     bool operator>(Vector2 const &) const;
     bool operator<=(Vector2 const &) const;
 
-    Vector2 wrap(int const rowCount, int const columnCount) const;
+    Vector2 wrap(CommonInt const rowCount, CommonInt const columnCount) const;
 
     struct Hash { size_t operator()(Vector2 const &vector) const noexcept; };
 
