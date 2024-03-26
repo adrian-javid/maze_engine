@@ -1,11 +1,15 @@
 #ifndef SquareGrid_hpp
 #define SquareGrid_hpp
 
+// parent class
+#include "Grid.hpp"
+
+// grid to string
 #include <string>
 #include <sstream>
+
+// table of tiles
 #include <vector>
-#include <type_traits>
-#include "Grid.hpp"
 
 namespace Project {
   class SquareGrid;
@@ -32,8 +36,8 @@ class Project::SquareGrid : public Project::Grid {
     size_t getColumnCount() const;
     Table const &getFlatData() const;
 
-    Tile &at(Grid::Index const row, Grid::Index const column) override;
-    Tile const &at(Grid::Index const row, Grid::Index const column) const override;
+    Tile &at(CommonInt const row, CommonInt const column) override;
+    Tile const &at(CommonInt const row, CommonInt const column) const override;
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
