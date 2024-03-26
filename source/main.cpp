@@ -4,7 +4,7 @@
 #include <emscripten.h>
 #endif
 
-#include "breadth_first_search.hpp"
+#include "simple_search.hpp"
 #include "cast.hpp"
 #include "graphics.hpp"
 #include "SquareGrid.hpp"

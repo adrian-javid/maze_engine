@@ -1,4 +1,4 @@
-#include "breadth_first_search.hpp"
+#include "simple_search.hpp"
 #include "cast.hpp"
 #include <queue>
 #include <map>

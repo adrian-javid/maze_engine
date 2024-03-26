@@ -1,5 +1,5 @@
-#ifndef breadth_first_search_hpp
-#define breadth_first_search_hpp
+#ifndef simple_search_hpp
+#define simple_search_hpp
 
 #include "SquareGrid.hpp"
 #include "Vector2.hpp"
