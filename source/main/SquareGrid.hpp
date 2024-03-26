@@ -16,7 +16,6 @@ class Project::SquareGrid : public Project::Grid {
 
   public:
 
-    using Tile = uint_fast8_t;
     using Table = std::vector<Tile>;
     static_assert(not std::is_same_v<Table, std::vector<bool>>);
 
