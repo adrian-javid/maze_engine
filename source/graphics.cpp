@@ -79,15 +79,15 @@ void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> con
     static constexpr Sdl::RgbaColor wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
     static constexpr Sdl::RgbaColor defaultColor = wallColor.withGreen(wallColor.green * 5);
 
-    int const rectangleWidth = Sdl::windowWidth / grid.getColumnCount();
-    int const rectangleHeight = Sdl::windowHeight / grid.getRowCount();
+    int const rectangleWidth = Sdl::windowWidth / grid.ColumnCount();
+    int const rectangleHeight = Sdl::windowHeight / grid.RowCount();
 
     SDL_Rect rectangle{};
     rectangle.w = rectangleWidth;
     rectangle.h = rectangleHeight;
 
-    for (Vector2 vector(0, 0); vector.row < grid.getRowCount(); ++vector.row) {
-        for (vector.col = 0; vector.col < grid.getColumnCount(); ++vector.col) {
+    for (Vector2 vector(0, 0); vector.row < grid.RowCount(); ++vector.row) {
+        for (vector.col = 0; vector.col < grid.ColumnCount(); ++vector.col) {
             rectangle.x = vector.col * rectangleWidth;
             rectangle.y = vector.row * rectangleHeight;
 

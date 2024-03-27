@@ -14,8 +14,8 @@ SquareGrid::SquareGrid(CommonInt const rowCount, CommonInt const columnCount):
         throw std::invalid_argument("column count " + std::to_string(columnCount) + " cannot be negative");
 }
 
-CommonInt SquareGrid::getRowCount() const { return rowCount; }
-CommonInt SquareGrid::getColumnCount() const { return columnCount; }
+CommonInt SquareGrid::RowCount() const { return rowCount; }
+CommonInt SquareGrid::ColumnCount() const { return columnCount; }
 auto SquareGrid::getFlatData() const -> Table const & { return flatData; }
 
 auto SquareGrid::at(CommonInt const row, CommonInt const column) -> Tile & { return flatData.at(row * columnCount + column); }

@@ -32,8 +32,8 @@ class Project::SquareGrid : public Project::Grid {
   public:
 
     explicit SquareGrid(CommonInt const rowCount=0, CommonInt const columnCount=0);
-    CommonInt getRowCount() const;
-    CommonInt getColumnCount() const;
+    CommonInt RowCount() const;
+    CommonInt ColumnCount() const;
     Table const &getFlatData() const;
 
     Tile &at(CommonInt const row, CommonInt const column) override;
