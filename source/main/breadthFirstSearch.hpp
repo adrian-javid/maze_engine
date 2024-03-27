@@ -1,7 +1,7 @@
 #ifndef breadthFirstSearch_hpp
 #define breadthFirstSearch_hpp
 
-#include "SquareGrid.hpp"
+#include "Grid.hpp"
 #include "Vector2.hpp"
 #include <optional>
 
@@ -17,7 +17,7 @@ namespace Project {
      * @return `std::optional<std::vector<Vector2>>`
      */
     std::optional<std::vector<Vector2>> breadthFirstSearch(
-        SquareGrid const &grid, Vector2 const &start, Vector2 const &end
+        Grid const &grid, Vector2 const &start, Vector2 const &end
     );
 }
 
