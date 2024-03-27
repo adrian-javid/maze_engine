@@ -32,13 +32,13 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
     int const columnCount = Cast::toInt(grid.getColumnCount());
 
     Storage_T storage;
-    Vector2::HashMap<Vector2> map;
+    Vector2::HashMap<Vector2> inverseTree;
 
     storage.push(start);
-    map.insert({start, start});
+    inverseTree.insert({start, start});
 
     while (not storage.empty()) {
-        Vector2 const vector = [&storage]() constexpr -> Vector2 const & {
+        Vector2 const key = [&storage]() constexpr -> Vector2 const & {
             if constexpr (std::is_same_v<Storage_T, std::stack<Vector2>>)
                 return storage.top();
             else
@@ -46,25 +46,23 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
         }();
         storage.pop();
 
-        if (vector == end) {
+        if (key == end) {
             std::vector<Vector2> path;
-            for (auto iterator = map.find(vector); iterator->first != start; iterator = map.find(iterator->second)) {
+            for (auto iterator = inverseTree.find(key); iterator->first != start; iterator = inverseTree.find(iterator->second)) {
                 path.push_back(iterator->first);
             }
             path.push_back(start);
             return path;
         }
 
-        for (Vector2 const &cardinalDirection : cardinalDirectionList) {
-            Vector2 const neighbor = (vector + cardinalDirection).wrap(rowCount, columnCount);
-
+        grid.forNeighbor(key, [&grid, &inverseTree, &key, &storage](Vector2 const &neighbor) {
             bool const neighborIsWall = grid.isWall(neighbor.row, neighbor.col);
 
-            if (not neighborIsWall && not map.count(neighbor)) {
-                map.insert({neighbor, vector});
+            if (not neighborIsWall && not inverseTree.count(neighbor)) {
+                inverseTree.insert({neighbor, key});
                 storage.push(neighbor);
             }
-        }
+        });
     }
 
     return std::nullopt;
