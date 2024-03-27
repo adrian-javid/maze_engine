@@ -32,10 +32,10 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
     int const columnCount = Cast::toInt(grid.getColumnCount());
 
     Storage_T storage;
-    Vector2::HashMap<Vector2> inverseTree;
+    Vector2::HashMap<Vector2> upTree;
 
     storage.push(start);
-    inverseTree.insert({start, start});
+    upTree.insert({start, start});
 
     while (not storage.empty()) {
         Vector2 const key = [&storage]() constexpr -> Vector2 const & {
@@ -48,18 +48,18 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
 
         if (key == end) {
             std::vector<Vector2> path;
-            for (auto iterator = inverseTree.find(key); iterator->first != start; iterator = inverseTree.find(iterator->second)) {
+            for (auto iterator = upTree.find(key); iterator->first != start; iterator = upTree.find(iterator->second)) {
                 path.push_back(iterator->first);
             }
             path.push_back(start);
             return path;
         }
 
-        grid.forNeighbor(key, [&grid, &inverseTree, &key, &storage](Vector2 const &neighbor) {
+        grid.forNeighbor(key, [&grid, &upTree, &key, &storage](Vector2 const &neighbor) {
             bool const neighborIsWall = grid.isWall(neighbor.row, neighbor.col);
 
-            if (not neighborIsWall && not inverseTree.count(neighbor)) {
-                inverseTree.insert({neighbor, key});
+            if (not neighborIsWall && not upTree.count(neighbor)) {
+                upTree.insert({neighbor, key});
                 storage.push(neighbor);
             }
         });
