@@ -13,9 +13,9 @@ using namespace Project;
 
 static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     SquareGrid grid(rowCount, columnCount);
-    size_t const secondQuarter = grid.getColumnCount() / 4;
-    size_t const fourthQuarter = secondQuarter * 3;
-    for (size_t row{0}; row < grid.getRowCount(); ++row) {
+    CommonInt const secondQuarter = grid.getColumnCount() / 4;
+    CommonInt const fourthQuarter = secondQuarter * 3;
+    for (CommonInt row{0}; row < grid.getRowCount(); ++row) {
         grid.putWall(row, secondQuarter);
         grid.putWall(row, fourthQuarter);
         
@@ -26,7 +26,7 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     grid.at((grid.getRowCount() - 1) - 1, secondQuarter) = SquareGrid::emptyTile;
     grid.at(1, fourthQuarter) = SquareGrid::emptyTile;
 
-    for (size_t offset = 0; offset < 8; ++offset) {
+    for (CommonInt offset = 0; offset < 8; ++offset) {
         grid.putWall(16, secondQuarter + offset);
         grid.putWall(3, fourthQuarter - offset);
     }
@@ -34,7 +34,7 @@ static SquareGrid makeGrid(size_t rowCount=20, size_t columnCount=20) {
     grid.at((grid.getRowCount() - 1) - 2, secondQuarter) = SquareGrid::emptyTile;
     grid.at(2, fourthQuarter) = SquareGrid::emptyTile;
 
-    for (size_t col{0}; col < grid.getRowCount(); ++col) {
+    for (CommonInt col{0}; col < grid.getRowCount(); ++col) {
         grid.putWall(0, col);
         grid.putWall(grid.getColumnCount() - 1, col);
     }
@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
 
     Sdl::globalGrid = makeGrid();
 
-    int const lastRow = Cast::toInt(Sdl::globalGrid.getRowCount()) - 1;
-    int const lastColumn = Cast::toInt(Sdl::globalGrid.getColumnCount()) - 1;
+    int const lastRow = Sdl::globalGrid.getRowCount() - 1;
+    int const lastColumn = Sdl::globalGrid.getColumnCount() - 1;
     auto const path = breadthFirstSearch(Sdl::globalGrid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
     for (auto &vector : path.value()) {
