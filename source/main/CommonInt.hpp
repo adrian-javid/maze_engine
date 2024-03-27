@@ -2,6 +2,7 @@
 #define CommonInt_hpp
 
 #include <cstdint>
+#include <limits>
 
 namespace Project {
 
