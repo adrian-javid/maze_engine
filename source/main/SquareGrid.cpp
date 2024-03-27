@@ -31,7 +31,7 @@ std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) 
 }
 
 void SquareGrid::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> operate) const {
-    CommonInt const rowCountInt = Cast::toInt(getRowCount());
+    CommonInt const rowCountInt    = Cast::toInt(getRowCount   ());
     CommonInt const columnCountInt = Cast::toInt(getColumnCount());
 
     operate((tileKey + Vector2::north).wrap(rowCountInt, columnCountInt));
