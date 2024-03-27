@@ -26,14 +26,14 @@ class Project::SquareGrid : public Project::Grid {
   private:
 
     Table flatData;
-    size_t rowCount;
-    size_t columnCount;
+    CommonInt rowCount;
+    CommonInt columnCount;
 
   public:
 
-    explicit SquareGrid(size_t const rowCount=0, size_t const columnCount=0);
-    size_t getRowCount() const;
-    size_t getColumnCount() const;
+    explicit SquareGrid(CommonInt const rowCount=0, CommonInt const columnCount=0);
+    CommonInt getRowCount() const;
+    CommonInt getColumnCount() const;
     Table const &getFlatData() const;
 
     Tile &at(CommonInt const row, CommonInt const column) override;
