@@ -1,6 +1,7 @@
 #include "graphics.hpp"
 #include <cmath>
 #include <cassert>
+#include <array>
 
 #if true
 #include <iostream>
@@ -78,18 +79,15 @@ void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> con
     static constexpr Sdl::RgbaColor wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
     static constexpr Sdl::RgbaColor defaultColor = wallColor.withGreen(wallColor.green * 5);
 
-    int const rectangleWidth = Sdl::windowWidth / Cast::toInt(grid.getColumnCount());
-    int const rectangleHeight = Sdl::windowHeight / Cast::toInt(grid.getRowCount());
+    int const rectangleWidth = Sdl::windowWidth / grid.getColumnCount();
+    int const rectangleHeight = Sdl::windowHeight / grid.getRowCount();
 
     SDL_Rect rectangle{};
     rectangle.w = rectangleWidth;
     rectangle.h = rectangleHeight;
 
-    int rowCount = Cast::toInt(grid.getRowCount());
-    int columnCount = Cast::toInt(grid.getColumnCount());
-
-    for (Vector2 vector(0, 0); vector.row < rowCount; ++vector.row) {
-        for (vector.col = 0; vector.col < columnCount; ++vector.col) {
+    for (Vector2 vector(0, 0); vector.row < grid.getRowCount(); ++vector.row) {
+        for (vector.col = 0; vector.col < grid.getColumnCount(); ++vector.col) {
             rectangle.x = vector.col * rectangleWidth;
             rectangle.y = vector.row * rectangleHeight;
 
@@ -129,7 +127,7 @@ static void drawRectangle(
         topRightVertex, bottomLeftVertex, bottomRightVertex,
     };
 
-    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), Cast::toInt(vertexList.size()), nullptr, 0);
+    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), vertexList.size(), nullptr, 0);
 }
 
 static void drawRectangleGrid(
@@ -186,7 +184,8 @@ void Sdl::drawPointyTopHexagon(
     SDL_Vertex const bottomRightVertex{bottomRightPoint, thirdColor, zeroPoint};
     SDL_Vertex const bottomVertex{bottomPoint, thirdColor, zeroPoint};
 
-    std::vector<SDL_Vertex> const vertexList = {
+    static constexpr int vertexCount{12};
+    std::array<SDL_Vertex, vertexCount> const vertexList = {
         // Top triangle.
         topVertex, topLeftVertex, topRightVertex,
 
@@ -198,7 +197,7 @@ void Sdl::drawPointyTopHexagon(
         bottomLeftVertex, bottomRightVertex, bottomVertex,
    };
 
-    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), Cast::toInt(vertexList.size()), nullptr, 0);
+    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
 }
 
 static void drawPointyTopHexagonGrid(
