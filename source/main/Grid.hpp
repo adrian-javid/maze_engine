@@ -24,6 +24,8 @@ class Project::Grid {
 
     virtual void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const = 0;
 
+    virtual ~Grid() = default;
+
 };
 
 #endif
