@@ -5,7 +5,7 @@
 #endif
 
 #include "breadthFirstSearch.hpp"
-#include "cast.hpp"
+#include "Cast.hpp"
 #include "graphics.hpp"
 #include "SquareGrid.hpp"
 
