@@ -7,7 +7,7 @@
 #include <array>
 #include <type_traits>
 #include <stack>
-#include "cast.hpp"
+#include "Cast.hpp"
 
 #include "Vector2.hpp"
 
