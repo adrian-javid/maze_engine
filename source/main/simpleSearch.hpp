@@ -4,15 +4,15 @@
 
 #include <optional>
 #include <vector>
+#include <array>
+#include "cast.hpp"
 
 #include "Vector2.hpp"
 
 namespace Project {
     template <typename Storage_T>
-    std::optional<std::vector<Project::Vector2>> simpleSearch(
-        SquareGrid const &grid,
-        Vector2 const &start,
-        Vector2 const &end
+    std::optional<std::vector<Vector2>> simpleSearch(
+        SquareGrid const &, Vector2 const &, Vector2 const &
     );
 }
 
@@ -29,7 +29,7 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
     int const rowCount = Cast::toInt(grid.getRowCount());
     int const columnCount = Cast::toInt(grid.getColumnCount());
 
-    Storage_T<Vector2> storage;
+    Storage_T storage;
     Vector2::HashMap<Vector2> map;
 
     storage.push(start);
