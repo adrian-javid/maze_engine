@@ -1,5 +1,7 @@
 #include "SquareGrid.hpp"
 
+#include "Cast.hpp"
+
 using Project::SquareGrid;
 
 SquareGrid::SquareGrid(size_t const rowCount, size_t const columnCount):
@@ -26,6 +28,16 @@ std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) 
     }
 
     return buffer.str();
+}
+
+void SquareGrid::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> operate) const {
+    CommonInt const rowCountInt = Cast::toInt(getRowCount());
+    CommonInt const columnCountInt = Cast::toInt(getColumnCount());
+
+    operate((tileKey + Vector2::north).wrap(rowCountInt, columnCountInt));
+    operate((tileKey + Vector2::south).wrap(rowCountInt, columnCountInt));
+    operate((tileKey + Vector2::east ).wrap(rowCountInt, columnCountInt));
+    operate((tileKey + Vector2::west ).wrap(rowCountInt, columnCountInt));
 }
 
 std::ostream &Project::operator<<(std::ostream &outputStream, SquareGrid const &squareGrid) {

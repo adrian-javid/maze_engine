@@ -41,6 +41,7 @@ class Project::SquareGrid : public Project::Grid {
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
+    void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const override;
 };
 
 #endif
