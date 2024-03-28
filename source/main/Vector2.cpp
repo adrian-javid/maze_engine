@@ -34,10 +34,11 @@ Vector2 Vector2::wrap(int const rowCount, int const columnCount) const {
     return vector;
 }
 
-size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
-    static std::hash<size_t> constexpr hash;
-    size_t hashRow = hash(vector.row);
-    size_t hashCol = hash(vector.col);
+std::size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
+    static_assert(std::is_same_v<decltype(vector.row), decltype(vector.col)>);
+    static constexpr std::hash<decltype(vector.row)> hash;
+    size_t const hashRow = hash(vector.row);
+    size_t const hashCol = hash(vector.col);
     /*
         This is a copy of `boost::hash_combine`.
         https://www.boost.org/doc/libs/1_55_0/doc/html/hash/reference.html#boost.hash_combine
