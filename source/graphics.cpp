@@ -119,15 +119,16 @@ static void drawRectangle(
     SDL_Vertex const bottomLeftVertex{bottomLeftPoint, secondColor, zeroPoint};
     SDL_Vertex const bottomRightVertex{bottomRightPoint, thirdColor, zeroPoint};
 
-    std::vector<SDL_Vertex> const vertexList = {
+    constexpr int vertexCount = 2 * (3);
+    std::array<SDL_Vertex, vertexCount> const vertexList = {
         // Top left triangle.
         topLeftVertex, topRightVertex, bottomLeftVertex,
-        
+
         // Bottom right triangle.
         topRightVertex, bottomLeftVertex, bottomRightVertex,
     };
 
-    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), vertexList.size(), nullptr, 0);
+    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
 }
 
 static void drawRectangleGrid(
@@ -142,7 +143,10 @@ static void drawRectangleGrid(
     for (int row = 0; row < rowCount; ++row)
         for (int column = 0; column < columnCount; ++column)
             drawRectangle(
-                {column * rectangleWidth + position.x, row * rectangleHeight + position.y},
+                {
+                    static_cast<float>(column) * rectangleWidth + position.x,
+                    static_cast<float>(row) * rectangleHeight + position.y
+                },
                 rectangleWidth, rectangleHeight,
                 firstColor, secondColor, thirdColor
             );
