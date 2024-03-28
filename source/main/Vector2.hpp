@@ -44,7 +44,7 @@ struct Project::Vector2 {
 
     Vector2 wrap(int const rowCount, int const columnCount) const;
 
-    struct Hash { size_t operator()(Vector2 const &vector) const noexcept; };
+    struct Hash { std::size_t operator()(Vector2 const &vector) const noexcept; };
 
     /// @brief An unorderd set of `Vector2`.
     using HashSet = std::unordered_set<Vector2, Hash>;
