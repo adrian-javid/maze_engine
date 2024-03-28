@@ -3,21 +3,28 @@
 using namespace Project;
 
 SquareGrid::SquareGrid(int const rowCount, int const columnCount):
-    flatData(rowCount * columnCount), rowCount{rowCount}, columnCount{columnCount}
-{
-    if (rowCount < 0)
-        throw std::invalid_argument("row count " + std::to_string(rowCount) + " cannpt be negative");
+    flatData([rowCount, columnCount]() constexpr -> std::size_t {
+        if (rowCount < 0)
+            throw std::invalid_argument("row count " + std::to_string(rowCount) + " should not be negative");
 
-    if (columnCount < 0)
-        throw std::invalid_argument("column count " + std::to_string(columnCount) + " cannot be negative");
-}
+        if (columnCount < 0)
+            throw std::invalid_argument("column count " + std::to_string(columnCount) + " should not be negative");
+
+        return static_cast<std::size_t>(rowCount) * static_cast<std::size_t>(columnCount);
+    }()), rowCount{rowCount}, columnCount{columnCount}
+{}
 
 int SquareGrid::RowCount() const { return rowCount; }
 int SquareGrid::ColumnCount() const { return columnCount; }
-auto SquareGrid::getFlatData() const -> Table const & { return flatData; }
+auto SquareGrid::FlatData() const -> Table const & { return flatData; }
 
-auto SquareGrid::at(int const row, int const column) -> Tile & { return flatData.at(row * columnCount + column); }
-auto SquareGrid::at(int const row, int const column) const -> Tile const & { return flatData.at(row * columnCount + column); }
+auto SquareGrid::at(int const row, int const column) -> Tile & {
+    return flatData.at(getFlatIndex(row, column));
+}
+
+auto SquareGrid::at(int const row, int const column) const -> Tile const & {
+    return flatData.at(getFlatIndex(row, column));
+}
 
 std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) const {
     std::stringstream buffer;

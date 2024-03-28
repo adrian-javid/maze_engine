@@ -34,7 +34,7 @@ class Project::SquareGrid : public Project::Grid {
     explicit SquareGrid(int const rowCount=0, int const columnCount=0);
     int RowCount() const;
     int ColumnCount() const;
-    Table const &getFlatData() const;
+    Table const &FlatData() const;
 
     Tile &at(int const row, int const column) override;
     Tile const &at(int const row, int const column) const override;
@@ -42,6 +42,19 @@ class Project::SquareGrid : public Project::Grid {
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
     void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const override;
+
+    constexpr std::size_t getFlatIndex(int row, int column) const {
+      constexpr auto wrap = [](int &index, int const count) constexpr -> void {
+        if ((index %= count) < 0) index += count;
+      };
+
+      wrap(row, rowCount);
+      wrap(column, columnCount);
+
+      int const flatIndex{row * columnCount + column};
+
+      return static_cast<std::size_t>(flatIndex);
+    }
 };
 
 #endif
