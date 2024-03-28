@@ -4,7 +4,10 @@
 #ifdef _WIN64
 #include "SDL2/SDL.h"
 #else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 #include <SDL.h>
+#pragma GCC diagnostic pop
 #endif
 
 #include "SquareGrid.hpp"
@@ -21,10 +24,10 @@ namespace Project::Sdl {
     struct [[deprecated("Use `SDL_Color` instead.")]] RgbaColor {
         Uint8 red, green, blue, alpha;
         void SetRenderDrawColor() const;
-        constexpr RgbaColor withRed  (Uint8 const red)   const { return {red, green, blue, alpha}; }
-        constexpr RgbaColor withGreen(Uint8 const green) const { return {red, green, blue, alpha}; }
-        constexpr RgbaColor withBlue (Uint8 const blue)  const { return {red, green, blue, alpha}; }
-        constexpr RgbaColor withAlpha(Uint8 const alpha) const { return {red, green, blue, alpha}; }
+        constexpr RgbaColor withRed  (Uint8 const redValue)   const { return {redValue, green, blue, alpha}; }
+        constexpr RgbaColor withGreen(Uint8 const greenValue) const { return {red, greenValue, blue, alpha}; }
+        constexpr RgbaColor withBlue (Uint8 const blueValue)  const { return {red, green, blueValue, alpha}; }
+        constexpr RgbaColor withAlpha(Uint8 const alphaValue) const { return {red, green, blue, alphaValue}; }
         std::string toString() const;
     };
 
