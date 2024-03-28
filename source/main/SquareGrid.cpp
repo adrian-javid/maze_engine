@@ -1,10 +1,8 @@
 #include "SquareGrid.hpp"
 
-#include "Cast.hpp"
-
 using namespace Project;
 
-SquareGrid::SquareGrid(CommonInt const rowCount, CommonInt const columnCount):
+SquareGrid::SquareGrid(int const rowCount, int const columnCount):
     flatData(rowCount * columnCount), rowCount{rowCount}, columnCount{columnCount}
 {
     if (rowCount < 0)
@@ -14,18 +12,18 @@ SquareGrid::SquareGrid(CommonInt const rowCount, CommonInt const columnCount):
         throw std::invalid_argument("column count " + std::to_string(columnCount) + " cannot be negative");
 }
 
-CommonInt SquareGrid::RowCount() const { return rowCount; }
-CommonInt SquareGrid::ColumnCount() const { return columnCount; }
+int SquareGrid::RowCount() const { return rowCount; }
+int SquareGrid::ColumnCount() const { return columnCount; }
 auto SquareGrid::getFlatData() const -> Table const & { return flatData; }
 
-auto SquareGrid::at(CommonInt const row, CommonInt const column) -> Tile & { return flatData.at(row * columnCount + column); }
-auto SquareGrid::at(CommonInt const row, CommonInt const column) const -> Tile const & { return flatData.at(row * columnCount + column); }
+auto SquareGrid::at(int const row, int const column) -> Tile & { return flatData.at(row * columnCount + column); }
+auto SquareGrid::at(int const row, int const column) const -> Tile const & { return flatData.at(row * columnCount + column); }
 
 std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) const {
     std::stringstream buffer;
 
-    for (CommonInt row{0}; row < rowCount; ++row) {
-        for (CommonInt column{0}; column < columnCount; ++column) {
+    for (int row{0}; row < rowCount; ++row) {
+        for (int column{0}; column < columnCount; ++column) {
             Tile const tile = at(row, column);
             char const symbol = (tile ? wallSymbol : emptySymbol);
             buffer << ' ' << symbol;

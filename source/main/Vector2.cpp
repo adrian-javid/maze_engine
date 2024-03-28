@@ -27,7 +27,7 @@ bool Vector2::operator>(Vector2 const &vector) const { return vector < *this; }
 
 bool Vector2::operator<=(Vector2 const &vector) const { return not(vector < *this); }
 
-Vector2 Vector2::wrap(CommonInt const rowCount, CommonInt const columnCount) const {
+Vector2 Vector2::wrap(int const rowCount, int const columnCount) const {
     Vector2 vector(row % rowCount, col % columnCount);
     if (vector.row < 0) vector.row += rowCount;
     if (vector.col < 0) vector.col += columnCount;

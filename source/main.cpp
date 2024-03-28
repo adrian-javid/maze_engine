@@ -5,17 +5,16 @@
 #endif
 
 #include "breadthFirstSearch.hpp"
-#include "Cast.hpp"
 #include "graphics.hpp"
 #include "SquareGrid.hpp"
 
 using namespace Project;
 
-static SquareGrid makeGrid(CommonInt rowCount, CommonInt columnCount) {
+static SquareGrid makeGrid(int rowCount, int columnCount) {
     SquareGrid grid(rowCount, columnCount);
-    CommonInt const secondQuarter = grid.ColumnCount() / 4;
-    CommonInt const fourthQuarter = secondQuarter * 3;
-    for (CommonInt row{0}; row < grid.RowCount(); ++row) {
+    int const secondQuarter = grid.ColumnCount() / 4;
+    int const fourthQuarter = secondQuarter * 3;
+    for (int row{0}; row < grid.RowCount(); ++row) {
         grid.putWall(row, secondQuarter);
         grid.putWall(row, fourthQuarter);
         
@@ -26,7 +25,7 @@ static SquareGrid makeGrid(CommonInt rowCount, CommonInt columnCount) {
     grid.at((grid.RowCount() - 1) - 1, secondQuarter) = SquareGrid::emptyTile;
     grid.at(1, fourthQuarter) = SquareGrid::emptyTile;
 
-    for (CommonInt offset = 0; offset < 8; ++offset) {
+    for (int offset = 0; offset < 8; ++offset) {
         grid.putWall(16, secondQuarter + offset);
         grid.putWall(3, fourthQuarter - offset);
     }
@@ -34,7 +33,7 @@ static SquareGrid makeGrid(CommonInt rowCount, CommonInt columnCount) {
     grid.at((grid.RowCount() - 1) - 2, secondQuarter) = SquareGrid::emptyTile;
     grid.at(2, fourthQuarter) = SquareGrid::emptyTile;
 
-    for (CommonInt col{0}; col < grid.RowCount(); ++col) {
+    for (int col{0}; col < grid.RowCount(); ++col) {
         grid.putWall(0, col);
         grid.putWall(grid.ColumnCount() - 1, col);
     }

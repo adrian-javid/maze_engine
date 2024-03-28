@@ -26,18 +26,18 @@ class Project::SquareGrid : public Project::Grid {
   private:
 
     Table flatData;
-    CommonInt rowCount;
-    CommonInt columnCount;
+    int rowCount;
+    int columnCount;
 
   public:
 
-    explicit SquareGrid(CommonInt const rowCount=0, CommonInt const columnCount=0);
-    CommonInt RowCount() const;
-    CommonInt ColumnCount() const;
+    explicit SquareGrid(int const rowCount=0, int const columnCount=0);
+    int RowCount() const;
+    int ColumnCount() const;
     Table const &getFlatData() const;
 
-    Tile &at(CommonInt const row, CommonInt const column) override;
-    Tile const &at(CommonInt const row, CommonInt const column) const override;
+    Tile &at(int const row, int const column) override;
+    Tile const &at(int const row, int const column) const override;
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 

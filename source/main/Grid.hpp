@@ -2,7 +2,6 @@
 #define Grid_hpp
 
 #include <functional>
-#include "CommonInt.hpp"
 #include "Vector2.hpp"
 
 namespace Project { class Grid; }
@@ -16,14 +15,17 @@ class Project::Grid {
     constexpr static Tile emptyTile = 0;
     constexpr static Tile wallFlag = 1 << 0;
 
-    virtual Tile &at(CommonInt const row, CommonInt const column) = 0;
-    virtual Tile const &at(CommonInt const row, CommonInt const column) const = 0;
+    virtual Tile &at(int const row, int const column) = 0;
+    virtual Tile const &at(int const row, int const column) const = 0;
 
-    bool isWall(CommonInt const row, CommonInt const column) const;
-    void putWall(CommonInt const row, CommonInt const column);
+    bool isWall(int const row, int const column) const;
+    void putWall(int const row, int const column);
 
     virtual void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const = 0;
 
+    constexpr Grid() = default;
+    constexpr Grid(Grid const &) = default;
+    constexpr Project::Grid &operator=(const Project::Grid &) = default;
     virtual ~Grid() = default;
 
 };

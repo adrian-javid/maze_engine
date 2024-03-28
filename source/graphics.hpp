@@ -9,7 +9,6 @@
 
 #include "SquareGrid.hpp"
 #include "Vector2.hpp"
-#include "Cast.hpp"
 
 namespace Project::Sdl {
 
