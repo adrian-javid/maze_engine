@@ -5,7 +5,9 @@
 
 #if true
 #include <iostream>
+#if false
 static auto &O = std::cout;
+#endif
 #endif
 
 using namespace Project;
@@ -215,9 +217,10 @@ static void drawPointyTopHexagonGrid(
     assert(radius >= 0);
 
     int const diameter = radius + 1 + radius;
-    int const diameterValue = static_cast<float>(diameter);
+    float const diameterValue = static_cast<float>(diameter);
 
     float const hexagonWidth = width / diameterValue;
+
     // For height, first hexagon counts as 1, other hexagons count as 3/4.
     float const hexagonHeight = height / (1.0f + (3.0f * (diameterValue - 1.0f)) / 4.0f);
 
@@ -230,7 +233,7 @@ static void drawPointyTopHexagonGrid(
         float const topHexagonCenterY = center.y - verticalIndexValue * threeQuartersHexagonHeight;
         float const bottomHexagonCenterY = center.y + verticalIndexValue * threeQuartersHexagonHeight;
 
-        float const horizontalOffset = verticalIndex * halfHexagonWidth;
+        float const horizontalOffset = verticalIndexValue * halfHexagonWidth;
 
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
