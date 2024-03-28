@@ -25,7 +25,7 @@ class Project::Grid {
 
     constexpr Grid() = default;
     constexpr Grid(Grid const &) = default;
-    constexpr Project::Grid &operator=(const Project::Grid &) = default;
+    Project::Grid &operator=(const Project::Grid &) = default;
     virtual ~Grid() = default;
 
 };
