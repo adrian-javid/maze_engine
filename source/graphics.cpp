@@ -36,7 +36,7 @@ SDL_Color Sdl::HslaColor::toRgbaColor(double hueSupplement) const {
 
     auto const chroma = (1.0 - std::fabs(2.0 * luminance - 1.0)) * saturation;
 
-    auto const X = chroma * (1 - std::fabs(std::fmod(hueMix / 60.0, 2) - 1));
+    auto const X = chroma * (1.0 - std::fabs(std::fmod(hueMix / 60.0, 2.0) - 1.0));
 
     struct Rgb { double r, g, b; } color{};
 
@@ -159,7 +159,7 @@ void Sdl::drawPointyTopHexagon(
     SDL_FPoint const &center,
     SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
 ) {
-    Sdl::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2 * size, firstColor, secondColor, thirdColor);
+    Sdl::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2.0f * size, firstColor, secondColor, thirdColor);
 }
 
 void Sdl::drawPointyTopHexagon(
@@ -168,9 +168,9 @@ void Sdl::drawPointyTopHexagon(
     SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
 ) {
 
-    float const halfWidth = width / 2;
-    float const halfHeight = height / 2;
-    float const quarterHeight = height / 4;
+    float const halfWidth = width / 2.0f;
+    float const halfHeight = height / 2.0f;
+    float const quarterHeight = height / 4.0f;
 
     SDL_FPoint const topPoint{center.x, center.y - halfHeight};
     SDL_FPoint const topLeftPoint{center.x - halfWidth, center.y - quarterHeight};
