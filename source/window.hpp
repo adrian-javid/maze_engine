@@ -20,7 +20,7 @@ namespace Project::Media {
         float const width, float const height
     );
 
-    void refreshWindow_v0();
+    [[deprecated]] void refreshWindow_v0();
 
     void drawRectangleGrid(
         SDL_FPoint const &position,
