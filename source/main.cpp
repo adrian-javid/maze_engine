@@ -8,6 +8,13 @@
 #include "Media.hpp"
 #include "SquareGrid.hpp"
 
+#include <algorithm>
+#include <iostream>
+
+#if true
+static auto &O = std::cout;
+#endif
+
 using namespace Project;
 
 static SquareGrid generateGrid(int rowCount, int columnCount) {
@@ -45,17 +52,38 @@ static SquareGrid generateGrid(int rowCount, int columnCount) {
 #include <iostream>
 #endif
 
+static double wrap(double value, double const bound) {
+    double constexpr zero{0.0};
+
+    value = std::fmod(value, bound);
+
+    if (value < zero) value += bound;
+    
+    if (value >= bound) value = zero;
+
+    return value;
+}
+
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
-    std::atexit(&Media::exitHandler);
     SDL_Init(SDL_INIT_VIDEO);
 
-    Grid const &maze = generateGrid(20, 20);
+    /*
+        I want to investigate why
+        calling this before `SDL_Init` causes a segmentation fault.
 
-    int const lastRow = Media::globalGrid.RowCount() - 1;
-    int const lastColumn = Media::globalGrid.ColumnCount() - 1;
-    auto const path = breadthFirstSearch(Media::globalGrid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
+        I believe it has something to do with `SDL_Quit`.
+    */
+    std::atexit(&Media::exitHandler);
+
+    auto const maze = generateGrid(20, 20);
+
+    int const lastRow = maze.RowCount() - 1;
+    int const lastColumn = maze.ColumnCount() - 1;
+    Vector2 const start = {0 + 1, 0 + 1};
+    Vector2 const end = {lastRow - 1, lastColumn - 1};
+    auto const path = breadthFirstSearch(maze, start, end);
 
     for (auto &vector : path.value()) {
         Media::globalColorMap.insert({vector, Media::pathColor});
@@ -73,9 +101,26 @@ int main(int argc, char *argv[]) {
     SDL_SetWindowTitle(Media::window, "Maze Solver");
     SDL_SetWindowMinimumSize(Media::window, 250, 150);
 
-    Media::refreshWindow_v0();
+    Media::windowRefresher = []() -> void {
+        static double percentage{0.0};
 
-    Media::windowRefresher = []() -> void {};
+        double const deltaPercentage = static_cast<double>(Media::deltaTime) / 32.0;
+
+        percentage = wrap(percentage + deltaPercentage, 1.0);
+        assert(percentage >= 0.0);
+        assert(percentage < 1.0);
+
+        static Uint64 timer = 0;
+        static Uint64 constexpr oneSecond = 1'000;
+        if ((timer += Media::deltaTime) >= oneSecond / 4) {
+            O << percentage << '\n';
+            timer = 0; // reset timer
+        }
+
+        SDL_RenderPresent(Media::renderer);
+    };
+
+    Media::windowRefresher();
 
     #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(&Media::mainLoop, -1, true);
