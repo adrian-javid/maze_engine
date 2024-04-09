@@ -5,7 +5,7 @@
 #endif
 
 #include "breadthFirstSearch.hpp"
-#include "graphics.hpp"
+#include "Media.hpp"
 #include "SquareGrid.hpp"
 
 using namespace Project;
