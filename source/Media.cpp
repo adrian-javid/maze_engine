@@ -18,11 +18,14 @@ int Media::windowWidth = 420;
 int Media::windowHeight = 420;
 Uint64 Media::deltaTime = 0;
 
-void Media::RgbaColor::SetRenderDrawColor() const { SDL_SetRenderDrawColor(renderer, red, green, blue, alpha); }
+void Media::setRenderDrawColor(SDL_Color const &color) { SDL_SetRenderDrawColor(
+    Media::renderer,
+    color.r, color.g, color.b, color.a
+); }
 
-std::string Media::RgbaColor::toString() const {
+std::string Media::toString(SDL_Color const &color) {
     std::stringstream buffer;
-    buffer << "(R=" << +red << ", G=" << +green << ", B=" << +blue << ", A=" << +alpha << ")";
+    buffer << "(R=" << +color.r << ", G=" << +color.g << ", B=" << +color.b << ", A=" << +color.a << ")";
     return buffer.str();
 }
 
@@ -75,11 +78,11 @@ std::string Media::HslaColor::toString() const {
 }
 
 SquareGrid Media::globalGrid;
-Vector2::HashMap<Media::RgbaColor> Media::globalColorMap;
+Vector2::HashMap<SDL_Color> Media::globalColorMap;
 
-void Media::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> const &colorMap) {
-    static constexpr Media::RgbaColor wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
-    static constexpr Media::RgbaColor defaultColor = wallColor.withGreen(wallColor.green * 5);
+void Media::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<SDL_Color> const &colorMap) {
+    static constexpr SDL_Color wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
+    static constexpr SDL_Color defaultColor{wallColor.r, wallColor.g * 5, wallColor.b, wallColor.a};
 
     int const rectangleWidth = Media::windowWidth / grid.ColumnCount();
     int const rectangleHeight = Media::windowHeight / grid.RowCount();
@@ -93,12 +96,16 @@ void Media::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> c
             rectangle.x = vector.col * rectangleWidth;
             rectangle.y = vector.row * rectangleHeight;
 
-            if (colorMap.count(vector))
-                colorMap.at(vector).SetRenderDrawColor();
-            else if (grid.isWall(vector.row, vector.col))
-                wallColor.SetRenderDrawColor();
-            else
-                defaultColor.SetRenderDrawColor();
+            SDL_Color const &color = [&]() -> SDL_Color {
+                if (colorMap.count(vector))
+                    return colorMap.at(vector);
+                else if (grid.isWall(vector.row, vector.col))
+                    return wallColor;
+                else
+                    return defaultColor;
+            }();
+
+            SDL_SetRenderDrawColor(Media::renderer, color.r, color.g, color.b, color.a);
 
             SDL_RenderFillRect(Media::renderer, &rectangle);
         }
@@ -289,7 +296,7 @@ void Media::refreshPresentation() {
         hueLowerBound, hueUpperBound, colorCycleLength
     );
 
-    Media::BLACK.SetRenderDrawColor();
+    Media::setRenderDrawColor(Media::BLACK);
     SDL_RenderClear(Media::renderer);
 
     if (false) Media::drawSquareGrid();

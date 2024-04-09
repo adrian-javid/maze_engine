@@ -21,15 +21,9 @@ namespace Project::Media {
     extern int windowHeight;
     extern Uint64 deltaTime;
 
-    struct [[deprecated("Use `SDL_Color` instead.")]] RgbaColor {
-        Uint8 red, green, blue, alpha;
-        void SetRenderDrawColor() const;
-        constexpr RgbaColor withRed  (Uint8 const redValue)   const { return {redValue, green, blue, alpha}; }
-        constexpr RgbaColor withGreen(Uint8 const greenValue) const { return {red, greenValue, blue, alpha}; }
-        constexpr RgbaColor withBlue (Uint8 const blueValue)  const { return {red, green, blueValue, alpha}; }
-        constexpr RgbaColor withAlpha(Uint8 const alphaValue) const { return {red, green, blue, alphaValue}; }
-        std::string toString() const;
-    };
+    std::string toString(SDL_Color const &color);
+
+    void setRenderDrawColor(SDL_Color const &color);
 
     struct HslaColor {
         double hue, saturation, luminance, alpha;
@@ -39,15 +33,15 @@ namespace Project::Media {
         std::string toString() const;
     };
 
-    constexpr RgbaColor BLACK{0x00, 0x00, 0x00, 0xFF};
-    constexpr RgbaColor PATH_COLOR = BLACK.withRed(0xFF);
+    constexpr SDL_Color BLACK{0x00, 0x00, 0x00, 0xFF};
+    constexpr SDL_Color PATH_COLOR = {0xFF, BLACK.g, BLACK.b, BLACK.a};
 
     extern SquareGrid globalGrid;
-    extern Vector2::HashMap<Media::RgbaColor> globalColorMap;
+    extern Vector2::HashMap<SDL_Color> globalColorMap;
 
     void refreshPresentation();
 
-    void drawSquareGrid(SquareGrid const &grid=Media::globalGrid, Vector2::HashMap<RgbaColor> const &colorMap=Media::globalColorMap);
+    void drawSquareGrid(SquareGrid const &grid=Media::globalGrid, Vector2::HashMap<SDL_Color> const &colorMap=Media::globalColorMap);
 
     void drawPointyTopHexagon(
         float const size,
