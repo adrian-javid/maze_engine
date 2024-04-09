@@ -12,21 +12,21 @@ static auto &O = std::cout;
 
 using namespace Project;
 
-SDL_Window *Sdl::window = nullptr;
-SDL_Renderer *Sdl::renderer = nullptr;
-int Sdl::windowWidth = 420;
-int Sdl::windowHeight = 420;
-Uint64 Sdl::deltaTime = 0;
+SDL_Window *Media::window = nullptr;
+SDL_Renderer *Media::renderer = nullptr;
+int Media::windowWidth = 420;
+int Media::windowHeight = 420;
+Uint64 Media::deltaTime = 0;
 
-void Sdl::RgbaColor::SetRenderDrawColor() const { SDL_SetRenderDrawColor(renderer, red, green, blue, alpha); }
+void Media::RgbaColor::SetRenderDrawColor() const { SDL_SetRenderDrawColor(renderer, red, green, blue, alpha); }
 
-std::string Sdl::RgbaColor::toString() const {
+std::string Media::RgbaColor::toString() const {
     std::stringstream buffer;
     buffer << "(R=" << +red << ", G=" << +green << ", B=" << +blue << ", A=" << +alpha << ")";
     return buffer.str();
 }
 
-SDL_Color Sdl::HslaColor::toRgbaColor(double hueSupplement) const {
+SDL_Color Media::HslaColor::toRgbaColor(double hueSupplement) const {
     double const hueMix = HslaColor::wrapHue(hue + hueSupplement);
 
     assert(0 <= hueMix and hueMix < 360);
@@ -57,32 +57,32 @@ SDL_Color Sdl::HslaColor::toRgbaColor(double hueSupplement) const {
     };
 }
 
-double Sdl::HslaColor::wrapHue(double hue, double const bound) {
+double Media::HslaColor::wrapHue(double hue, double const bound) {
     hue = std::fmod(hue, bound);
     if (hue < 0) hue += bound;
     if (hue >= bound) hue = 0.0;
     return hue;
 }
 
-void Sdl::HslaColor::addHue(double const hueSupplement) {
+void Media::HslaColor::addHue(double const hueSupplement) {
     hue = wrapHue(hue + hueSupplement);
 }
 
-std::string Sdl::HslaColor::toString() const {
+std::string Media::HslaColor::toString() const {
     std::stringstream buffer;
     buffer << "(H=" << hue << ", S=" << saturation << ", L=" << luminance << ", A=" << alpha << ")";
     return buffer.str();
 }
 
-SquareGrid Sdl::globalGrid;
-Vector2::HashMap<Sdl::RgbaColor> Sdl::globalColorMap;
+SquareGrid Media::globalGrid;
+Vector2::HashMap<Media::RgbaColor> Media::globalColorMap;
 
-void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> const &colorMap) {
-    static constexpr Sdl::RgbaColor wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
-    static constexpr Sdl::RgbaColor defaultColor = wallColor.withGreen(wallColor.green * 5);
+void Media::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> const &colorMap) {
+    static constexpr Media::RgbaColor wallColor{0x20, 0x20, 0x95, SDL_ALPHA_OPAQUE};
+    static constexpr Media::RgbaColor defaultColor = wallColor.withGreen(wallColor.green * 5);
 
-    int const rectangleWidth = Sdl::windowWidth / grid.ColumnCount();
-    int const rectangleHeight = Sdl::windowHeight / grid.RowCount();
+    int const rectangleWidth = Media::windowWidth / grid.ColumnCount();
+    int const rectangleHeight = Media::windowHeight / grid.RowCount();
 
     SDL_Rect rectangle{};
     rectangle.w = rectangleWidth;
@@ -100,7 +100,7 @@ void Sdl::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<RgbaColor> con
             else
                 defaultColor.SetRenderDrawColor();
 
-            SDL_RenderFillRect(Sdl::renderer, &rectangle);
+            SDL_RenderFillRect(Media::renderer, &rectangle);
         }
     }
 }
@@ -130,7 +130,7 @@ static void drawRectangle(
         topRightVertex, bottomLeftVertex, bottomRightVertex,
     };
 
-    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
+    SDL_RenderGeometry(Media::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
 }
 
 static void drawRectangleGrid(
@@ -154,15 +154,15 @@ static void drawRectangleGrid(
             );
 }
 
-void Sdl::drawPointyTopHexagon(
+void Media::drawPointyTopHexagon(
     float const size,
     SDL_FPoint const &center,
     SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
 ) {
-    Sdl::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2.0f * size, firstColor, secondColor, thirdColor);
+    Media::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2.0f * size, firstColor, secondColor, thirdColor);
 }
 
-void Sdl::drawPointyTopHexagon(
+void Media::drawPointyTopHexagon(
     SDL_FPoint const &center,
     float const width, float const height,
     SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
@@ -203,7 +203,7 @@ void Sdl::drawPointyTopHexagon(
         bottomLeftVertex, bottomRightVertex, bottomVertex,
    };
 
-    SDL_RenderGeometry(Sdl::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
+    SDL_RenderGeometry(Media::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
 }
 
 static void drawPointyTopHexagonGrid(
@@ -237,8 +237,8 @@ static void drawPointyTopHexagonGrid(
 
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
-            Sdl::drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
-            Sdl::drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
+            Media::drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
+            Media::drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
         }
     }
 
@@ -251,15 +251,15 @@ static double asHue(
     double const colorCycleLength
 ) {
     if (hueOffset < colorCycleLength)
-        return Sdl::HslaColor::wrapHue(hueLowerBound + hueOffset);
+        return Media::HslaColor::wrapHue(hueLowerBound + hueOffset);
     else /* mirror */
-        return Sdl::HslaColor::wrapHue(hueUpperBound - (hueOffset - colorCycleLength));
+        return Media::HslaColor::wrapHue(hueUpperBound - (hueOffset - colorCycleLength));
 }
 
-void Sdl::refreshPresentation() {
-    static Sdl::HslaColor firstColor{0.0, 1.0, 0.5, 1.0};
-    static Sdl::HslaColor secondColor = firstColor;
-    static Sdl::HslaColor thirdColor = secondColor;
+void Media::refreshPresentation() {
+    static Media::HslaColor firstColor{0.0, 1.0, 0.5, 1.0};
+    static Media::HslaColor secondColor = firstColor;
+    static Media::HslaColor thirdColor = secondColor;
 
     static double hueOffset = 0.0;
 
@@ -275,60 +275,60 @@ void Sdl::refreshPresentation() {
     double const deltaHue = static_cast<double>(deltaTime) / 32.0; // TODO: need a safe cast from `Uint8` to `double`
 
     firstColor.hue = asHue(
-        hueOffset = Sdl::HslaColor::wrapHue(hueOffset + deltaHue, 2 * colorCycleLength),
+        hueOffset = Media::HslaColor::wrapHue(hueOffset + deltaHue, 2 * colorCycleLength),
         hueLowerBound, hueUpperBound, colorCycleLength
     );
 
     secondColor.hue = asHue(
-        Sdl::HslaColor::wrapHue(hueOffset - 20.0, 2.0 * colorCycleLength),
+        Media::HslaColor::wrapHue(hueOffset - 20.0, 2.0 * colorCycleLength),
         hueLowerBound, hueUpperBound, colorCycleLength
     );
 
     thirdColor.hue = asHue(
-        Sdl::HslaColor::wrapHue(hueOffset - 40.0, 2.0 * colorCycleLength),
+        Media::HslaColor::wrapHue(hueOffset - 40.0, 2.0 * colorCycleLength),
         hueLowerBound, hueUpperBound, colorCycleLength
     );
 
-    Sdl::BLACK.SetRenderDrawColor();
-    SDL_RenderClear(Sdl::renderer);
+    Media::BLACK.SetRenderDrawColor();
+    SDL_RenderClear(Media::renderer);
 
-    if (false) Sdl::drawSquareGrid();
+    if (false) Media::drawSquareGrid();
 
     if (true) /* draw rectangle grid */ {
         drawRectangleGrid(
             /* position */ {0.0f, 0.0f},
             /* row count */ 5,
             /* column count */ 5,
-            static_cast<float>(Sdl::windowWidth) / 2.0f,
-            static_cast<float>(Sdl::windowHeight) / 2.0f,
+            static_cast<float>(Media::windowWidth) / 2.0f,
+            static_cast<float>(Media::windowHeight) / 2.0f,
             firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
         drawRectangleGrid(
-            /* position */ {static_cast<float>(Sdl::windowWidth) / 2.0f, static_cast<float>(Sdl::windowHeight) / 2.0f},
+            /* position */ {static_cast<float>(Media::windowWidth) / 2.0f, static_cast<float>(Media::windowHeight) / 2.0f},
             /* row count */ 5,
             /* column count */ 5,
-            static_cast<float>(Sdl::windowWidth) / 2.0f,
-            static_cast<float>(Sdl::windowHeight) / 2.0f,
+            static_cast<float>(Media::windowWidth) / 2.0f,
+            static_cast<float>(Media::windowHeight) / 2.0f,
             firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
         drawPointyTopHexagonGrid(
             /* center */ {
-                static_cast<float>(Sdl::windowWidth) * 3.0f / 4.0f,
-                static_cast<float>(Sdl::windowHeight) * 1.0f / 4.0f
+                static_cast<float>(Media::windowWidth) * 3.0f / 4.0f,
+                static_cast<float>(Media::windowHeight) * 1.0f / 4.0f
             },
             /* radius */ 3,
-            static_cast<float>(Sdl::windowWidth) / 2.0f,
-            static_cast<float>(Sdl::windowHeight) / 2.0f,
+            static_cast<float>(Media::windowWidth) / 2.0f,
+            static_cast<float>(Media::windowHeight) / 2.0f,
             firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
         drawPointyTopHexagonGrid(
             /* center */ {
-                static_cast<float>(Sdl::windowWidth) * 1.0f / 4.0f,
-                static_cast<float>(Sdl::windowHeight) * 3.0f / 4.0f
+                static_cast<float>(Media::windowWidth) * 1.0f / 4.0f,
+                static_cast<float>(Media::windowHeight) * 3.0f / 4.0f
             },
             /* radius */ 3,
-            static_cast<float>(Sdl::windowWidth) / 2.0f,
-            static_cast<float>(Sdl::windowHeight) / 2.0f,
+            static_cast<float>(Media::windowWidth) / 2.0f,
+            static_cast<float>(Media::windowHeight) / 2.0f,
             firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
     }
@@ -336,20 +336,20 @@ void Sdl::refreshPresentation() {
     if (false) /* draw hexagon grid */ {
         drawPointyTopHexagonGrid(
             /* center */ {
-                static_cast<float>(Sdl::windowWidth) * 3.0f / 4.0f,
-                static_cast<float>(Sdl::windowHeight) * 2.0f / 4.0f
+                static_cast<float>(Media::windowWidth) * 3.0f / 4.0f,
+                static_cast<float>(Media::windowHeight) * 2.0f / 4.0f
             },
             /* radius */ 3,
-            static_cast<float>(Sdl::windowWidth) / 2.0f,
-            static_cast<float>(Sdl::windowHeight),
+            static_cast<float>(Media::windowWidth) / 2.0f,
+            static_cast<float>(Media::windowHeight),
             firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
         );
     }
 
-    SDL_RenderPresent(Sdl::renderer);
+    SDL_RenderPresent(Media::renderer);
 }
 
-void Sdl::mainLoop() {
+void Media::mainLoop() {
     static Uint64 lastTime = 0;
     Uint64 const currentTime = SDL_GetTicks64();
     deltaTime = currentTime - lastTime;
@@ -358,16 +358,16 @@ void Sdl::mainLoop() {
     while (SDL_PollEvent(&event)) switch (event.type) {
         case SDL_KEYDOWN: switch (event.key.keysym.sym) {
             case SDLK_BACKQUOTE:
-                SDL_SetWindowFullscreen(Sdl::window, SDL_WINDOW_FULLSCREEN);
+                SDL_SetWindowFullscreen(Media::window, SDL_WINDOW_FULLSCREEN);
                 break;
             case SDLK_ESCAPE:
-                SDL_SetWindowFullscreen(Sdl::window, 0);
+                SDL_SetWindowFullscreen(Media::window, 0);
                 break;
         } break;
         case SDL_WINDOWEVENT: switch (event.window.event) {
             case SDL_WINDOWEVENT_RESIZED:
-                Sdl::windowWidth = event.window.data1;
-                Sdl::windowHeight = event.window.data2;
+                Media::windowWidth = event.window.data1;
+                Media::windowHeight = event.window.data2;
                 break;
         } break;
         case SDL_QUIT:
@@ -375,7 +375,7 @@ void Sdl::mainLoop() {
             break;
     }
 
-    Sdl::refreshPresentation();
+    Media::refreshPresentation();
 
     static Uint64 timer = 0, counter = 0;
     static Uint64 constexpr oneSecond = 1000;
@@ -388,8 +388,8 @@ void Sdl::mainLoop() {
     SDL_Delay(1);
 }
 
-void Sdl::exitHandler() {
-    if (Sdl::window) SDL_DestroyWindow(Sdl::window);
-    if (Sdl::renderer) SDL_DestroyRenderer(Sdl::renderer);
+void Media::exitHandler() {
+    if (Media::window) SDL_DestroyWindow(Media::window);
+    if (Media::renderer) SDL_DestroyRenderer(Media::renderer);
     SDL_Quit();
 }

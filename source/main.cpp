@@ -53,45 +53,45 @@ int main(int argc, char *argv[]) {
     #endif
 
     SDL_Init(SDL_INIT_VIDEO);
-    std::atexit(&Sdl::exitHandler);
+    std::atexit(&Media::exitHandler);
 
     #ifndef NDEBUG
-    Sdl::HslaColor color{210, 0.79, 0.3, 0.5};
+    Media::HslaColor color{210, 0.79, 0.3, 0.5};
     O << color.toString() << "\n";
     // O << color.toRgbaColor().toString() << "\n";
-    // O << Sdl::HslaColor{240.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
-    // O << Sdl::HslaColor{120.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
-    // O << Sdl::HslaColor{60.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
+    // O << Media::HslaColor{240.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
+    // O << Media::HslaColor{120.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
+    // O << Media::HslaColor{60.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
     #endif
 
-    Sdl::globalGrid = makeGrid(20, 20);
+    Media::globalGrid = makeGrid(20, 20);
 
-    int const lastRow = Sdl::globalGrid.RowCount() - 1;
-    int const lastColumn = Sdl::globalGrid.ColumnCount() - 1;
-    auto const path = breadthFirstSearch(Sdl::globalGrid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
+    int const lastRow = Media::globalGrid.RowCount() - 1;
+    int const lastColumn = Media::globalGrid.ColumnCount() - 1;
+    auto const path = breadthFirstSearch(Media::globalGrid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
     for (auto &vector : path.value()) {
-        Sdl::globalColorMap.insert({vector, Sdl::PATH_COLOR});
+        Media::globalColorMap.insert({vector, Media::PATH_COLOR});
     }
 
     SDL_CreateWindowAndRenderer(
-        Sdl::windowWidth, Sdl::windowHeight,
+        Media::windowWidth, Media::windowHeight,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
-        &Sdl::window, &Sdl::renderer
+        &Media::window, &Media::renderer
     );
 
-    assert(Sdl::window != nullptr);
-    assert(Sdl::renderer != nullptr);
+    assert(Media::window != nullptr);
+    assert(Media::renderer != nullptr);
 
-    SDL_SetWindowTitle(Sdl::window, "Maze Solver");
-    SDL_SetWindowMinimumSize(Sdl::window, 250, 150);
+    SDL_SetWindowTitle(Media::window, "Maze Solver");
+    SDL_SetWindowMinimumSize(Media::window, 250, 150);
 
-    Sdl::refreshPresentation();
+    Media::refreshPresentation();
 
     #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(&Sdl::mainLoop, -1, true);
+    emscripten_set_main_loop(&Media::mainLoop, -1, true);
     #else
-    while (true) Sdl::mainLoop();
+    while (true) Media::mainLoop();
     #endif
 
     return EXIT_SUCCESS;

@@ -13,7 +13,7 @@
 #include "SquareGrid.hpp"
 #include "Vector2.hpp"
 
-namespace Project::Sdl {
+namespace Project::Media {
 
     extern SDL_Window *window;
     extern SDL_Renderer *renderer;
@@ -43,11 +43,11 @@ namespace Project::Sdl {
     constexpr RgbaColor PATH_COLOR = BLACK.withRed(0xFF);
 
     extern SquareGrid globalGrid;
-    extern Vector2::HashMap<Sdl::RgbaColor> globalColorMap;
+    extern Vector2::HashMap<Media::RgbaColor> globalColorMap;
 
     void refreshPresentation();
 
-    void drawSquareGrid(SquareGrid const &grid=Sdl::globalGrid, Vector2::HashMap<RgbaColor> const &colorMap=Sdl::globalColorMap);
+    void drawSquareGrid(SquareGrid const &grid=Media::globalGrid, Vector2::HashMap<RgbaColor> const &colorMap=Media::globalColorMap);
 
     void drawPointyTopHexagon(
         float const size,
@@ -62,10 +62,6 @@ namespace Project::Sdl {
 
     void mainLoop();
     void exitHandler();
-}
-
-namespace Project::Graphics {
-    /////////
 }
 
 #endif
