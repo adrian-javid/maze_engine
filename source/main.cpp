@@ -53,6 +53,8 @@ static SquareGrid generateGrid(int rowCount, int columnCount) {
 #endif
 
 static double wrap(double value, double const bound) {
+    assert(bound != 0);
+
     double constexpr zero{0.0};
 
     value = std::fmod(value, bound);
@@ -78,6 +80,7 @@ int main(int argc, char *argv[]) {
     std::atexit(&Media::exitHandler);
 
     auto const maze = generateGrid(20, 20);
+    Vector2::HashSet pathTileSet;
 
     int const lastRow = maze.RowCount() - 1;
     int const lastColumn = maze.ColumnCount() - 1;
@@ -87,6 +90,7 @@ int main(int argc, char *argv[]) {
 
     for (auto &vector : path.value()) {
         Media::globalColorMap.insert({vector, Media::pathColor});
+        pathTileSet.insert(vector);
     }
 
     SDL_CreateWindowAndRenderer(
@@ -101,7 +105,11 @@ int main(int argc, char *argv[]) {
     SDL_SetWindowTitle(Media::window, "Maze Solver");
     SDL_SetWindowMinimumSize(Media::window, 250, 150);
 
-    Media::windowRefresher = []() -> void {
+    Media::windowRefresher = [&maze, &pathTileSet]() -> void {
+        constexpr Media::HslaColor wallTileColor(225.0);
+        constexpr Media::HslaColor emptyTileColor(175.0);
+        constexpr Media::HslaColor pathTileColor(300.0);
+
         static double percentage{0.0};
 
         double const deltaPercentage = static_cast<double>(Media::deltaTime) / 32.0;
@@ -112,10 +120,23 @@ int main(int argc, char *argv[]) {
 
         static Uint64 timer = 0;
         static Uint64 constexpr oneSecond = 1'000;
-        if ((timer += Media::deltaTime) >= oneSecond / 4) {
+        if ((timer += Media::deltaTime) >= oneSecond / 6) {
             O << percentage << '\n';
             timer = 0; // reset timer
         }
+
+        Media::setRenderDrawColor(Media::BLACK);
+        SDL_RenderClear(Media::renderer);
+
+        Media::drawRectangleGrid(
+            {0.0f, 0.0f},
+            maze.RowCount(), maze.ColumnCount(),
+            Media::windowWidth, Media::windowHeight,
+            [&pathTileSet](int row, int column) -> Media::ColorTriplet {
+                if (pathTileSet.count({row, column}))
+                    return {{}, SDL_Color{}, SDL_Color{}};
+            }
+        );
 
         SDL_RenderPresent(Media::renderer);
     };
