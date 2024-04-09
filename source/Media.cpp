@@ -18,6 +18,8 @@ int Media::windowWidth = 420;
 int Media::windowHeight = 420;
 Uint64 Media::deltaTime = 0;
 
+std::function<void()> Media::windowRefresher = []() constexpr -> void {};
+
 void Media::setRenderDrawColor(SDL_Color const &color) { SDL_SetRenderDrawColor(
     Media::renderer,
     color.r, color.g, color.b, color.a
@@ -144,13 +146,14 @@ static void drawRectangleGrid(
     SDL_FPoint const &position,
     int const rowCount, int columnCount,
     float const width, float const height,
-    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+    std::function<Media::ColorTriplet(int, int)> getColorTriplet
 ) {
     float const rectangleWidth = width / static_cast<float>(columnCount);
     float const rectangleHeight = height / static_cast<float>(rowCount);
 
-    for (int row = 0; row < rowCount; ++row)
-        for (int column = 0; column < columnCount; ++column)
+    for (int row = 0; row < rowCount; ++row) {
+        for (int column = 0; column < columnCount; ++column) {
+            auto const [firstColor, secondColor, thirdColor] = getColorTriplet(row, column);
             drawRectangle(
                 {
                     static_cast<float>(column) * rectangleWidth + position.x,
@@ -159,6 +162,34 @@ static void drawRectangleGrid(
                 rectangleWidth, rectangleHeight,
                 firstColor, secondColor, thirdColor
             );
+        }
+    }
+}
+
+[[deprecated]] static void drawRectangleGrid(
+    SDL_FPoint const &position,
+    int const rowCount, int columnCount,
+    float const width, float const height,
+    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+) {
+    drawRectangleGrid(position, rowCount, columnCount, width, height, [&](int, int) -> Media::ColorTriplet {
+        return {firstColor, secondColor, thirdColor};
+    });
+}
+
+static void drawGrid(
+    SquareGrid const &squareGrid,
+    SDL_FPoint const &position,
+    float const width, float const height
+) {
+    drawRectangleGrid(
+        position,
+        squareGrid.RowCount(), squareGrid.ColumnCount(),
+        width, height,
+        [](int, int) -> Media::ColorTriplet {
+            return {SDL_Color{}, SDL_Color{}, SDL_Color{}};
+        }
+    );
 }
 
 void Media::drawPointyTopHexagon(
@@ -263,7 +294,7 @@ static double asHue(
         return Media::HslaColor::wrapHue(hueUpperBound - (hueOffset - colorCycleLength));
 }
 
-void Media::refreshPresentation() {
+void Media::refreshWindow_v0() {
     static Media::HslaColor firstColor{0.0, 1.0, 0.5, 1.0};
     static Media::HslaColor secondColor = firstColor;
     static Media::HslaColor thirdColor = secondColor;
@@ -308,7 +339,9 @@ void Media::refreshPresentation() {
             /* column count */ 5,
             static_cast<float>(Media::windowWidth) / 2.0f,
             static_cast<float>(Media::windowHeight) / 2.0f,
-            firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
+            [](int, int) -> Media::ColorTriplet {return{
+                firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
+            };}
         );
         drawRectangleGrid(
             /* position */ {static_cast<float>(Media::windowWidth) / 2.0f, static_cast<float>(Media::windowHeight) / 2.0f},
@@ -382,10 +415,11 @@ void Media::mainLoop() {
             break;
     }
 
-    Media::refreshPresentation();
+    Media::refreshWindow_v0();
+    Media::windowRefresher();
 
     static Uint64 timer = 0, counter = 0;
-    static Uint64 constexpr oneSecond = 1000;
+    static Uint64 constexpr oneSecond = 1'000;
     if ((timer += deltaTime) >= 1 * oneSecond / 2) {
         std::cout << "Hello " << ++counter << "." << '\n';
         timer = 0; // reset timer

@@ -20,6 +20,9 @@ namespace Project::Media {
     extern int windowWidth;
     extern int windowHeight;
     extern Uint64 deltaTime;
+    extern std::function<void()> windowRefresher;
+
+    using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
 
     std::string toString(SDL_Color const &color);
 
@@ -34,12 +37,12 @@ namespace Project::Media {
     };
 
     constexpr SDL_Color BLACK{0x00, 0x00, 0x00, 0xFF};
-    constexpr SDL_Color PATH_COLOR = {0xFF, BLACK.g, BLACK.b, BLACK.a};
+    constexpr SDL_Color pathColor = {0xFF, BLACK.g, BLACK.b, BLACK.a};
 
     extern SquareGrid globalGrid;
     extern Vector2::HashMap<SDL_Color> globalColorMap;
 
-    void refreshPresentation();
+    void refreshWindow_v0();
 
     void drawSquareGrid(SquareGrid const &grid=Media::globalGrid, Vector2::HashMap<SDL_Color> const &colorMap=Media::globalColorMap);
 

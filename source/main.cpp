@@ -10,7 +10,7 @@
 
 using namespace Project;
 
-static SquareGrid makeGrid(int rowCount, int columnCount) {
+static SquareGrid generateGrid(int rowCount, int columnCount) {
     SquareGrid grid(rowCount, columnCount);
     int const secondQuarter = grid.ColumnCount() / 4;
     int const fourthQuarter = secondQuarter * 3;
@@ -48,30 +48,17 @@ static SquareGrid makeGrid(int rowCount, int columnCount) {
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
-    #ifndef NDEBUG
-    static auto &O = std::cout;
-    #endif
-
-    SDL_Init(SDL_INIT_VIDEO);
     std::atexit(&Media::exitHandler);
+    SDL_Init(SDL_INIT_VIDEO);
 
-    #ifndef NDEBUG
-    Media::HslaColor color{210, 0.79, 0.3, 0.5};
-    O << color.toString() << "\n";
-    // O << color.toRgbaColor().toString() << "\n";
-    // O << Media::HslaColor{240.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
-    // O << Media::HslaColor{120.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
-    // O << Media::HslaColor{60.0, 1.0, 0.5, 1.0}.toRgbaColor().toString() << "\n";
-    #endif
-
-    Media::globalGrid = makeGrid(20, 20);
+    Grid const &maze = generateGrid(20, 20);
 
     int const lastRow = Media::globalGrid.RowCount() - 1;
     int const lastColumn = Media::globalGrid.ColumnCount() - 1;
     auto const path = breadthFirstSearch(Media::globalGrid, {0 + 1, 0 + 1}, {lastRow - 1, lastColumn - 1});
 
     for (auto &vector : path.value()) {
-        Media::globalColorMap.insert({vector, Media::PATH_COLOR});
+        Media::globalColorMap.insert({vector, Media::pathColor});
     }
 
     SDL_CreateWindowAndRenderer(
@@ -86,7 +73,9 @@ int main(int argc, char *argv[]) {
     SDL_SetWindowTitle(Media::window, "Maze Solver");
     SDL_SetWindowMinimumSize(Media::window, 250, 150);
 
-    Media::refreshPresentation();
+    Media::refreshWindow_v0();
+
+    Media::windowRefresher = []() -> void {};
 
     #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(&Media::mainLoop, -1, true);
