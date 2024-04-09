@@ -57,6 +57,8 @@ GCC_WARNING = make(CXXFLAGS=[
     '-Wold-style-cast', '-Wcast-qual', '-Wcast-function-type',
     '-Wcast-align', '-Wunused-macros', '-Wzero-as-null-pointer-constant',
 
+    '-Wreturn-local-addr',
+
     '-Wundef', # undefined identifier in `#if` directive
     '-Wnon-virtual-dtor', # virtual functions but non-virtual destructor
     '-Wdouble-promotion', # float implicitly promoted to double
