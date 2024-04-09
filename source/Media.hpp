@@ -28,8 +28,20 @@ namespace Project::Media {
 
     void setRenderDrawColor(SDL_Color const &color);
 
+    void drawGrid(
+        SquareGrid const &squareGrid,
+        SDL_FPoint const &position,
+        float const width, float const height
+    );
+
     struct HslaColor {
         double hue, saturation, luminance, alpha;
+        constexpr HslaColor(
+            double const hueValue,
+            double const saturationValue=1.0,
+            double const luminanceValue=0.5,
+            double const alphaValue=1.0
+        ): hue{hueValue}, saturation{saturationValue}, luminance{luminanceValue}, alpha{alphaValue} {}
         SDL_Color toRgbaColor(double hueSupplement=0.0) const;
         static double wrapHue(double hue, double const bound=360.0);
         void addHue(double const hueSupplement);
@@ -45,6 +57,13 @@ namespace Project::Media {
     void refreshWindow_v0();
 
     void drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<SDL_Color> const &colorMap=Media::globalColorMap);
+
+    void drawRectangleGrid(
+        SDL_FPoint const &position,
+        int const rowCount, int columnCount,
+        float const width, float const height,
+        std::function<Media::ColorTriplet(int, int)> getColorTriplet
+    );
 
     void drawPointyTopHexagon(
         float const size,
