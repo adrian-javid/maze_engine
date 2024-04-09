@@ -316,7 +316,7 @@ void Media::refreshWindow_v0() {
         hueLowerBound, hueUpperBound, colorCycleLength
     );
 
-    Media::setRenderDrawColor(Media::BLACK);
+    Media::setRenderDrawColor(Media::black);
     SDL_RenderClear(Media::renderer);
 
     if (true) /* draw rectangle grid */ {

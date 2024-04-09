@@ -48,8 +48,8 @@ namespace Project::Media {
         std::string toString() const;
     };
 
-    constexpr SDL_Color BLACK{0x00, 0x00, 0x00, 0xFF};
-    constexpr SDL_Color pathColor = {0xFF, BLACK.g, BLACK.b, BLACK.a};
+    constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
+    constexpr SDL_Color pathColor = {0xFF, black.g, black.b, black.a};
 
     // extern SquareGrid globalGrid;
     extern Vector2::HashMap<SDL_Color> globalColorMap;

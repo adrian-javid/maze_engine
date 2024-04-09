@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
     Media::windowRefresher = [&maze, &pathTileSet]() -> void {
         constexpr Media::HslaColor wallTileColor(225.0);
         constexpr Media::HslaColor emptyTileColor(175.0);
-        constexpr Media::HslaColor pathTileColor(300.0);
+        constexpr Media::HslaColor pathTileColor(0.0);
 
         static double percentage{0.0};
 
@@ -125,16 +125,25 @@ int main(int argc, char *argv[]) {
             timer = 0; // reset timer
         }
 
-        Media::setRenderDrawColor(Media::BLACK);
+        Media::setRenderDrawColor(Media::black);
         SDL_RenderClear(Media::renderer);
 
         Media::drawRectangleGrid(
             {0.0f, 0.0f},
             maze.RowCount(), maze.ColumnCount(),
             Media::windowWidth, Media::windowHeight,
-            [&pathTileSet](int row, int column) -> Media::ColorTriplet {
-                if (pathTileSet.count({row, column}))
-                    return {{}, SDL_Color{}, SDL_Color{}};
+            [&](int row, int column) -> Media::ColorTriplet {
+
+                SDL_Color const color = [&]() -> SDL_Color {
+                    if (pathTileSet.count({row, column}))
+                        return pathTileColor.toRgbaColor();
+                    else if (maze.isWall(row, column))
+                        return wallTileColor.toRgbaColor();
+                    else
+                        return emptyTileColor.toRgbaColor();
+                }();
+
+                return {color, color, color};
             }
         );
 
