@@ -79,7 +79,7 @@ std::string Media::HslaColor::toString() const {
     return buffer.str();
 }
 
-SquareGrid Media::globalGrid;
+// SquareGrid Media::globalGrid;
 Vector2::HashMap<SDL_Color> Media::globalColorMap;
 
 void Media::drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<SDL_Color> const &colorMap) {
@@ -330,8 +330,6 @@ void Media::refreshWindow_v0() {
     Media::setRenderDrawColor(Media::BLACK);
     SDL_RenderClear(Media::renderer);
 
-    if (false) Media::drawSquareGrid();
-
     if (true) /* draw rectangle grid */ {
         drawRectangleGrid(
             /* position */ {0.0f, 0.0f},
@@ -415,7 +413,6 @@ void Media::mainLoop() {
             break;
     }
 
-    Media::refreshWindow_v0();
     Media::windowRefresher();
 
     static Uint64 timer = 0, counter = 0;
