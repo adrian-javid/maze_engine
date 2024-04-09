@@ -5,7 +5,8 @@
 #endif
 
 #include "breadthFirstSearch.hpp"
-#include "Media.hpp"
+#include "simpleDirectmediaLayer.hpp"
+#include "window.hpp"
 #include "SquareGrid.hpp"
 
 #include <algorithm>
@@ -89,7 +90,6 @@ int main(int argc, char *argv[]) {
     auto const path = breadthFirstSearch(maze, start, end);
 
     for (auto &vector : path.value()) {
-        Media::globalColorMap.insert({vector, Media::pathColor});
         pathTileSet.insert(vector);
     }
 
