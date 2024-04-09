@@ -142,7 +142,7 @@ static void drawRectangle(
     SDL_RenderGeometry(Media::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
 }
 
-static void drawRectangleGrid(
+void Media::drawRectangleGrid(
     SDL_FPoint const &position,
     int const rowCount, int columnCount,
     float const width, float const height,
@@ -166,18 +166,7 @@ static void drawRectangleGrid(
     }
 }
 
-[[deprecated]] static void drawRectangleGrid(
-    SDL_FPoint const &position,
-    int const rowCount, int columnCount,
-    float const width, float const height,
-    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
-) {
-    drawRectangleGrid(position, rowCount, columnCount, width, height, [&](int, int) -> Media::ColorTriplet {
-        return {firstColor, secondColor, thirdColor};
-    });
-}
-
-static void drawGrid(
+void Media::drawGrid(
     SquareGrid const &squareGrid,
     SDL_FPoint const &position,
     float const width, float const height
@@ -347,7 +336,11 @@ void Media::refreshWindow_v0() {
             /* column count */ 5,
             static_cast<float>(Media::windowWidth) / 2.0f,
             static_cast<float>(Media::windowHeight) / 2.0f,
-            firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
+            [](int, int) -> Media::ColorTriplet {
+                return {
+                    firstColor.toRgbaColor(), secondColor.toRgbaColor(), thirdColor.toRgbaColor()
+                };
+            }
         );
         drawPointyTopHexagonGrid(
             /* center */ {
