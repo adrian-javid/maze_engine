@@ -23,7 +23,12 @@ struct Project::Media::HslaColor {
         double const saturationValue=1.0,
         double const luminanceValue=0.5,
         double const alphaValue=1.0
-    ): hue{hueValue}, saturation{saturationValue}, luminance{luminanceValue}, alpha{alphaValue} {}
+    ):
+        hue{hueValue},
+        saturation{saturationValue},
+        luminance{luminanceValue},
+        alpha{alphaValue}
+    {}
     SDL_Color toRgbaColor(double hueSupplement=0.0) const;
     static double wrapHue(double hue, double const bound=360.0);
     void addHue(double const hueSupplement);
