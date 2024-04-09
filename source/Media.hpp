@@ -39,12 +39,12 @@ namespace Project::Media {
     constexpr SDL_Color BLACK{0x00, 0x00, 0x00, 0xFF};
     constexpr SDL_Color pathColor = {0xFF, BLACK.g, BLACK.b, BLACK.a};
 
-    extern SquareGrid globalGrid;
+    // extern SquareGrid globalGrid;
     extern Vector2::HashMap<SDL_Color> globalColorMap;
 
     void refreshWindow_v0();
 
-    void drawSquareGrid(SquareGrid const &grid=Media::globalGrid, Vector2::HashMap<SDL_Color> const &colorMap=Media::globalColorMap);
+    void drawSquareGrid(SquareGrid const &grid, Vector2::HashMap<SDL_Color> const &colorMap=Media::globalColorMap);
 
     void drawPointyTopHexagon(
         float const size,
