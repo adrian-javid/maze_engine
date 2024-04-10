@@ -182,9 +182,9 @@ static void drawPointyTopHexagonGrid(
     double const colorCycleLength
 ) {
     if (hueOffset < colorCycleLength)
-        return Media::HslaColor::wrapHue(hueLowerBound + hueOffset);
+        return Media::HslaColor::hueWrap(hueLowerBound + hueOffset);
     else /* mirror */
-        return Media::HslaColor::wrapHue(hueUpperBound - (hueOffset - colorCycleLength));
+        return Media::HslaColor::hueWrap(hueUpperBound - (hueOffset - colorCycleLength));
 }
 
 void Media::refreshWindow_v0() {
@@ -206,17 +206,17 @@ void Media::refreshWindow_v0() {
     double const deltaHue = static_cast<double>(deltaTime) / 32.0; // TODO: need a safe cast from `Uint8` to `double`
 
     firstColor.hue = asHue(
-        hueOffset = Media::HslaColor::wrapHue(hueOffset + deltaHue, 2 * colorCycleLength),
+        hueOffset = Util::wrapValue(hueOffset + deltaHue, 2 * colorCycleLength),
         hueLowerBound, hueUpperBound, colorCycleLength
     );
 
     secondColor.hue = asHue(
-        Media::HslaColor::wrapHue(hueOffset - 20.0, 2.0 * colorCycleLength),
+        Util::wrapValue(hueOffset - 20.0, 2.0 * colorCycleLength),
         hueLowerBound, hueUpperBound, colorCycleLength
     );
 
     thirdColor.hue = asHue(
-        Media::HslaColor::wrapHue(hueOffset - 40.0, 2.0 * colorCycleLength),
+        Util::wrapValue(hueOffset - 40.0, 2.0 * colorCycleLength),
         hueLowerBound, hueUpperBound, colorCycleLength
     );
 
