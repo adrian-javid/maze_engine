@@ -1,4 +1,10 @@
-namespace Project::Main {}
+namespace Project::Main {/*
+
+
+    This program solves mazes!
+
+
+*/}
 
 #include "breadthFirstSearch.hpp"
 #include "simpleDirectmediaLayer.hpp"
@@ -11,8 +17,8 @@ namespace Project::Main {}
 #include <cassert>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
-#endif
 
+#endif
 #if true
 static auto &O = std::cout;
 #endif
