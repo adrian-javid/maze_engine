@@ -11,37 +11,37 @@ static Vector2 calculateMirrorCenter(int const index, int const radius) {
     return rotatedPosition;
 }
 
-Hex::Key<> Game::wrap(Hex::Key<> const &key) const {
-  // return early if key is in grid
-  auto iterator = grid.find(key);
-  if (iterator != grid.end())
-    return key;
+Vector2 HexagonGrid::wrap(Vector2 const &key) const {
+    // return early if key is in table
+    auto iterator = table.find(key);
+    if (iterator != table.end())
+        return key;
 
-  /* key is out of bounds */
+    /* key is out of bounds */
 
-  struct ClosestMirrorCenterCandidate {
-    Hex::Key<> mirrorCenter;
-    Hex::Integer distance;
-  } closestMirrorCenter{mirrorCenterTable[0], key.getDistance(mirrorCenterTable[0])};
+    struct ClosestMirrorCenterCandidate {
+        Vector2 mirrorCenter;
+        int distance;
+    } closestMirrorCenter{mirrorCenterTable[0], (key - mirrorCenterTable[0]).HexManhattanLength()};
 
-  // find the closest mirror center
-  for (Hex::Integer mirrorIndex = 0 + 1; mirrorIndex < 6; ++mirrorIndex) {
-    auto const distance = key.getDistance(mirrorCenterTable[mirrorIndex]);
-    if (distance < closestMirrorCenter.distance)
-      closestMirrorCenter = {mirrorCenterTable[mirrorIndex], distance};
-  }
+    // find the closest mirror center
+    for (int mirrorIndex = 0 + 1; mirrorIndex < 6; ++mirrorIndex) {
+        auto const distance = (key - mirrorCenterTable[mirrorIndex]).HexManhattanLength();
+        if (distance < closestMirrorCenter.distance)
+        closestMirrorCenter = {mirrorCenterTable[mirrorIndex], distance};
+    }
 
-  // subtract mirror center from key until the key is in-bounds
-  auto safeKey = key - closestMirrorCenter.mirrorCenter; 
-  for (
-    iterator = grid.find(safeKey);
-    iterator == grid.end();
-    iterator = grid.find(safeKey -= closestMirrorCenter.mirrorCenter)
-  ) {
-    continue;
-  }
+    // subtract mirror center from key until the key is in-bounds
+    auto safeKey = key - closestMirrorCenter.mirrorCenter; 
+    for (
+        iterator = table.find(safeKey);
+        iterator == table.end();
+        iterator = table.find(safeKey -= closestMirrorCenter.mirrorCenter)
+    ) {
+        continue;
+    }
 
-  return safeKey;
+    return safeKey;
 }
 
 HexagonGrid::HexagonGrid(int const setRadius):
@@ -81,5 +81,11 @@ auto HexagonGrid::at(int const axis1, int const axis2) const -> Tile const & {
     return table.at({axis1, axis2});
 }
 
-void HexagonGrid::forNeighbor(Vector2 const &key, std::function<void(Vector2 const &operate)>) const {
+void HexagonGrid::forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> operate) const {
+    operate(HexagonGrid::wrap(key + Vector2::hexagonNorthWest));
+    operate(HexagonGrid::wrap(key + Vector2::hexagonNorthEast));
+    operate(HexagonGrid::wrap(key + Vector2::hexagonEast     ));
+    operate(HexagonGrid::wrap(key + Vector2::hexagonSouthEast));
+    operate(HexagonGrid::wrap(key + Vector2::hexagonSouthWest));
+    operate(HexagonGrid::wrap(key + Vector2::hexagonWest     ));
 }
