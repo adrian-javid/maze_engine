@@ -27,7 +27,9 @@ class Project::HexagonGrid : public Project::Grid {
     virtual Tile &at(Vector2 const &key) override;
     virtual Tile const &at(Vector2 const &key) const override;
 
-    void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const override;
+    void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> operate) const override;
+
+    Vector2 wrap(Vector2 const &key) const;
 };
 
 #endif
