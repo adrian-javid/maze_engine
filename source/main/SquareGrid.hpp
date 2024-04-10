@@ -25,7 +25,7 @@ class Project::SquareGrid : public Project::Grid {
 
   private:
 
-    Table flatData;
+    Table table;
     int rowCount;
     int columnCount;
 
