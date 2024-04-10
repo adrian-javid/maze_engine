@@ -149,7 +149,6 @@ int main(int argc, char *argv[]) {
 
     // Set the window refresher. This is called every iteration in the main loop.
     Media::windowRefresher = &refreshWindow;
-    // Media::windowRefresher = &Media::refreshWindow_v0;
 
     // Start the main loop.
     #ifdef __EMSCRIPTEN__
