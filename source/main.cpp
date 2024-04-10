@@ -10,6 +10,7 @@ namespace Project::Main {/*
 #include "simpleDirectmediaLayer.hpp"
 #include "window.hpp"
 #include "SquareGrid.hpp"
+#include "HexagonGrid.hpp"
 #include "Util.hpp"
 
 #include <algorithm>
