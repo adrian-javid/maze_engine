@@ -51,17 +51,13 @@ double Media::HslaColor::hueWrap(double const value) {
 }
 
 Media::ColorTriplet Media::HslaColor::getColorTriplet(double const percentage, double const colorDepth) const {
-    double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2 * colorDepth)};
+    double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2.0 * colorDepth)};
 
-    constexpr auto getHueValue = [](
-        double const hue, double const hueOffset, double const colorDepth
-    ) -> double {
-        return
-            hueOffset < colorDepth
-        ?
-            hueWrap(hue + hueOffset)
-        :
-            hueWrap((hue + colorDepth) - (hueOffset - colorDepth));
+    constexpr auto getHueValue = [](double const hue, double const hueOffset, double const colorDepth) -> double {
+        if (hueOffset < colorDepth)
+            return hueWrap(hue + hueOffset);
+        else
+            return hueWrap((hue + colorDepth) - (hueOffset - colorDepth));
     };
 
     return {
