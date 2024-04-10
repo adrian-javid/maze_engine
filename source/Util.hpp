@@ -5,6 +5,13 @@
 #include <cassert>
 
 namespace Project::Util {
+
+    constexpr int wrapValue(int value, int const upperBound) {
+        value %= upperBound;
+        if (value < 0) value += upperBound;
+        return value;
+    }
+
     double wrapValue(double value, double const upperBound);
 
     constexpr double linearInterpolation(double const percentage, double const start, double const end) {
