@@ -3,8 +3,15 @@
 
 #include <cmath>
 #include <cassert>
+#include <type_traits>
 
 namespace Project::Util {
+
+    template<class T>
+    [[nodiscard]] constexpr auto abs(T const& x) noexcept {
+        static_assert(std::is_arithmetic_v<T>);
+        return x < 0 ? -x : x;
+    }
 
     constexpr int wrapValue(int value, int const upperBound) {
         value %= upperBound;
