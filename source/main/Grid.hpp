@@ -15,11 +15,14 @@ class Project::Grid {
     constexpr static Tile emptyTile = 0;
     constexpr static Tile wallFlag = 1 << 0;
 
-    virtual Tile &at(int const row, int const column) = 0;
-    virtual Tile const &at(int const row, int const column) const = 0;
+    virtual Tile &at(int const index1, int const index2) = 0;
+    virtual Tile const &at(int const index1, int const index2) const = 0;
 
-    bool isWall(int const row, int const column) const;
-    void putWall(int const row, int const column);
+    virtual Tile &at(Vector2 const &key);
+    virtual Tile const &at(Vector2 const &key) const;
+
+    bool isWall(int const index1, int const index2) const;
+    void putWall(int const index1, int const index2);
 
     virtual void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const = 0;
 
