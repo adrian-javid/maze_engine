@@ -9,16 +9,16 @@ TEST_CASE("Neighbors", "[Vector2]") {
     Vector2 const vector(1, 1);
     CHECK(vector == Vector2(1, 1));
 
-    Vector2 const northNeighbor = (vector + Vector2::north).wrap(rowCount, columnCount);
+    Vector2 const northNeighbor = (vector + Vector2::squareNorth).wrap(rowCount, columnCount);
     CHECK(northNeighbor == Vector2(0, 1));
 
-    Vector2 const southNeighbor = (vector + Vector2::south).wrap(rowCount, columnCount);
+    Vector2 const southNeighbor = (vector + Vector2::squareSouth).wrap(rowCount, columnCount);
     CHECK(southNeighbor == Vector2(2, 1));
 
-    Vector2 const eastNeighbor = (vector + Vector2::east).wrap(rowCount, columnCount);
+    Vector2 const eastNeighbor = (vector + Vector2::squareEast).wrap(rowCount, columnCount);
     CHECK(eastNeighbor == Vector2(1, 2));
 
-    Vector2 const westNeighbor = (vector + Vector2::west).wrap(rowCount, columnCount);
+    Vector2 const westNeighbor = (vector + Vector2::squareWest).wrap(rowCount, columnCount);
     CHECK(westNeighbor == Vector2(1, 0));
 
 }
