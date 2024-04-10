@@ -39,13 +39,6 @@ void Project::Media::mainLoop() {
     // Refresh window.
     Media::windowRefresher();
 
-    // static Uint64 timer = 0, counter = 0;
-    // static Uint64 constexpr oneSecond = 1'000;
-    // if ((timer += deltaTime) >= 1 * oneSecond / 2) {
-    //     std::cout << "Hello " << ++counter << "." << '\n';
-    //     timer = 0; // reset timer
-    // }
-
     // As this iteration ends, update the previous time.
     previousTime = currentTime;
 
