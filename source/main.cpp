@@ -84,13 +84,13 @@ static void refreshWindow() {
         static_cast<float>(Media::windowWidth),
         static_cast<float>(Media::windowHeight),
         [&](int row, int column) -> Media::ColorTriplet {
-            double const colorLength{55.0};
+            double const colorDepth{55.0};
             if (Main::pathTileSet.count({row, column}))
-                return pathTileColor.getColorTriplet(percentage, colorLength);
+                return pathTileColor.getColorTriplet(percentage, colorDepth);
             else if (Main::maze.isWall(row, column))
-                return wallTileColor.getColorTriplet(percentage, colorLength);
+                return wallTileColor.getColorTriplet(percentage, colorDepth);
             else
-                return emptyTileColor.getColorTriplet(percentage, colorLength);
+                return emptyTileColor.getColorTriplet(percentage, colorDepth);
         }
     );
 
