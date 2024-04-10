@@ -56,7 +56,7 @@ namespace Project::Main {
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
 }
 
-static void refreshWindow() {
+namespace Project::Main {static void refreshWindow() {
     constexpr Media::HslaColor pathTileColor(0.0);
     constexpr Media::HslaColor wallTileColor(240.0);
     constexpr Media::HslaColor emptyTileColor(155.0);
@@ -102,7 +102,7 @@ static void refreshWindow() {
     );
 
     SDL_RenderPresent(Media::renderer);
-}
+}}
 
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
     SDL_SetWindowMinimumSize(Media::window, 250, 150);
 
     // Set the window refresher. This is called every iteration in the main loop.
-    Media::windowRefresher = &refreshWindow;
+    Media::windowRefresher = &Main::refreshWindow;
 
     // Start the main loop.
     #ifdef __EMSCRIPTEN__
