@@ -52,6 +52,14 @@ struct Project::Vector2 {
     */
     constexpr Vector2(int row, int column): value1{row}, value2{column} {}
 
+    constexpr int ManhattanLength() const {
+        return Util::abs(value1) + Util::abs(value2);
+    }
+
+    constexpr int HexManhattanLength() const {
+        return (ManhattanLength() + Util::abs(ThirdAxis())) / 2;
+    }
+
     constexpr Vector2 operator+(Vector2 const &vector) const {
         return {value1 + vector.value1, value2 + vector.value2};
     }
