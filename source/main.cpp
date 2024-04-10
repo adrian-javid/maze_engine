@@ -55,28 +55,50 @@ namespace Project::Main {
     static Vector2::HashSet pathTileSet;
 }
 
+
+static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
+
 static void refreshWindow() {
-    constexpr Media::HslaColor wallTileColor(225.0);
-    constexpr Media::HslaColor emptyTileColor(175.0);
-    constexpr Media::HslaColor pathTileColor(0.0);
+    constexpr Media::HslaColor tileColor(225.0);
 
     static double percentage{0.0};
 
-    double const deltaPercentage = static_cast<double>(Media::deltaTime) * 0.00049;
+    double const deltaPercentage = static_cast<double>(Media::deltaTime) * 0.00010;
 
-    percentage = Util::wrapValue(percentage + deltaPercentage, 1.0);
+    percentage = percentageWrap(percentage + deltaPercentage);
     assert(percentage >= 0.0);
     assert(percentage < 1.0);
 
-    static Uint64 timer = 0;
-    static Uint64 constexpr oneSecond = 1'000;
+    double constexpr colorDepth{55.0};
+
+    static Uint64 timer{0};
+    static Uint64 constexpr oneSecond{1'000};
+    constexpr double depth{50.0};
+
+    auto const hueOffset = Util::linearInterpolation(percentage, 0.0, 2.0 * depth);
+
+    auto const cyclicHue0 = Media::HslaColor::getCyclicHue(tileColor.hue, percentage, depth);
+    auto const rgbaColor0 = tileColor.toRgbaColor(cyclicHue0);
+
+    auto const cyclicHue1 = Media::HslaColor::getCyclicHue(tileColor.hue, percentageWrap(percentage - .10), depth);
+    auto const rgbaColor1 = tileColor.toRgbaColor(cyclicHue1);
+
+    auto const cyclicHue2 = Media::HslaColor::getCyclicHue(tileColor.hue, percentageWrap(percentage - .20), depth);
+    auto const rgbaColor2 = tileColor.toRgbaColor(cyclicHue2);
+
+    auto constexpr sp = ' ';
+    auto constexpr ln = '\n';
+
     if ((timer += Media::deltaTime) >= oneSecond / 10) {
-        O << percentage << '\n';
+        O
+            << percentage << sp
+            << hueOffset << sp
+            << cyclicHue0 << sp
+            << cyclicHue1 << sp
+            << cyclicHue2 << sp
+        << ln;
         timer = 0; // reset timer
     }
-
-    Media::setRenderDrawColor(Media::black);
-    SDL_RenderClear(Media::renderer);
 
     Media::drawRectangleGrid(
         {0.0f, 0.0f},
@@ -84,13 +106,7 @@ static void refreshWindow() {
         static_cast<float>(Media::windowWidth),
         static_cast<float>(Media::windowHeight),
         [&](int row, int column) -> Media::ColorTriplet {
-            double const colorDepth{55.0};
-            if (Main::pathTileSet.count({row, column}))
-                return pathTileColor.getColorTriplet(percentage, colorDepth);
-            else if (Main::maze.isWall(row, column))
-                return wallTileColor.getColorTriplet(percentage, colorDepth);
-            else
-                return emptyTileColor.getColorTriplet(percentage, colorDepth);
+            return {rgbaColor0, rgbaColor1, rgbaColor2};
         }
     );
 
@@ -100,38 +116,51 @@ static void refreshWindow() {
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
+    // Initialize the Simple Directmedia Layer library.
     SDL_Init(SDL_INIT_VIDEO);
 
+    // Register exit handler.
     /*
-        I want to investigate why
+        I don't understand why
         calling this before `SDL_Init` causes a segmentation fault.
 
         I believe it has something to do with `SDL_Quit`.
     */
     std::atexit(&Media::exitHandler);
 
+    // Get the last row index and the last column index of the maze.
     int const lastRow = Main::maze.RowCount() - 1;
     int const lastColumn = Main::maze.ColumnCount() - 1;
+
+    // Define start and end positions of the maze.
     Vector2 const start = {0 + 1, 0 + 1};
     Vector2 const end = {lastRow - 1, lastColumn - 1};
+
+    // Search for a path that solves the maze.
     auto const path = breadthFirstSearch(Main::maze, start, end);
+
+    // Save the path tiles.
     for (auto &vector : path.value()) Main::pathTileSet.insert(vector);
 
+    // You couldn't have guessed that this creates the window and renderer.
     SDL_CreateWindowAndRenderer(
         Media::windowWidth, Media::windowHeight,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
         &Media::window, &Media::renderer
     );
 
+    // Assert window and renderer were created.
     assert(Media::window != nullptr);
     assert(Media::renderer != nullptr);
 
     SDL_SetWindowTitle(Media::window, "Maze Solver");
     SDL_SetWindowMinimumSize(Media::window, 250, 150);
 
+    // Set the window refresher. This is called every iteration in the main loop.
     Media::windowRefresher = &refreshWindow;
-    Media::windowRefresher();
+    // Media::windowRefresher = &Media::refreshWindow_v0;
 
+    // Start the main loop.
     #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(&Media::mainLoop, -1, true);
     #else
