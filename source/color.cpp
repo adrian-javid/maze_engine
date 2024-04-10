@@ -50,6 +50,19 @@ double Media::HslaColor::hueWrap(double const value) {
     return Util::wrapValue(value, fullCycle);
 }
 
+double Media::HslaColor::getCyclicHue(
+    double const hue,
+    double const percentage,
+    double const depth
+) {
+    assert(hue >= 0.0); assert(hue < 360.0);
+    double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2.0 * depth)};
+    if (hueOffset < depth)
+        return hueWrap(hue + hueOffset);
+    else
+        return hueWrap((hue + depth) - (hueOffset - depth));
+}
+
 Media::ColorTriplet Media::HslaColor::getColorTriplet(double const percentage, double const colorDepth) const {
     double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2.0 * colorDepth)};
 
