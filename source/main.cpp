@@ -1,8 +1,4 @@
-#include <cassert>
-
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
-#endif
+namespace Project::Main {}
 
 #include "breadthFirstSearch.hpp"
 #include "simpleDirectmediaLayer.hpp"
@@ -12,6 +8,10 @@
 
 #include <algorithm>
 #include <iostream>
+#include <cassert>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 #if true
 static auto &O = std::cout;
@@ -56,7 +56,6 @@ namespace Project::Main {
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
 }
 
-
 static void refreshWindow() {
     constexpr Media::HslaColor pathTileColor(0.0);
     constexpr Media::HslaColor wallTileColor(240.0);
@@ -69,10 +68,10 @@ static void refreshWindow() {
     percentage = Main::percentageWrap(percentage + deltaPercentage);
     assert(percentage >= 0.0); assert(percentage < 1.0);
 
-    constexpr double depth{45.0};
+    constexpr double hueDepth{45.0};
     constexpr auto getColorTriplet = [](Media::HslaColor const &tileColor) -> Media::ColorTriplet {
         constexpr auto getCyclicHue = [](double const hue, double const percentageAddend) -> double {
-            return Media::HslaColor::getCyclicHue(hue, Main::percentageWrap(percentage + percentageAddend), depth);
+            return Media::HslaColor::getCyclicHue(hue, Main::percentageWrap(percentage + percentageAddend), hueDepth);
         };
         return std::make_tuple(
             tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.00)),
@@ -132,7 +131,7 @@ int main(int argc, char *argv[]) {
     auto const path = breadthFirstSearch(Main::maze, start, end);
 
     // Save the path tiles.
-    for (auto &vector : path.value()) Main::pathTileSet.insert(vector);
+    for (auto const &vector : path.value()) Main::pathTileSet.insert(vector);
 
     // You couldn't have guessed that this creates the window and renderer.
     SDL_CreateWindowAndRenderer(
