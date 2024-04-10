@@ -16,34 +16,6 @@ Vector2 const Vector2::hexagonSouthEast( 0, +1);
 Vector2 const Vector2::hexagonSouthWest(-1, +1);
 Vector2 const Vector2::hexagonWest     (-1,  0);
 
-Vector2 Vector2::operator+(Vector2 const &vector) const { return {value1 + vector.value1, value2 + vector.value2}; }
-Vector2 Vector2::operator-(Vector2 const &vector) const { return {value1 - vector.value1, value2 - vector.value2}; }
-
-bool Vector2::operator==(Vector2 const &vector) const { return value1 == vector.value1 && value2 == vector.value2; }
-bool Vector2::operator!=(Vector2 const &vector) const { return not(*this == vector); }
-
-bool Vector2::operator<(Vector2 const &vector) const {
-    if (value1 != vector.value1)
-        return value1 < vector.value1;
-    else
-        return value2 < vector.value2;
-}
-
-bool Vector2::operator>=(Vector2 const &vector) const { return not(*this < vector); }
-
-bool Vector2::operator>(Vector2 const &vector) const { return vector < *this; }
-
-bool Vector2::operator<=(Vector2 const &vector) const { return not(vector < *this); }
-
-Vector2 Vector2::wrap(int const rowCount, int const columnCount) const {
-    assert(rowCount > 0);
-    assert(columnCount > 0);
-    Vector2 vector(value1 % rowCount, value2 % columnCount);
-    if (vector.value1 < 0) vector.value1 += rowCount;
-    if (vector.value2 < 0) vector.value2 += columnCount;
-    return vector;
-}
-
 std::size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
     static_assert(std::is_same_v<decltype(vector.value1), decltype(vector.value2)>);
     static constexpr std::hash<decltype(vector.value1)> hash;

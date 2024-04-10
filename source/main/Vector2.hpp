@@ -52,22 +52,51 @@ struct Project::Vector2 {
     */
     constexpr Vector2(int row, int column): value1{row}, value2{column} {}
 
-    Vector2 operator+(Vector2 const &) const;
-    Vector2 operator-(Vector2 const &) const;
+    constexpr Vector2 operator+(Vector2 const &vector) const {
+        return {value1 + vector.value1, value2 + vector.value2};
+    }
 
-    bool operator==(Vector2 const &) const;
-    bool operator!=(Vector2 const &) const;
+    constexpr Vector2 &operator+=(Vector2 const &vector) {
+        return (*this = *this + vector);
+    }
 
-    bool operator<(Vector2 const &) const;
-    bool operator>=(Vector2 const &) const;
-    bool operator>(Vector2 const &) const;
-    bool operator<=(Vector2 const &) const;
+    constexpr Vector2 operator-(Vector2 const &vector) const {
+        return {value1 - vector.value1, value2 - vector.value2};
+    }
+
+    constexpr Vector2 &operator-=(Vector2 const &vector) {
+        return (*this = *this - vector);
+    }
+
+    constexpr bool operator==(Vector2 const &vector) const { return value1 == vector.value1 && value2 == vector.value2; }
+
+    constexpr bool operator!=(Vector2 const &vector) const { return not(*this == vector); }
+
+    constexpr bool operator<(Vector2 const &vector) const {
+        if (value1 != vector.value1)
+            return value1 < vector.value1;
+        else
+            return value2 < vector.value2;
+    }
+
+    constexpr bool operator>=(Vector2 const &vector) const { return not(*this < vector); }
+
+    constexpr bool operator>(Vector2 const &vector) const { return vector < *this; }
+
+    constexpr bool operator<=(Vector2 const &vector) const { return not(vector < *this); }
 
     constexpr Vector2 operator*(int const scalar) const {
         return Vector2(this->value1 * scalar, this->value2 * scalar);
     }
 
-    Vector2 wrap(int const rowCount, int const columnCount) const;
+    constexpr Vector2 wrap(int const rowCount, int const columnCount) const {
+        assert(rowCount > 0);
+        assert(columnCount > 0);
+        Vector2 vector(value1 % rowCount, value2 % columnCount);
+        if (vector.value1 < 0) vector.value1 += rowCount;
+        if (vector.value2 < 0) vector.value2 += columnCount;
+        return vector;
+    }
 
     struct Hash { std::size_t operator()(Vector2 const &vector) const noexcept; };
 
