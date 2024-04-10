@@ -45,21 +45,40 @@ SDL_Color Media::makeRgbaColor(
     };
 }
 
+double Media::HslaColor::hueWrap(double const value) {
+    constexpr double fullCycle{360.0};
+    return Util::wrapValue(value, fullCycle);
+}
+
+Media::ColorTriplet Media::HslaColor::getColorTriplet(double const percentage, double const colorDepth) const {
+    double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2 * colorDepth)};
+
+    constexpr auto getHueValue = [](
+        double const hue, double const hueOffset, double const colorDepth
+    ) -> double {
+        return
+            hueOffset < colorDepth
+        ?
+            hueWrap(hue + hueOffset)
+        :
+            hueWrap((hue + colorDepth) - (hueOffset - colorDepth));
+    };
+
+    return {
+        toRgbaColor(getHueValue(hue, hueOffset -  0.0, colorDepth)),
+        toRgbaColor(getHueValue(hue, hueOffset - 20.0, colorDepth)),
+        toRgbaColor(getHueValue(hue, hueOffset - 40.0, colorDepth))
+    };
+}
+
 SDL_Color Media::HslaColor::toRgbaColor() const { return toRgbaColor(this->hue); }
 
 SDL_Color Media::HslaColor::toRgbaColor(double const overrideHue) const {
     return makeRgbaColor(overrideHue, this->saturation, this->luminance, this->alpha);
 }
 
-double Media::HslaColor::wrapHue(double hue, double const bound) {
-    hue = std::fmod(hue, bound);
-    if (hue < 0) hue += bound;
-    if (hue >= bound) hue = 0.0;
-    return hue;
-}
-
 void Media::HslaColor::addHue(double const hueSupplement) {
-    hue = wrapHue(hue + hueSupplement);
+    hue = hueWrap(hue + hueSupplement);
 }
 
 std::string Media::HslaColor::toString() const {

@@ -41,31 +41,12 @@ struct Project::Media::HslaColor {
         alpha{alphaValue}
     {}
 
-    inline ColorTriplet getColorTriplet(double const percentage, double const colorLength) const {
-        double const startValue{this->hue};
-        double const endValue{startValue + colorLength};
+    static double hueWrap(double const value);
 
-        double const value{Util::linearInterpolation(percentage, startValue, startValue + 2 * colorLength)};
-
-        constexpr auto hueWrap = [](double const value) constexpr -> double {
-            constexpr double fullCycle{360.0};
-            return Util::wrapValue(value, fullCycle);
-        };
-
-        double const hueValue = value < endValue ? hueWrap(value) :
-        // hueWrap(endValue - (value - endValue));
-        56.0;
-
-        return {
-            toRgbaColor(hueValue),
-            toRgbaColor(hueWrap(hueValue - 20.0)),
-            toRgbaColor(hueWrap(hueValue - 40.0))
-        };
-    }
+    ColorTriplet getColorTriplet(double const percentage, double const colorDepth) const;
 
     SDL_Color toRgbaColor() const;
     SDL_Color toRgbaColor(double const overrideHue) const;
-    static double wrapHue(double hue, double const bound=360.0);
     void addHue(double const hueSupplement);
     std::string toString() const;
 };
