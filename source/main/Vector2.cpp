@@ -4,22 +4,29 @@
 
 using Project::Vector2;
 
-Vector2 const Vector2::north(-1,  0);
-Vector2 const Vector2::south( 1,  0);
-Vector2 const Vector2::east(  0,  1);
-Vector2 const Vector2::west(  0, -1);
+Vector2 const Vector2::squareNorth(-1,  0);
+Vector2 const Vector2::squareSouth(+1,  0);
+Vector2 const Vector2::squareEast ( 0, +1);
+Vector2 const Vector2::squareWest ( 0, -1);
 
-Vector2 Vector2::operator+(Vector2 const &vector) const { return {row + vector.row, col + vector.col}; }
-Vector2 Vector2::operator-(Vector2 const &vector) const { return {row - vector.row, col - vector.col}; }
+Vector2 const Vector2::hexagonNorthWest( 0, -1);
+Vector2 const Vector2::hexagonNorthEast(+1, -1);
+Vector2 const Vector2::hexagonEast     (+1,  0);
+Vector2 const Vector2::hexagonSouthEast( 0, +1);
+Vector2 const Vector2::hexagonSouthWest(-1, +1);
+Vector2 const Vector2::hexagonWest     (-1,  0);
 
-bool Vector2::operator==(Vector2 const &vector) const { return row == vector.row && col == vector.col; }
+Vector2 Vector2::operator+(Vector2 const &vector) const { return {value1 + vector.value1, value2 + vector.value2}; }
+Vector2 Vector2::operator-(Vector2 const &vector) const { return {value1 - vector.value1, value2 - vector.value2}; }
+
+bool Vector2::operator==(Vector2 const &vector) const { return value1 == vector.value1 && value2 == vector.value2; }
 bool Vector2::operator!=(Vector2 const &vector) const { return not(*this == vector); }
 
 bool Vector2::operator<(Vector2 const &vector) const {
-    if (row != vector.row)
-        return row < vector.row;
+    if (value1 != vector.value1)
+        return value1 < vector.value1;
     else
-        return col < vector.col;
+        return value2 < vector.value2;
 }
 
 bool Vector2::operator>=(Vector2 const &vector) const { return not(*this < vector); }
@@ -31,17 +38,17 @@ bool Vector2::operator<=(Vector2 const &vector) const { return not(vector < *thi
 Vector2 Vector2::wrap(int const rowCount, int const columnCount) const {
     assert(rowCount > 0);
     assert(columnCount > 0);
-    Vector2 vector(row % rowCount, col % columnCount);
-    if (vector.row < 0) vector.row += rowCount;
-    if (vector.col < 0) vector.col += columnCount;
+    Vector2 vector(value1 % rowCount, value2 % columnCount);
+    if (vector.value1 < 0) vector.value1 += rowCount;
+    if (vector.value2 < 0) vector.value2 += columnCount;
     return vector;
 }
 
 std::size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
-    static_assert(std::is_same_v<decltype(vector.row), decltype(vector.col)>);
-    static constexpr std::hash<decltype(vector.row)> hash;
-    size_t const hashRow = hash(vector.row);
-    size_t const hashCol = hash(vector.col);
+    static_assert(std::is_same_v<decltype(vector.value1), decltype(vector.value2)>);
+    static constexpr std::hash<decltype(vector.value1)> hash;
+    size_t const hashRow = hash(vector.value1);
+    size_t const hashCol = hash(vector.value2);
     /*
         This is a copy of `boost::hash_combine`.
         https://www.boost.org/doc/libs/1_55_0/doc/html/hash/reference.html#boost.hash_combine
@@ -51,7 +58,7 @@ std::size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
 
 std::string Vector2::toString() const {
     std::stringstream buffer;
-    buffer << '(' << row << ", " << col << ")";
+    buffer << '(' << value1 << ", " << value2 << ")";
     return buffer.str();
 }
 
