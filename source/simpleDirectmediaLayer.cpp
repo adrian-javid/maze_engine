@@ -2,12 +2,18 @@
 
 #include "window.hpp"
 
+// Change in time.
 Uint64 Project::Media::deltaTime = 0;
 
 void Project::Media::mainLoop() {
-    static Uint64 lastTime = 0;
+    // Time of the previous iteration.
+    static Uint64 previousTime = 0;
+
+    // Get the time of this iteration.
     Uint64 const currentTime = SDL_GetTicks64();
-    deltaTime = currentTime - lastTime;
+
+    // Get the change in time.
+    deltaTime = currentTime - previousTime;
 
     static SDL_Event event;
     while (SDL_PollEvent(&event)) switch (event.type) {
@@ -30,6 +36,7 @@ void Project::Media::mainLoop() {
             break;
     }
 
+    // Refresh window.
     Media::windowRefresher();
 
     // static Uint64 timer = 0, counter = 0;
@@ -39,7 +46,10 @@ void Project::Media::mainLoop() {
     //     timer = 0; // reset timer
     // }
 
-    lastTime = currentTime;
+    // As this iteration ends, update the previous time.
+    previousTime = currentTime;
+
+    // Give the CPU a break.
     SDL_Delay(1);
 }
 
