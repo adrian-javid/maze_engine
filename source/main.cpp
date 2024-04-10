@@ -84,17 +84,12 @@ static void refreshWindow() {
         static_cast<float>(Media::windowWidth),
         static_cast<float>(Media::windowHeight),
         [&](int row, int column) -> Media::ColorTriplet {
-
-            SDL_Color const color = [&]() -> SDL_Color {
-                if (Main::pathTileSet.count({row, column}))
-                    return pathTileColor.toRgbaColor();
-                else if (Main::maze.isWall(row, column))
-                    return wallTileColor.toRgbaColor();
-                else
-                    return emptyTileColor.toRgbaColor();
-            }();
-
-            return {color, color, color};
+            if (Main::pathTileSet.count({row, column}))
+                return pathTileColor.getColorTriplet(percentage, 30.0);
+            else if (Main::maze.isWall(row, column))
+                return wallTileColor.getColorTriplet(percentage, 30.0);
+            else
+                return emptyTileColor.getColorTriplet(percentage, 30.0);
         }
     );
 
