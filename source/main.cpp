@@ -19,7 +19,7 @@ static auto &O = std::cout;
 
 using namespace Project;
 
-static SquareGrid generateGrid(int rowCount, int columnCount) {
+namespace Project::Main {static SquareGrid generateGrid(int rowCount, int columnCount) {
     SquareGrid grid(rowCount, columnCount);
     int const secondQuarter = grid.ColumnCount() / 4;
     int const fourthQuarter = secondQuarter * 3;
@@ -48,65 +48,57 @@ static SquareGrid generateGrid(int rowCount, int columnCount) {
     }
 
     return grid;
-}
+}}
 
 namespace Project::Main {
     static auto const maze = generateGrid(20, 20);
     static Vector2::HashSet pathTileSet;
+    static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
 }
 
 
-static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
-
 static void refreshWindow() {
-    constexpr Media::HslaColor tileColor(225.0);
+    constexpr Media::HslaColor pathTileColor(0.0);
+    constexpr Media::HslaColor wallTileColor(240.0);
+    constexpr Media::HslaColor emptyTileColor(155.0);
 
-    static double percentage{0.0};
-
+    constexpr double zeroPercent{0.0};    
+    static double percentage{zeroPercent};
     double const deltaPercentage = static_cast<double>(Media::deltaTime) * 0.00010;
 
-    percentage = percentageWrap(percentage + deltaPercentage);
-    assert(percentage >= 0.0);
-    assert(percentage < 1.0);
+    percentage = Main::percentageWrap(percentage + deltaPercentage);
+    assert(percentage >= 0.0); assert(percentage < 1.0);
 
-    double constexpr colorDepth{55.0};
+    constexpr double depth{45.0};
+    constexpr auto getColorTriplet = [](Media::HslaColor const &tileColor) -> Media::ColorTriplet {
+        constexpr auto getCyclicHue = [](double const hue, double const percentageAddend) -> double {
+            return Media::HslaColor::getCyclicHue(hue, Main::percentageWrap(percentage + percentageAddend), depth);
+        };
+        return std::make_tuple(
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.00)),
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.33)),
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.66))
+        );
+    };
 
-    static Uint64 timer{0};
-    static Uint64 constexpr oneSecond{1'000};
-    constexpr double depth{50.0};
-
-    auto const hueOffset = Util::linearInterpolation(percentage, 0.0, 2.0 * depth);
-
-    auto const cyclicHue0 = Media::HslaColor::getCyclicHue(tileColor.hue, percentage, depth);
-    auto const rgbaColor0 = tileColor.toRgbaColor(cyclicHue0);
-
-    auto const cyclicHue1 = Media::HslaColor::getCyclicHue(tileColor.hue, percentageWrap(percentage - .10), depth);
-    auto const rgbaColor1 = tileColor.toRgbaColor(cyclicHue1);
-
-    auto const cyclicHue2 = Media::HslaColor::getCyclicHue(tileColor.hue, percentageWrap(percentage - .20), depth);
-    auto const rgbaColor2 = tileColor.toRgbaColor(cyclicHue2);
-
-    auto constexpr sp = ' ';
-    auto constexpr ln = '\n';
-
-    if ((timer += Media::deltaTime) >= oneSecond / 10) {
-        O
-            << percentage << sp
-            << hueOffset << sp
-            << cyclicHue0 << sp
-            << cyclicHue1 << sp
-            << cyclicHue2 << sp
-        << ln;
-        timer = 0; // reset timer
-    }
+    Media::ColorTriplet const pathTileColorTriplet = getColorTriplet(pathTileColor);
+    Media::ColorTriplet const wallTileColorTriplet = getColorTriplet(wallTileColor);
+    Media::ColorTriplet const emptyTileColorTriplet = getColorTriplet(emptyTileColor);
 
     Media::drawRectangleGrid(
         {0.0f, 0.0f},
         Main::maze.RowCount(), Main::maze.ColumnCount(),
         static_cast<float>(Media::windowWidth),
         static_cast<float>(Media::windowHeight),
-        [&](int row, int column) -> Media::ColorTriplet {
-            return {rgbaColor0, rgbaColor1, rgbaColor2};
+        [
+            &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
+        ](int row, int column) -> Media::ColorTriplet {
+            if (Main::pathTileSet.find({row, column}) != Main::pathTileSet.end())
+                return pathTileColorTriplet;
+            else if (Main::maze.isWall(row, column))
+                return wallTileColorTriplet;
+            else
+                return emptyTileColorTriplet;
         }
     );
 
