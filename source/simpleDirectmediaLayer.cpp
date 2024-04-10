@@ -2,9 +2,7 @@
 
 #include "window.hpp"
 
-namespace Project::Media {
-    Uint64 Media::deltaTime = 0;
-}
+Uint64 Project::Media::deltaTime = 0;
 
 void Project::Media::mainLoop() {
     static Uint64 lastTime = 0;
@@ -34,12 +32,12 @@ void Project::Media::mainLoop() {
 
     Media::windowRefresher();
 
-    static Uint64 timer = 0, counter = 0;
-    static Uint64 constexpr oneSecond = 1'000;
-    if ((timer += deltaTime) >= 1 * oneSecond / 2) {
-        // std::cout << "Hello " << ++counter << "." << '\n';
-        timer = 0; // reset timer
-    }
+    // static Uint64 timer = 0, counter = 0;
+    // static Uint64 constexpr oneSecond = 1'000;
+    // if ((timer += deltaTime) >= 1 * oneSecond / 2) {
+    //     std::cout << "Hello " << ++counter << "." << '\n';
+    //     timer = 0; // reset timer
+    // }
 
     lastTime = currentTime;
     SDL_Delay(1);
