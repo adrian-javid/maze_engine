@@ -12,25 +12,25 @@ std::string Media::toString(SDL_Color const &color) {
 }
 
 SDL_Color Media::HslaColor::toRgbaColor(double hueSupplement) const {
-    double const hueMix = HslaColor::wrapHue(hue + hueSupplement);
+    double const hueValue = HslaColor::wrapHue(this->hue + hueSupplement);
 
-    assert(0 <= hueMix and hueMix < 360);
+    assert(0 <= hueValue and hueValue < 360);
     assert(0 <= saturation and saturation <= 1);
     assert(0 <= luminance and saturation <= 1);
     assert(0 <= alpha and alpha <= 1);
 
     auto const chroma = (1.0 - std::fabs(2.0 * luminance - 1.0)) * saturation;
 
-    auto const X = chroma * (1.0 - std::fabs(std::fmod(hueMix / 60.0, 2.0) - 1.0));
+    auto const X = chroma * (1.0 - std::fabs(std::fmod(hueValue / 60.0, 2.0) - 1.0));
 
     struct Rgb { double r, g, b; } color{};
 
-    /**/ if (  0 <= hueMix and hueMix <  60) color = Rgb{chroma,      X,    0.0}; 
-    else if ( 60 <= hueMix and hueMix < 120) color = Rgb{     X, chroma,    0.0};
-    else if (120 <= hueMix and hueMix < 180) color = Rgb{   0.0, chroma,      X};
-    else if (180 <= hueMix and hueMix < 240) color = Rgb{   0.0,      X, chroma};
-    else if (240 <= hueMix and hueMix < 300) color = Rgb{     X,    0.0, chroma};
-    else if (300 <= hueMix and hueMix < 360) color = Rgb{chroma,    0.0,      X};
+    /**/ if (  0 <= hueValue and hueValue <  60) color = Rgb{chroma,      X,    0.0}; 
+    else if ( 60 <= hueValue and hueValue < 120) color = Rgb{     X, chroma,    0.0};
+    else if (120 <= hueValue and hueValue < 180) color = Rgb{   0.0, chroma,      X};
+    else if (180 <= hueValue and hueValue < 240) color = Rgb{   0.0,      X, chroma};
+    else if (240 <= hueValue and hueValue < 300) color = Rgb{     X,    0.0, chroma};
+    else if (300 <= hueValue and hueValue < 360) color = Rgb{chroma,    0.0,      X};
 
     auto const m = luminance - chroma / 2.0;
 
