@@ -41,6 +41,19 @@ struct Project::Media::HslaColor {
         alpha{alphaValue}
     {}
 
+    static inline double getCyclicHue(
+        double const hue,
+        double const percentage,
+        double const depth
+    ) {
+        assert(hue >= 0.0); assert(hue < 360.0);
+        double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2.0 * depth)};
+        if (hueOffset < depth)
+            return hueWrap(hue + hueOffset);
+        else
+            return hueWrap((hue + depth) - (hueOffset - depth));
+    }
+
     static double hueWrap(double const value);
 
     ColorTriplet getColorTriplet(double const percentage, double const colorDepth) const;
