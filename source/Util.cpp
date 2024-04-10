@@ -2,15 +2,17 @@
 
 using namespace Project;
 
-double Util::wrapValue(double value, double const upperBound, double const lowerBound) {
+double Util::wrapValue(double value, double const upperBound) {
+    constexpr double zero{0.0};
+
     assert(upperBound != 0);
-    assert(lowerBound < upperBound);
+    assert(zero < upperBound);
 
     value = std::fmod(value, upperBound);
 
-    if (value < lowerBound) value += upperBound;
+    if (value < zero) value += upperBound;
     
-    if (value >= upperBound) value = lowerBound;
+    if (value >= upperBound) value = zero;
 
     return value;
 }

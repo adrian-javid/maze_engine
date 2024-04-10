@@ -5,7 +5,7 @@
 #include <cassert>
 
 namespace Project::Util {
-    double wrapValue(double value, double const upperBound, double const lowerBound=0.0);
+    double wrapValue(double value, double const upperBound);
 
     constexpr double linearInterpolation(double const percentage, double const start, double const end) {
         assert(percentage >= 0.0);
