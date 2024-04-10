@@ -15,6 +15,13 @@ namespace Project::Media {
 
     std::string toString(SDL_Color const &color);
 
+    SDL_Color makeRgbaColor(
+        double const hue,
+        double const saturation=1.0,
+        double const luminance=0.5,
+        double const alpha=1.0
+    );
+
     struct HslaColor;
 }
 
@@ -40,21 +47,22 @@ struct Project::Media::HslaColor {
 
         double const value{Util::linearInterpolation(percentage, startValue, startValue + 2 * colorLength)};
 
-        constexpr double fullCycle{360.0};
+        constexpr auto hueWrap = [](double const value) constexpr -> double {
+            constexpr double fullCycle{360.0};
+            return Util::wrapValue(value, fullCycle);
+        };
 
-        double const hueValue =
-            value < endValue ?
-                Util::wrapValue(value, fullCycle) :
-                Util::wrapValue(endValue - (value - endValue), fullCycle);
+        double const hueValue = value < endValue ? hueWrap(value) : hueWrap(endValue - (value - endValue));
 
         return {
-            this->toRgbaColor(),
-            this->toRgbaColor(-20.0),
-            this->toRgbaColor(-40.0)
+            toRgbaColor(hueValue),
+            toRgbaColor(hueWrap(hueValue - 20.0)),
+            toRgbaColor(hueWrap(hueValue - 40.0))
         };
     }
 
-    SDL_Color toRgbaColor(double hueSupplement=0.0) const;
+    SDL_Color toRgbaColor() const;
+    SDL_Color toRgbaColor(double const overrideHue) const;
     static double wrapHue(double hue, double const bound=360.0);
     void addHue(double const hueSupplement);
     std::string toString() const;
