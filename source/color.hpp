@@ -52,7 +52,9 @@ struct Project::Media::HslaColor {
             return Util::wrapValue(value, fullCycle);
         };
 
-        double const hueValue = value < endValue ? hueWrap(value) : hueWrap(endValue - (value - endValue));
+        double const hueValue = value < endValue ? hueWrap(value) :
+        // hueWrap(endValue - (value - endValue));
+        56.0;
 
         return {
             toRgbaColor(hueValue),

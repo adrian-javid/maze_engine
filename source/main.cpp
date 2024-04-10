@@ -62,7 +62,7 @@ static void refreshWindow() {
 
     static double percentage{0.0};
 
-    double const deltaPercentage = static_cast<double>(Media::deltaTime) / 32.0;
+    double const deltaPercentage = static_cast<double>(Media::deltaTime) * 0.00049;
 
     percentage = Util::wrapValue(percentage + deltaPercentage, 1.0);
     assert(percentage >= 0.0);
@@ -70,7 +70,7 @@ static void refreshWindow() {
 
     static Uint64 timer = 0;
     static Uint64 constexpr oneSecond = 1'000;
-    if ((timer += Media::deltaTime) >= oneSecond / 6) {
+    if ((timer += Media::deltaTime) >= oneSecond / 10) {
         O << percentage << '\n';
         timer = 0; // reset timer
     }
@@ -84,12 +84,13 @@ static void refreshWindow() {
         static_cast<float>(Media::windowWidth),
         static_cast<float>(Media::windowHeight),
         [&](int row, int column) -> Media::ColorTriplet {
+            double const colorLength{55.0};
             if (Main::pathTileSet.count({row, column}))
-                return pathTileColor.getColorTriplet(percentage, 30.0);
+                return pathTileColor.getColorTriplet(percentage, colorLength);
             else if (Main::maze.isWall(row, column))
-                return wallTileColor.getColorTriplet(percentage, 30.0);
+                return wallTileColor.getColorTriplet(percentage, colorLength);
             else
-                return emptyTileColor.getColorTriplet(percentage, 30.0);
+                return emptyTileColor.getColorTriplet(percentage, colorLength);
         }
     );
 
