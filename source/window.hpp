@@ -14,12 +14,6 @@ namespace Project::Media {
 
     void setRenderDrawColor(SDL_Color const &color);
 
-    void drawGrid(
-        SquareGrid const &squareGrid,
-        SDL_FPoint const &position,
-        float const width, float const height
-    );
-
     void drawRectangleGrid(
         SDL_FPoint const &position,
         int const rowCount, int columnCount,
@@ -27,14 +21,9 @@ namespace Project::Media {
         std::function<Media::ColorTriplet(int, int)> getColorTriplet
     );
 
-    void drawPointyTopHexagon(
-        float const size,
+    void drawPointyTopHexagonGrid(
         SDL_FPoint const &center,
-        SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
-    );
-
-    void drawPointyTopHexagon(
-        SDL_FPoint const &center,
+        int const radius,
         float const width, float const height,
         SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
     );

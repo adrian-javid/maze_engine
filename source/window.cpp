@@ -70,30 +70,7 @@ void Media::drawRectangleGrid(
     }
 }
 
-void Media::drawGrid(
-    SquareGrid const &squareGrid,
-    SDL_FPoint const &position,
-    float const width, float const height
-) {
-    drawRectangleGrid(
-        position,
-        squareGrid.RowCount(), squareGrid.ColumnCount(),
-        width, height,
-        [](int, int) -> Media::ColorTriplet {
-            return {SDL_Color{}, SDL_Color{}, SDL_Color{}};
-        }
-    );
-}
-
-void Media::drawPointyTopHexagon(
-    float const size,
-    SDL_FPoint const &center,
-    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
-) {
-    Media::drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2.0f * size, firstColor, secondColor, thirdColor);
-}
-
-void Media::drawPointyTopHexagon(
+static void drawPointyTopHexagon(
     SDL_FPoint const &center,
     float const width, float const height,
     SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
@@ -137,7 +114,15 @@ void Media::drawPointyTopHexagon(
     SDL_RenderGeometry(Media::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
 }
 
-static void drawPointyTopHexagonGrid(
+static void drawPointyTopHexagon(
+    float const size,
+    SDL_FPoint const &center,
+    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+) {
+    drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2.0f * size, firstColor, secondColor, thirdColor);
+}
+
+void Media::drawPointyTopHexagonGrid(
     SDL_FPoint const &center,
     int const radius,
     float const width, float const height,
@@ -168,8 +153,8 @@ static void drawPointyTopHexagonGrid(
 
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
-            Media::drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
-            Media::drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
+            drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
+            drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
         }
     }
 

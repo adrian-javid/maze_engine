@@ -91,11 +91,14 @@ namespace Project::Main {static void refreshWindow() {
     Media::ColorTriplet const wallTileColorTriplet = getColorTriplet(wallTileColor);
     Media::ColorTriplet const emptyTileColorTriplet = getColorTriplet(emptyTileColor);
 
+    float const windowWidthValue = static_cast<float>(Media::windowWidth);
+    float const windowHeightValue = static_cast<float>(Media::windowHeight);
+
     Media::drawRectangleGrid(
         {0.0f, 0.0f},
         Main::maze.RowCount(), Main::maze.ColumnCount(),
-        static_cast<float>(Media::windowWidth),
-        static_cast<float>(Media::windowHeight),
+        windowWidthValue / 2.0f,
+        windowHeightValue,
         [
             &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
         ](int row, int column) -> Media::ColorTriplet {
@@ -106,6 +109,13 @@ namespace Project::Main {static void refreshWindow() {
             else
                 return emptyTileColorTriplet;
         }
+    );
+
+    Media::drawPointyTopHexagonGrid(
+        {3.0f * windowWidthValue / 4.0f, 1.0f * windowHeightValue / 2.0f},
+        5,
+        windowWidthValue / 2.0f, windowHeightValue,
+        std::get<0>(wallTileColorTriplet), std::get<1>(wallTileColorTriplet), std::get<2>(wallTileColorTriplet)
     );
 
     SDL_RenderPresent(Media::renderer);
