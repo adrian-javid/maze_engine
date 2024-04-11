@@ -115,7 +115,16 @@ namespace Project::Main {static void refreshWindow() {
         {3.0f * windowWidthValue / 4.0f, 1.0f * windowHeightValue / 2.0f},
         5,
         windowWidthValue / 2.0f, windowHeightValue,
-        std::get<0>(wallTileColorTriplet), std::get<1>(wallTileColorTriplet), std::get<2>(wallTileColorTriplet)
+        [
+            &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
+        ](int axis1, int axis2) -> Media::ColorTriplet {
+            if (Main::pathTileSet.find({axis1, axis2}) != Main::pathTileSet.end())
+                return pathTileColorTriplet;
+            else if (/* TODO: fix wrong maze! */ Main::maze.isWall(axis1, axis2))
+                return wallTileColorTriplet;
+            else
+                return emptyTileColorTriplet;
+        }
     );
 
     SDL_RenderPresent(Media::renderer);
@@ -123,6 +132,48 @@ namespace Project::Main {static void refreshWindow() {
 
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
+
+    #if true
+    int const radius = 4;
+    float const width = 250.0f;
+    float const height = 150.0f;
+    SDL_FPoint const center{width / 2.0f, height / 2.0f};
+
+    // Radius of 0 draws 1 hexagon.
+    assert(radius >= 0);
+
+    int const diameter = radius + 1 + radius;
+    float const diameterValue = static_cast<float>(diameter);
+
+    float const hexagonWidth = width / diameterValue;
+
+    // For height, first hexagon counts as 1, other hexagons count as 3/4.
+    float const hexagonHeight = height / (1.0f + (3.0f * (diameterValue - 1.0f)) / 4.0f);
+
+    float const threeQuartersHexagonHeight = (3 * hexagonHeight) / 4;
+    float const halfHexagonWidth = hexagonWidth / 2;
+
+    for (int verticalIndex = 0; verticalIndex <= radius; ++verticalIndex) {
+        float const verticalIndexValue = static_cast<float>(verticalIndex);
+
+        float const topHexagonCenterY = center.y - verticalIndexValue * threeQuartersHexagonHeight;
+        float const bottomHexagonCenterY = center.y + verticalIndexValue * threeQuartersHexagonHeight;
+
+        float const horizontalOffset = verticalIndexValue * halfHexagonWidth;
+
+        O << "axis 2: " << -verticalIndex << ", " << verticalIndex << '\n';
+
+        for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
+            float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
+            // O << "\thorizontal index: " << horizontalIndex << '\n';
+            O << "\taxis 1: " << horizontalIndex - radius + verticalIndex
+            << ", " << radius - horizontalIndex << '\n';
+        }
+    }
+
+    O << "done\n";
+    return EXIT_SUCCESS;
+    #endif
 
     // Initialize the Simple Directmedia Layer library.
     SDL_Init(SDL_INIT_VIDEO);
