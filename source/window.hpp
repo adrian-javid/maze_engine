@@ -18,16 +18,15 @@ namespace Project::Media {
         SDL_FPoint const &position,
         int const rowCount, int columnCount,
         float const width, float const height,
-        std::function<Media::ColorTriplet(int, int)> getColorTriplet
+        std::function<Media::ColorTriplet(int /* row */, int /* column */)> getColorTriplet
     );
 
     void drawPointyTopHexagonGrid(
         SDL_FPoint const &center,
         int const radius,
         float const width, float const height,
-        SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+        std::function<Media::ColorTriplet(int /* axis 1 */, int /* axis 2 */)> getColorTriplet
     );
 }
-
 
 #endif

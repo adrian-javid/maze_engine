@@ -126,7 +126,7 @@ void Media::drawPointyTopHexagonGrid(
     SDL_FPoint const &center,
     int const radius,
     float const width, float const height,
-    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+    std::function<Media::ColorTriplet(int /* axis 1 */, int /* axis 2 */)> getColorTriplet
 ) {
 
     // Radius of 0 draws 1 hexagon.
@@ -153,8 +153,21 @@ void Media::drawPointyTopHexagonGrid(
 
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
-            drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
-            drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
+
+            // int const axis2{horizontalIndex - radius + verticalIndex};
+
+            // /* top hexagon */ {
+            //     int const axis1{-verticalIndex};
+            //     auto const [firstColor, secondColor, thirdColor] = getColorTriplet(axis1, );
+            // }
+
+            // /* bottom hexagon */ {
+            //     int const axis1{verticalIndex};
+
+            // }
+
+            // drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
+            // drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
         }
     }
 
