@@ -133,7 +133,7 @@ namespace Project::Main {static void refreshWindow() {
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
-    #if true
+    #if false
     int const radius = 4;
     float const width = 250.0f;
     float const height = 150.0f;
@@ -165,9 +165,10 @@ int main(int argc, char *argv[]) {
 
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
-            // O << "\thorizontal index: " << horizontalIndex << '\n';
-            O << "\taxis 1: " << horizontalIndex - radius + verticalIndex
-            << ", " << radius - horizontalIndex << '\n';
+            O << "\taxis 1: "
+            << horizontalIndex - radius + verticalIndex
+            << ", " << horizontalIndex - radius
+            << '\n';
         }
     }
 
