@@ -151,24 +151,35 @@ void Media::drawPointyTopHexagonGrid(
 
         float const horizontalOffset = verticalIndexValue * halfHexagonWidth;
 
+        int const topAxis2{-verticalIndex};
+        int const bottomAxis2{verticalIndex};
+
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
 
             // int const axis2{horizontalIndex - radius + verticalIndex};
 
-            // /* top hexagon */ {
-            //     int const axis1{-verticalIndex};
-            //     auto const [firstColor, secondColor, thirdColor] = getColorTriplet(axis1, );
-            // }
+            /* top hexagon */ {
+                int const axis1{horizontalIndex - radius + verticalIndex};
+                auto const [firstColor, secondColor, thirdColor] = getColorTriplet(axis1, topAxis2);
+                drawPointyTopHexagon(
+                    {hexagonCenterX, topHexagonCenterY},
+                    hexagonWidth, hexagonHeight,
+                    firstColor, secondColor, thirdColor
+                );
+            }
 
-            // /* bottom hexagon */ {
-            //     int const axis1{verticalIndex};
-
-            // }
-
-            // drawPointyTopHexagon({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
-            // drawPointyTopHexagon({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight, firstColor, secondColor, thirdColor);
+            /* bottom hexagon */ {
+                int const axis1{horizontalIndex - radius};
+                auto const[firstColor, secondColor, thirdColor] = getColorTriplet(axis1, bottomAxis2);
+                drawPointyTopHexagon(
+                    {hexagonCenterX, bottomHexagonCenterY},
+                    hexagonWidth, hexagonHeight,
+                    firstColor, secondColor, thirdColor
+                );
+            }
         }
+
     }
 
 }
