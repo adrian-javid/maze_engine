@@ -22,6 +22,7 @@ namespace Project::Main {/*
 #endif
 #if true
 static auto &O = std::cout;
+static constexpr char ln = '\n';
 #endif
 
 using namespace Project;
@@ -58,7 +59,16 @@ namespace Project::Main {static SquareGrid generateGrid(int rowCount, int column
 }}
 
 namespace Project::Main {
-    static auto const maze = generateGrid(20, 20);
+    static auto const maze0 = generateGrid(20, 20);
+    static auto const maze1 = []() -> HexagonGrid {
+        HexagonGrid maze(4);
+        O << maze.core().size() << ln;
+        // for (auto const & pair : maze.core()) O << pair.first << " " << pair.second << ln;
+        maze.putWall(0, 0);
+        maze.putWall(0, -1);
+        maze.putWall(-4, 0);
+        return maze;
+    }();
     static Vector2::HashSet pathTileSet;
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
 }
@@ -96,7 +106,7 @@ namespace Project::Main {static void refreshWindow() {
 
     Media::drawRectangleGrid(
         {0.0f, 0.0f},
-        Main::maze.RowCount(), Main::maze.ColumnCount(),
+        Main::maze0.RowCount(), Main::maze0.ColumnCount(),
         windowWidthValue / 2.0f,
         windowHeightValue,
         [
@@ -104,7 +114,7 @@ namespace Project::Main {static void refreshWindow() {
         ](int row, int column) -> Media::ColorTriplet {
             if (Main::pathTileSet.find({row, column}) != Main::pathTileSet.end())
                 return pathTileColorTriplet;
-            else if (Main::maze.isWall(row, column))
+            else if (Main::maze0.isWall(row, column))
                 return wallTileColorTriplet;
             else
                 return emptyTileColorTriplet;
@@ -113,14 +123,14 @@ namespace Project::Main {static void refreshWindow() {
 
     Media::drawPointyTopHexagonGrid(
         {3.0f * windowWidthValue / 4.0f, 1.0f * windowHeightValue / 2.0f},
-        5,
+        maze1.Radius(),
         windowWidthValue / 2.0f, windowHeightValue,
         [
             &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
         ](int axis1, int axis2) -> Media::ColorTriplet {
-            if (Main::pathTileSet.find({axis1, axis2}) != Main::pathTileSet.end())
+            if (false)
                 return pathTileColorTriplet;
-            else if (/* TODO: fix wrong maze! */ Main::maze.isWall(axis1, axis2))
+            else if (Main::maze1.isWall(axis1, axis2))
                 return wallTileColorTriplet;
             else
                 return emptyTileColorTriplet;
@@ -189,15 +199,15 @@ int main(int argc, char *argv[]) {
     std::atexit(&Media::exitHandler);
 
     // Get the last row index and the last column index of the maze.
-    int const lastRow = Main::maze.RowCount() - 1;
-    int const lastColumn = Main::maze.ColumnCount() - 1;
+    int const lastRow = Main::maze0.RowCount() - 1;
+    int const lastColumn = Main::maze0.ColumnCount() - 1;
 
     // Define start and end positions of the maze.
     Vector2 const start = {0 + 1, 0 + 1};
     Vector2 const end = {lastRow - 1, lastColumn - 1};
 
     // Search for a path that solves the maze.
-    auto const path = breadthFirstSearch(Main::maze, start, end);
+    auto const path = breadthFirstSearch(Main::maze0, start, end);
 
     // Save the path tiles.
     for (auto const &vector : path.value()) Main::pathTileSet.insert(vector);
