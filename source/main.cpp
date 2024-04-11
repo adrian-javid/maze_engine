@@ -7,6 +7,7 @@ namespace Project::Main {/*
 */}
 
 #include "breadthFirstSearch.hpp"
+#include "depthFirstSearch.hpp"
 #include "simpleDirectmediaLayer.hpp"
 #include "window.hpp"
 #include "SquareGrid.hpp"
@@ -67,9 +68,12 @@ namespace Project::Main {
         maze.putWall(0, 0);
         maze.putWall(0, -1);
         maze.putWall(-4, 0);
+        maze.putWall(-1, 1);
+        maze.putWall(-3, 4);
         return maze;
     }();
-    static Vector2::HashSet pathTileSet;
+    static Vector2::HashSet pathTileSet0;
+    static Vector2::HashSet pathTileSet1;
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
 }
 
@@ -112,7 +116,7 @@ namespace Project::Main {static void refreshWindow() {
         [
             &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
         ](int row, int column) -> Media::ColorTriplet {
-            if (Main::pathTileSet.find({row, column}) != Main::pathTileSet.end())
+            if (Main::pathTileSet0.find({row, column}) != Main::pathTileSet0.end())
                 return pathTileColorTriplet;
             else if (Main::maze0.isWall(row, column))
                 return wallTileColorTriplet;
@@ -128,7 +132,7 @@ namespace Project::Main {static void refreshWindow() {
         [
             &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
         ](int axis1, int axis2) -> Media::ColorTriplet {
-            if (false)
+            if (Main::pathTileSet1.find({axis1, axis2}) != Main::pathTileSet1.end())
                 return pathTileColorTriplet;
             else if (Main::maze1.isWall(axis1, axis2))
                 return wallTileColorTriplet;
@@ -207,10 +211,13 @@ int main(int argc, char *argv[]) {
     Vector2 const end = {lastRow - 1, lastColumn - 1};
 
     // Search for a path that solves the maze.
-    auto const path = breadthFirstSearch(Main::maze0, start, end);
+    auto const path0 = depthFirstSearch(Main::maze0, start, end);
 
     // Save the path tiles.
-    for (auto const &vector : path.value()) Main::pathTileSet.insert(vector);
+    for (auto const &vector : path0.value()) Main::pathTileSet0.insert(vector);
+
+    auto const path1 = breadthFirstSearch(Main::maze1, {-1, -1}, {0, 2});
+    for (auto const &vector : path1.value()) Main::pathTileSet1.insert(vector);
 
     // You couldn't have guessed that this creates the window and renderer.
     SDL_CreateWindowAndRenderer(
