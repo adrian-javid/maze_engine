@@ -81,9 +81,9 @@ namespace Project::Main {static void refreshWindow() {
             return Media::HslaColor::getCyclicHue(hue, Main::percentageWrap(percentage + percentageAddend), hueDepth);
         };
         return std::make_tuple(
-            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.00)),
-            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.33)),
-            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.66))
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.0000)),
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.3333)),
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.6666))
         );
     };
 
