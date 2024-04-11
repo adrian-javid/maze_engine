@@ -63,8 +63,6 @@ namespace Project::Main {
     static auto const maze0 = generateGrid(20, 20);
     static auto const maze1 = []() -> HexagonGrid {
         HexagonGrid maze(4);
-        O << maze.core().size() << ln;
-        // for (auto const & pair : maze.core()) O << pair.first << " " << pair.second << ln;
         maze.putWall(0, 0);
         maze.putWall(0, -1);
         maze.putWall(-4, 0);
