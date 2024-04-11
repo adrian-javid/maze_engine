@@ -21,6 +21,8 @@ class Project::HexagonGrid : public Project::Grid {
 
     constexpr int Radius() const { return radius; }
 
+    constexpr Vector2::HashMap<Grid::Tile> const &core() const { return table; }
+
     Tile &at(int const axis1, int const axis2) override;
     Tile const &at(int const axis1, int const axis2) const override;
 
