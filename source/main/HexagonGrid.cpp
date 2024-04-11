@@ -54,7 +54,7 @@ HexagonGrid::HexagonGrid(int const setRadius):
         calculateMirrorCenter(4, setRadius),
         calculateMirrorCenter(5, setRadius),
     },
-    radius{radius}
+    radius{setRadius}
 {
     assert(radius >= 0);
 
