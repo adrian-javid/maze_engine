@@ -11,8 +11,8 @@ class Project::Grid {
   public:
     using Tile = std::uint_least8_t;
 
-    constexpr static Tile emptyTile = 0;
-    constexpr static Tile wallFlag = 1 << 0;
+    constexpr static Tile emptyTile = 0b000u;
+    constexpr static Tile wallFlag = 1u << 0u;
 
     virtual Tile &at(int const index1, int const index2) = 0;
     virtual Tile const &at(int const index1, int const index2) const = 0;
