@@ -9,8 +9,7 @@ namespace Project { class Grid; }
 class Project::Grid {
 
   public:
-
-    using Tile = std::uint_fast8_t;
+    using Tile = std::uint_least8_t;
 
     constexpr static Tile emptyTile = 0;
     constexpr static Tile wallFlag = 1 << 0;
