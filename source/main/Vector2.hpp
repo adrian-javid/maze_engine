@@ -36,6 +36,7 @@ struct Project::Vector2 {
     constexpr Vector2 hexagonalRotate(int const indexDegree60) const {
         std::array<int, 3> vector{};
         int const signFactor = indexDegree60 % 2 == 0 ? 1 : -1;
+        // TODO: cast to `size_t`
         vector[Util::wrapValue(0 - indexDegree60, 3)] = this->value1;
         vector[Util::wrapValue(1 - indexDegree60, 3)] = this->value2;
         vector[Util::wrapValue(2 - indexDegree60, 3)] = this->ThirdAxis();
