@@ -45,9 +45,7 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
         }
 
         grid.forNeighbor(key, [&grid, &upTree, &key, &storage](Vector2 const &neighbor) {
-            bool const neighborIsWall = grid.isWall(neighbor.value1, neighbor.value2);
-
-            if (not neighborIsWall && upTree.find(neighbor) == upTree.end()) {
+            if (upTree.find(neighbor) == upTree.end()) {
                 upTree.insert({neighbor, key});
                 storage.push(neighbor);
             }
