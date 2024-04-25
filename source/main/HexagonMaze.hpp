@@ -31,6 +31,8 @@ class Project::HexagonMaze : public Project::Maze {
 
     void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> operate) const override;
 
+    bool isOpen(int const row, int const column, Direction const) const override;
+
     Vector2 wrap(Vector2 const &key) const;
 };
 

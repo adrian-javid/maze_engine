@@ -89,3 +89,16 @@ void HexagonMaze::forNeighbor(Vector2 const &key, std::function<void(Vector2 con
     operate(HexagonMaze::wrap(key + Vector2::hexagonSouthWest));
     operate(HexagonMaze::wrap(key + Vector2::hexagonWest     ));
 }
+
+bool HexagonMaze::isOpen(int const axis1, int const axis2, Direction const direction) const {
+    switch (direction) {
+        case Direction::northwest:
+        case Direction::northeast:
+        case Direction::east:
+        case Direction::southeast:
+        case Direction::southwest:
+        case Direction::west:
+        default:
+            return false;
+    }
+}
