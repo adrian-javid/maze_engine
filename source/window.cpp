@@ -30,14 +30,15 @@ constexpr static std::tuple<SDL_FPoint, SDL_FPoint, SDL_FPoint, SDL_FPoint> getR
 static void drawQuadrilateral(
     SDL_FPoint const &northwestPoint, SDL_FPoint const &northeastPoint,
     SDL_FPoint const &southwestPoint, SDL_FPoint const &southeastPoint,
-    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
+    SDL_Color const &northwestColor, SDL_Color const &northeastColor,
+    SDL_Color const &southwestColor, SDL_Color const &southeastColor
 ) {
     static constexpr SDL_FPoint zeroPoint = {0, 0};
 
-    SDL_Vertex const topLeftVertex{northwestPoint, firstColor, zeroPoint};
-    SDL_Vertex const topRightVertex{northeastPoint, secondColor, zeroPoint};
-    SDL_Vertex const bottomLeftVertex{southwestPoint, secondColor, zeroPoint};
-    SDL_Vertex const bottomRightVertex{southeastPoint, thirdColor, zeroPoint};
+    SDL_Vertex const topLeftVertex{northwestPoint, northwestColor, zeroPoint};
+    SDL_Vertex const topRightVertex{northeastPoint, northeastColor, zeroPoint};
+    SDL_Vertex const bottomLeftVertex{southwestPoint, southwestColor, zeroPoint};
+    SDL_Vertex const bottomRightVertex{southeastPoint, southeastColor, zeroPoint};
 
     constexpr int vertexCount = 2 * (3);
     std::array<SDL_Vertex, vertexCount> const vertexList = {
@@ -55,8 +56,8 @@ void Media::drawSquareMaze(
     SquareMaze const &maze,
     SDL_FPoint const &position,
     float const width, float const height,
-    Media::ColorTriplet const &mainColor,
-    Media::ColorTriplet const &wallColor
+    Media::ColorTriplet const &mainColorTriplet,
+    Media::ColorTriplet const &wallColorTriplet
 ) {
     int const columnCount{maze.ColumnCount()};
     int const rowCount{maze.RowCount()};
@@ -69,10 +70,11 @@ void Media::drawSquareMaze(
 
     for (Vector2 key(0); key.value1 < rowCount; ++key.value1) {
         for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
-            auto const & [mainColor1, mainColor2, mainColor3] = mainColor;
-            auto const && [
-                northwestPoint, northeastPoint,
-                southwestPoint, southeastPoint
+            auto const &[mainColor1, mainColor2, mainColor3] = mainColorTriplet;
+
+            auto const &&[
+                outerNorthwestPoint, outerNortheastPoint,
+                outerSouthwestPoint, outerSoutheastPoint
             ] = getRectanglePointList(
                 /* northwest corner of rectangle */ {
                     static_cast<float>(key.value2) * rectangleWidth + position.x,
@@ -83,43 +85,58 @@ void Media::drawSquareMaze(
 
             // Draw main tile base.
             drawQuadrilateral(
-                northwestPoint, northeastPoint,
-                southwestPoint, southeastPoint,
-                mainColor1, mainColor2, mainColor3
+                outerNorthwestPoint, outerNortheastPoint,
+                outerSouthwestPoint, outerSoutheastPoint,
+                mainColor1, mainColor2,
+                mainColor3, mainColor1
             );
 
             /* Draw walls. */
 
-            static constexpr float framePercent = 0.65f;
-            static_assert(framePercent >= 0.0f); static_assert(framePercent <= 1.0f);
-            SDL_FPoint const rectangleCenter{northwestPoint.x + rectangleWidthHalf, northwestPoint.y + rectangleHeightHalf};
+            static constexpr float wallFramePercent = 0.35f;
+            static_assert(wallFramePercent >= 0.0f); static_assert(wallFramePercent <= 1.0f);
 
-            auto const && [
+            auto const &&[
                 innerNorthwestPoint, innerNortheastPoint,
                 innerSouthwestPoint, innerSoutheastPoint
             ] = getRectanglePointList(
                 {
-                    Util::linearInterpolation(framePercent, northwestPoint.x, northwestPoint.x + rectangleWidthHalf),
-                    Util::linearInterpolation(framePercent, northwestPoint.y, northwestPoint.y + rectangleHeightHalf)
+                    Util::linearInterpolation(wallFramePercent, outerNorthwestPoint.x, outerNorthwestPoint.x + rectangleWidthHalf),
+                    Util::linearInterpolation(wallFramePercent, outerNorthwestPoint.y, outerNorthwestPoint.y + rectangleHeightHalf)
                 },
-                rectangleWidth * (1.0f - framePercent), rectangleHeight * (1.0f - framePercent)
+                rectangleWidth * (1.0f - wallFramePercent), rectangleHeight * (1.0f - wallFramePercent)
             );
 
-            auto const & [wall1, wall2, wall3] = wallColor;
+            auto const &[wallColor1, wallColor2, wallColor3] = wallColorTriplet;
 
-            drawQuadrilateral(
+            if (maze.isOpen(key, SquareMaze::Direction::north)) drawQuadrilateral(
+                outerNorthwestPoint, outerNortheastPoint,
                 innerNorthwestPoint, innerNortheastPoint,
-                innerSouthwestPoint, innerSoutheastPoint,
-                wall1, wall2, wall3
+                wallColor1, wallColor2,
+                wallColor1, wallColor2
             );
 
-            if (maze.isOpen(key, SquareMaze::Direction::north));
+            if (maze.isOpen(key, SquareMaze::Direction::east)) drawQuadrilateral(
+                innerNortheastPoint, outerNortheastPoint,
+                innerSoutheastPoint, outerSoutheastPoint,
+                wallColor2, wallColor2,
+                wallColor3, wallColor3
+            );
 
-            if (maze.isOpen(key, SquareMaze::Direction::east));
+            if (maze.isOpen(key, SquareMaze::Direction::south)) drawQuadrilateral(
+                innerSouthwestPoint, innerSoutheastPoint,
+                outerSouthwestPoint, outerSoutheastPoint,
+                wallColor2, wallColor3,
+                wallColor2, wallColor3
+            );
 
-            if (maze.isOpen(key, SquareMaze::Direction::south));
-            
-            if (maze.isOpen(key, SquareMaze::Direction::west));
+            if (maze.isOpen(key, SquareMaze::Direction::west)) drawQuadrilateral(
+                outerNorthwestPoint, innerNorthwestPoint,
+                outerSouthwestPoint, innerSouthwestPoint,
+                wallColor1, wallColor1,
+                wallColor2, wallColor2
+            );
+
         }
     }
 }
