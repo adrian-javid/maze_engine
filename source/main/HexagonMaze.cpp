@@ -86,12 +86,13 @@ void HexagonMaze::forNeighbor(Vector2 const &key, std::function<void(Vector2 con
 
 bool HexagonMaze::isOpen(Vector2 const &tileKey, Direction const direction) const {
     switch (direction) {
-        case Direction::northwest:
-        case Direction::northeast:
-        case Direction::east:
-        case Direction::southeast:
-        case Direction::southwest:
-        case Direction::west:
+        case Direction::northeast: return at(tileKey                            ) & HexagonMaze::northeastWall;
+        case Direction::east     : return at(tileKey                            ) & HexagonMaze::eastWall     ;
+        case Direction::southeast: return at(tileKey                            ) & HexagonMaze::southeastWall;
+        case Direction::southwest: return at(tileKey + Vector2::hexagonSouthWest) & HexagonMaze::northeastWall;
+        case Direction::west     : return at(tileKey + Vector2::hexagonWest     ) & HexagonMaze::eastWall     ;
+        case Direction::northwest: return at(tileKey + Vector2::hexagonNorthWest) & HexagonMaze::southeastWall; 
+
         default:
             return false;
     }
