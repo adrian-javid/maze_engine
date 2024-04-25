@@ -137,7 +137,7 @@ namespace Project::Global {static void refreshWindow() {
         {3.0f * windowWidthValue / 4.0f, 1.0f * windowHeightValue / 2.0f},
         windowWidthValue / 2.0f, windowHeightValue,
         [
-            &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
+            &pathTileColorTriplet, &emptyTileColorTriplet
         ](Vector2 const &key) -> Media::ColorTriplet {
             if (Global::pathTileSet1.find(key) != Global::pathTileSet1.end())
                 return pathTileColorTriplet;
