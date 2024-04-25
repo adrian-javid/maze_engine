@@ -22,6 +22,12 @@ namespace Project::Util {
 
     double wrapValue(double value, double const upperBound);
 
+    constexpr float linearInterpolation(float const percentage, float const start, float const end) {
+        assert(percentage >= 0.0f);
+        assert(percentage <= 1.0f);
+        return start * (1.0f - percentage) + end * percentage;
+    }
+
     constexpr double linearInterpolation(double const percentage, double const start, double const end) {
         assert(percentage >= 0.0);
         assert(percentage <= 1.0);

@@ -58,12 +58,14 @@ void Media::drawSquareMaze(
     Media::ColorTriplet const &mainColor,
     Media::ColorTriplet const &wallColor
 ) {
-    // Does cacheing these values help? I don't know.
     int const columnCount{maze.ColumnCount()};
     int const rowCount{maze.RowCount()};
 
     float const rectangleWidth = width / static_cast<float>(columnCount);
     float const rectangleHeight = height / static_cast<float>(rowCount);
+
+    float const rectangleWidthHalf = rectangleWidth / 2.0f;
+    float const rectangleHeightHalf = rectangleHeight / 2.0f;
 
     for (int row = 0; row < rowCount; ++row) {
         for (int column = 0; column < columnCount; ++column) {
@@ -87,7 +89,23 @@ void Media::drawSquareMaze(
             );
 
             /* Draw walls. */
-            
+
+            static constexpr float framePercent = 0.10f;
+            static_assert(framePercent >= 0.0f); static_assert(framePercent <= 1.0f);
+            SDL_FPoint const rectangleCenter{northwestPoint.x + rectangleWidthHalf, northwestPoint.y + rectangleHeightHalf};
+
+            auto const && [
+                innerNorthwestPoint, innerNortheastPoint,
+                innerSouthwestPoint, innerSoutheastPoint
+            ] = getRectanglePointList(
+                {
+                    Util::linearInterpolation(framePercent, northwestPoint.x, northwestPoint.x + rectangleWidthHalf),
+                    Util::linearInterpolation(framePercent, northwestPoint.y, northwestPoint.y + rectangleHeightHalf)
+                },
+                rectangleWidth * framePercent, rectangleHeight * framePercent
+            );
+
+            // if (maze.isOpen())
         }
     }
 }

@@ -40,6 +40,14 @@ namespace Project::Main {static SquareMaze generateGrid(int rowCount, int column
         maze.putWall(row, maze.ColumnCount() - 1);
     }
 
+    Vector2 key;
+
+    maze.at(key={5, 5}) |= Maze::northWall | Maze::eastWall;
+
+    maze.at(key={-3, -3}) |= Maze::northWall | Maze::eastWall;
+    maze.at(key + Vector2::squareSouth) |= Maze::northWall;
+    maze.at(key + Vector2::squareWest) |= Maze::eastWall;
+
     maze.at({(maze.RowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
     maze.at({1, fourthQuarter}) = SquareMaze::emptyTile;
 
