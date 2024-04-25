@@ -3,6 +3,7 @@
 
 #include "simpleDirectmediaLayer.hpp"
 #include "SquareMaze.hpp"
+#include "HexagonMaze.hpp"
 #include "color.hpp"
 
 namespace Project::Media {
@@ -32,10 +33,11 @@ namespace Project::Media {
      * @param getColorTriplet
      */
     void drawHexagonMaze(
+        HexagonMaze const &maze,
         SDL_FPoint const &center,
-        int const radius,
         float const width, float const height,
-        std::function<Media::ColorTriplet(int /* axis 1 */, int /* axis 2 */)> getColorTriplet
+        ColorGetter const getMainColorTriplet,
+        Media::ColorTriplet const &wallColor
     );
 }
 

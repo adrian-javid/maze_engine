@@ -194,11 +194,14 @@ static void drawPointyTopHexagon(
 }
 
 void Media::drawHexagonMaze(
+    HexagonMaze const &maze,
     SDL_FPoint const &center,
-    int const radius,
     float const width, float const height,
-    std::function<Media::ColorTriplet(int /* axis 1 */, int /* axis 2 */)> getColorTriplet
+    ColorGetter const getMainColorTriplet,
+    Media::ColorTriplet const &wallColor
 ) {
+
+    int const radius{maze.Radius()};
 
     // Radius of 0 draws 1 hexagon.
     assert(radius >= 0);
@@ -232,7 +235,7 @@ void Media::drawHexagonMaze(
 
             /* top hexagon */ {
                 int const axis1{horizontalIndex - radius + verticalIndex};
-                auto const [firstColor, secondColor, thirdColor] = getColorTriplet(axis1, topAxis2);
+                auto const &&[firstColor, secondColor, thirdColor] = getMainColorTriplet({axis1, topAxis2});
                 drawPointyTopHexagon(
                     {hexagonCenterX, topHexagonCenterY},
                     hexagonWidth, hexagonHeight,
@@ -242,7 +245,7 @@ void Media::drawHexagonMaze(
 
             /* bottom hexagon */ {
                 int const axis1{horizontalIndex - radius};
-                auto const[firstColor, secondColor, thirdColor] = getColorTriplet(axis1, bottomAxis2);
+                auto const &&[firstColor, secondColor, thirdColor] = getMainColorTriplet({axis1, bottomAxis2});
                 drawPointyTopHexagon(
                     {hexagonCenterX, bottomHexagonCenterY},
                     hexagonWidth, hexagonHeight,

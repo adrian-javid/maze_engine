@@ -124,9 +124,6 @@ namespace Project::Global {static void refreshWindow() {
         windowWidthValue / 2.0f,
         windowHeightValue,
         [&emptyTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
-            if (key == start0 or key == end0)
-                return pathTileColorTriplet;
-
             if (Global::pathTileSet0.find(key) != Global::pathTileSet0.end())
                 return pathTileColorTriplet;
 
@@ -136,17 +133,18 @@ namespace Project::Global {static void refreshWindow() {
     );
 
     Media::drawHexagonMaze(
+        maze1,
         {3.0f * windowWidthValue / 4.0f, 1.0f * windowHeightValue / 2.0f},
-        maze1.Radius(),
         windowWidthValue / 2.0f, windowHeightValue,
         [
             &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
-        ](int axis1, int axis2) -> Media::ColorTriplet {
-            if (Global::pathTileSet1.find({axis1, axis2}) != Global::pathTileSet1.end())
+        ](Vector2 const &key) -> Media::ColorTriplet {
+            if (Global::pathTileSet1.find(key) != Global::pathTileSet1.end())
                 return pathTileColorTriplet;
             else
                 return emptyTileColorTriplet;
-        }
+        },
+        wallTileColorTriplet
     );
 
     SDL_RenderPresent(Media::renderer);
