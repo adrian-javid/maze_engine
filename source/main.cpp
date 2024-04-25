@@ -29,34 +29,34 @@ static constexpr char ln = '\n';
 using namespace Project;
 
 namespace Project::Main {static SquareMaze generateGrid(int rowCount, int columnCount) {
-    SquareMaze grid(rowCount, columnCount);
-    int const secondQuarter = grid.ColumnCount() / 4;
+    SquareMaze maze(rowCount, columnCount);
+    int const secondQuarter = maze.ColumnCount() / 4;
     int const fourthQuarter = secondQuarter * 3;
-    for (int row{0}; row < grid.RowCount(); ++row) {
-        grid.putWall(row, secondQuarter);
-        grid.putWall(row, fourthQuarter);
+    for (int row{0}; row < maze.RowCount(); ++row) {
+        maze.putWall(row, secondQuarter);
+        maze.putWall(row, fourthQuarter);
         
-        grid.putWall(row, 0);
-        grid.putWall(row, grid.ColumnCount() - 1);
+        maze.putWall(row, 0);
+        maze.putWall(row, maze.ColumnCount() - 1);
     }
 
-    grid.at({(grid.RowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
-    grid.at({1, fourthQuarter}) = SquareMaze::emptyTile;
+    maze.at({(maze.RowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
+    maze.at({1, fourthQuarter}) = SquareMaze::emptyTile;
 
     for (int offset = 0; offset < 8; ++offset) {
-        grid.putWall(16, secondQuarter + offset);
-        grid.putWall(3, fourthQuarter - offset);
+        maze.putWall(16, secondQuarter + offset);
+        maze.putWall(3, fourthQuarter - offset);
     }
 
-    grid.at({(grid.RowCount() - 1) - 2, secondQuarter}) = SquareMaze::emptyTile;
-    grid.at({2, fourthQuarter}) = SquareMaze::emptyTile;
+    maze.at({(maze.RowCount() - 1) - 2, secondQuarter}) = SquareMaze::emptyTile;
+    maze.at({2, fourthQuarter}) = SquareMaze::emptyTile;
 
-    for (int col{0}; col < grid.RowCount(); ++col) {
-        grid.putWall(0, col);
-        grid.putWall(grid.ColumnCount() - 1, col);
+    for (int col{0}; col < maze.RowCount(); ++col) {
+        maze.putWall(0, col);
+        maze.putWall(maze.ColumnCount() - 1, col);
     }
 
-    return grid;
+    return maze;
 }}
 
 namespace Project::Main {
