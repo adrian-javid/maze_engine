@@ -56,7 +56,7 @@ void Media::drawSquareMaze(
     SquareMaze const &maze,
     SDL_FPoint const &position,
     float const width, float const height,
-    Media::ColorTriplet const &mainColorTriplet,
+    ColorGetter const getMainColorTriplet,
     Media::ColorTriplet const &wallColorTriplet
 ) {
     int const columnCount{maze.ColumnCount()};
@@ -70,7 +70,7 @@ void Media::drawSquareMaze(
 
     for (Vector2 key(0); key.value1 < rowCount; ++key.value1) {
         for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
-            auto const &[mainColor1, mainColor2, mainColor3] = mainColorTriplet;
+            auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet(key);
 
             auto const &&[
                 outerNorthwestPoint, outerNortheastPoint,

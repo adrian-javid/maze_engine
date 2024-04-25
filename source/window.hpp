@@ -18,7 +18,7 @@ namespace Project::Media {
         SquareMaze const &maze,
         SDL_FPoint const &position,
         float const width, float const height,
-        Media::ColorTriplet const &mainColor,
+        ColorGetter const getMainColorTriplet,
         Media::ColorTriplet const &wallColor
     );
 
