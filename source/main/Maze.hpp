@@ -31,6 +31,20 @@ class Project::Maze {
 
     virtual void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const = 0;
 
+    enum struct Direction : std::uint_fast8_t {
+      /**/                 north,
+      /**/
+      /**/      northwest,        northeast,
+      /**/
+      /**/  west,                           east,
+      /**/
+      /**/      southwest,        southeast,
+      /**/
+      /**/                 south
+    };
+
+    virtual bool isOpen(int const index1, int const index2, Direction const) const = 0;
+
     constexpr Maze() = default;
     constexpr Maze(Maze const &) = default;
     Project::Maze &operator=(const Project::Maze &) = default;

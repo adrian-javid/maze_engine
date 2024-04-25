@@ -43,13 +43,11 @@ class Project::SquareMaze : public Project::Maze {
 
     void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const override;
 
-    constexpr std::size_t getFlatIndex(int row, int column) const {
-      constexpr auto wrap = [](int &index, int const count) constexpr -> void {
-        if ((index %= count) < 0) index += count;
-      };
+    bool isOpen(int const row, int const column, Direction const) const override;
 
-      wrap(row, rowCount);
-      wrap(column, columnCount);
+    constexpr std::size_t getFlatIndex(int row, int column) const {
+      row = Util::wrapValue(row, rowCount);
+      column = Util::wrapValue(column, columnCount);
 
       int const flatIndex{row * columnCount + column};
 

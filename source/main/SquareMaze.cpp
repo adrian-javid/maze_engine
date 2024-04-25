@@ -48,6 +48,23 @@ void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 
     operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
 }
 
+bool SquareMaze::isOpen(int const row, int const column, Direction const direction) const {
+    Tile const tile{at(row, column)};
+
+    switch (direction) {
+        case Direction::north:
+            return tile & SquareMaze::northWall;
+        case Direction::south:
+            return at(row + Vector2::squareSouth.value1, column + Vector2::squareSouth.value2) & SquareMaze::northWall;
+        case Direction::east:
+            return tile & SquareMaze::eastWall;
+        case Direction::west:
+            return at(row + Vector2::squareWest.value1, column + Vector2::squareWest.value2) & SquareMaze::eastWall;
+        default:
+            return false;
+    }
+}
+
 std::ostream &Project::operator<<(std::ostream &outputStream, SquareMaze const &squareGrid) {
     outputStream << squareGrid.toString(); return outputStream;
 }
