@@ -3,6 +3,7 @@
 
 #include "Maze.hpp"
 #include "Vector2.hpp"
+#include "simpleSearch.hpp"
 #include <optional>
 
 namespace Project {
@@ -17,7 +18,7 @@ namespace Project {
      * @return `std::optional<std::vector<Vector2>>`
      */
     std::optional<std::vector<Vector2>> breadthFirstSearch(
-        Maze const &grid, Vector2 const &start, Vector2 const &end
+        Maze const &grid, Vector2 const &start, Vector2 const &end, VertexProcessor const processor=nullptr
     );
 }
 
