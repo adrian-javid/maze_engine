@@ -33,11 +33,11 @@ namespace Project::Global {static SquareMaze generateGrid(int rowCount, int colu
     int const secondQuarter = maze.ColumnCount() / 4;
     int const fourthQuarter = secondQuarter * 3;
     for (int row{0}; row < maze.RowCount(); ++row) {
-        maze.putWall(row, secondQuarter);
-        maze.putWall(row, fourthQuarter);
+        // maze.putWall(row, secondQuarter);
+        // maze.putWall(row, fourthQuarter);
         
-        maze.putWall(row, 0);
-        maze.putWall(row, maze.ColumnCount() - 1);
+        // maze.putWall(row, 0);
+        // maze.putWall(row, maze.ColumnCount() - 1);
     }
 
     Vector2 key;
@@ -52,16 +52,16 @@ namespace Project::Global {static SquareMaze generateGrid(int rowCount, int colu
     maze.at({1, fourthQuarter}) = SquareMaze::emptyTile;
 
     for (int offset = 0; offset < 8; ++offset) {
-        maze.putWall(16, secondQuarter + offset);
-        maze.putWall(3, fourthQuarter - offset);
+        // maze.putWall(16, secondQuarter + offset);
+        // maze.putWall(3, fourthQuarter - offset);
     }
 
     maze.at({(maze.RowCount() - 1) - 2, secondQuarter}) = SquareMaze::emptyTile;
     maze.at({2, fourthQuarter}) = SquareMaze::emptyTile;
 
     for (int col{0}; col < maze.RowCount(); ++col) {
-        maze.putWall(0, col);
-        maze.putWall(maze.ColumnCount() - 1, col);
+        // maze.putWall(0, col);
+        // maze.putWall(maze.ColumnCount() - 1, col);
     }
 
     return maze;
@@ -75,11 +75,11 @@ namespace Project::Global {
 
     static auto const maze1 = []() -> HexagonMaze {
         HexagonMaze maze(4);
-        maze.putWall(0, 0);
-        maze.putWall(0, -1);
-        maze.putWall(-4, 0);
-        maze.putWall(-1, 1);
-        maze.putWall(-3, 4);
+        // maze.putWall(0, 0);
+        // maze.putWall(0, -1);
+        // maze.putWall(-4, 0);
+        // maze.putWall(-1, 1);
+        // maze.putWall(-3, 4);
         return maze;
     }();
     static Vector2::HashSet pathTileSet0;
@@ -144,8 +144,6 @@ namespace Project::Global {static void refreshWindow() {
         ](int axis1, int axis2) -> Media::ColorTriplet {
             if (Global::pathTileSet1.find({axis1, axis2}) != Global::pathTileSet1.end())
                 return pathTileColorTriplet;
-            else if (Global::maze1.isWall(axis1, axis2))
-                return wallTileColorTriplet;
             else
                 return emptyTileColorTriplet;
         }
