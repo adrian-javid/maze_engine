@@ -1,3 +1,3 @@
-# `scons` is the Python PIP package required to build this project.
+# `scons` is the Python-based build system required to build this project.
 
 scons
