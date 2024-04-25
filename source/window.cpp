@@ -18,21 +18,26 @@ void Media::setRenderDrawColor(SDL_Color const &color) {
     );
 }
 
-static void drawRectangle(
-    SDL_FPoint const &position,
-    float const width, float const height,
+constexpr static std::tuple<SDL_FPoint, SDL_FPoint, SDL_FPoint, SDL_FPoint> getRectanglePointList(
+    SDL_FPoint const &position, float const width, float const height
+) {return std::make_tuple(
+    position,
+    SDL_FPoint{position.x + width, position.y},
+    SDL_FPoint{position.x, position.y + height},
+    SDL_FPoint{position.x + width, position.y + height}
+);}
+
+static void drawQuadrilateral(
+    SDL_FPoint const &northwestPoint, SDL_FPoint const &northeastPoint,
+    SDL_FPoint const &southwestPoint, SDL_FPoint const &southeastPoint,
     SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
 ) {
-    SDL_FPoint const topRightPoint{position.x + width, position.y};
-    SDL_FPoint const bottomLeftPoint{position.x, position.y + height};
-    SDL_FPoint const bottomRightPoint{position.x + width, position.y + height};
-
     static constexpr SDL_FPoint zeroPoint = {0, 0};
 
-    SDL_Vertex const topLeftVertex{position, firstColor, zeroPoint};
-    SDL_Vertex const topRightVertex{topRightPoint, secondColor, zeroPoint};
-    SDL_Vertex const bottomLeftVertex{bottomLeftPoint, secondColor, zeroPoint};
-    SDL_Vertex const bottomRightVertex{bottomRightPoint, thirdColor, zeroPoint};
+    SDL_Vertex const topLeftVertex{northwestPoint, firstColor, zeroPoint};
+    SDL_Vertex const topRightVertex{northeastPoint, secondColor, zeroPoint};
+    SDL_Vertex const bottomLeftVertex{southwestPoint, secondColor, zeroPoint};
+    SDL_Vertex const bottomRightVertex{southeastPoint, thirdColor, zeroPoint};
 
     constexpr int vertexCount = 2 * (3);
     std::array<SDL_Vertex, vertexCount> const vertexList = {
@@ -62,15 +67,27 @@ void Media::drawSquareMaze(
 
     for (int row = 0; row < rowCount; ++row) {
         for (int column = 0; column < columnCount; ++column) {
-            auto const [firstColor, secondColor, thirdColor] = mainColor;
-            drawRectangle(
-                {
+            auto const & [firstColor, secondColor, thirdColor] = mainColor;
+            auto const && [
+                northwestPoint, northeastPoint,
+                southwestPoint, southeastPoint
+            ] = getRectanglePointList(
+                /* northwest corner of rectangle */ {
                     static_cast<float>(column) * rectangleWidth + position.x,
                     static_cast<float>(row) * rectangleHeight + position.y
                 },
-                rectangleWidth, rectangleHeight,
+                rectangleWidth, rectangleHeight
+            );
+
+            // Draw main tile base.
+            drawQuadrilateral(
+                northwestPoint, northeastPoint,
+                southwestPoint, southeastPoint,
                 firstColor, secondColor, thirdColor
             );
+
+            /* Draw walls. */
+            
         }
     }
 }
