@@ -3,6 +3,7 @@
 
 #include "simpleDirectmediaLayer.hpp"
 #include "Util.hpp"
+#include "Vector2.hpp"
 
 #include <tuple>
 #include <string>
@@ -10,6 +11,8 @@
 
 namespace Project::Media {
     using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
+
+    using ColorGetter = std::function<ColorTriplet(Vector2 const &)>;
 
     constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
 
