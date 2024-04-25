@@ -48,7 +48,7 @@ void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 
     operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
 }
 
-bool SquareMaze::isOpen(Vector2 const & tileKey, Direction const direction) const {
+bool SquareMaze::isOpen(Vector2 const &tileKey, Direction const direction) const {
     switch (direction) {
         case Direction::north: return at(tileKey                       ) & SquareMaze::northWall;
         case Direction::east : return at(tileKey                       ) & SquareMaze::eastWall ;
