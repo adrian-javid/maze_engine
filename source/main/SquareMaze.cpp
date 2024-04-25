@@ -41,14 +41,14 @@ std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) 
     return buffer.str();
 }
 
-void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> operate) const {
-    if (isOpen(tileKey, SquareMaze::Direction::north)) operate((tileKey + Vector2::squareNorth).wrap(rowCount, columnCount));
-    if (isOpen(tileKey, SquareMaze::Direction::south)) operate((tileKey + Vector2::squareSouth).wrap(rowCount, columnCount));
-    if (isOpen(tileKey, SquareMaze::Direction::east )) operate((tileKey + Vector2::squareEast ).wrap(rowCount, columnCount));
-    if (isOpen(tileKey, SquareMaze::Direction::west )) operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
+void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> const operate) const {
+    if (not hasWall(tileKey, SquareMaze::Direction::north)) operate((tileKey + Vector2::squareNorth).wrap(rowCount, columnCount));
+    if (not hasWall(tileKey, SquareMaze::Direction::south)) operate((tileKey + Vector2::squareSouth).wrap(rowCount, columnCount));
+    if (not hasWall(tileKey, SquareMaze::Direction::east )) operate((tileKey + Vector2::squareEast ).wrap(rowCount, columnCount));
+    if (not hasWall(tileKey, SquareMaze::Direction::west )) operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
 }
 
-bool SquareMaze::isOpen(Vector2 const &tileKey, Direction const direction) const {
+bool SquareMaze::hasWall(Vector2 const &tileKey, Direction const direction) const {
     switch (direction) {
         case Direction::north: return at(tileKey                       ) & SquareMaze::northWall;
         case Direction::east : return at(tileKey                       ) & SquareMaze::eastWall ;
