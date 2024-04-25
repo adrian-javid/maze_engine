@@ -1,16 +1,19 @@
-
 #ifndef simpleSearch_hpp
 #define simpleSearch_hpp
 
+#include <optional>
 #include <type_traits>
 #include <stack>
 
 namespace Project {
+    using VertexProcessor = std::function<void(Vector2 const &)>;
+
     template <typename Storage_T>
     std::optional<std::vector<Vector2>> simpleSearch(
         Maze const &, Vector2 const &, Vector2 const &,
-        std::function<void(Vector2 const &)> process=nullptr
+        VertexProcessor const process=nullptr
     );
+
 }
 
 template <typename Storage_T>
@@ -18,7 +21,7 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
     Maze const &grid,
     Vector2 const &start,
     Vector2 const &end,
-    std::function<void(Vector2 const &)> process
+    VertexProcessor const process
 ) {
     using namespace Project;
 
