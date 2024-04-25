@@ -43,15 +43,12 @@ struct Project::Vector2 {
         return Vector2(vector[0], vector[1]) * signFactor;
     }
 
-    /// @brief Create a vector with `row` `0` and `col` `0`.
-    constexpr Vector2(): Vector2(0, 0) {}
-
     /**
      * @brief Create a vector with specified values.
      * @param row assign `row`
      * @param column assign `col`
     */
-    constexpr Vector2(int row, int column): value1{row}, value2{column} {}
+    constexpr Vector2(int row=0, int column=0): value1{row}, value2{column} {}
 
     constexpr int ManhattanLength() const {
         return Util::abs(value1) + Util::abs(value2);
