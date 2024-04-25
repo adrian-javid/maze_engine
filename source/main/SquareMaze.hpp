@@ -41,9 +41,9 @@ class Project::SquareMaze : public Project::Maze {
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
-    void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const override;
+    void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const) const override;
 
-    bool isOpen(Vector2 const &, Direction const) const override;
+    bool hasWall(Vector2 const &, Direction const) const override;
 
     constexpr std::size_t getFlatIndex(Vector2 const &tileKey) const {
       int const row = Util::wrapValue(tileKey.value1, rowCount);
