@@ -67,16 +67,16 @@ void Media::drawSquareMaze(
     float const rectangleWidthHalf = rectangleWidth / 2.0f;
     float const rectangleHeightHalf = rectangleHeight / 2.0f;
 
-    for (int row = 0; row < rowCount; ++row) {
-        for (int column = 0; column < columnCount; ++column) {
+    for (Vector2 key(0); key.value1 < rowCount; ++key.value1) {
+        for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
             auto const & [firstColor, secondColor, thirdColor] = mainColor;
             auto const && [
                 northwestPoint, northeastPoint,
                 southwestPoint, southeastPoint
             ] = getRectanglePointList(
                 /* northwest corner of rectangle */ {
-                    static_cast<float>(column) * rectangleWidth + position.x,
-                    static_cast<float>(row) * rectangleHeight + position.y
+                    static_cast<float>(key.value2) * rectangleWidth + position.x,
+                    static_cast<float>(key.value1) * rectangleHeight + position.y
                 },
                 rectangleWidth, rectangleHeight
             );
