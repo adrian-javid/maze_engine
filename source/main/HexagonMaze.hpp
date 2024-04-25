@@ -23,15 +23,12 @@ class Project::HexagonMaze : public Project::Maze {
 
     constexpr Vector2::HashMap<Maze::Tile> const &core() const { return table; }
 
-    Tile &at(int const axis1, int const axis2) override;
-    Tile const &at(int const axis1, int const axis2) const override;
-
     virtual Tile &at(Vector2 const &key) override;
     virtual Tile const &at(Vector2 const &key) const override;
 
     void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> operate) const override;
 
-    bool isOpen(int const row, int const column, Direction const) const override;
+    bool isOpen(Vector2 const &tileKey, Direction const) const override;
 
     Vector2 wrap(Vector2 const &key) const;
 };

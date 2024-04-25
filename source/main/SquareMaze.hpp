@@ -36,21 +36,19 @@ class Project::SquareMaze : public Project::Maze {
     int ColumnCount() const;
     Table const &FlatData() const;
 
-    Tile &at(int const row, int const column) override;
-    Tile const &at(int const row, int const column) const override;
+    Tile &at(Vector2 const &) override;
+    Tile const &at(Vector2 const &) const override;
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
     void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const override;
 
-    bool isOpen(int const row, int const column, Direction const) const override;
+    bool isOpen(Vector2 const &, Direction const) const override;
 
-    constexpr std::size_t getFlatIndex(int row, int column) const {
-      row = Util::wrapValue(row, rowCount);
-      column = Util::wrapValue(column, columnCount);
-
+    constexpr std::size_t getFlatIndex(Vector2 const &tileKey) const {
+      int const row = Util::wrapValue(tileKey.value1, rowCount);
+      int const column = Util::wrapValue(tileKey.value2, columnCount);
       int const flatIndex{row * columnCount + column};
-
       return static_cast<std::size_t>(flatIndex);
     }
 };

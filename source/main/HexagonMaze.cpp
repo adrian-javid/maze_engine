@@ -75,12 +75,6 @@ auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(key); }
 
 auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(key); }
 
-auto HexagonMaze::at(int const axis1, int const axis2) -> Tile & { return table.at({axis1, axis2}); }
-
-auto HexagonMaze::at(int const axis1, int const axis2) const -> Tile const & {
-    return table.at({axis1, axis2});
-}
-
 void HexagonMaze::forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> operate) const {
     operate(HexagonMaze::wrap(key + Vector2::hexagonNorthWest));
     operate(HexagonMaze::wrap(key + Vector2::hexagonNorthEast));
@@ -90,7 +84,7 @@ void HexagonMaze::forNeighbor(Vector2 const &key, std::function<void(Vector2 con
     operate(HexagonMaze::wrap(key + Vector2::hexagonWest     ));
 }
 
-bool HexagonMaze::isOpen(int const axis1, int const axis2, Direction const direction) const {
+bool HexagonMaze::isOpen(Vector2 const &tileKey, Direction const direction) const {
     switch (direction) {
         case Direction::northwest:
         case Direction::northeast:

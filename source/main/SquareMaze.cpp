@@ -18,20 +18,20 @@ int SquareMaze::RowCount() const { return rowCount; }
 int SquareMaze::ColumnCount() const { return columnCount; }
 auto SquareMaze::FlatData() const -> Table const & { return table; }
 
-auto SquareMaze::at(int const row, int const column) -> Tile & {
-    return table.at(getFlatIndex(row, column));
+auto SquareMaze::at(Vector2 const &tileKey) -> Tile & {
+    return table.at(getFlatIndex(tileKey));
 }
 
-auto SquareMaze::at(int const row, int const column) const -> Tile const & {
-    return table.at(getFlatIndex(row, column));
+auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
+    return table.at(getFlatIndex(tileKey));
 }
 
 std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) const {
     std::stringstream buffer;
 
-    for (int row{0}; row < rowCount; ++row) {
-        for (int column{0}; column < columnCount; ++column) {
-            Tile const tile = at(row, column);
+    for (Vector2 key(0, 0); key.value1 < rowCount; ++key.value1) {
+        for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
+            Tile const tile = at(key);
             char const symbol = (tile ? wallSymbol : emptySymbol);
             buffer << ' ' << symbol;
         }
@@ -48,16 +48,16 @@ void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 
     operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
 }
 
-bool SquareMaze::isOpen(int const row, int const column, Direction const direction) const {
+bool SquareMaze::isOpen(Vector2 const & tileKey, Direction const direction) const {
     switch (direction) {
         case Direction::north:
-            return at(row, column) & SquareMaze::northWall;
+            return at(tileKey) & SquareMaze::northWall;
         case Direction::south:
-            return Maze::at(Vector2(row, column) + Vector2::squareSouth) & SquareMaze::northWall;
+            return at(tileKey + Vector2::squareSouth) & SquareMaze::northWall;
         case Direction::east:
-            return at(row, column) & SquareMaze::eastWall;
+            return at(tileKey) & SquareMaze::eastWall;
         case Direction::west:
-            return Maze::at(Vector2(row, column) + Vector2::squareWest) & SquareMaze::eastWall;
+            return at(tileKey + Vector2::squareWest) & SquareMaze::eastWall;
         default:
             return false;
     }

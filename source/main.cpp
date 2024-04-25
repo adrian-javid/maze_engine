@@ -40,16 +40,16 @@ namespace Project::Main {static SquareMaze generateGrid(int rowCount, int column
         grid.putWall(row, grid.ColumnCount() - 1);
     }
 
-    grid.at((grid.RowCount() - 1) - 1, secondQuarter) = SquareMaze::emptyTile;
-    grid.at(1, fourthQuarter) = SquareMaze::emptyTile;
+    grid.at({(grid.RowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
+    grid.at({1, fourthQuarter}) = SquareMaze::emptyTile;
 
     for (int offset = 0; offset < 8; ++offset) {
         grid.putWall(16, secondQuarter + offset);
         grid.putWall(3, fourthQuarter - offset);
     }
 
-    grid.at((grid.RowCount() - 1) - 2, secondQuarter) = SquareMaze::emptyTile;
-    grid.at(2, fourthQuarter) = SquareMaze::emptyTile;
+    grid.at({(grid.RowCount() - 1) - 2, secondQuarter}) = SquareMaze::emptyTile;
+    grid.at({2, fourthQuarter}) = SquareMaze::emptyTile;
 
     for (int col{0}; col < grid.RowCount(); ++col) {
         grid.putWall(0, col);

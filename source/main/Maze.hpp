@@ -20,11 +20,8 @@ class Project::Maze {
     constexpr static Tile eastWall      { 1u << 2u };
     constexpr static Tile southeastWall { 1u << 3u };
 
-    virtual Tile &at(int const index1, int const index2) = 0;
-    virtual Tile const &at(int const index1, int const index2) const = 0;
-
-    virtual Tile &at(Vector2 const &key);
-    virtual Tile const &at(Vector2 const &key) const;
+    virtual Tile &at(Vector2 const &key) = 0;
+    virtual Tile const &at(Vector2 const &key) const = 0;
 
     bool isWall(int const index1, int const index2) const;
     void putWall(int const index1, int const index2);
@@ -43,7 +40,7 @@ class Project::Maze {
       /**/                 south
     };
 
-    virtual bool isOpen(int const index1, int const index2, Direction const) const = 0;
+    virtual bool isOpen(Vector2 const &, Direction const) const = 0;
 
     constexpr Maze() = default;
     constexpr Maze(Maze const &) = default;
