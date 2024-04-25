@@ -1,4 +1,4 @@
-namespace Project::Main {/*
+namespace Project::Global {/*
 
 
     This program solves mazes!
@@ -28,7 +28,7 @@ static constexpr char ln = '\n';
 
 using namespace Project;
 
-namespace Project::Main {static SquareMaze generateGrid(int rowCount, int columnCount) {
+namespace Project::Global {static SquareMaze generateGrid(int rowCount, int columnCount) {
     SquareMaze maze(rowCount, columnCount);
     int const secondQuarter = maze.ColumnCount() / 4;
     int const fourthQuarter = secondQuarter * 3;
@@ -67,8 +67,12 @@ namespace Project::Main {static SquareMaze generateGrid(int rowCount, int column
     return maze;
 }}
 
-namespace Project::Main {
+namespace Project::Global {
     static auto const maze0 = generateGrid(20, 20);
+
+    Vector2 const start0 = {0 + 1, 0 + 1};
+    Vector2 const end0 = {(maze0.RowCount() - 1) - 1, (maze0.ColumnCount() - 1) - 1};
+
     static auto const maze1 = []() -> HexagonMaze {
         HexagonMaze maze(4);
         maze.putWall(0, 0);
@@ -83,7 +87,7 @@ namespace Project::Main {
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
 }
 
-namespace Project::Main {static void refreshWindow() {
+namespace Project::Global {static void refreshWindow() {
     constexpr Media::HslaColor pathTileColor(0.0);
     constexpr Media::HslaColor wallTileColor(240.0);
     constexpr Media::HslaColor emptyTileColor(155.0);
@@ -92,13 +96,13 @@ namespace Project::Main {static void refreshWindow() {
     static double percentage{zeroPercent};
     double const deltaPercentage = static_cast<double>(Media::deltaTime) * 0.00010;
 
-    percentage = Main::percentageWrap(percentage + deltaPercentage);
+    percentage = Global::percentageWrap(percentage + deltaPercentage);
     assert(percentage >= 0.0); assert(percentage < 1.0);
 
     constexpr double hueDepth{45.0};
     constexpr auto getColorTriplet = [](Media::HslaColor const &tileColor) -> Media::ColorTriplet {
         constexpr auto getCyclicHue = [](double const hue, double const percentageAddend) -> double {
-            return Media::HslaColor::getCyclicHue(hue, Main::percentageWrap(percentage + percentageAddend), hueDepth);
+            return Media::HslaColor::getCyclicHue(hue, Global::percentageWrap(percentage + percentageAddend), hueDepth);
         };
         return std::make_tuple(
             tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.00)),
@@ -115,11 +119,19 @@ namespace Project::Main {static void refreshWindow() {
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
     Media::drawSquareMaze(
-        Main::maze0,
+        Global::maze0,
         {0.0f, 0.0f},
         windowWidthValue / 2.0f,
         windowHeightValue,
-        emptyTileColorTriplet,
+        [&emptyTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
+            if (key == start0 or key == end0)
+                return pathTileColorTriplet;
+
+            if (Global::pathTileSet0.find(key) != Global::pathTileSet0.end())
+                return pathTileColorTriplet;
+
+            return emptyTileColorTriplet;
+        },
         wallTileColorTriplet
     );
 
@@ -130,9 +142,9 @@ namespace Project::Main {static void refreshWindow() {
         [
             &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
         ](int axis1, int axis2) -> Media::ColorTriplet {
-            if (Main::pathTileSet1.find({axis1, axis2}) != Main::pathTileSet1.end())
+            if (Global::pathTileSet1.find({axis1, axis2}) != Global::pathTileSet1.end())
                 return pathTileColorTriplet;
-            else if (Main::maze1.isWall(axis1, axis2))
+            else if (Global::maze1.isWall(axis1, axis2))
                 return wallTileColorTriplet;
             else
                 return emptyTileColorTriplet;
@@ -200,23 +212,15 @@ int main(int argc, char *argv[]) {
     */
     std::atexit(&Media::exitHandler);
 
-    // Get the last row index and the last column index of the maze.
-    int const lastRow = Main::maze0.RowCount() - 1;
-    int const lastColumn = Main::maze0.ColumnCount() - 1;
-
-    // Define start and end positions of the maze.
-    Vector2 const start = {0 + 1, 0 + 1};
-    Vector2 const end = {lastRow - 1, lastColumn - 1};
-
     // Search for a path that solves the maze.
-    auto const path0 = depthFirstSearch(Main::maze0, start, end);
+    auto const path0 = depthFirstSearch(Global::maze0, Global::start0, Global::end0);
 
     // Save the path tiles.
     if (path0)
-        for (auto const &vector : path0.value()) Main::pathTileSet0.insert(vector);
+        for (auto const &vector : path0.value()) Global::pathTileSet0.insert(vector);
 
-    auto const path1 = breadthFirstSearch(Main::maze1, {-1, -1}, {0, 2});
-    for (auto const &vector : path1.value()) Main::pathTileSet1.insert(vector);
+    auto const path1 = breadthFirstSearch(Global::maze1, {-1, -1}, {0, 2});
+    for (auto const &vector : path1.value()) Global::pathTileSet1.insert(vector);
 
     // You couldn't have guessed that this creates the window and renderer.
     SDL_CreateWindowAndRenderer(
@@ -233,7 +237,7 @@ int main(int argc, char *argv[]) {
     SDL_SetWindowMinimumSize(Media::window, 250, 150);
 
     // Set the window refresher. This is called every iteration in the main loop.
-    Media::windowRefresher = &Main::refreshWindow;
+    Media::windowRefresher = &Global::refreshWindow;
 
     // Start the main loop.
     #ifdef __EMSCRIPTEN__
