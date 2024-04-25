@@ -47,17 +47,22 @@ static void drawRectangle(
 }
 
 void Media::drawSquareMaze(
+    SquareMaze const &maze,
     SDL_FPoint const &position,
-    int const rowCount, int columnCount,
     float const width, float const height,
-    std::function<Media::ColorTriplet(int, int)> getColorTriplet
+    Media::ColorTriplet const &mainColor,
+    Media::ColorTriplet const &wallColor
 ) {
+    // Does cacheing these values help? I don't know.
+    int const columnCount{maze.ColumnCount()};
+    int const rowCount{maze.RowCount()};
+
     float const rectangleWidth = width / static_cast<float>(columnCount);
     float const rectangleHeight = height / static_cast<float>(rowCount);
 
     for (int row = 0; row < rowCount; ++row) {
         for (int column = 0; column < columnCount; ++column) {
-            auto const [firstColor, secondColor, thirdColor] = getColorTriplet(row, column);
+            auto const [firstColor, secondColor, thirdColor] = mainColor;
             drawRectangle(
                 {
                     static_cast<float>(column) * rectangleWidth + position.x,

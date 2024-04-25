@@ -93,9 +93,9 @@ namespace Project::Main {static void refreshWindow() {
             return Media::HslaColor::getCyclicHue(hue, Main::percentageWrap(percentage + percentageAddend), hueDepth);
         };
         return std::make_tuple(
-            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.0000)),
-            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.3333)),
-            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.6666))
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.00)),
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.10)),
+            tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.20))
         );
     };
 
@@ -107,20 +107,12 @@ namespace Project::Main {static void refreshWindow() {
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
     Media::drawSquareMaze(
+        Main::maze0,
         {0.0f, 0.0f},
-        Main::maze0.RowCount(), Main::maze0.ColumnCount(),
         windowWidthValue / 2.0f,
         windowHeightValue,
-        [
-            &pathTileColorTriplet, &wallTileColorTriplet, &emptyTileColorTriplet
-        ](int row, int column) -> Media::ColorTriplet {
-            if (Main::pathTileSet0.find({row, column}) != Main::pathTileSet0.end())
-                return pathTileColorTriplet;
-            else if (Main::maze0.isWall(row, column))
-                return wallTileColorTriplet;
-            else
-                return emptyTileColorTriplet;
-        }
+        emptyTileColorTriplet,
+        wallTileColorTriplet
     );
 
     Media::drawHexagonMaze(

@@ -15,10 +15,11 @@ namespace Project::Media {
     void setRenderDrawColor(SDL_Color const &color);
 
     void drawSquareMaze(
+        SquareMaze const &maze,
         SDL_FPoint const &position,
-        int const rowCount, int columnCount,
         float const width, float const height,
-        std::function<Media::ColorTriplet(int /* row */, int /* column */)> getColorTriplet
+        Media::ColorTriplet const &mainColor,
+        Media::ColorTriplet const &wallColor
     );
 
     /**
