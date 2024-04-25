@@ -75,11 +75,14 @@ namespace Project::Global {
 
     static auto const maze1 = []() -> HexagonMaze {
         HexagonMaze maze(4);
-        // maze.putWall(0, 0);
-        // maze.putWall(0, -1);
-        // maze.putWall(-4, 0);
-        // maze.putWall(-1, 1);
-        // maze.putWall(-3, 4);
+        auto const center = Vector2(0, 0);
+
+        maze.at(center) |= HexagonMaze::northeastWall;
+        maze.at(center + Vector2::hexagonSouthWest) |= HexagonMaze::northeastWall;
+
+        maze.at(center) |= HexagonMaze::eastWall;
+        maze.at(center + Vector2::hexagonWest) |= HexagonMaze::eastWall;
+
         return maze;
     }();
     static Vector2::HashSet pathTileSet0;
