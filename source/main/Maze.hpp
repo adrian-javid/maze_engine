@@ -35,7 +35,7 @@ class Project::Maze {
       /**/                 south
     };
 
-    virtual bool isOpen(Vector2 const &, Direction const) const = 0;
+    virtual bool hasWall(Vector2 const &, Direction const) const = 0;
 
     constexpr Maze() = default;
     constexpr Maze(Maze const &) = default;
