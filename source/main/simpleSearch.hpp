@@ -8,7 +8,8 @@
 namespace Project {
     template <typename Storage_T>
     std::optional<std::vector<Vector2>> simpleSearch(
-        Maze const &, Vector2 const &, Vector2 const &
+        Maze const &, Vector2 const &, Vector2 const &,
+        std::function<void(Vector2 const &)> process=nullptr
     );
 }
 
@@ -16,7 +17,8 @@ template <typename Storage_T>
 std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
     Maze const &grid,
     Vector2 const &start,
-    Vector2 const &end
+    Vector2 const &end,
+    std::function<void(Vector2 const &)> process
 ) {
     using namespace Project;
 
@@ -35,6 +37,7 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
         }();
         storage.pop();
 
+        if (process) process(key);
         if (key == end) {
             std::vector<Vector2> path;
             for (auto iterator = upTree.find(key); iterator->first != start; iterator = upTree.find(iterator->second)) {
