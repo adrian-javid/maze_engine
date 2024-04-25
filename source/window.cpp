@@ -69,7 +69,7 @@ void Media::drawSquareMaze(
 
     for (Vector2 key(0); key.value1 < rowCount; ++key.value1) {
         for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
-            auto const & [firstColor, secondColor, thirdColor] = mainColor;
+            auto const & [mainColor1, mainColor2, mainColor3] = mainColor;
             auto const && [
                 northwestPoint, northeastPoint,
                 southwestPoint, southeastPoint
@@ -85,12 +85,12 @@ void Media::drawSquareMaze(
             drawQuadrilateral(
                 northwestPoint, northeastPoint,
                 southwestPoint, southeastPoint,
-                firstColor, secondColor, thirdColor
+                mainColor1, mainColor2, mainColor3
             );
 
             /* Draw walls. */
 
-            static constexpr float framePercent = 0.10f;
+            static constexpr float framePercent = 0.65f;
             static_assert(framePercent >= 0.0f); static_assert(framePercent <= 1.0f);
             SDL_FPoint const rectangleCenter{northwestPoint.x + rectangleWidthHalf, northwestPoint.y + rectangleHeightHalf};
 
@@ -102,10 +102,24 @@ void Media::drawSquareMaze(
                     Util::linearInterpolation(framePercent, northwestPoint.x, northwestPoint.x + rectangleWidthHalf),
                     Util::linearInterpolation(framePercent, northwestPoint.y, northwestPoint.y + rectangleHeightHalf)
                 },
-                rectangleWidth * framePercent, rectangleHeight * framePercent
+                rectangleWidth * (1.0f - framePercent), rectangleHeight * (1.0f - framePercent)
             );
 
-            // if (maze.isOpen())
+            auto const & [wall1, wall2, wall3] = wallColor;
+
+            drawQuadrilateral(
+                innerNorthwestPoint, innerNortheastPoint,
+                innerSouthwestPoint, innerSoutheastPoint,
+                wall1, wall2, wall3
+            );
+
+            if (maze.isOpen(key, SquareMaze::Direction::north));
+
+            if (maze.isOpen(key, SquareMaze::Direction::east));
+
+            if (maze.isOpen(key, SquareMaze::Direction::south));
+            
+            if (maze.isOpen(key, SquareMaze::Direction::west));
         }
     }
 }
