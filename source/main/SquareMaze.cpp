@@ -42,10 +42,10 @@ std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) 
 }
 
 void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> operate) const {
-    operate((tileKey + Vector2::squareNorth).wrap(rowCount, columnCount));
-    operate((tileKey + Vector2::squareSouth).wrap(rowCount, columnCount));
-    operate((tileKey + Vector2::squareEast ).wrap(rowCount, columnCount));
-    operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
+    if (isOpen(tileKey, SquareMaze::Direction::north)) operate((tileKey + Vector2::squareNorth).wrap(rowCount, columnCount));
+    if (isOpen(tileKey, SquareMaze::Direction::south)) operate((tileKey + Vector2::squareSouth).wrap(rowCount, columnCount));
+    if (isOpen(tileKey, SquareMaze::Direction::east )) operate((tileKey + Vector2::squareEast ).wrap(rowCount, columnCount));
+    if (isOpen(tileKey, SquareMaze::Direction::west )) operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
 }
 
 bool SquareMaze::isOpen(Vector2 const &tileKey, Direction const direction) const {
