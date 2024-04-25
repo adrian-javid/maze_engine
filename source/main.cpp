@@ -212,7 +212,8 @@ int main(int argc, char *argv[]) {
     auto const path0 = depthFirstSearch(Main::maze0, start, end);
 
     // Save the path tiles.
-    for (auto const &vector : path0.value()) Main::pathTileSet0.insert(vector);
+    if (path0)
+        for (auto const &vector : path0.value()) Main::pathTileSet0.insert(vector);
 
     auto const path1 = breadthFirstSearch(Main::maze1, {-1, -1}, {0, 2});
     for (auto const &vector : path1.value()) Main::pathTileSet1.insert(vector);
