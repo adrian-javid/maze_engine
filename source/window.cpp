@@ -46,7 +46,7 @@ static void drawRectangle(
     SDL_RenderGeometry(Media::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
 }
 
-void Media::drawRectangleGrid(
+void Media::drawSquareMaze(
     SDL_FPoint const &position,
     int const rowCount, int columnCount,
     float const width, float const height,
@@ -122,7 +122,7 @@ static void drawPointyTopHexagon(
     drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2.0f * size, firstColor, secondColor, thirdColor);
 }
 
-void Media::drawPointyTopHexagonGrid(
+void Media::drawHexagonMaze(
     SDL_FPoint const &center,
     int const radius,
     float const width, float const height,

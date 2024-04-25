@@ -106,7 +106,7 @@ namespace Project::Main {static void refreshWindow() {
     float const windowWidthValue = static_cast<float>(Media::windowWidth);
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
-    Media::drawRectangleGrid(
+    Media::drawSquareMaze(
         {0.0f, 0.0f},
         Main::maze0.RowCount(), Main::maze0.ColumnCount(),
         windowWidthValue / 2.0f,
@@ -123,7 +123,7 @@ namespace Project::Main {static void refreshWindow() {
         }
     );
 
-    Media::drawPointyTopHexagonGrid(
+    Media::drawHexagonMaze(
         {3.0f * windowWidthValue / 4.0f, 1.0f * windowHeightValue / 2.0f},
         maze1.Radius(),
         windowWidthValue / 2.0f, windowHeightValue,

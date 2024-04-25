@@ -14,14 +14,23 @@ namespace Project::Media {
 
     void setRenderDrawColor(SDL_Color const &color);
 
-    void drawRectangleGrid(
+    void drawSquareMaze(
         SDL_FPoint const &position,
         int const rowCount, int columnCount,
         float const width, float const height,
         std::function<Media::ColorTriplet(int /* row */, int /* column */)> getColorTriplet
     );
 
-    void drawPointyTopHexagonGrid(
+    /**
+     * @note Draws hexagons with "pointy top" style. That is, the hexagons have a point northward.
+     * 
+     * @param center pixel location of center of maze
+     * @param radius 
+     * @param width pixel width
+     * @param height pixel height
+     * @param getColorTriplet
+     */
+    void drawHexagonMaze(
         SDL_FPoint const &center,
         int const radius,
         float const width, float const height,
