@@ -14,6 +14,7 @@ namespace Project::Util {
     }
 
     constexpr int wrapValue(int value, int const upperBound) {
+        assert(upperBound > 0);
         value %= upperBound;
         if (value < 0) value += upperBound;
         return value;
