@@ -13,8 +13,6 @@ class Project::Maze {
 
     constexpr static Tile emptyTile{0u};
 
-    constexpr static Tile wallFlag{0b1u};
-
     constexpr static Tile northWall     { 1u << 0u };
     constexpr static Tile northeastWall { 1u << 1u };
     constexpr static Tile eastWall      { 1u << 2u };
@@ -22,9 +20,6 @@ class Project::Maze {
 
     virtual Tile &at(Vector2 const &key) = 0;
     virtual Tile const &at(Vector2 const &key) const = 0;
-
-    bool isWall(int const index1, int const index2) const;
-    void putWall(int const index1, int const index2);
 
     virtual void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const = 0;
 
