@@ -99,12 +99,7 @@ struct Project::Vector2 {
     }
 
     constexpr Vector2 wrap(int const rowCount, int const columnCount) const {
-        assert(rowCount > 0);
-        assert(columnCount > 0);
-        Vector2 vector(value1 % rowCount, value2 % columnCount);
-        if (vector.value1 < 0) vector.value1 += rowCount;
-        if (vector.value2 < 0) vector.value2 += columnCount;
-        return vector;
+        return Vector2(Util::wrapValue(value1, rowCount), Util::wrapValue(value2, columnCount));
     }
 
     struct Hash { std::size_t operator()(Vector2 const &vector) const noexcept; };
