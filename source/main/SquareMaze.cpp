@@ -1,8 +1,8 @@
-#include "SquareGrid.hpp"
+#include "SquareMaze.hpp"
 
 using namespace Project;
 
-SquareGrid::SquareGrid(int const rowCount, int const columnCount):
+SquareMaze::SquareMaze(int const rowCount, int const columnCount):
     table([rowCount, columnCount]() constexpr -> std::size_t {
         if (rowCount < 0)
             throw std::invalid_argument("row count " + std::to_string(rowCount) + " should not be negative");
@@ -14,19 +14,19 @@ SquareGrid::SquareGrid(int const rowCount, int const columnCount):
     }()), rowCount{rowCount}, columnCount{columnCount}
 {}
 
-int SquareGrid::RowCount() const { return rowCount; }
-int SquareGrid::ColumnCount() const { return columnCount; }
-auto SquareGrid::FlatData() const -> Table const & { return table; }
+int SquareMaze::RowCount() const { return rowCount; }
+int SquareMaze::ColumnCount() const { return columnCount; }
+auto SquareMaze::FlatData() const -> Table const & { return table; }
 
-auto SquareGrid::at(int const row, int const column) -> Tile & {
+auto SquareMaze::at(int const row, int const column) -> Tile & {
     return table.at(getFlatIndex(row, column));
 }
 
-auto SquareGrid::at(int const row, int const column) const -> Tile const & {
+auto SquareMaze::at(int const row, int const column) const -> Tile const & {
     return table.at(getFlatIndex(row, column));
 }
 
-std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) const {
+std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) const {
     std::stringstream buffer;
 
     for (int row{0}; row < rowCount; ++row) {
@@ -41,13 +41,13 @@ std::string SquareGrid::toString(char const wallSymbol, char const emptySymbol) 
     return buffer.str();
 }
 
-void SquareGrid::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> operate) const {
+void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> operate) const {
     operate((tileKey + Vector2::squareNorth).wrap(rowCount, columnCount));
     operate((tileKey + Vector2::squareSouth).wrap(rowCount, columnCount));
     operate((tileKey + Vector2::squareEast ).wrap(rowCount, columnCount));
     operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
 }
 
-std::ostream &Project::operator<<(std::ostream &outputStream, SquareGrid const &squareGrid) {
+std::ostream &Project::operator<<(std::ostream &outputStream, SquareMaze const &squareGrid) {
     outputStream << squareGrid.toString(); return outputStream;
 }

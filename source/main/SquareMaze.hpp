@@ -1,8 +1,8 @@
-#ifndef SquareGrid_hpp
-#define SquareGrid_hpp
+#ifndef SquareMaze_hpp
+#define SquareMaze_hpp
 
 // parent class
-#include "Grid.hpp"
+#include "Maze.hpp"
 
 // grid to string
 #include <string>
@@ -12,11 +12,11 @@
 #include <vector>
 
 namespace Project {
-  class SquareGrid;
-  std::ostream &operator<<(std::ostream &outputStream, SquareGrid const &squareGrid);
+  class SquareMaze;
+  std::ostream &operator<<(std::ostream &outputStream, SquareMaze const &squareGrid);
 }
 
-class Project::SquareGrid : public Project::Grid {
+class Project::SquareMaze : public Project::Maze {
 
   public:
 
@@ -31,7 +31,7 @@ class Project::SquareGrid : public Project::Grid {
 
   public:
 
-    explicit SquareGrid(int const rowCount=0, int const columnCount=0);
+    explicit SquareMaze(int const rowCount=0, int const columnCount=0);
     int RowCount() const;
     int ColumnCount() const;
     Table const &FlatData() const;

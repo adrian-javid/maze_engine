@@ -1,4 +1,4 @@
-#include "HexagonGrid.hpp"
+#include "HexagonMaze.hpp"
 
 using namespace Project;
 
@@ -11,7 +11,7 @@ static Vector2 calculateMirrorCenter(int const index, int const radius) {
     return rotatedPosition;
 }
 
-Vector2 HexagonGrid::wrap(Vector2 const &key) const {
+Vector2 HexagonMaze::wrap(Vector2 const &key) const {
     // return early if key is in table
     auto iterator = table.find(key);
     if (iterator != table.end())
@@ -44,7 +44,7 @@ Vector2 HexagonGrid::wrap(Vector2 const &key) const {
     return safeKey;
 }
 
-HexagonGrid::HexagonGrid(int const setRadius):
+HexagonMaze::HexagonMaze(int const setRadius):
     table(),
     mirrorCenterTable{
         calculateMirrorCenter(0, setRadius),
@@ -66,26 +66,26 @@ HexagonGrid::HexagonGrid(int const setRadius):
 
         for (int r = r1; r <= r2; ++r) {
             Vector2 const key(center + Vector2(q, r));
-            table.insert({key, Project::Grid::emptyTile});
+            table.insert({key, Project::Maze::emptyTile});
         }
     }
 }
 
-auto HexagonGrid::at(Vector2 const &key) -> Tile & { return table.at(key); }
+auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(key); }
 
-auto HexagonGrid::at(Vector2 const &key) const -> Tile const & { return table.at(key); }
+auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(key); }
 
-auto HexagonGrid::at(int const axis1, int const axis2) -> Tile & { return table.at({axis1, axis2}); }
+auto HexagonMaze::at(int const axis1, int const axis2) -> Tile & { return table.at({axis1, axis2}); }
 
-auto HexagonGrid::at(int const axis1, int const axis2) const -> Tile const & {
+auto HexagonMaze::at(int const axis1, int const axis2) const -> Tile const & {
     return table.at({axis1, axis2});
 }
 
-void HexagonGrid::forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> operate) const {
-    operate(HexagonGrid::wrap(key + Vector2::hexagonNorthWest));
-    operate(HexagonGrid::wrap(key + Vector2::hexagonNorthEast));
-    operate(HexagonGrid::wrap(key + Vector2::hexagonEast     ));
-    operate(HexagonGrid::wrap(key + Vector2::hexagonSouthEast));
-    operate(HexagonGrid::wrap(key + Vector2::hexagonSouthWest));
-    operate(HexagonGrid::wrap(key + Vector2::hexagonWest     ));
+void HexagonMaze::forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> operate) const {
+    operate(HexagonMaze::wrap(key + Vector2::hexagonNorthWest));
+    operate(HexagonMaze::wrap(key + Vector2::hexagonNorthEast));
+    operate(HexagonMaze::wrap(key + Vector2::hexagonEast     ));
+    operate(HexagonMaze::wrap(key + Vector2::hexagonSouthEast));
+    operate(HexagonMaze::wrap(key + Vector2::hexagonSouthWest));
+    operate(HexagonMaze::wrap(key + Vector2::hexagonWest     ));
 }

@@ -10,8 +10,8 @@ namespace Project::Main {/*
 #include "depthFirstSearch.hpp"
 #include "simpleDirectmediaLayer.hpp"
 #include "window.hpp"
-#include "SquareGrid.hpp"
-#include "HexagonGrid.hpp"
+#include "SquareMaze.hpp"
+#include "HexagonMaze.hpp"
 #include "Util.hpp"
 
 #include <algorithm>
@@ -28,8 +28,8 @@ static constexpr char ln = '\n';
 
 using namespace Project;
 
-namespace Project::Main {static SquareGrid generateGrid(int rowCount, int columnCount) {
-    SquareGrid grid(rowCount, columnCount);
+namespace Project::Main {static SquareMaze generateGrid(int rowCount, int columnCount) {
+    SquareMaze grid(rowCount, columnCount);
     int const secondQuarter = grid.ColumnCount() / 4;
     int const fourthQuarter = secondQuarter * 3;
     for (int row{0}; row < grid.RowCount(); ++row) {
@@ -40,16 +40,16 @@ namespace Project::Main {static SquareGrid generateGrid(int rowCount, int column
         grid.putWall(row, grid.ColumnCount() - 1);
     }
 
-    grid.at((grid.RowCount() - 1) - 1, secondQuarter) = SquareGrid::emptyTile;
-    grid.at(1, fourthQuarter) = SquareGrid::emptyTile;
+    grid.at((grid.RowCount() - 1) - 1, secondQuarter) = SquareMaze::emptyTile;
+    grid.at(1, fourthQuarter) = SquareMaze::emptyTile;
 
     for (int offset = 0; offset < 8; ++offset) {
         grid.putWall(16, secondQuarter + offset);
         grid.putWall(3, fourthQuarter - offset);
     }
 
-    grid.at((grid.RowCount() - 1) - 2, secondQuarter) = SquareGrid::emptyTile;
-    grid.at(2, fourthQuarter) = SquareGrid::emptyTile;
+    grid.at((grid.RowCount() - 1) - 2, secondQuarter) = SquareMaze::emptyTile;
+    grid.at(2, fourthQuarter) = SquareMaze::emptyTile;
 
     for (int col{0}; col < grid.RowCount(); ++col) {
         grid.putWall(0, col);
@@ -61,8 +61,8 @@ namespace Project::Main {static SquareGrid generateGrid(int rowCount, int column
 
 namespace Project::Main {
     static auto const maze0 = generateGrid(20, 20);
-    static auto const maze1 = []() -> HexagonGrid {
-        HexagonGrid maze(4);
+    static auto const maze1 = []() -> HexagonMaze {
+        HexagonMaze maze(4);
         maze.putWall(0, 0);
         maze.putWall(0, -1);
         maze.putWall(-4, 0);

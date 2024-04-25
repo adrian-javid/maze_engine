@@ -1,27 +1,27 @@
-#ifndef HexagonGrid_hpp
-#define HexagonGrid_hpp
+#ifndef HexagonMaze_hpp
+#define HexagonMaze_hpp
 
-#include "Grid.hpp"
+#include "Maze.hpp"
 
 #include <array>
 
-namespace Project { class HexagonGrid; }
+namespace Project { class HexagonMaze; }
 
-class Project::HexagonGrid : public Project::Grid {
+class Project::HexagonMaze : public Project::Maze {
 
   private:
 
-    Vector2::HashMap<Grid::Tile> table;
+    Vector2::HashMap<Maze::Tile> table;
     std::array<Vector2, /* A hexagon has six sides. */ 6> mirrorCenterTable;
     int radius;
 
   public:
 
-    explicit HexagonGrid(int const setRadius=0);
+    explicit HexagonMaze(int const setRadius=0);
 
     constexpr int Radius() const { return radius; }
 
-    constexpr Vector2::HashMap<Grid::Tile> const &core() const { return table; }
+    constexpr Vector2::HashMap<Maze::Tile> const &core() const { return table; }
 
     Tile &at(int const axis1, int const axis2) override;
     Tile const &at(int const axis1, int const axis2) const override;

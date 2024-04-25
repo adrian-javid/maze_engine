@@ -8,13 +8,13 @@
 namespace Project {
     template <typename Storage_T>
     std::optional<std::vector<Vector2>> simpleSearch(
-        Grid const &, Vector2 const &, Vector2 const &
+        Maze const &, Vector2 const &, Vector2 const &
     );
 }
 
 template <typename Storage_T>
 std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
-    Grid const &grid,
+    Maze const &grid,
     Vector2 const &start,
     Vector2 const &end
 ) {

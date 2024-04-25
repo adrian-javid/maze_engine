@@ -2,7 +2,7 @@
 #define window_hpp
 
 #include "simpleDirectmediaLayer.hpp"
-#include "SquareGrid.hpp"
+#include "SquareMaze.hpp"
 #include "color.hpp"
 
 namespace Project::Media {
