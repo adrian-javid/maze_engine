@@ -109,28 +109,28 @@ void Media::drawSquareMaze(
 
             auto const &[wallColor1, wallColor2, wallColor3] = wallColorTriplet;
 
-            if (maze.isOpen(key, SquareMaze::Direction::north)) drawQuadrilateral(
+            if (maze.hasWall(key, SquareMaze::Direction::north)) drawQuadrilateral(
                 outerNorthwestPoint, outerNortheastPoint,
                 innerNorthwestPoint, innerNortheastPoint,
                 wallColor1, wallColor2,
                 wallColor1, wallColor2
             );
 
-            if (maze.isOpen(key, SquareMaze::Direction::east)) drawQuadrilateral(
+            if (maze.hasWall(key, SquareMaze::Direction::east)) drawQuadrilateral(
                 innerNortheastPoint, outerNortheastPoint,
                 innerSoutheastPoint, outerSoutheastPoint,
                 wallColor2, wallColor2,
                 wallColor3, wallColor3
             );
 
-            if (maze.isOpen(key, SquareMaze::Direction::south)) drawQuadrilateral(
+            if (maze.hasWall(key, SquareMaze::Direction::south)) drawQuadrilateral(
                 innerSouthwestPoint, innerSoutheastPoint,
                 outerSouthwestPoint, outerSoutheastPoint,
                 wallColor2, wallColor3,
                 wallColor2, wallColor3
             );
 
-            if (maze.isOpen(key, SquareMaze::Direction::west)) drawQuadrilateral(
+            if (maze.hasWall(key, SquareMaze::Direction::west)) drawQuadrilateral(
                 outerNorthwestPoint, innerNorthwestPoint,
                 outerSouthwestPoint, innerSouthwestPoint,
                 wallColor1, wallColor1,
