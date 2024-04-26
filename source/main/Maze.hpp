@@ -40,7 +40,7 @@ class Project::Maze {
       /**/                 south
     };
 
-    virtual bool hasWall(Vector2 const &, Direction const) const = 0;
+    virtual bool hasWall(Vector2 const &tileKey, Direction const direction) const = 0;
 
     void generate(unsigned int const seed);
 
