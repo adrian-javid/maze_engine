@@ -78,13 +78,13 @@ namespace Project::Global {
         auto const center = Vector2(0, 0);
 
         maze.at(center) |= HexagonMaze::northeastWall;
-        maze.at(center + Vector2::hexagonSouthWest) |= HexagonMaze::northeastWall;
+        maze.at(center + Vector2::hexagonSouthwest) |= HexagonMaze::northeastWall;
 
         maze.at(center) |= HexagonMaze::eastWall;
         maze.at(center + Vector2::hexagonWest) |= HexagonMaze::eastWall;
 
         maze.at(center) |= HexagonMaze::southeastWall;
-        maze.at(center + Vector2::hexagonNorthWest) |= HexagonMaze::southeastWall;
+        maze.at(center + Vector2::hexagonNorthwest) |= HexagonMaze::southeastWall;
 
         return maze;
     }();

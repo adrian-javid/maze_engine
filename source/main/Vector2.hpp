@@ -21,11 +21,11 @@ struct Project::Vector2 {
     static Vector2 const squareEast;
     static Vector2 const squareWest;
 
-    static Vector2 const hexagonNorthWest;
-    static Vector2 const hexagonNorthEast;
+    static Vector2 const hexagonNorthwest;
+    static Vector2 const hexagonNortheast;
     static Vector2 const hexagonEast;
-    static Vector2 const hexagonSouthEast;
-    static Vector2 const hexagonSouthWest;
+    static Vector2 const hexagonSoutheast;
+    static Vector2 const hexagonSouthwest;
     static Vector2 const hexagonWest;
 
     int value1;

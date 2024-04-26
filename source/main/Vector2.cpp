@@ -9,11 +9,11 @@ Vector2 const Vector2::squareSouth(+1,  0);
 Vector2 const Vector2::squareEast ( 0, +1);
 Vector2 const Vector2::squareWest ( 0, -1);
 
-Vector2 const Vector2::hexagonNorthWest( 0, -1);
-Vector2 const Vector2::hexagonNorthEast(+1, -1);
+Vector2 const Vector2::hexagonNorthwest( 0, -1);
+Vector2 const Vector2::hexagonNortheast(+1, -1);
 Vector2 const Vector2::hexagonEast     (+1,  0);
-Vector2 const Vector2::hexagonSouthEast( 0, +1);
-Vector2 const Vector2::hexagonSouthWest(-1, +1);
+Vector2 const Vector2::hexagonSoutheast( 0, +1);
+Vector2 const Vector2::hexagonSouthwest(-1, +1);
 Vector2 const Vector2::hexagonWest     (-1,  0);
 
 std::size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
