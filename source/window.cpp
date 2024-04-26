@@ -219,7 +219,7 @@ void Media::drawHexagonMaze(
     ColorGetter const getMainColorTriplet,
     Media::ColorTriplet const &wallColorTriplet
 ) {
-    int const radius{maze.Radius()};
+    int const radius{maze.getRadius()};
     auto const &[wallColor1, wallColor2, wallColor3] = wallColorTriplet;
 
     // Radius of 0 draws 1 hexagon.

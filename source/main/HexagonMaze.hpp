@@ -19,7 +19,7 @@ class Project::HexagonMaze : public Project::Maze {
 
     explicit HexagonMaze(int const setRadius=0);
 
-    constexpr int Radius() const { return radius; }
+    constexpr int getRadius() const { return radius; }
 
     constexpr Vector2::HashMap<Maze::Tile> const &core() const { return table; }
 
