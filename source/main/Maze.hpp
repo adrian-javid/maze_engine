@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <optional>
+#include <any>
 
 namespace Project { class Maze; }
 
@@ -54,16 +55,30 @@ class Project::Maze {
     virtual ~Maze() = default;
 
     class Iterator {
+      private:
+        std::function<Vector2 const &(std::any const &)> dereference;
+        std::function<Iterator &(std::any &)> preIncrement;
+        std::function<bool(std::any const &, Iterator const &)> equals;
+
+        std::any memory;
+
       public:
+        Iterator() {};
+        explicit Iterator(
+          std::any const &,
+          decltype(Iterator::dereference) const &dereferencer,
+          decltype(Iterator::preIncrement) const &preIncrementer,
+          decltype(Iterator::equals) const &equalityDeterminer
+        );
         Vector2 const &operator*() const;
-        Iterator &operator++();
+        Iterator &operator++(); // preincrement
         bool operator==(Iterator const &iterator);
         bool operator!=(Iterator const &iterator);
     };
 
-    // virtual Iterator begin() const = 0;
+    virtual Iterator begin() const = 0;
 
-    // virtual Iterator end() const = 0;
+    virtual Iterator end() const = 0;
 
 };
 
