@@ -222,10 +222,10 @@ void Media::drawHexagonMaze(
     SDL_FPoint const &center,
     float const width, float const height,
     ColorGetter const getMainColorTriplet,
-    Media::ColorTriplet const &wallColor
+    Media::ColorTriplet const &wallColorTriplet
 ) {
-
     int const radius{maze.Radius()};
+    auto const &[wallColor1, wallColor2, wallColor3] = wallColorTriplet;
 
     // Radius of 0 draws 1 hexagon.
     assert(radius >= 0);
@@ -255,35 +255,44 @@ void Media::drawHexagonMaze(
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
 
-            /* top hexagon */ {
-                int const axis1{horizontalIndex - radius + verticalIndex};
-                auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet({axis1, topAxis2});
+            auto const drawTile = [
+                &getMainColorTriplet, &wallColor1, &wallColor2, &wallColor3,
+                hexagonCenterX, hexagonWidth, hexagonHeight
+            ](Vector2 const &tileKey, float const hexagonCenterY) -> void {
+                auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet(tileKey);
                 auto const &&[
-                    northwestPoint, northPoint, northeastPoint,
-                    southwestPoint, southPoint, southeastPoint
-                ] = getPointyTopHexagonPointList({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight);
+                    outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
+                    outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint
+                ] = getPointyTopHexagonPointList({hexagonCenterX, hexagonCenterY}, hexagonWidth, hexagonHeight);
                 drawHexagon(
-                    northwestPoint, northPoint, northeastPoint,
-                    southwestPoint, southPoint, southeastPoint,
+                    outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
+                    outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint,
                     mainColor1, mainColor1, mainColor2,
                     mainColor2, mainColor3, mainColor3
                 );
-            }
 
-            /* bottom hexagon */ {
-                int const axis1{horizontalIndex - radius};
-                auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet({axis1, bottomAxis2});
                 auto const &&[
-                    northwestPoint, northPoint, northeastPoint,
-                    southwestPoint, southPoint, southeastPoint
-                ] = getPointyTopHexagonPointList({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight);
-                drawHexagon(
-                    northwestPoint, northPoint, northeastPoint,
-                    southwestPoint, southPoint, southeastPoint,
-                    mainColor1, mainColor1, mainColor2,
-                    mainColor2, mainColor3, mainColor3
+                    innerNorthwestPoint, innerNorthPoint, innerNortheastPoint,
+                    innerSouthwestPoint, innerSouthPoint, innerSoutheastPoint
+                ] = getPointyTopHexagonPointList(
+                    {hexagonCenterX, hexagonCenterY},
+                    hexagonWidth * (1.0f - wallFramePercent),
+                    hexagonHeight * (1.0f - wallFramePercent)
                 );
-            }
+
+                drawHexagon(
+                    innerNorthwestPoint, innerNorthPoint, innerNortheastPoint,
+                    innerSouthwestPoint, innerSouthPoint, innerSoutheastPoint,
+                    wallColor1, wallColor1, wallColor2,
+                    wallColor2, wallColor3, wallColor3
+                );
+            };
+
+            /* top hexagon */
+            drawTile({horizontalIndex - radius + verticalIndex, topAxis2}, topHexagonCenterY);
+
+            /* bottom hexagon */
+            drawTile({horizontalIndex - radius, bottomAxis2}, bottomHexagonCenterY);
         }
 
     }
