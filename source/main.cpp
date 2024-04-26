@@ -22,7 +22,7 @@ namespace Project::Global {/*
 
 #endif
 #if true
-static auto &O = std::cout;
+static auto &o = std::cout;
 static constexpr char ln = '\n';
 #endif
 
@@ -160,6 +160,19 @@ int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
     #if false
+    o << sizeof(std::variant<
+        decltype(HexagonMaze().getTable().begin()),
+        decltype(SquareMaze().getTable().begin())
+    >) << ln;
+    o << sizeof(std::any) << ln;
+    o << typeid(void *).name() << ' ' << sizeof(void *) << ln;
+    o << sizeof(std::function<Vector2 const &(std::any const &)>) << ln;
+    o << sizeof(std::function<void()>) << ln;
+    o << sizeof(std::ptrdiff_t) << ln;
+    o << typeid(std::size_t).name() << ' ' << sizeof(std::size_t) << ln;
+    #endif
+
+    #if false
     int const radius = 4;
     float const width = 250.0f;
     float const height = 150.0f;
@@ -187,18 +200,18 @@ int main(int argc, char *argv[]) {
 
         float const horizontalOffset = verticalIndexValue * halfHexagonWidth;
 
-        O << "axis 2: " << -verticalIndex << ", " << verticalIndex << '\n';
+        o << "axis 2: " << -verticalIndex << ", " << verticalIndex << '\n';
 
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
-            O << "\taxis 1: "
+            o << "\taxis 1: "
             << horizontalIndex - radius + verticalIndex
             << ", " << horizontalIndex - radius
             << '\n';
         }
     }
 
-    O << "done\n";
+    o << "done\n";
     return EXIT_SUCCESS;
     #endif
 
