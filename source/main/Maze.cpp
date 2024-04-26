@@ -7,7 +7,7 @@
 
 auto Project::Maze::generate(unsigned int const seed) -> void {
     struct Wall {
-        Vector2 tilKey;
+        Vector2 tileKey;
         int identifier;
         Maze::Direction type;
     };
