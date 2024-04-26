@@ -255,8 +255,6 @@ void Media::drawHexagonMaze(
         for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
             float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
 
-            // int const axis2{horizontalIndex - radius + verticalIndex};
-
             /* top hexagon */ {
                 int const axis1{horizontalIndex - radius + verticalIndex};
                 auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet({axis1, topAxis2});
