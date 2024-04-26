@@ -15,9 +15,9 @@ auto Project::Maze::generate(unsigned int const seed) -> void {
     int indentifierCount{0};
     std::vector<Wall> wallList;
 
-    for (Vector2 const &tileKey : *this) {
+    // for (Vector2 const &tileKey : *this) {
         
-    }
+    // }
 
     /*
     for key in maze:
