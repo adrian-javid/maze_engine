@@ -18,13 +18,14 @@ void Media::setRenderDrawColor(SDL_Color const &color) {
     );
 }
 
-constexpr static std::tuple<SDL_FPoint, SDL_FPoint, SDL_FPoint, SDL_FPoint> getRectanglePointList(
+constexpr static std::tuple<
+    SDL_FPoint, SDL_FPoint,
+    SDL_FPoint, SDL_FPoint
+> getQuadrilateralPointList(
     SDL_FPoint const &position, float const width, float const height
 ) {return std::make_tuple(
-    position,
-    SDL_FPoint{position.x + width, position.y},
-    SDL_FPoint{position.x, position.y + height},
-    SDL_FPoint{position.x + width, position.y + height}
+    position, SDL_FPoint{position.x + width, position.y},
+    SDL_FPoint{position.x, position.y + height}, SDL_FPoint{position.x + width, position.y + height}
 );}
 
 static void drawQuadrilateral(
@@ -75,7 +76,7 @@ void Media::drawSquareMaze(
             auto const &&[
                 outerNorthwestPoint, outerNortheastPoint,
                 outerSouthwestPoint, outerSoutheastPoint
-            ] = getRectanglePointList(
+            ] = getQuadrilateralPointList(
                 /* northwest corner of rectangle */ {
                     static_cast<float>(key.value2) * rectangleWidth + position.x,
                     static_cast<float>(key.value1) * rectangleHeight + position.y
@@ -93,13 +94,10 @@ void Media::drawSquareMaze(
 
             /* Draw walls. */
 
-            static constexpr float wallFramePercent = 0.35f;
-            static_assert(wallFramePercent >= 0.0f); static_assert(wallFramePercent <= 1.0f);
-
             auto const &&[
                 innerNorthwestPoint, innerNortheastPoint,
                 innerSouthwestPoint, innerSoutheastPoint
-            ] = getRectanglePointList(
+            ] = getQuadrilateralPointList(
                 {
                     Util::linearInterpolation(wallFramePercent, outerNorthwestPoint.x, outerNorthwestPoint.x + rectangleWidthHalf),
                     Util::linearInterpolation(wallFramePercent, outerNorthwestPoint.y, outerNorthwestPoint.y + rectangleHeightHalf)
@@ -141,6 +139,19 @@ void Media::drawSquareMaze(
     }
 }
 
+constexpr static std::tuple<
+    SDL_FPoint, SDL_FPoint, SDL_FPoint,
+    SDL_FPoint, SDL_FPoint, SDL_FPoint
+> getHexagonPointList(
+    SDL_FPoint const &center, float const width, float const height
+) {
+    float const halfWidth = width / 2.0f;
+    float const halfHeight = height / 2.0f;
+    float const quarterHeight = height / 4.0f;
+
+    return {};
+}
+
 static void drawPointyTopHexagon(
     SDL_FPoint const &center,
     float const width, float const height,
@@ -151,23 +162,23 @@ static void drawPointyTopHexagon(
     float const halfHeight = height / 2.0f;
     float const quarterHeight = height / 4.0f;
 
-    SDL_FPoint const topPoint{center.x, center.y - halfHeight};
-    SDL_FPoint const topLeftPoint{center.x - halfWidth, center.y - quarterHeight};
-    SDL_FPoint const topRightPoint{center.x + halfWidth, center.y - quarterHeight};
+    SDL_FPoint const northPoint{center.x, center.y - halfHeight};
+    SDL_FPoint const northWestPoint{center.x - halfWidth, center.y - quarterHeight};
+    SDL_FPoint const northEastPoint{center.x + halfWidth, center.y - quarterHeight};
 
-    SDL_FPoint const bottomPoint{center.x, center.y + halfHeight};
-    SDL_FPoint const bottomLeftPoint{center.x - halfWidth, center.y + quarterHeight};
-    SDL_FPoint const bottomRightPoint{center.x + halfWidth, center.y + quarterHeight};
+    SDL_FPoint const southPoint{center.x, center.y + halfHeight};
+    SDL_FPoint const southWestPoint{center.x - halfWidth, center.y + quarterHeight};
+    SDL_FPoint const southEastPoint{center.x + halfWidth, center.y + quarterHeight};
 
     static constexpr SDL_FPoint zeroPoint = {0.0f, 0.0f};
 
-    SDL_Vertex const topVertex{topPoint, firstColor, zeroPoint};
-    SDL_Vertex const topLeftVertex{topLeftPoint, firstColor, zeroPoint};
-    SDL_Vertex const topRightVertex{topRightPoint, secondColor, zeroPoint};
+    SDL_Vertex const topVertex{northPoint, firstColor, zeroPoint};
+    SDL_Vertex const topLeftVertex{northWestPoint, firstColor, zeroPoint};
+    SDL_Vertex const topRightVertex{northEastPoint, secondColor, zeroPoint};
 
-    SDL_Vertex const bottomLeftVertex{bottomLeftPoint, secondColor, zeroPoint};
-    SDL_Vertex const bottomRightVertex{bottomRightPoint, thirdColor, zeroPoint};
-    SDL_Vertex const bottomVertex{bottomPoint, thirdColor, zeroPoint};
+    SDL_Vertex const bottomLeftVertex{southWestPoint, secondColor, zeroPoint};
+    SDL_Vertex const bottomRightVertex{southEastPoint, thirdColor, zeroPoint};
+    SDL_Vertex const bottomVertex{southPoint, thirdColor, zeroPoint};
 
     static constexpr int vertexCount{12};
     std::array<SDL_Vertex, vertexCount> const vertexList = {
@@ -191,6 +202,11 @@ static void drawPointyTopHexagon(
     SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
 ) {
     drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2.0f * size, firstColor, secondColor, thirdColor);
+}
+
+static void drawHexagonMazeTileWalls(
+    Media::ColorTriplet const &wallColorTriplet
+) {
 }
 
 void Media::drawHexagonMaze(
