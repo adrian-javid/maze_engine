@@ -1,8 +1,9 @@
 #ifndef Maze_hpp
 #define Maze_hpp
 
-#include <functional>
 #include "Vector2.hpp"
+
+#include <functional>
 
 namespace Project { class Maze; }
 
