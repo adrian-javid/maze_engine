@@ -21,7 +21,9 @@ class Project::Maze {
     virtual Tile &at(Vector2 const &key) = 0;
     virtual Tile const &at(Vector2 const &key) const = 0;
 
-    virtual void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)>) const = 0;
+    using VertexAction = std::function<void(Vector2 const &)>;
+
+    virtual void forNeighbor(Vector2 const &, VertexAction const) const = 0;
 
     enum struct Direction : std::uint_fast8_t {
       /**/                 north,

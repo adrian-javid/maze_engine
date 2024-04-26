@@ -75,7 +75,7 @@ auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze
 
 auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrap(key)); }
 
-void HexagonMaze::forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const operate) const {
+void HexagonMaze::forNeighbor(Vector2 const &key, VertexAction const operate) const {
     operate(HexagonMaze::wrap(key + Vector2::hexagonNorthwest));
     operate(HexagonMaze::wrap(key + Vector2::hexagonNortheast));
     operate(HexagonMaze::wrap(key + Vector2::hexagonEast     ));

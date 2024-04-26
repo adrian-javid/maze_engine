@@ -6,12 +6,10 @@
 #include <stack>
 
 namespace Project {
-    using VertexProcessor = std::function<void(Vector2 const &)>;
-
     template <typename Storage_T>
     std::optional<std::vector<Vector2>> simpleSearch(
         Maze const &, Vector2 const &, Vector2 const &,
-        VertexProcessor const process=nullptr
+        Maze::VertexAction const process=nullptr
     );
 
 }
@@ -21,7 +19,7 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
     Maze const &grid,
     Vector2 const &start,
     Vector2 const &end,
-    VertexProcessor const process
+    Maze::VertexAction const process
 ) {
     using namespace Project;
 

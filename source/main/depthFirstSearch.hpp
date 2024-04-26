@@ -19,7 +19,7 @@ namespace Project {
      * @return `std::optional<std::vector<Vector2>>`
      */
     std::optional<std::vector<Vector2>> depthFirstSearch(
-        Maze const &grid, Vector2 const &start, Vector2 const &end, VertexProcessor const processor=nullptr
+        Maze const &grid, Vector2 const &start, Vector2 const &end, Maze::VertexAction const processor=nullptr
     );
 }
 

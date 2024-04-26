@@ -41,7 +41,7 @@ std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) 
     return buffer.str();
 }
 
-void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> const operate) const {
+void SquareMaze::forNeighbor(Vector2 const &tileKey, VertexAction const operate) const {
     if (not hasWall(tileKey, SquareMaze::Direction::north)) operate((tileKey + Vector2::squareNorth).wrap(rowCount, columnCount));
     if (not hasWall(tileKey, SquareMaze::Direction::south)) operate((tileKey + Vector2::squareSouth).wrap(rowCount, columnCount));
     if (not hasWall(tileKey, SquareMaze::Direction::east )) operate((tileKey + Vector2::squareEast ).wrap(rowCount, columnCount));
