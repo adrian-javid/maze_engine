@@ -13,6 +13,9 @@ namespace Project::Media {
     extern int windowHeight;
     extern std::function<void()> windowRefresher;
 
+    static constexpr float wallFramePercent = 0.35f;
+    static_assert(wallFramePercent >= 0.0f); static_assert(wallFramePercent <= 1.0f);
+
     void setRenderDrawColor(SDL_Color const &color);
 
     void drawSquareMaze(
