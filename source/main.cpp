@@ -83,7 +83,8 @@ namespace Project::Global {
         maze.at(center) |= HexagonMaze::eastWall;
         maze.at(center + Vector2::hexagonWest) |= HexagonMaze::eastWall;
 
-        maze
+        maze.at(center) |= HexagonMaze::southeastWall;
+        maze.at(center + Vector2::hexagonNorthWest) |= HexagonMaze::southeastWall;
 
         return maze;
     }();
