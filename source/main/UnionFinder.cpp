@@ -2,7 +2,7 @@
 
 Project::UnionFinder::UnionFinder(std::size_t const count): forest(count, -1) {}
 
-int Project::UnionFinder::addElements(std::size_t const count) {
+void Project::UnionFinder::addElements(std::size_t const count) {
     forest.insert(forest.end(), count, -1);
 }
 

@@ -13,7 +13,7 @@ class Project::UnionFinder {
 
     UnionFinder(std::size_t const count=0u);
 
-    int addElements(std::size_t const count);
+    void addElements(std::size_t const count);
 
     void unionThem(int const element1, int const element2);
 

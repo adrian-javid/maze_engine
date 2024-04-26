@@ -71,6 +71,8 @@ HexagonMaze::HexagonMaze(int const setRadius):
     }
 }
 
+std::size_t HexagonMaze::TileCount() const { return table.size(); }
+
 auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze::wrap(key)); }
 
 auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrap(key)); }

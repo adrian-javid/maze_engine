@@ -36,6 +36,8 @@ class Project::SquareMaze : public Project::Maze {
     int ColumnCount() const;
     Table const &FlatData() const;
 
+    std::size_t TileCount() const override;
+
     Tile &at(Vector2 const &) override;
     Tile const &at(Vector2 const &) const override;
 
