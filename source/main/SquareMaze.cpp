@@ -18,7 +18,7 @@ int SquareMaze::RowCount() const { return rowCount; }
 int SquareMaze::ColumnCount() const { return columnCount; }
 auto SquareMaze::FlatData() const -> Table const & { return table; }
 
-std::size_t SquareMaze::TileCount() const { return table.size(); }
+std::size_t SquareMaze::getTileCount() const { return table.size(); }
 
 auto SquareMaze::at(Vector2 const &tileKey) -> Tile & {
     return table.at(getFlatIndex(tileKey));

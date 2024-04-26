@@ -19,7 +19,7 @@ class Project::Maze {
     constexpr static Tile eastWall      { 1u << 2u };
     constexpr static Tile southeastWall { 1u << 3u };
 
-    virtual std::size_t TileCount() const = 0;
+    virtual std::size_t getTileCount() const = 0;
 
     virtual Tile &at(Vector2 const &key) = 0;
     virtual Tile const &at(Vector2 const &key) const = 0;

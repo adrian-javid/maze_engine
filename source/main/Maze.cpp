@@ -17,7 +17,7 @@ auto Project::Maze::generate(unsigned int const seed) -> void {
     std::mt19937 randomNumberGenerator(seed);
     std::shuffle(wallList.begin(), wallList.end(), randomNumberGenerator);
 
-    UnionFinder cyclePrevention(TileCount());
+    UnionFinder cyclePrevention(getTileCount());
     while (not wallList.empty()) {
         Wall const &wall = wallList.back();
         wallList.pop_back();

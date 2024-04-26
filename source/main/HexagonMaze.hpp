@@ -23,7 +23,7 @@ class Project::HexagonMaze : public Project::Maze {
 
     constexpr Vector2::HashMap<Maze::Tile> const &core() const { return table; }
 
-    std::size_t TileCount() const;
+    std::size_t getTileCount() const;
 
     virtual Tile &at(Vector2 const &key) override;
     virtual Tile const &at(Vector2 const &key) const override;
