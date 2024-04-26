@@ -76,12 +76,12 @@ auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze
 auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrap(key)); }
 
 void HexagonMaze::forNeighbor(Vector2 const &key, VertexAction const operate) const {
-    operate(HexagonMaze::wrap(key + Vector2::hexagonNorthwest));
-    operate(HexagonMaze::wrap(key + Vector2::hexagonNortheast));
-    operate(HexagonMaze::wrap(key + Vector2::hexagonEast     ));
-    operate(HexagonMaze::wrap(key + Vector2::hexagonSoutheast));
-    operate(HexagonMaze::wrap(key + Vector2::hexagonSouthwest));
-    operate(HexagonMaze::wrap(key + Vector2::hexagonWest     ));
+    if (not hasWall(key, Direction::northwest)) operate(HexagonMaze::wrap(key + Vector2::hexagonNorthwest));
+    if (not hasWall(key, Direction::northeast)) operate(HexagonMaze::wrap(key + Vector2::hexagonNortheast));
+    if (not hasWall(key, Direction::east     )) operate(HexagonMaze::wrap(key + Vector2::hexagonEast     ));
+    if (not hasWall(key, Direction::southeast)) operate(HexagonMaze::wrap(key + Vector2::hexagonSoutheast));
+    if (not hasWall(key, Direction::southwest)) operate(HexagonMaze::wrap(key + Vector2::hexagonSouthwest));
+    if (not hasWall(key, Direction::west     )) operate(HexagonMaze::wrap(key + Vector2::hexagonWest     ));
 }
 
 bool HexagonMaze::hasWall(Vector2 const &tileKey, Direction const direction) const {
