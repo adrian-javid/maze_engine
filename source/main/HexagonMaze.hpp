@@ -21,7 +21,7 @@ class Project::HexagonMaze : public Project::Maze {
 
     constexpr int getRadius() const { return radius; }
 
-    constexpr Vector2::HashMap<Maze::Tile> const &core() const { return table; }
+    constexpr Vector2::HashMap<Maze::Tile> const &getTable() const { return table; }
 
     std::size_t getTileCount() const;
 

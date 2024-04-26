@@ -19,13 +19,11 @@ namespace Project {
 class Project::SquareMaze : public Project::Maze {
 
   public:
-
-    using Table = std::vector<Tile>;
-    static_assert(not std::is_same_v<Table, std::vector<bool>>);
+    static_assert(not std::is_same_v<std::vector<Tile>, std::vector<bool>>);
 
   private:
 
-    Table table;
+    std::vector<Tile> table;
     int rowCount;
     int columnCount;
 
@@ -34,7 +32,7 @@ class Project::SquareMaze : public Project::Maze {
     explicit SquareMaze(int const rowCount=0, int const columnCount=0);
     int getRowCount() const;
     int getColumnCount() const;
-    Table const &getTable() const;
+    std::vector<Tile> const &getTable() const;
 
     std::size_t getTileCount() const override;
 
