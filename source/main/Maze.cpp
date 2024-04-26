@@ -16,7 +16,7 @@ auto Project::Maze::generate(unsigned int const seed) -> void {
     std::vector<Wall> wallList;
 
     // for (Vector2 const &tileKey : *this) {
-        
+
     // }
 
     /*

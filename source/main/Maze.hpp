@@ -37,7 +37,7 @@ class Project::Maze {
     virtual Tile &at(Vector2 const &key) = 0;
     virtual Tile const &at(Vector2 const &key) const = 0;
 
-    // virtual void forValidDirection(std::function<void(Direction)> const) const = 0;
+    virtual void forValidDirection(std::function<void(Direction)> const) const = 0;
 
     // virtual std::optional<Tile> query(Vector2 const &, Direction const) const = 0;
 

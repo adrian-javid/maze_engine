@@ -77,6 +77,15 @@ auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze
 
 auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrap(key)); }
 
+void HexagonMaze::forValidDirection(std::function<void(Direction)> const operate) const {
+    operate(Direction::northeast);
+    operate(Direction::east     );
+    operate(Direction::southeast);
+    operate(Direction::southwest);
+    operate(Direction::west     );
+    operate(Direction::northwest);
+}
+
 void HexagonMaze::forNeighbor(Vector2 const &key, VertexAction const operate) const {
     if (not hasWall(key, Direction::northwest)) operate(HexagonMaze::wrap(key + Vector2::hexagonNorthwest));
     if (not hasWall(key, Direction::northeast)) operate(HexagonMaze::wrap(key + Vector2::hexagonNortheast));

@@ -28,6 +28,13 @@ auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
     return table.at(getFlatIndex(tileKey));
 }
 
+void SquareMaze::forValidDirection(std::function<void(Direction)> const operate) const {
+    operate(Direction::north);
+    operate(Direction::south);
+    operate(Direction::east );
+    operate(Direction::west );
+}
+
 std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) const {
     std::stringstream buffer;
 

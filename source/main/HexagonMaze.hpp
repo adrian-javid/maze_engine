@@ -25,8 +25,10 @@ class Project::HexagonMaze : public Project::Maze {
 
     std::size_t getTileCount() const;
 
-    virtual Tile &at(Vector2 const &key) override;
-    virtual Tile const &at(Vector2 const &key) const override;
+    Tile &at(Vector2 const &key) override;
+    Tile const &at(Vector2 const &key) const override;
+
+    void forValidDirection(std::function<void(Direction)> const) const override;
 
     void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const operate) const override;
 
