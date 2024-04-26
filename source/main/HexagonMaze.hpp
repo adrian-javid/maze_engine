@@ -35,6 +35,10 @@ class Project::HexagonMaze : public Project::Maze {
     bool hasWall(Vector2 const &tileKey, Direction const) const override;
 
     Vector2 wrap(Vector2 const &key) const;
+
+    Iterator begin() const override;
+
+    Iterator end() const override;
 };
 
 #endif

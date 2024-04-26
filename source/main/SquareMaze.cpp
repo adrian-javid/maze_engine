@@ -72,3 +72,11 @@ bool SquareMaze::hasWall(Vector2 const &tileKey, Direction const direction) cons
 std::ostream &Project::operator<<(std::ostream &outputStream, SquareMaze const &squareGrid) {
     outputStream << squareGrid.toString(); return outputStream;
 }
+
+auto Project::SquareMaze::begin() const -> Iterator {
+    return {};
+}
+
+auto Project::SquareMaze::end() const -> Iterator {
+    return {};
+}

@@ -53,6 +53,10 @@ class Project::SquareMaze : public Project::Maze {
       int const flatIndex{row * columnCount + column};
       return static_cast<std::size_t>(flatIndex);
     }
+
+    Iterator begin() const override;
+
+    Iterator end() const override;
 };
 
 #endif

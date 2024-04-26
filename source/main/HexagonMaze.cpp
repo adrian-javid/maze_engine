@@ -108,3 +108,12 @@ bool HexagonMaze::hasWall(Vector2 const &tileKey, Direction const direction) con
             return false;
     }
 }
+
+
+auto Project::HexagonMaze::begin() const -> Iterator {
+    return {};
+}
+
+auto Project::HexagonMaze::end() const -> Iterator {
+    return {};
+}
