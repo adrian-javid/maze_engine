@@ -31,8 +31,8 @@ constexpr static std::tuple<
 static void drawQuadrilateral(
     SDL_FPoint const &northwestPoint, SDL_FPoint const &northeastPoint,
     SDL_FPoint const &southwestPoint, SDL_FPoint const &southeastPoint,
-    SDL_Color const &northwestColor, SDL_Color const &northeastColor,
-    SDL_Color const &southwestColor, SDL_Color const &southeastColor
+    SDL_Color  const &northwestColor, SDL_Color  const &northeastColor,
+    SDL_Color  const &southwestColor, SDL_Color  const &southeastColor
 ) {
     static constexpr SDL_FPoint zeroPoint = {0, 0};
 
@@ -89,7 +89,7 @@ void Media::drawSquareMaze(
                 outerNorthwestPoint, outerNortheastPoint,
                 outerSouthwestPoint, outerSoutheastPoint,
                 mainColor1, mainColor2,
-                mainColor3, mainColor1
+                mainColor2, mainColor3
             );
 
             /* Draw walls. */
@@ -142,43 +142,42 @@ void Media::drawSquareMaze(
 constexpr static std::tuple<
     SDL_FPoint, SDL_FPoint, SDL_FPoint,
     SDL_FPoint, SDL_FPoint, SDL_FPoint
-> getHexagonPointList(
+> getPointyTopHexagonPointList(
     SDL_FPoint const &center, float const width, float const height
 ) {
     float const halfWidth = width / 2.0f;
     float const halfHeight = height / 2.0f;
     float const quarterHeight = height / 4.0f;
 
-    return {};
-}
-
-static void drawPointyTopHexagon(
-    SDL_FPoint const &center,
-    float const width, float const height,
-    SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
-) {
-
-    float const halfWidth = width / 2.0f;
-    float const halfHeight = height / 2.0f;
-    float const quarterHeight = height / 4.0f;
-
     SDL_FPoint const northPoint{center.x, center.y - halfHeight};
-    SDL_FPoint const northWestPoint{center.x - halfWidth, center.y - quarterHeight};
-    SDL_FPoint const northEastPoint{center.x + halfWidth, center.y - quarterHeight};
+    SDL_FPoint const northwestPoint{center.x - halfWidth, center.y - quarterHeight};
+    SDL_FPoint const northeastPoint{center.x + halfWidth, center.y - quarterHeight};
 
     SDL_FPoint const southPoint{center.x, center.y + halfHeight};
-    SDL_FPoint const southWestPoint{center.x - halfWidth, center.y + quarterHeight};
-    SDL_FPoint const southEastPoint{center.x + halfWidth, center.y + quarterHeight};
+    SDL_FPoint const southwestPoint{center.x - halfWidth, center.y + quarterHeight};
+    SDL_FPoint const southeastPoint{center.x + halfWidth, center.y + quarterHeight};
 
+    return std::make_tuple(
+        northwestPoint, northPoint, northeastPoint,
+        southwestPoint, southPoint, southeastPoint
+    );
+}
+
+static void drawHexagon(
+    SDL_FPoint const &northwestPoint, SDL_FPoint const &northPoint, SDL_FPoint const &northeastPoint,
+    SDL_FPoint const &southwestPoint, SDL_FPoint const &southPoint, SDL_FPoint const &southeastPoint,
+    SDL_Color  const &northwestColor, SDL_Color  const &northColor, SDL_Color  const &northeastColor,
+    SDL_Color  const &southwestColor, SDL_Color  const &southColor, SDL_Color  const &southeastColor
+) {
     static constexpr SDL_FPoint zeroPoint = {0.0f, 0.0f};
 
-    SDL_Vertex const topVertex{northPoint, firstColor, zeroPoint};
-    SDL_Vertex const topLeftVertex{northWestPoint, firstColor, zeroPoint};
-    SDL_Vertex const topRightVertex{northEastPoint, secondColor, zeroPoint};
+    SDL_Vertex const topVertex{northPoint, northColor, zeroPoint};
+    SDL_Vertex const topLeftVertex{northwestPoint, northwestColor, zeroPoint};
+    SDL_Vertex const topRightVertex{northeastPoint, northeastColor, zeroPoint};
 
-    SDL_Vertex const bottomLeftVertex{southWestPoint, secondColor, zeroPoint};
-    SDL_Vertex const bottomRightVertex{southEastPoint, thirdColor, zeroPoint};
-    SDL_Vertex const bottomVertex{southPoint, thirdColor, zeroPoint};
+    SDL_Vertex const bottomLeftVertex{southwestPoint, southwestColor, zeroPoint};
+    SDL_Vertex const bottomRightVertex{southeastPoint, southeastColor, zeroPoint};
+    SDL_Vertex const bottomVertex{southPoint, southColor, zeroPoint};
 
     static constexpr int vertexCount{12};
     std::array<SDL_Vertex, vertexCount> const vertexList = {
@@ -201,7 +200,16 @@ static void drawPointyTopHexagon(
     SDL_FPoint const &center,
     SDL_Color const &firstColor, SDL_Color const &secondColor, SDL_Color const &thirdColor
 ) {
-    drawPointyTopHexagon(center, std::sqrt(3.0f) * size, 2.0f * size, firstColor, secondColor, thirdColor);
+    auto const &&[
+        northwestPoint, northPoint, northeastPoint,
+        southwestPoint, southPoint, southeastPoint
+    ] = getPointyTopHexagonPointList(center, std::sqrt(3.0f) * size, 2.0f * size);
+    drawHexagon(
+        northwestPoint, northPoint, northeastPoint,
+        southwestPoint, southPoint, southeastPoint,
+        firstColor, secondColor, thirdColor,
+        firstColor, secondColor, thirdColor
+    );
 }
 
 static void drawHexagonMazeTileWalls(
@@ -251,21 +259,31 @@ void Media::drawHexagonMaze(
 
             /* top hexagon */ {
                 int const axis1{horizontalIndex - radius + verticalIndex};
-                auto const &&[firstColor, secondColor, thirdColor] = getMainColorTriplet({axis1, topAxis2});
-                drawPointyTopHexagon(
-                    {hexagonCenterX, topHexagonCenterY},
-                    hexagonWidth, hexagonHeight,
-                    firstColor, secondColor, thirdColor
+                auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet({axis1, topAxis2});
+                auto const &&[
+                    northwestPoint, northPoint, northeastPoint,
+                    southwestPoint, southPoint, southeastPoint
+                ] = getPointyTopHexagonPointList({hexagonCenterX, topHexagonCenterY}, hexagonWidth, hexagonHeight);
+                drawHexagon(
+                    northwestPoint, northPoint, northeastPoint,
+                    southwestPoint, southPoint, southeastPoint,
+                    mainColor1, mainColor1, mainColor2,
+                    mainColor2, mainColor3, mainColor3
                 );
             }
 
             /* bottom hexagon */ {
                 int const axis1{horizontalIndex - radius};
-                auto const &&[firstColor, secondColor, thirdColor] = getMainColorTriplet({axis1, bottomAxis2});
-                drawPointyTopHexagon(
-                    {hexagonCenterX, bottomHexagonCenterY},
-                    hexagonWidth, hexagonHeight,
-                    firstColor, secondColor, thirdColor
+                auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet({axis1, bottomAxis2});
+                auto const &&[
+                    northwestPoint, northPoint, northeastPoint,
+                    southwestPoint, southPoint, southeastPoint
+                ] = getPointyTopHexagonPointList({hexagonCenterX, bottomHexagonCenterY}, hexagonWidth, hexagonHeight);
+                drawHexagon(
+                    northwestPoint, northPoint, northeastPoint,
+                    southwestPoint, southPoint, southeastPoint,
+                    mainColor1, mainColor1, mainColor2,
+                    mainColor2, mainColor3, mainColor3
                 );
             }
         }
