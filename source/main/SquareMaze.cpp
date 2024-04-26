@@ -14,9 +14,9 @@ SquareMaze::SquareMaze(int const rowCount, int const columnCount):
     }()), rowCount{rowCount}, columnCount{columnCount}
 {}
 
-int SquareMaze::RowCount() const { return rowCount; }
-int SquareMaze::ColumnCount() const { return columnCount; }
-auto SquareMaze::FlatData() const -> Table const & { return table; }
+int SquareMaze::getRowCount() const { return rowCount; }
+int SquareMaze::getColumnCount() const { return columnCount; }
+auto SquareMaze::getTable() const -> Table const & { return table; }
 
 std::size_t SquareMaze::getTileCount() const { return table.size(); }
 

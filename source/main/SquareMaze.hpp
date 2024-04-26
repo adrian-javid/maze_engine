@@ -32,9 +32,9 @@ class Project::SquareMaze : public Project::Maze {
   public:
 
     explicit SquareMaze(int const rowCount=0, int const columnCount=0);
-    int RowCount() const;
-    int ColumnCount() const;
-    Table const &FlatData() const;
+    int getRowCount() const;
+    int getColumnCount() const;
+    Table const &getTable() const;
 
     std::size_t getTileCount() const override;
 

@@ -60,8 +60,8 @@ void Media::drawSquareMaze(
     ColorGetter const getMainColorTriplet,
     Media::ColorTriplet const &wallColorTriplet
 ) {
-    int const columnCount{maze.ColumnCount()};
-    int const rowCount{maze.RowCount()};
+    int const columnCount{maze.getColumnCount()};
+    int const rowCount{maze.getRowCount()};
 
     float const rectangleWidth = width / static_cast<float>(columnCount);
     float const rectangleHeight = height / static_cast<float>(rowCount);

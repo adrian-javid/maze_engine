@@ -30,14 +30,14 @@ using namespace Project;
 
 namespace Project::Global {static SquareMaze generateGrid(int rowCount, int columnCount) {
     SquareMaze maze(rowCount, columnCount);
-    int const secondQuarter = maze.ColumnCount() / 4;
+    int const secondQuarter = maze.getColumnCount() / 4;
     int const fourthQuarter = secondQuarter * 3;
-    for (int row{0}; row < maze.RowCount(); ++row) {
+    for (int row{0}; row < maze.getRowCount(); ++row) {
         // maze.putWall(row, secondQuarter);
         // maze.putWall(row, fourthQuarter);
         
         // maze.putWall(row, 0);
-        // maze.putWall(row, maze.ColumnCount() - 1);
+        // maze.putWall(row, maze.getColumnCount() - 1);
     }
 
     Vector2 key;
@@ -48,7 +48,7 @@ namespace Project::Global {static SquareMaze generateGrid(int rowCount, int colu
     maze.at(key + Vector2::squareSouth) |= Maze::northWall;
     maze.at(key + Vector2::squareWest) |= Maze::eastWall;
 
-    maze.at({(maze.RowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
+    maze.at({(maze.getRowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
     maze.at({1, fourthQuarter}) = SquareMaze::emptyTile;
 
     for (int offset = 0; offset < 8; ++offset) {
@@ -56,12 +56,12 @@ namespace Project::Global {static SquareMaze generateGrid(int rowCount, int colu
         // maze.putWall(3, fourthQuarter - offset);
     }
 
-    maze.at({(maze.RowCount() - 1) - 2, secondQuarter}) = SquareMaze::emptyTile;
+    maze.at({(maze.getRowCount() - 1) - 2, secondQuarter}) = SquareMaze::emptyTile;
     maze.at({2, fourthQuarter}) = SquareMaze::emptyTile;
 
-    for (int col{0}; col < maze.RowCount(); ++col) {
+    for (int col{0}; col < maze.getRowCount(); ++col) {
         // maze.putWall(0, col);
-        // maze.putWall(maze.ColumnCount() - 1, col);
+        // maze.putWall(maze.getColumnCount() - 1, col);
     }
 
     return maze;
@@ -71,7 +71,7 @@ namespace Project::Global {
     static auto const maze0 = generateGrid(20, 20);
 
     Vector2 const start0 = {0 + 1, 0 + 1};
-    Vector2 const end0 = {(maze0.RowCount() - 1) - 1, (maze0.ColumnCount() - 1) - 1};
+    Vector2 const end0 = {(maze0.getRowCount() - 1) - 1, (maze0.getColumnCount() - 1) - 1};
 
     static auto const maze1 = []() -> HexagonMaze {
         HexagonMaze maze(4);
