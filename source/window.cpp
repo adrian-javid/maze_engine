@@ -212,11 +212,6 @@ static void drawPointyTopHexagon(
     );
 }
 
-static void drawHexagonMazeTileWalls(
-    Media::ColorTriplet const &wallColorTriplet
-) {
-}
-
 void Media::drawHexagonMaze(
     HexagonMaze const &maze,
     SDL_FPoint const &center,
@@ -257,7 +252,8 @@ void Media::drawHexagonMaze(
 
             auto const drawTile = [
                 &getMainColorTriplet, &wallColor1, &wallColor2, &wallColor3,
-                hexagonCenterX, hexagonWidth, hexagonHeight
+                hexagonCenterX, hexagonWidth, hexagonHeight,
+                &maze
             ](Vector2 const &tileKey, float const hexagonCenterY) -> void {
                 auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet(tileKey);
                 auto const &&[
@@ -280,11 +276,46 @@ void Media::drawHexagonMaze(
                     hexagonHeight * (1.0f - wallFramePercent)
                 );
 
-                drawHexagon(
-                    innerNorthwestPoint, innerNorthPoint, innerNortheastPoint,
-                    innerSouthwestPoint, innerSouthPoint, innerSoutheastPoint,
-                    wallColor1, wallColor1, wallColor2,
-                    wallColor2, wallColor3, wallColor3
+                if (maze.hasWall(tileKey, HexagonMaze::Direction::northeast)) drawQuadrilateral(
+                    outerNorthPoint, outerNortheastPoint,
+                    innerNorthPoint, innerNortheastPoint,
+                    wallColor1, wallColor2,
+                    wallColor1, wallColor2
+                );
+
+                if (maze.hasWall(tileKey, HexagonMaze::Direction::east)) drawQuadrilateral(
+                    innerNortheastPoint, outerNortheastPoint,
+                    innerSoutheastPoint, outerSoutheastPoint,
+                    wallColor2, wallColor2,
+                    wallColor3, wallColor3
+                );
+
+                if (maze.hasWall(tileKey, HexagonMaze::Direction::southeast)) drawQuadrilateral(
+                    innerSouthPoint, innerSoutheastPoint,
+                    outerSouthPoint, outerSoutheastPoint,
+                    wallColor1, wallColor3,
+                    wallColor1, wallColor3
+                );
+
+                if (maze.hasWall(tileKey, HexagonMaze::Direction::southwest)) drawQuadrilateral(
+                    outerSouthwestPoint, innerSouthwestPoint,
+                    outerSouthPoint, innerSouthPoint,
+                    wallColor2, wallColor2,
+                    wallColor1, wallColor1
+                );
+
+                if (maze.hasWall(tileKey, HexagonMaze::Direction::west)) drawQuadrilateral(
+                    outerNorthwestPoint, innerNorthwestPoint,
+                    outerSouthwestPoint, innerSouthwestPoint,
+                    wallColor3, wallColor3,
+                    wallColor2, wallColor2
+                );
+
+                if (maze.hasWall(tileKey, HexagonMaze::Direction::northwest)) drawQuadrilateral(
+                    outerNorthwestPoint, outerNorthPoint,
+                    innerNorthwestPoint, innerNorthPoint,
+                    wallColor3, wallColor1,
+                    wallColor3, wallColor1
                 );
             };
 
