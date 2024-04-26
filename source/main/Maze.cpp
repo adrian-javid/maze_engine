@@ -12,14 +12,43 @@ auto Project::Maze::generate(unsigned int const seed) -> void {
         Maze::Direction type;
     };
 
+    int indentifierCount{0};
     std::vector<Wall> wallList;
+
+    for (Vector2 const &tileKey : *this) {
+        
+    }
+
+    /*
+    for key in maze:
+        for wallType in maze[key]:
+            wallList.push(Wall{key, identifierCount++, wallType})
+    */
 
     std::mt19937 randomNumberGenerator(seed);
     std::shuffle(wallList.begin(), wallList.end(), randomNumberGenerator);
-
     UnionFinder cyclePrevention(getTileCount());
-    while (not wallList.empty()) {
-        Wall const &wall = wallList.back();
-        wallList.pop_back();
+
+    for (Wall const &wall : wallList) {
+        // ...
     }
+
 }
+
+
+auto Project::Maze::Iterator::operator*() const -> Vector2 const & {
+    return {};
+}
+
+auto Project::Maze::Iterator::operator++() -> Iterator & {
+    return *this;
+}
+
+bool Project::Maze::Iterator::operator==(Iterator const &iterator) {
+    return {};
+}
+
+bool Project::Maze::Iterator::operator!=(Iterator const &iterator) {
+    return {};
+}
+
