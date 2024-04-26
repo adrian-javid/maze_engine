@@ -22,11 +22,11 @@ Vector2 HexagonMaze::wrap(Vector2 const &key) const {
     struct ClosestMirrorCenterCandidate {
         Vector2 mirrorCenter;
         int distance;
-    } closestMirrorCenter{mirrorCenterTable[0], (key - mirrorCenterTable[0]).HexManhattanLength()};
+    } closestMirrorCenter{mirrorCenterTable[0], (key - mirrorCenterTable[0]).hexManhattanLength()};
 
     // find the closest mirror center
     for (int mirrorIndex = 0 + 1; mirrorIndex < 6; ++mirrorIndex) {
-        auto const distance = (key - mirrorCenterTable[mirrorIndex]).HexManhattanLength();
+        auto const distance = (key - mirrorCenterTable[mirrorIndex]).hexManhattanLength();
         if (distance < closestMirrorCenter.distance)
         closestMirrorCenter = {mirrorCenterTable[mirrorIndex], distance};
     }

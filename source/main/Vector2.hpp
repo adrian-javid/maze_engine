@@ -31,7 +31,7 @@ struct Project::Vector2 {
     int value1;
     int value2;
 
-    constexpr int getThirdAxis() const { return -value1 - value2; }
+    constexpr int thirdAxis() const { return -value1 - value2; }
 
     constexpr Vector2 hexagonalRotate(int const indexDegree60) const {
         std::array<int, 3> vector{};
@@ -39,7 +39,7 @@ struct Project::Vector2 {
         // TODO: cast to `size_t`
         vector[Util::wrapValue(0 - indexDegree60, 3)] = this->value1;
         vector[Util::wrapValue(1 - indexDegree60, 3)] = this->value2;
-        vector[Util::wrapValue(2 - indexDegree60, 3)] = this->getThirdAxis();
+        vector[Util::wrapValue(2 - indexDegree60, 3)] = this->thirdAxis();
         return Vector2(vector[0], vector[1]) * signFactor;
     }
 
@@ -50,12 +50,12 @@ struct Project::Vector2 {
     */
     constexpr Vector2(int row=0, int column=0): value1{row}, value2{column} {}
 
-    constexpr int ManhattanLength() const {
+    constexpr int manhattanLength() const {
         return Util::abs(value1) + Util::abs(value2);
     }
 
-    constexpr int HexManhattanLength() const {
-        return (ManhattanLength() + Util::abs(getThirdAxis())) / 2;
+    constexpr int hexManhattanLength() const {
+        return (manhattanLength() + Util::abs(thirdAxis())) / 2;
     }
 
     constexpr Vector2 operator+(Vector2 const &vector) const {
