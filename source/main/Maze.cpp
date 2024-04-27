@@ -13,10 +13,11 @@ void Project::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vecto
 }
 
 auto Project::Maze::shuffle(unsigned int const seed) -> void {
-    int indentifierCount{0};
+    UnionFinder::Identifier indentifierCount{0};
+    Vector2::HashMap<UnionFinder::Identifier> idendity;
+
     struct Wall {
         Vector2 tileKey;
-        int identifier;
         Maze::Direction type;
     };
 
@@ -25,7 +26,6 @@ auto Project::Maze::shuffle(unsigned int const seed) -> void {
         forEachValidDirection([](Direction const direction) {
 
         });
-        // wallList.push_back({key, indentifierCount++, Maze::Direction::west});
     });
 
     /*
@@ -39,7 +39,6 @@ auto Project::Maze::shuffle(unsigned int const seed) -> void {
     UnionFinder cyclePrevention(getTileCount());
 
     for (Wall const &wall : wallList) {
-        // ...
     }
 
 }
