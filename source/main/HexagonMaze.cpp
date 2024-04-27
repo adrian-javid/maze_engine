@@ -90,7 +90,7 @@ void HexagonMaze::forEachValidDirection(std::function<void(Direction const)> con
     forThisDirection(Direction::northwest);
 }
 
-auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const -> Adjacency {
+auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const -> TileAdjacency {
     switch (direction) {
         case Direction::northeast:
             return {wrapKey(key + Vector2::hexagonNortheast), at(key) & HexagonMaze::northeastWall};

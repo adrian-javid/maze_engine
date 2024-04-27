@@ -41,14 +41,14 @@ class Project::Maze {
 
     virtual void forEachValidDirection(std::function<void(Direction const)> const &) const = 0;
 
-    struct Adjacency {
+    struct TileAdjacency {
       Vector2 key;
       bool hasWall;
-      constexpr /* implicit on purpose */ Adjacency(Vector2 const &tileKey, int const wallFlag):
+      constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, int const wallFlag):
         key(tileKey), hasWall{static_cast<bool const>(wallFlag)}
       {}
     };
-    virtual Adjacency checkAdjacent(Vector2, Direction const) const = 0;
+    virtual TileAdjacency checkAdjacent(Vector2, Direction const) const = 0;
 
     void forEachNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const &) const;
 

@@ -41,7 +41,7 @@ void SquareMaze::forEachValidDirection(std::function<void(Direction const)> cons
     forThisDirection(Direction::west );
 }
 
-auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> Adjacency {
+auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> TileAdjacency {
     switch (direction) {
         case Direction::north:
             return {wrapKey(key + Vector2::squareNorth), at(key) & SquareMaze::northWall};
