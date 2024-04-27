@@ -34,6 +34,11 @@ void SquareMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> co
             forThisTile(key, table.at(getFlatIndex(key)));
 }
 
+void SquareMaze::forEachPrincipalDirection(std::function<void(Direction const)> const &forThisPrincipalDirection) const {
+    forThisPrincipalDirection(north);
+    forThisPrincipalDirection(east);
+}
+
 void SquareMaze::forEachValidDirection(std::function<void(Direction const)> const &forThisDirection) const {
     forThisDirection(north);
     forThisDirection(south);

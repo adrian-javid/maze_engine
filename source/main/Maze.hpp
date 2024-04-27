@@ -37,7 +37,7 @@ class Project::Maze {
       /**/
       /**/          case northwest: return southeast;              case northeast: return southwest;
       /**/
-      /**/  case west: return east;          default: throw direction;                 case east: return west;
+      /**/  case west: return east;              default: throw direction;             case east: return west;
       /**/
       /**/          case southwest: return northeast;              case southeast: return northwest;
       /**/
@@ -52,7 +52,9 @@ class Project::Maze {
 
     virtual void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const = 0;
 
-    virtual void forEachValidDirection(std::function<void(Direction const)> const &) const = 0;
+    virtual void forEachPrincipalDirection(std::function<void(Direction const)> const &) const = 0;
+
+    virtual void forEachValidDirection(std::function<void(Direction const)> const &) const;
 
     struct TileAdjacency {
       Vector2 key;
@@ -61,7 +63,7 @@ class Project::Maze {
       template <typename ConvertableToBool_T>
       constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, ConvertableToBool_T const wallFlag):
         key(tileKey), hasWall{static_cast<bool>(wallFlag)}
-      {}
+      { static_assert(std::is_convertible_v<ConvertableToBool_T, bool>); }
     };
     virtual TileAdjacency checkAdjacent(Vector2, Direction const) const = 0;
 
