@@ -75,12 +75,14 @@ namespace Project::Global {static SquareMaze generateGrid(int rowCount, int colu
 }}
 
 namespace Project::Global {
-    static auto const maze0 = generateGrid(20, 20);
+    static SquareMaze const maze0(20, 20, 0xFFu);
 
     Vector2 const start0 = {0 + 1, 0 + 1};
     Vector2 const end0 = {(maze0.getRowCount() - 1) - 1, (maze0.getColumnCount() - 1) - 1};
 
-    static auto const maze1 = []() -> HexagonMaze {
+    static HexagonMaze const maze1(4, 0xFFu);
+    
+    auto const genMaze1 = []() -> HexagonMaze {
         HexagonMaze maze(4);
         auto const center = Vector2(0, 0);
 
