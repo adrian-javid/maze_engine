@@ -57,10 +57,11 @@ class Project::Maze {
     struct TileAdjacency {
       Vector2 key;
       bool hasWall;
-      // template <typename ConvertableToBool_T>
-      // constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, ConvertableToBool_T const wallFlag):
-      //   key(tileKey), hasWall{static_cast<bool>(wallFlag)}
-      // {}
+      // This function is to address narrowing conversion to `bool`.
+      template <typename ConvertableToBool_T>
+      constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, ConvertableToBool_T const wallFlag):
+        key(tileKey), hasWall{static_cast<bool>(wallFlag)}
+      {}
     };
     virtual TileAdjacency checkAdjacent(Vector2, Direction const) const = 0;
 
