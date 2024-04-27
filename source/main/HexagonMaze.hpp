@@ -17,6 +17,13 @@ class Project::HexagonMaze : public Project::Maze {
 
   public:
 
+    static Vector2 constexpr hexagonNorthwest{ 0, -1};
+    static Vector2 constexpr hexagonNortheast{+1, -1};
+    static Vector2 constexpr hexagonEast     {+1,  0};
+    static Vector2 constexpr hexagonSoutheast{ 0, +1};
+    static Vector2 constexpr hexagonSouthwest{-1, +1};
+    static Vector2 constexpr hexagonWest     {-1,  0};
+
     explicit HexagonMaze(int const setRadius=0);
 
     constexpr int getRadius() const { return radius; }
