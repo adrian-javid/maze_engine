@@ -33,13 +33,19 @@ struct Project::Vector2 {
 
     constexpr int thirdAxis() const { return -value1 - value2; }
 
+    template<int index, int upperBound>
+    inline static constexpr std::size_t rotateIndex(int const indexOffseter) {
+        static_assert(index >= 0);
+        static_assert(index < upperBound);
+        return static_cast<std::size_t>(Util::wrapValue(index - indexOffseter, upperBound));
+    }
+
     constexpr Vector2 hexagonalRotate(int const indexDegree60) const {
         std::array<int, 3> vector{};
         int const signFactor = indexDegree60 % 2 == 0 ? 1 : -1;
-        // TODO: cast to `size_t`
-        vector[Util::wrapValue(0 - indexDegree60, 3)] = this->value1;
-        vector[Util::wrapValue(1 - indexDegree60, 3)] = this->value2;
-        vector[Util::wrapValue(2 - indexDegree60, 3)] = this->thirdAxis();
+        vector[rotateIndex<0, vector.size()>(indexDegree60)] = this->value1;
+        vector[rotateIndex<1, vector.size()>(indexDegree60)] = this->value2;
+        vector[rotateIndex<2, vector.size()>(indexDegree60)] = this->thirdAxis();
         return Vector2(vector[0], vector[1]) * signFactor;
     }
 
