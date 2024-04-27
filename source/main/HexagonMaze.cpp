@@ -81,7 +81,7 @@ void HexagonMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> c
     for (auto const &[key, tile] : table) forThisTile(key, tile);
 }
 
-void HexagonMaze::forEachValidDirection(std::function<void(Direction)> const &forThisDirection) const {
+void HexagonMaze::forEachValidDirection(std::function<void(Direction const)> const &forThisDirection) const {
     forThisDirection(Direction::northeast);
     forThisDirection(Direction::east     );
     forThisDirection(Direction::southeast);

@@ -39,7 +39,7 @@ class Project::Maze {
 
     virtual void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const = 0;
 
-    virtual void forEachValidDirection(std::function<void(Direction)> const &) const = 0;
+    virtual void forEachValidDirection(std::function<void(Direction const)> const &) const = 0;
 
     // virtual std::optional<Tile> query(Vector2 const &, Direction const) const = 0;
 

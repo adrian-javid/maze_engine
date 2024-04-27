@@ -14,7 +14,7 @@ auto Project::Maze::shuffle(unsigned int const seed) -> void {
     };
 
     std::vector<Wall> wallList;
-    forEachTile([&wallList, &indentifierCount](Vector2 const &key, Tile const tile) {
+    forEachTile([this, &wallList, &indentifierCount](Vector2 const &key, Tile const tile) {
         // forEachValidDirection()
         // wallList.push_back({key, indentifierCount++, Maze::Direction::west});
     });
