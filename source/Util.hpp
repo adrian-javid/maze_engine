@@ -4,8 +4,38 @@
 #include <cmath>
 #include <cassert>
 #include <type_traits>
+#include <functional>
+#include <any>
 
 namespace Project::Util {
+
+    template<typename T>
+    class OpaqueIterator {
+        private:
+            std::function<T(std::any const &)> dereference;
+            std::function<void(std::any &)> increment;
+            std::function<bool(std::any const &, std::any const &)> equals;
+            std::any baseIterator;
+        public:
+            template<typename BaseIterator_T>
+            explicit OpaqueIterator(BaseIterator_T &&iterator):
+                dereference([](std::any const &memory) -> T {
+                    return *std::any_cast<BaseIterator_T const &>(memory);
+                }),
+                increment([](std::any &memory) -> void {
+                    ++std::any_cast<BaseIterator_T &>(memory);
+                }),
+                equals([](std::any const &memory1, std::any const &memory2) -> bool {
+                    return std::any_cast<BaseIterator_T const &>(memory1) == std::any_cast<BaseIterator_T const &>(memory2);
+                }),
+                baseIterator(iterator)
+            {}
+
+            T const &operator*() const { return dereference(baseIterator); }
+            OpaqueIterator &operator++() { increment(baseIterator); return *this; }
+            bool operator==(OpaqueIterator const &otherIterator) const { return equals(baseIterator, otherIterator.baseIterator); }
+            bool operator!=(OpaqueIterator const &otherIterator) const { return not (*this == otherIterator); }
+    };
 
     template<class T>
     [[nodiscard]] constexpr auto abs(T const& x) noexcept {
