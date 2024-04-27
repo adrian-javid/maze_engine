@@ -5,6 +5,13 @@
 #include <algorithm>
 #include <random>
 
+void Project::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &forThisNeighbor) const {
+    forEachValidDirection([this, &key, &forThisNeighbor](Direction const direction) {
+        auto const &&[neighbor, wallFlag] = query(key, direction);
+        if (not wallFlag) forThisNeighbor(neighbor);
+    });
+}
+
 auto Project::Maze::shuffle(unsigned int const seed) -> void {
     int indentifierCount{0};
     struct Wall {
@@ -15,7 +22,9 @@ auto Project::Maze::shuffle(unsigned int const seed) -> void {
 
     std::vector<Wall> wallList;
     forEachTile([this, &wallList, &indentifierCount](Vector2 const &key, Tile const tile) {
-        // forEachValidDirection()
+        forEachValidDirection([](Direction const direction) {
+
+        });
         // wallList.push_back({key, indentifierCount++, Maze::Direction::west});
     });
 

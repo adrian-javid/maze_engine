@@ -21,11 +21,11 @@ auto SquareMaze::getTable() const -> std::vector<Tile> const & { return table; }
 std::size_t SquareMaze::getTileCount() const { return table.size(); }
 
 auto SquareMaze::at(Vector2 const &tileKey) -> Tile & {
-    return table.at(getFlatIndex(tileKey));
+    return table.at(getFlatIndex(wrapKey(tileKey)));
 }
 
 auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
-    return table.at(getFlatIndex(tileKey));
+    return table.at(getFlatIndex(wrapKey(tileKey)));
 }
 
 void SquareMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> const &forThisTile) const {
@@ -41,6 +41,25 @@ void SquareMaze::forEachValidDirection(std::function<void(Direction const)> cons
     forThisDirection(Direction::west );
 }
 
+auto SquareMaze::query(Vector2 key, Direction const direction) const -> std::tuple<Vector2, bool> {
+    switch (direction) {
+        case Direction::north:
+            return std::make_tuple(wrapKey(key + Vector2::squareNorth), at(key) & SquareMaze::northWall);
+        case Direction::east :
+            return std::make_tuple(wrapKey(key + Vector2::squareEast), at(key) & SquareMaze::eastWall);
+
+        case Direction::south:
+            key = wrapKey(key + Vector2::squareSouth);
+            return std::make_tuple(key, table.at(getFlatIndex(key)) & SquareMaze::northWall);
+        case Direction::west :
+            key = wrapKey(key + Vector2::squareWest);
+            return std::make_tuple(key, table.at(getFlatIndex(key)) & SquareMaze::eastWall);
+
+        default:
+            return std::make_tuple(wrapKey(key), true);
+    }
+}
+
 std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) const {
     std::stringstream buffer;
 
@@ -54,25 +73,6 @@ std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) 
     }
 
     return buffer.str();
-}
-
-void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> const &operate) const {
-    if (not hasWall(tileKey, Direction::north)) operate((tileKey + Vector2::squareNorth).wrap(rowCount, columnCount));
-    if (not hasWall(tileKey, Direction::south)) operate((tileKey + Vector2::squareSouth).wrap(rowCount, columnCount));
-    if (not hasWall(tileKey, Direction::east )) operate((tileKey + Vector2::squareEast ).wrap(rowCount, columnCount));
-    if (not hasWall(tileKey, Direction::west )) operate((tileKey + Vector2::squareWest ).wrap(rowCount, columnCount));
-}
-
-bool SquareMaze::hasWall(Vector2 const &tileKey, Direction const direction) const {
-    switch (direction) {
-        case Direction::north: return at(tileKey                       ) & SquareMaze::northWall;
-        case Direction::east : return at(tileKey                       ) & SquareMaze::eastWall ;
-        case Direction::south: return at(tileKey + Vector2::squareSouth) & SquareMaze::northWall;
-        case Direction::west : return at(tileKey + Vector2::squareWest ) & SquareMaze::eastWall ;
-
-        default:
-            return false;
-    }
 }
 
 std::ostream &Project::operator<<(std::ostream &outputStream, SquareMaze const &squareGrid) {

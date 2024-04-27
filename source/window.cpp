@@ -107,28 +107,28 @@ void Media::drawSquareMaze(
 
             auto const &[wallColor1, wallColor2, wallColor3] = wallColorTriplet;
 
-            if (maze.hasWall(key, SquareMaze::Direction::north)) drawQuadrilateral(
+            if (std::get<bool>(maze.query(key, SquareMaze::Direction::north))) drawQuadrilateral(
                 outerNorthwestPoint, outerNortheastPoint,
                 innerNorthwestPoint, innerNortheastPoint,
                 wallColor1, wallColor2,
                 wallColor1, wallColor2
             );
 
-            if (maze.hasWall(key, SquareMaze::Direction::east)) drawQuadrilateral(
+            if (std::get<bool>(maze.query(key, SquareMaze::Direction::east))) drawQuadrilateral(
                 innerNortheastPoint, outerNortheastPoint,
                 innerSoutheastPoint, outerSoutheastPoint,
                 wallColor2, wallColor2,
                 wallColor3, wallColor3
             );
 
-            if (maze.hasWall(key, SquareMaze::Direction::south)) drawQuadrilateral(
+            if (std::get<bool>(maze.query(key, SquareMaze::Direction::south))) drawQuadrilateral(
                 innerSouthwestPoint, innerSoutheastPoint,
                 outerSouthwestPoint, outerSoutheastPoint,
                 wallColor2, wallColor3,
                 wallColor2, wallColor3
             );
 
-            if (maze.hasWall(key, SquareMaze::Direction::west)) drawQuadrilateral(
+            if (std::get<bool>(maze.query(key, SquareMaze::Direction::west))) drawQuadrilateral(
                 outerNorthwestPoint, innerNorthwestPoint,
                 outerSouthwestPoint, innerSouthwestPoint,
                 wallColor1, wallColor1,
@@ -276,42 +276,42 @@ void Media::drawHexagonMaze(
                     hexagonHeight * (1.0f - wallFramePercent)
                 );
 
-                if (maze.hasWall(tileKey, HexagonMaze::Direction::northeast)) drawQuadrilateral(
+                if (std::get<bool>(maze.query(tileKey, HexagonMaze::Direction::northeast))) drawQuadrilateral(
                     outerNorthPoint, outerNortheastPoint,
                     innerNorthPoint, innerNortheastPoint,
                     wallColor1, wallColor2,
                     wallColor1, wallColor2
                 );
 
-                if (maze.hasWall(tileKey, HexagonMaze::Direction::east)) drawQuadrilateral(
+                if (std::get<bool>(maze.query(tileKey, HexagonMaze::Direction::east))) drawQuadrilateral(
                     innerNortheastPoint, outerNortheastPoint,
                     innerSoutheastPoint, outerSoutheastPoint,
                     wallColor2, wallColor2,
                     wallColor3, wallColor3
                 );
 
-                if (maze.hasWall(tileKey, HexagonMaze::Direction::southeast)) drawQuadrilateral(
+                if (std::get<bool>(maze.query(tileKey, HexagonMaze::Direction::southeast))) drawQuadrilateral(
                     innerSouthPoint, innerSoutheastPoint,
                     outerSouthPoint, outerSoutheastPoint,
                     wallColor1, wallColor3,
                     wallColor1, wallColor3
                 );
 
-                if (maze.hasWall(tileKey, HexagonMaze::Direction::southwest)) drawQuadrilateral(
+                if (std::get<bool>(maze.query(tileKey, HexagonMaze::Direction::southwest))) drawQuadrilateral(
                     outerSouthwestPoint, innerSouthwestPoint,
                     outerSouthPoint, innerSouthPoint,
                     wallColor2, wallColor2,
                     wallColor1, wallColor1
                 );
 
-                if (maze.hasWall(tileKey, HexagonMaze::Direction::west)) drawQuadrilateral(
+                if (std::get<bool>(maze.query(tileKey, HexagonMaze::Direction::west))) drawQuadrilateral(
                     outerNorthwestPoint, innerNorthwestPoint,
                     outerSouthwestPoint, innerSouthwestPoint,
                     wallColor3, wallColor3,
                     wallColor2, wallColor2
                 );
 
-                if (maze.hasWall(tileKey, HexagonMaze::Direction::northwest)) drawQuadrilateral(
+                if (std::get<bool>(maze.query(tileKey, HexagonMaze::Direction::northwest))) drawQuadrilateral(
                     outerNorthwestPoint, outerNorthPoint,
                     innerNorthwestPoint, innerNorthPoint,
                     wallColor3, wallColor1,

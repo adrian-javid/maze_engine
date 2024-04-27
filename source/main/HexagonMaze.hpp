@@ -32,11 +32,9 @@ class Project::HexagonMaze : public Project::Maze {
 
     void forEachValidDirection(std::function<void(Direction const)> const &) const override;
 
-    void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &operate) const override;
+    std::tuple<Vector2, bool> query(Vector2 key, Direction const direction) const override;
 
-    bool hasWall(Vector2 const &tileKey, Direction const) const override;
-
-    Vector2 wrap(Vector2 const &key) const;
+    Vector2 wrapKey(Vector2 const &key) const;
 };
 
 #endif

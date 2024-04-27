@@ -11,7 +11,7 @@ static Vector2 calculateMirrorCenter(int const index, int const radius) {
     return rotatedPosition;
 }
 
-Vector2 HexagonMaze::wrap(Vector2 const &key) const {
+Vector2 HexagonMaze::wrapKey(Vector2 const &key) const {
     // return early if key is in table
     auto iterator = table.find(key);
     if (iterator != table.end())
@@ -73,9 +73,9 @@ HexagonMaze::HexagonMaze(int const setRadius):
 
 std::size_t HexagonMaze::getTileCount() const { return table.size(); }
 
-auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze::wrap(key)); }
+auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze::wrapKey(key)); }
 
-auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrap(key)); }
+auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrapKey(key)); }
 
 void HexagonMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> const &forThisTile) const {
     for (auto const &[key, tile] : table) forThisTile(key, tile);
@@ -90,25 +90,26 @@ void HexagonMaze::forEachValidDirection(std::function<void(Direction const)> con
     forThisDirection(Direction::northwest);
 }
 
-void HexagonMaze::forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &operate) const {
-    if (not hasWall(key, Direction::northwest)) operate(HexagonMaze::wrap(key + Vector2::hexagonNorthwest));
-    if (not hasWall(key, Direction::northeast)) operate(HexagonMaze::wrap(key + Vector2::hexagonNortheast));
-    if (not hasWall(key, Direction::east     )) operate(HexagonMaze::wrap(key + Vector2::hexagonEast     ));
-    if (not hasWall(key, Direction::southeast)) operate(HexagonMaze::wrap(key + Vector2::hexagonSoutheast));
-    if (not hasWall(key, Direction::southwest)) operate(HexagonMaze::wrap(key + Vector2::hexagonSouthwest));
-    if (not hasWall(key, Direction::west     )) operate(HexagonMaze::wrap(key + Vector2::hexagonWest     ));
-}
-
-bool HexagonMaze::hasWall(Vector2 const &tileKey, Direction const direction) const {
+auto HexagonMaze::query(Vector2 key, Direction const direction) const -> std::tuple<Vector2, bool> {
     switch (direction) {
-        case Direction::northeast: return at(tileKey                            ) & HexagonMaze::northeastWall;
-        case Direction::east     : return at(tileKey                            ) & HexagonMaze::eastWall     ;
-        case Direction::southeast: return at(tileKey                            ) & HexagonMaze::southeastWall;
-        case Direction::southwest: return at(tileKey + Vector2::hexagonSouthwest) & HexagonMaze::northeastWall;
-        case Direction::west     : return at(tileKey + Vector2::hexagonWest     ) & HexagonMaze::eastWall     ;
-        case Direction::northwest: return at(tileKey + Vector2::hexagonNorthwest) & HexagonMaze::southeastWall; 
+        case Direction::northeast:
+            return std::make_tuple(wrapKey(key + Vector2::hexagonNortheast), at(key) & HexagonMaze::northeastWall);
+        case Direction::east     :
+            return std::make_tuple(wrapKey(key + Vector2::hexagonEast), at(key) & HexagonMaze::eastWall);
+        case Direction::southeast:
+            return std::make_tuple(wrapKey(key + Vector2::hexagonSoutheast), at(key) & HexagonMaze::southeastWall);
+
+        case Direction::southwest:
+            key = wrapKey(key + Vector2::hexagonSouthwest);
+            return std::make_tuple(key, table.at(key) & HexagonMaze::northeastWall);
+        case Direction::west     :
+            key = wrapKey(key + Vector2::hexagonWest);
+            return std::make_tuple(key, table.at(key) & HexagonMaze::eastWall);
+        case Direction::northwest:
+            key = wrapKey(key + Vector2::hexagonNorthwest);
+            return std::make_tuple(key, table.at(key) & HexagonMaze::southeastWall) ;
 
         default:
-            return false;
+            return std::make_tuple(wrapKey(key), true);
     }
 }

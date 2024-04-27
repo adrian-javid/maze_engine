@@ -41,11 +41,9 @@ class Project::Maze {
 
     virtual void forEachValidDirection(std::function<void(Direction const)> const &) const = 0;
 
-    // virtual std::optional<Tile> query(Vector2 const &, Direction const) const = 0;
+    virtual std::tuple<Vector2, bool> query(Vector2, Direction const) const = 0;
 
-    virtual bool hasWall(Vector2 const &tileKey, Direction const direction) const = 0;
-
-    virtual void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &operate) const = 0;
+    void forEachNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const &) const;
 
     void shuffle(unsigned int const seed);
 

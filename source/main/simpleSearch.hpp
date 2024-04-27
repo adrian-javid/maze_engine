@@ -48,7 +48,7 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
             return path;
         }
 
-        grid.forNeighbor(key, [&grid, &upTree, &key, &storage](Vector2 const &neighbor) {
+        grid.forEachNeighbor(key, [&grid, &upTree, &key, &storage](Vector2 const &neighbor) {
             if (upTree.find(neighbor) == upTree.end()) {
                 upTree.insert({neighbor, key});
                 storage.push(neighbor);

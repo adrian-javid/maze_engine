@@ -11,6 +11,8 @@
 // table of tiles
 #include <vector>
 
+#include "Vector2.hpp"
+
 namespace Project {
   class SquareMaze;
   std::ostream &operator<<(std::ostream &outputStream, SquareMaze const &squareGrid);
@@ -19,11 +21,16 @@ namespace Project {
 class Project::SquareMaze : public Project::Maze {
 
   public:
-    static_assert(not std::is_same_v<std::vector<Tile>, std::vector<bool>>);
+
+    // static constexpr Vector2 north(-1,  0);
+    // static constexpr Vector2 south(+1,  0);
+    // static constexpr Vector2 east ( 0, +1);
+    // static constexpr Vector2 west ( 0, -1);
 
   private:
 
     std::vector<Tile> table;
+    static_assert(not std::is_same_v<std::vector<Tile>, std::vector<bool>>);
     int rowCount;
     int columnCount;
 
@@ -43,18 +50,16 @@ class Project::SquareMaze : public Project::Maze {
 
     void forEachValidDirection(std::function<void(Direction const)> const &) const override;
 
-    std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
+    std::tuple<Vector2, bool> query(Vector2, Direction const) const override;
 
-    void forNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const &) const override;
+    constexpr Vector2 wrapKey(Vector2 const &key) const { return key.wrap(rowCount, columnCount); }
 
-    bool hasWall(Vector2 const &, Direction const) const override;
-
-    constexpr std::size_t getFlatIndex(Vector2 const &tileKey) const {
-      int const row = Util::wrapValue(tileKey.value1, rowCount);
-      int const column = Util::wrapValue(tileKey.value2, columnCount);
-      int const flatIndex{row * columnCount + column};
+    constexpr std::size_t getFlatIndex(Vector2 const &key) const {
+      int const flatIndex{/* row */key.value1 * columnCount + /* column */key.value2};
       return static_cast<std::size_t>(flatIndex);
     }
+
+    std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 };
 
 #endif
