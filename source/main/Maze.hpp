@@ -11,7 +11,9 @@ namespace Project { class Maze; }
 class Project::Maze {
 
   public:
+
     using Tile = std::uint_least8_t;
+
 
     enum struct Direction : std::uint_fast8_t {
       /**/                 north,
@@ -22,7 +24,7 @@ class Project::Maze {
       /**/
       /**/      southwest,        southeast,
       /**/
-      /**/                 south
+      /**/                 south,
     };
 
     static constexpr Direction reverse(Direction const direction) {
