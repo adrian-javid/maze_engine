@@ -6,12 +6,12 @@ void Project::UnionFinder::addElements(std::size_t const count) {
     forest.insert(forest.end(), count, -1);
 }
 
-int Project::UnionFinder::find(int const element) {
+auto Project::UnionFinder::find(Identifier const element) -> Identifier {
     // base case
     if (forest.at(element) < 0) return element;
 
     // recursion
-    int const root{find(forest.at(element))};
+    Identifier const root{find(forest.at(element))};
 
     // path compression
     forest.at(element) = root;
@@ -19,10 +19,10 @@ int Project::UnionFinder::find(int const element) {
     return root;
 }
 
-void Project::UnionFinder::unionThem(int const element1, int const element2) {
-  int const root1 = find(element1);
-  int const root2 = find(element2);
-  int const negativeSize = forest.at(root1) + forest.at(root2);
+void Project::UnionFinder::unionThem(Identifier const element1, Identifier const element2) {
+  Identifier const root1 = find(element1);
+  Identifier const root2 = find(element2);
+  Identifier const negativeSize = forest.at(root1) + forest.at(root2);
 
   if (forest.at(root1) < forest.at(root2)) {
     forest.at(root2) = root1;
@@ -33,7 +33,7 @@ void Project::UnionFinder::unionThem(int const element1, int const element2) {
   }
 }
 
-int Project::UnionFinder::size(int const element) {
-    int const root = find(element);
+auto Project::UnionFinder::size(Identifier const element) -> Identifier {
+    Identifier const root = find(element);
     return -1 * forest.at(root);
 }
