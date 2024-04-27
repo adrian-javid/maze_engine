@@ -14,40 +14,36 @@ class Project::Maze {
 
     using Tile = std::uint_least8_t;
 
+    static constexpr Tile emptyTile{0u};
 
-    enum struct Direction : std::uint_fast8_t {
-      /**/                 north,
+    /**
+     * @note Purposely unscoped `enum` for bitwise operations and implicit conversion to `bool`.
+     */
+    enum Direction : Tile {
+      /**/                       north = 1u << 0u,
       /**/
-      /**/      northwest,        northeast,
+      /**/         northwest = 1u << 7u,       northeast = 1u << 1u,
       /**/
-      /**/  west,                           east,
+      /**/  west = 1u << 6u,                                east = 1u << 2u,
       /**/
-      /**/      southwest,        southeast,
+      /**/         southwest = 1u << 5u,        southeast = 1u << 3u,
       /**/
-      /**/                 south,
+      /**/                       south = 1u << 4u,
     };
 
-    static constexpr Direction reverse(Direction const direction) {
-      using D = Direction;
+    static constexpr Direction reverseDirection(Direction const direction) {
       switch (direction) {
-      /**/                                       case D::north: return D::south;
+      /**/                                       case north: return south;
       /**/
-      /**/          case D::northwest: return D::southeast;              case D::northeast: return D::southwest;
+      /**/          case northwest: return southeast;              case northeast: return southwest;
       /**/
-      /**/  case D::west: return D::east;          default: throw direction;                 case D::east: return D::west;
+      /**/  case west: return east;          default: throw direction;                 case east: return west;
       /**/
-      /**/          case D::southwest: return D::northeast;              case D::southeast: return D::northwest;
+      /**/          case southwest: return northeast;              case southeast: return northwest;
       /**/
-      /**/                                       case D::south: return D::north;
+      /**/                                       case south: return north;
       }
     }
-
-    constexpr static Tile emptyTile{0u};
-
-    constexpr static Tile northWall     { 1u << 0u };
-    constexpr static Tile northeastWall { 1u << 1u };
-    constexpr static Tile eastWall      { 1u << 2u };
-    constexpr static Tile southeastWall { 1u << 3u };
 
     virtual std::size_t getTileCount() const = 0;
 
@@ -61,10 +57,10 @@ class Project::Maze {
     struct TileAdjacency {
       Vector2 key;
       bool hasWall;
-      template <typename ConvertableToBool_T>
-      constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, ConvertableToBool_T const wallFlag):
-        key(tileKey), hasWall{static_cast<bool>(wallFlag)}
-      {}
+      // template <typename ConvertableToBool_T>
+      // constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, ConvertableToBool_T const wallFlag):
+      //   key(tileKey), hasWall{static_cast<bool>(wallFlag)}
+      // {}
     };
     virtual TileAdjacency checkAdjacent(Vector2, Direction const) const = 0;
 
