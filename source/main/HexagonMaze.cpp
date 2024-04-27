@@ -90,20 +90,20 @@ void HexagonMaze::forEachPrincipalDirection(std::function<void(Direction const)>
 auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const -> TileAdjacency {
     switch (direction) {
         case northeast:
-            return {wrapKey(key + Vector2::hexagonNortheast), at(key) & northeast};
+            return {wrapKey(key + northeastOffset), at(key) & northeast};
         case east     :
-            return {wrapKey(key + Vector2::hexagonEast), at(key) & east};
+            return {wrapKey(key + eastOffset), at(key) & east};
         case southeast:
-            return {wrapKey(key + Vector2::hexagonSoutheast), at(key) & southeast};
+            return {wrapKey(key + southeastOffset), at(key) & southeast};
 
         case southwest:
-            key = wrapKey(key + Vector2::hexagonSouthwest);
+            key = wrapKey(key + southwestOffset);
             return {key, table.at(key) & northeast};
         case west     :
-            key = wrapKey(key + Vector2::hexagonWest);
+            key = wrapKey(key + westOffset);
             return {key, table.at(key) & east};
         case northwest:
-            key = wrapKey(key + Vector2::hexagonNorthwest);
+            key = wrapKey(key + northwestOffset);
             return {key, table.at(key) & southeast};
 
         default:

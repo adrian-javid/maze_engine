@@ -4,13 +4,6 @@
 
 using Project::Vector2;
 
-Vector2 const Vector2::hexagonNorthwest( 0, -1);
-Vector2 const Vector2::hexagonNortheast(+1, -1);
-Vector2 const Vector2::hexagonEast     (+1,  0);
-Vector2 const Vector2::hexagonSoutheast( 0, +1);
-Vector2 const Vector2::hexagonSouthwest(-1, +1);
-Vector2 const Vector2::hexagonWest     (-1,  0);
-
 std::size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
     static_assert(std::is_same_v<decltype(vector.value1), decltype(vector.value2)>);
     static constexpr std::hash<decltype(vector.value1)> hash;
