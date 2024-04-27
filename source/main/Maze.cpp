@@ -18,7 +18,7 @@ auto Project::Maze::shuffle(unsigned int const seed) -> void {
 
     struct Wall {
         Vector2 tileKey;
-        Maze::Direction type;
+        Direction type;
     };
 
     std::vector<Wall> wallList;
