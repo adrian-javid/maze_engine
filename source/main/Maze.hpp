@@ -41,7 +41,7 @@ class Project::Maze {
 
     virtual void forEachValidDirection(std::function<void(Direction const)> const &) const = 0;
 
-    virtual std::tuple<Vector2, bool> query(Vector2, Direction const) const = 0;
+    virtual std::tuple<Vector2, bool> checkAdjacent(Vector2, Direction const) const = 0;
 
     void forEachNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const &) const;
 

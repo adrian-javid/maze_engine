@@ -50,7 +50,7 @@ class Project::SquareMaze : public Project::Maze {
 
     void forEachValidDirection(std::function<void(Direction const)> const &) const override;
 
-    std::tuple<Vector2, bool> query(Vector2, Direction const) const override;
+    std::tuple<Vector2, bool> checkAdjacent(Vector2, Direction const) const override;
 
     constexpr Vector2 wrapKey(Vector2 const &key) const { return key.wrap(rowCount, columnCount); }
 

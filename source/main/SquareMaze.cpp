@@ -41,7 +41,7 @@ void SquareMaze::forEachValidDirection(std::function<void(Direction const)> cons
     forThisDirection(Direction::west );
 }
 
-auto SquareMaze::query(Vector2 key, Direction const direction) const -> std::tuple<Vector2, bool> {
+auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> std::tuple<Vector2, bool> {
     switch (direction) {
         case Direction::north:
             return std::make_tuple(wrapKey(key + Vector2::squareNorth), at(key) & SquareMaze::northWall);

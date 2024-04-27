@@ -32,7 +32,7 @@ class Project::HexagonMaze : public Project::Maze {
 
     void forEachValidDirection(std::function<void(Direction const)> const &) const override;
 
-    std::tuple<Vector2, bool> query(Vector2 key, Direction const direction) const override;
+    std::tuple<Vector2, bool> checkAdjacent(Vector2 key, Direction const direction) const override;
 
     Vector2 wrapKey(Vector2 const &key) const;
 };

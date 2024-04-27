@@ -7,7 +7,7 @@
 
 void Project::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &forThisNeighbor) const {
     forEachValidDirection([this, &key, &forThisNeighbor](Direction const direction) {
-        auto const &&[neighbor, wallFlag] = query(key, direction);
+        auto const &&[neighbor, wallFlag] = checkAdjacent(key, direction);
         if (not wallFlag) forThisNeighbor(neighbor);
     });
 }

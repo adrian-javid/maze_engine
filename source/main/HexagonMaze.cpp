@@ -90,7 +90,7 @@ void HexagonMaze::forEachValidDirection(std::function<void(Direction const)> con
     forThisDirection(Direction::northwest);
 }
 
-auto HexagonMaze::query(Vector2 key, Direction const direction) const -> std::tuple<Vector2, bool> {
+auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const -> std::tuple<Vector2, bool> {
     switch (direction) {
         case Direction::northeast:
             return std::make_tuple(wrapKey(key + Vector2::hexagonNortheast), at(key) & HexagonMaze::northeastWall);
