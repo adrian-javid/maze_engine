@@ -32,7 +32,7 @@ class Project::Maze {
       /**/
       /**/          case D::northwest: return D::southeast;              case D::northeast: return D::southwest;
       /**/
-      /**/  case D::west: D::east;                  default: throw direction;                         case D::east: D::west;
+      /**/  case D::west: return D::east;          default: throw direction;                 case D::east: return D::west;
       /**/
       /**/          case D::southwest: return D::northeast;              case D::southeast: return D::northwest;
       /**/
