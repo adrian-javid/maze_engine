@@ -26,7 +26,7 @@ class Project::Maze {
       /**/
       /**/  west = 1u << 6u,                                east = 1u << 2u,
       /**/
-      /**/         southwest = 1u << 5u,        southeast = 1u << 3u,
+      /**/         southwest = 1u << 5u,       southeast = 1u << 3u,
       /**/
       /**/                       south = 1u << 4u,
     };
