@@ -2,7 +2,7 @@
 
 using namespace Project;
 
-SquareMaze::SquareMaze(int const rowCount, int const columnCount):
+SquareMaze::SquareMaze(int const rowCount, int const columnCount, Tile const tileFillValue):
     table([rowCount, columnCount]() constexpr -> std::size_t {
         if (rowCount < 0)
             throw std::invalid_argument("row count " + std::to_string(rowCount) + " should not be negative");
@@ -11,7 +11,7 @@ SquareMaze::SquareMaze(int const rowCount, int const columnCount):
             throw std::invalid_argument("column count " + std::to_string(columnCount) + " should not be negative");
 
         return static_cast<std::size_t>(rowCount) * static_cast<std::size_t>(columnCount);
-    }()), rowCount{rowCount}, columnCount{columnCount}
+    }(), tileFillValue), rowCount{rowCount}, columnCount{columnCount}
 {}
 
 int SquareMaze::getRowCount() const { return rowCount; }
