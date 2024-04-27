@@ -41,22 +41,22 @@ void SquareMaze::forEachValidDirection(std::function<void(Direction const)> cons
     forThisDirection(Direction::west );
 }
 
-auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> std::tuple<Vector2, bool> {
+auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> Adjacency {
     switch (direction) {
         case Direction::north:
-            return std::make_tuple(wrapKey(key + Vector2::squareNorth), at(key) & SquareMaze::northWall);
+            return {wrapKey(key + Vector2::squareNorth), at(key) & SquareMaze::northWall};
         case Direction::east :
-            return std::make_tuple(wrapKey(key + Vector2::squareEast), at(key) & SquareMaze::eastWall);
+            return {wrapKey(key + Vector2::squareEast), at(key) & SquareMaze::eastWall};
 
         case Direction::south:
             key = wrapKey(key + Vector2::squareSouth);
-            return std::make_tuple(key, table.at(getFlatIndex(key)) & SquareMaze::northWall);
+            return {key, table.at(getFlatIndex(key)) & SquareMaze::northWall};
         case Direction::west :
             key = wrapKey(key + Vector2::squareWest);
-            return std::make_tuple(key, table.at(getFlatIndex(key)) & SquareMaze::eastWall);
+            return {key, table.at(getFlatIndex(key)) & SquareMaze::eastWall};
 
         default:
-            return std::make_tuple(wrapKey(key), true);
+            return {wrapKey(key), true};
     }
 }
 

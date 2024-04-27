@@ -90,26 +90,26 @@ void HexagonMaze::forEachValidDirection(std::function<void(Direction const)> con
     forThisDirection(Direction::northwest);
 }
 
-auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const -> std::tuple<Vector2, bool> {
+auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const -> Adjacency {
     switch (direction) {
         case Direction::northeast:
-            return std::make_tuple(wrapKey(key + Vector2::hexagonNortheast), at(key) & HexagonMaze::northeastWall);
+            return {wrapKey(key + Vector2::hexagonNortheast), at(key) & HexagonMaze::northeastWall};
         case Direction::east     :
-            return std::make_tuple(wrapKey(key + Vector2::hexagonEast), at(key) & HexagonMaze::eastWall);
+            return {wrapKey(key + Vector2::hexagonEast), at(key) & HexagonMaze::eastWall};
         case Direction::southeast:
-            return std::make_tuple(wrapKey(key + Vector2::hexagonSoutheast), at(key) & HexagonMaze::southeastWall);
+            return {wrapKey(key + Vector2::hexagonSoutheast), at(key) & HexagonMaze::southeastWall};
 
         case Direction::southwest:
             key = wrapKey(key + Vector2::hexagonSouthwest);
-            return std::make_tuple(key, table.at(key) & HexagonMaze::northeastWall);
+            return {key, table.at(key) & HexagonMaze::northeastWall};
         case Direction::west     :
             key = wrapKey(key + Vector2::hexagonWest);
-            return std::make_tuple(key, table.at(key) & HexagonMaze::eastWall);
+            return {key, table.at(key) & HexagonMaze::eastWall};
         case Direction::northwest:
             key = wrapKey(key + Vector2::hexagonNorthwest);
-            return std::make_tuple(key, table.at(key) & HexagonMaze::southeastWall) ;
+            return {key, table.at(key) & HexagonMaze::southeastWall};
 
         default:
-            return std::make_tuple(wrapKey(key), true);
+            return {wrapKey(key), true};
     }
 }
