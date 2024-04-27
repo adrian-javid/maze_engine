@@ -84,14 +84,14 @@ namespace Project::Global {
         HexagonMaze maze(4);
         auto const center = Vector2(0, 0);
 
-        maze.at(center) |= HexagonMaze::northeastWall;
-        maze.at(center + Vector2::hexagonSouthwest) |= HexagonMaze::northeastWall;
+        maze.at(center) |= HexagonMaze::northeast;
+        maze.at(center + Vector2::hexagonSouthwest) |= HexagonMaze::northeast;
 
         maze.at(center) |= HexagonMaze::east;
         maze.at(center + Vector2::hexagonWest) |= HexagonMaze::east;
 
-        maze.at(center) |= HexagonMaze::southeastWall;
-        maze.at(center + Vector2::hexagonNorthwest) |= HexagonMaze::southeastWall;
+        maze.at(center) |= HexagonMaze::southeast;
+        maze.at(center + Vector2::hexagonNorthwest) |= HexagonMaze::southeast;
 
         return maze;
     }();
