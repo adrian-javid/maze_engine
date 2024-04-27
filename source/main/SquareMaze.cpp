@@ -28,6 +28,12 @@ auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
     return table.at(getFlatIndex(tileKey));
 }
 
+void SquareMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> const &forThisTile) const {
+    for (Vector2 key(0); key.value1 < rowCount; ++key.value1)
+        for (key.value2 = 0; key.value2 < columnCount; ++key.value2)
+            forThisTile(key, table.at(getFlatIndex(key)));
+}
+
 void SquareMaze::forValidDirection(std::function<void(Direction)> const &operate) const {
     operate(Direction::north);
     operate(Direction::south);
@@ -71,12 +77,4 @@ bool SquareMaze::hasWall(Vector2 const &tileKey, Direction const direction) cons
 
 std::ostream &Project::operator<<(std::ostream &outputStream, SquareMaze const &squareGrid) {
     outputStream << squareGrid.toString(); return outputStream;
-}
-
-auto Project::SquareMaze::begin() const -> Iterator {
-    return {};
-}
-
-auto Project::SquareMaze::end() const -> Iterator {
-    return {};
 }

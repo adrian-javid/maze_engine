@@ -38,6 +38,8 @@ class Project::Maze {
     virtual Tile &at(Vector2 const &key) = 0;
     virtual Tile const &at(Vector2 const &key) const = 0;
 
+    virtual void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const = 0;
+
     virtual void forValidDirection(std::function<void(Direction)> const &) const = 0;
 
     // virtual std::optional<Tile> query(Vector2 const &, Direction const) const = 0;
@@ -52,32 +54,6 @@ class Project::Maze {
     constexpr Maze(Maze const &) = default;
     Project::Maze &operator=(const Project::Maze &) = default;
     virtual ~Maze() = default;
-
-    class Iterator {
-      private:
-        std::function<Vector2 const &(std::any const &)> dereference;
-        std::function<Iterator &(std::any &)> preIncrement;
-        std::function<bool(std::any const &, Iterator const &)> equals;
-
-        std::any memory;
-
-      public:
-        Iterator() {};
-        explicit Iterator(
-          std::any const &,
-          decltype(Iterator::dereference) const &dereferencer,
-          decltype(Iterator::preIncrement) const &preIncrementer,
-          decltype(Iterator::equals) const &equalityDeterminer
-        );
-        Vector2 const &operator*() const;
-        Iterator &operator++(); // preincrement
-        bool operator==(Iterator const &iterator);
-        bool operator!=(Iterator const &iterator);
-    };
-
-    virtual Iterator begin() const = 0;
-
-    virtual Iterator end() const = 0;
 
 };
 

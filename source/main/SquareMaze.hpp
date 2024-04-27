@@ -39,6 +39,8 @@ class Project::SquareMaze : public Project::Maze {
     Tile &at(Vector2 const &) override;
     Tile const &at(Vector2 const &) const override;
 
+    void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const override;
+
     void forValidDirection(std::function<void(Direction)> const &) const override;
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
@@ -53,10 +55,6 @@ class Project::SquareMaze : public Project::Maze {
       int const flatIndex{row * columnCount + column};
       return static_cast<std::size_t>(flatIndex);
     }
-
-    Iterator begin() const override;
-
-    Iterator end() const override;
 };
 
 #endif

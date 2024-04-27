@@ -77,6 +77,10 @@ auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze
 
 auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrap(key)); }
 
+void HexagonMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> const &forThisTile) const {
+    for (auto const &[key, tile] : table) forThisTile(key, tile);
+}
+
 void HexagonMaze::forValidDirection(std::function<void(Direction)> const &operate) const {
     operate(Direction::northeast);
     operate(Direction::east     );
@@ -107,13 +111,4 @@ bool HexagonMaze::hasWall(Vector2 const &tileKey, Direction const direction) con
         default:
             return false;
     }
-}
-
-
-auto Project::HexagonMaze::begin() const -> Iterator {
-    return {};
-}
-
-auto Project::HexagonMaze::end() const -> Iterator {
-    return {};
 }

@@ -34,27 +34,3 @@ auto Project::Maze::generate(unsigned int const seed) -> void {
     }
 
 }
-
-Project::Maze::Iterator::Iterator(
-    std::any const &memoryValue,
-    decltype(Iterator::dereference) const &dereferencer,
-    decltype(Iterator::preIncrement) const &preIncrementer,
-    decltype(Iterator::equals) const &equalityDeterminer
-): dereference(dereferencer), preIncrement(preIncrementer), equals(equalityDeterminer), memory(memoryValue) {}
-
-auto Project::Maze::Iterator::operator*() const -> Vector2 const & {
-    return dereference(memory);
-}
-
-auto Project::Maze::Iterator::operator++() -> Iterator & {
-    return preIncrement(memory);
-}
-
-bool Project::Maze::Iterator::operator==(Iterator const &iterator) {
-    return equals(memory, iterator);
-}
-
-bool Project::Maze::Iterator::operator!=(Iterator const &iterator) {
-    return not equals(memory, iterator);
-}
-
