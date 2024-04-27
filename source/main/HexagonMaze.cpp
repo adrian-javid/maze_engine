@@ -25,7 +25,7 @@ Vector2 HexagonMaze::wrap(Vector2 const &key) const {
     } closestMirrorCenter{mirrorCenterTable[0], (key - mirrorCenterTable[0]).hexManhattanLength()};
 
     // find the closest mirror center
-    for (std::uint_fast8_t mirrorIndex = 0 + 1; mirrorIndex < 6; ++mirrorIndex) {
+    for (std::size_t mirrorIndex = 0 + 1; mirrorIndex < 6; ++mirrorIndex) {
         auto const distance = (key - mirrorCenterTable[mirrorIndex]).hexManhattanLength();
         if (distance < closestMirrorCenter.distance)
         closestMirrorCenter = {mirrorCenterTable[mirrorIndex], distance};
