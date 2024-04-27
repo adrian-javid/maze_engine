@@ -28,7 +28,7 @@ auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
     return table.at(getFlatIndex(tileKey));
 }
 
-void SquareMaze::forValidDirection(std::function<void(Direction)> const operate) const {
+void SquareMaze::forValidDirection(std::function<void(Direction)> const &operate) const {
     operate(Direction::north);
     operate(Direction::south);
     operate(Direction::east );
@@ -50,7 +50,7 @@ std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) 
     return buffer.str();
 }
 
-void SquareMaze::forNeighbor(Vector2 const &tileKey, VertexAction const operate) const {
+void SquareMaze::forNeighbor(Vector2 const &tileKey, std::function<void(Vector2 const &)> const &operate) const {
     if (not hasWall(tileKey, Direction::north)) operate((tileKey + Vector2::squareNorth).wrap(rowCount, columnCount));
     if (not hasWall(tileKey, Direction::south)) operate((tileKey + Vector2::squareSouth).wrap(rowCount, columnCount));
     if (not hasWall(tileKey, Direction::east )) operate((tileKey + Vector2::squareEast ).wrap(rowCount, columnCount));

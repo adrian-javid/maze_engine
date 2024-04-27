@@ -28,9 +28,9 @@ class Project::HexagonMaze : public Project::Maze {
     Tile &at(Vector2 const &key) override;
     Tile const &at(Vector2 const &key) const override;
 
-    void forValidDirection(std::function<void(Direction)> const) const override;
+    void forValidDirection(std::function<void(Direction)> const &) const override;
 
-    void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const operate) const override;
+    void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &operate) const override;
 
     bool hasWall(Vector2 const &tileKey, Direction const) const override;
 

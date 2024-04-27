@@ -9,7 +9,7 @@ namespace Project {
     template <typename Storage_T>
     std::optional<std::vector<Vector2>> simpleSearch(
         Maze const &, Vector2 const &, Vector2 const &,
-        Maze::VertexAction const process=nullptr
+        std::function<void(Vector2 const &)> const process=nullptr
     );
 
 }
@@ -19,7 +19,7 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
     Maze const &grid,
     Vector2 const &start,
     Vector2 const &end,
-    Maze::VertexAction const process
+    std::function<void(Vector2 const &)> const process
 ) {
     using namespace Project;
 
