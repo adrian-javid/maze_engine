@@ -39,13 +39,6 @@ void SquareMaze::forEachPrincipalDirection(std::function<void(Direction const)> 
     forThisPrincipalDirection(east);
 }
 
-void SquareMaze::forEachValidDirection(std::function<void(Direction const)> const &forThisDirection) const {
-    forThisDirection(north);
-    forThisDirection(south);
-    forThisDirection(east );
-    forThisDirection(west );
-}
-
 auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> TileAdjacency {
     switch (direction) {
         case Direction::north:

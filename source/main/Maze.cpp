@@ -5,8 +5,14 @@
 #include <algorithm>
 #include <random>
 
-void Project::Maze::forEachValidDirection(std::function<void(Direction const)> const &forThisValidDirection) const {
-    
+void Project::Maze::forEachValidDirection(std::function<void(Direction const)> const &forThisDirection) const {
+    forEachPrincipalDirection([&forThisDirection](Direction const direction) -> void {
+        forThisDirection(direction);
+    });
+
+    forEachPrincipalDirection([&forThisDirection](Direction const direction) -> void {
+        forThisDirection(reverseDirection(direction));
+    });
 }
 
 void Project::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &forThisNeighbor) const {

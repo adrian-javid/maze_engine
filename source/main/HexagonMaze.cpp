@@ -87,15 +87,6 @@ void HexagonMaze::forEachPrincipalDirection(std::function<void(Direction const)>
     forThisPrincipalDirection(southeast);
 }
 
-void HexagonMaze::forEachValidDirection(std::function<void(Direction const)> const &forThisDirection) const {
-    forThisDirection(northeast);
-    forThisDirection(east     );
-    forThisDirection(southeast);
-    forThisDirection(southwest);
-    forThisDirection(west     );
-    forThisDirection(northwest);
-}
-
 auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const -> TileAdjacency {
     switch (direction) {
         case northeast:

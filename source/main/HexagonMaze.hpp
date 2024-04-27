@@ -32,8 +32,6 @@ class Project::HexagonMaze : public Project::Maze {
 
     void forEachPrincipalDirection(std::function<void(Direction const)> const &) const override;
 
-    void forEachValidDirection(std::function<void(Direction const)> const &) const override;
-
     TileAdjacency checkAdjacent(Vector2 key, Direction const direction) const override;
 
     Vector2 wrapKey(Vector2 const &key) const;

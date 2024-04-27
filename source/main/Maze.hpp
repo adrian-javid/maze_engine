@@ -54,7 +54,7 @@ class Project::Maze {
 
     virtual void forEachPrincipalDirection(std::function<void(Direction const)> const &) const = 0;
 
-    virtual void forEachValidDirection(std::function<void(Direction const)> const &) const;
+    void forEachValidDirection(std::function<void(Direction const)> const &) const;
 
     struct TileAdjacency {
       Vector2 key;

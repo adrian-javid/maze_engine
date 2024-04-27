@@ -50,8 +50,6 @@ class Project::SquareMaze : public Project::Maze {
 
     void forEachPrincipalDirection(std::function<void(Direction const)> const &) const override;
 
-    void forEachValidDirection(std::function<void(Direction const)> const &) const override;
-
     TileAdjacency checkAdjacent(Vector2, Direction const) const override;
 
     constexpr Vector2 wrapKey(Vector2 const &key) const { return key.wrap(rowCount, columnCount); }
