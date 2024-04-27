@@ -47,6 +47,7 @@ namespace Project::Util {
         assert(upperBound > 0);
         value %= upperBound;
         if (value < 0) value += upperBound;
+        assert(value >= 0);
         return value;
     }
 
