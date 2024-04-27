@@ -56,7 +56,7 @@ auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> 
             return {key, table.at(getFlatIndex(key)) & SquareMaze::eastWall};
 
         default:
-            return {wrapKey(key), true};
+            throw direction;
     }
 }
 

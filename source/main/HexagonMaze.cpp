@@ -110,6 +110,6 @@ auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const ->
             return {key, table.at(key) & HexagonMaze::southeastWall};
 
         default:
-            return {wrapKey(key), true};
+            throw direction;
     }
 }
