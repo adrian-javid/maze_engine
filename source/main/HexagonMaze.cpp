@@ -77,8 +77,8 @@ auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze
 
 auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrapKey(key)); }
 
-void HexagonMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> const &forThisTile) const {
-    for (auto const &[key, tile] : table) forThisTile(key, tile);
+void HexagonMaze::forEachKey(std::function<void(Vector2 const &)> const &forThisKey) const {
+    for (auto const &pair : table) forThisKey(pair.first);
 }
 
 void HexagonMaze::forEachPrincipalDirection(std::function<void(Direction const)> const &forThisPrincipalDirection) const {

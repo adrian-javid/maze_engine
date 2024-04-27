@@ -28,10 +28,10 @@ auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
     return table.at(getFlatIndex(wrapKey(tileKey)));
 }
 
-void SquareMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> const &forThisTile) const {
+void SquareMaze::forEachKey(std::function<void(Vector2 const &)> const &forThisKey) const {
     for (Vector2 key(0); key.value1 < rowCount; ++key.value1)
         for (key.value2 = 0; key.value2 < columnCount; ++key.value2)
-            forThisTile(key, table.at(getFlatIndex(key)));
+            forThisKey(key);
 }
 
 void SquareMaze::forEachPrincipalDirection(std::function<void(Direction const)> const &forThisPrincipalDirection) const {

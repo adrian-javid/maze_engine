@@ -50,7 +50,7 @@ class Project::Maze {
     virtual Tile &at(Vector2 const &key) = 0;
     virtual Tile const &at(Vector2 const &key) const = 0;
 
-    virtual void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const = 0;
+    virtual void forEachKey(std::function<void(Vector2 const &)> const &) const = 0;
 
     virtual void forEachPrincipalDirection(std::function<void(Direction const)> const &) const = 0;
 

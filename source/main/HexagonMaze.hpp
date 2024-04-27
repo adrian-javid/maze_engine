@@ -35,7 +35,7 @@ class Project::HexagonMaze : public Project::Maze {
     Tile &at(Vector2 const &key) override;
     Tile const &at(Vector2 const &key) const override;
 
-    void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const override;
+    void forEachKey(std::function<void(Vector2 const &)> const &) const override;
 
     void forEachPrincipalDirection(std::function<void(Direction const)> const &) const override;
 
