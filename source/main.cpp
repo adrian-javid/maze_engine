@@ -40,13 +40,20 @@ namespace Project::Global {static SquareMaze generateGrid(int rowCount, int colu
         // maze.putWall(row, maze.getColumnCount() - 1);
     }
 
+    struct OneMem {
+        std::uint_least8_t a;
+    };
+
+    sizeof(std::uint_least8_t);
+    sizeof(OneMem);
+
     Vector2 key;
 
-    maze.at(key={5, 5}) |= Maze::northWall | Maze::eastWall;
+    maze.at(key={5, 5}) |= Maze::north | Maze::east;
 
-    maze.at(key={-3, -3}) |= Maze::northWall | Maze::eastWall;
-    maze.at(key + Vector2::squareSouth) |= Maze::northWall;
-    maze.at(key + Vector2::squareWest) |= Maze::eastWall;
+    maze.at(key={-3, -3}) |= Maze::north | Maze::east;
+    maze.at(key + Vector2::squareSouth) |= Maze::north;
+    maze.at(key + Vector2::squareWest) |= Maze::east;
 
     maze.at({(maze.getRowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
     maze.at({1, fourthQuarter}) = SquareMaze::emptyTile;
@@ -80,8 +87,8 @@ namespace Project::Global {
         maze.at(center) |= HexagonMaze::northeastWall;
         maze.at(center + Vector2::hexagonSouthwest) |= HexagonMaze::northeastWall;
 
-        maze.at(center) |= HexagonMaze::eastWall;
-        maze.at(center + Vector2::hexagonWest) |= HexagonMaze::eastWall;
+        maze.at(center) |= HexagonMaze::east;
+        maze.at(center + Vector2::hexagonWest) |= HexagonMaze::east;
 
         maze.at(center) |= HexagonMaze::southeastWall;
         maze.at(center + Vector2::hexagonNorthwest) |= HexagonMaze::southeastWall;
