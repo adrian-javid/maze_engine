@@ -82,32 +82,32 @@ void HexagonMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> c
 }
 
 void HexagonMaze::forEachValidDirection(std::function<void(Direction const)> const &forThisDirection) const {
-    forThisDirection(Direction::northeast);
-    forThisDirection(Direction::east     );
-    forThisDirection(Direction::southeast);
-    forThisDirection(Direction::southwest);
-    forThisDirection(Direction::west     );
-    forThisDirection(Direction::northwest);
+    forThisDirection(northeast);
+    forThisDirection(east     );
+    forThisDirection(southeast);
+    forThisDirection(southwest);
+    forThisDirection(west     );
+    forThisDirection(northwest);
 }
 
 auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const -> TileAdjacency {
     switch (direction) {
-        case Direction::northeast:
-            return {wrapKey(key + Vector2::hexagonNortheast), at(key) & HexagonMaze::northeastWall};
-        case Direction::east     :
-            return {wrapKey(key + Vector2::hexagonEast), at(key) & HexagonMaze::eastWall};
-        case Direction::southeast:
-            return {wrapKey(key + Vector2::hexagonSoutheast), at(key) & HexagonMaze::southeastWall};
+        case northeast:
+            return {wrapKey(key + Vector2::hexagonNortheast), at(key) & northeast};
+        case east     :
+            return {wrapKey(key + Vector2::hexagonEast), at(key) & east};
+        case southeast:
+            return {wrapKey(key + Vector2::hexagonSoutheast), at(key) & southeast};
 
-        case Direction::southwest:
+        case southwest:
             key = wrapKey(key + Vector2::hexagonSouthwest);
-            return {key, table.at(key) & HexagonMaze::northeastWall};
-        case Direction::west     :
+            return {key, table.at(key) & northeast};
+        case west     :
             key = wrapKey(key + Vector2::hexagonWest);
-            return {key, table.at(key) & HexagonMaze::eastWall};
-        case Direction::northwest:
+            return {key, table.at(key) & east};
+        case northwest:
             key = wrapKey(key + Vector2::hexagonNorthwest);
-            return {key, table.at(key) & HexagonMaze::southeastWall};
+            return {key, table.at(key) & southeast};
 
         default:
             throw direction;
