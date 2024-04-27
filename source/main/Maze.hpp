@@ -25,6 +25,21 @@ class Project::Maze {
       /**/                 south
     };
 
+    static constexpr Direction reverse(Direction const direction) {
+      using D = Direction;
+      switch (direction) {
+      /**/                                       case D::north: return D::south;
+      /**/
+      /**/          case D::northwest: return D::southeast;              case D::northeast: return D::southwest;
+      /**/
+      /**/  case D::west: D::east;                  default: throw direction;                         case D::east: D::west;
+      /**/
+      /**/          case D::southwest: return D::northeast;              case D::southeast: return D::northwest;
+      /**/
+      /**/                                       case D::south: return D::north;
+      }
+    }
+
     constexpr static Tile emptyTile{0u};
 
     constexpr static Tile northWall     { 1u << 0u };
