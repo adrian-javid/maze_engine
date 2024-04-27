@@ -242,7 +242,9 @@ int main(int argc, char *argv[]) {
         for (auto const &vector : path0.value()) Global::pathTileSet0.insert(vector);
 
     auto const path1 = breadthFirstSearch(Global::maze1, {-1, -1}, {0, 2});
-    for (auto const &vector : path1.value()) Global::pathTileSet1.insert(vector);
+
+    if (path1)
+        for (auto const &vector : path1.value()) Global::pathTileSet1.insert(vector);
 
     // You couldn't have guessed that this creates the window and renderer.
     SDL_CreateWindowAndRenderer(
