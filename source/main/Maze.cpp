@@ -7,17 +7,16 @@
 
 auto Project::Maze::generate(unsigned int const seed) -> void {
     struct Wall {
-        Vector2 tileKey;
-        int identifier;
-        Maze::Direction type;
+        Vector2 const &tileKey;
+        int const identifier;
+        Maze::Direction const type;
     };
 
     int indentifierCount{0};
     std::vector<Wall> wallList;
 
-    // for (Vector2 const &tileKey : *this) {
-
-    // }
+    forEachTile([](Vector2 const &key, Tile const tile) {
+    });
 
     /*
     for key in maze:

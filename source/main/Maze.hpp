@@ -5,7 +5,6 @@
 
 #include <functional>
 #include <optional>
-#include <any>
 
 namespace Project { class Maze; }
 
