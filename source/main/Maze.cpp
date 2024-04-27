@@ -5,17 +5,18 @@
 #include <algorithm>
 #include <random>
 
-auto Project::Maze::generate(unsigned int const seed) -> void {
+auto Project::Maze::shuffle(unsigned int const seed) -> void {
+    int indentifierCount{0};
     struct Wall {
-        Vector2 const &tileKey;
-        int const identifier;
-        Maze::Direction const type;
+        Vector2 tileKey;
+        int identifier;
+        Maze::Direction type;
     };
 
-    int indentifierCount{0};
     std::vector<Wall> wallList;
-
-    forEachTile([](Vector2 const &key, Tile const tile) {
+    forEachTile([&wallList, &indentifierCount](Vector2 const &key, Tile const tile) {
+        // forEachValidDirection()
+        // wallList.push_back({key, indentifierCount++, Maze::Direction::west});
     });
 
     /*

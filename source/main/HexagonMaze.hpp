@@ -30,7 +30,7 @@ class Project::HexagonMaze : public Project::Maze {
 
     void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const override;
 
-    void forValidDirection(std::function<void(Direction)> const &) const override;
+    void forEachValidDirection(std::function<void(Direction)> const &) const override;
 
     void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &operate) const override;
 

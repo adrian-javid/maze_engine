@@ -41,7 +41,7 @@ class Project::SquareMaze : public Project::Maze {
 
     void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const override;
 
-    void forValidDirection(std::function<void(Direction)> const &) const override;
+    void forEachValidDirection(std::function<void(Direction)> const &) const override;
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 

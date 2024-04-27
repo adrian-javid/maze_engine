@@ -34,11 +34,11 @@ void SquareMaze::forEachTile(std::function<void(Vector2 const &, Tile const)> co
             forThisTile(key, table.at(getFlatIndex(key)));
 }
 
-void SquareMaze::forValidDirection(std::function<void(Direction)> const &operate) const {
-    operate(Direction::north);
-    operate(Direction::south);
-    operate(Direction::east );
-    operate(Direction::west );
+void SquareMaze::forEachValidDirection(std::function<void(Direction)> const &forThisDirection) const {
+    forThisDirection(Direction::north);
+    forThisDirection(Direction::south);
+    forThisDirection(Direction::east );
+    forThisDirection(Direction::west );
 }
 
 std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) const {

@@ -39,7 +39,7 @@ class Project::Maze {
 
     virtual void forEachTile(std::function<void(Vector2 const &, Tile const)> const &) const = 0;
 
-    virtual void forValidDirection(std::function<void(Direction)> const &) const = 0;
+    virtual void forEachValidDirection(std::function<void(Direction)> const &) const = 0;
 
     // virtual std::optional<Tile> query(Vector2 const &, Direction const) const = 0;
 
@@ -47,7 +47,7 @@ class Project::Maze {
 
     virtual void forNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &operate) const = 0;
 
-    void generate(unsigned int const seed);
+    void shuffle(unsigned int const seed);
 
     constexpr Maze() = default;
     constexpr Maze(Maze const &) = default;
