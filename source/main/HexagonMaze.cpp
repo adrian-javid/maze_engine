@@ -44,7 +44,7 @@ Vector2 HexagonMaze::wrapKey(Vector2 const &key) const {
     return safeKey;
 }
 
-HexagonMaze::HexagonMaze(int const setRadius):
+HexagonMaze::HexagonMaze(int const setRadius, Tile const tileFillValue):
     table(),
     mirrorCenterTable{
         calculateMirrorCenter(0, setRadius),
@@ -66,7 +66,7 @@ HexagonMaze::HexagonMaze(int const setRadius):
 
         for (int r = r1; r <= r2; ++r) {
             Vector2 const key(center + Vector2(q, r));
-            table.insert({key, Project::Maze::emptyTile});
+            table.insert({key, tileFillValue});
         }
     }
 }
