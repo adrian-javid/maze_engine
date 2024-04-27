@@ -15,12 +15,6 @@ namespace Project { struct Vector2; }
  * @brief Ordered pair of `int`. Can represent the identifier of a tile in a grid.
  */
 struct Project::Vector2 {
-
-    static Vector2 const squareNorth;
-    static Vector2 const squareSouth;
-    static Vector2 const squareEast;
-    static Vector2 const squareWest;
-
     static Vector2 const hexagonNorthwest;
     static Vector2 const hexagonNortheast;
     static Vector2 const hexagonEast;

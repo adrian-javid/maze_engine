@@ -4,11 +4,6 @@
 
 using Project::Vector2;
 
-Vector2 const Vector2::squareNorth(-1,  0);
-Vector2 const Vector2::squareSouth(+1,  0);
-Vector2 const Vector2::squareEast ( 0, +1);
-Vector2 const Vector2::squareWest ( 0, -1);
-
 Vector2 const Vector2::hexagonNorthwest( 0, -1);
 Vector2 const Vector2::hexagonNortheast(+1, -1);
 Vector2 const Vector2::hexagonEast     (+1,  0);

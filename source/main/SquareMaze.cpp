@@ -42,15 +42,15 @@ void SquareMaze::forEachPrincipalDirection(std::function<void(Direction const)> 
 auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> TileAdjacency {
     switch (direction) {
         case Direction::north:
-            return {wrapKey(key + Vector2::squareNorth), at(key) & north};
+            return {wrapKey(key + northOffset), at(key) & north};
         case Direction::east :
-            return {wrapKey(key + Vector2::squareEast), at(key) & east};
+            return {wrapKey(key + eastOffset), at(key) & east};
 
         case Direction::south:
-            key = wrapKey(key + Vector2::squareSouth);
+            key = wrapKey(key + southOffset);
             return {key, table.at(getFlatIndex(key)) & north};
         case Direction::west :
-            key = wrapKey(key + Vector2::squareWest);
+            key = wrapKey(key + westOffset);
             return {key, table.at(getFlatIndex(key)) & east};
 
         default:

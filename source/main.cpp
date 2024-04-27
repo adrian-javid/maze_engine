@@ -52,8 +52,8 @@ namespace Project::Global {static SquareMaze generateGrid(int rowCount, int colu
     maze.at(key={5, 5}) |= Maze::north | Maze::east;
 
     maze.at(key={-3, -3}) |= Maze::north | Maze::east;
-    maze.at(key + Vector2::squareSouth) |= Maze::north;
-    maze.at(key + Vector2::squareWest) |= Maze::east;
+    maze.at(key + SquareMaze::southOffset) |= Maze::north;
+    maze.at(key + SquareMaze::westOffset) |= Maze::east;
 
     maze.at({(maze.getRowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
     maze.at({1, fourthQuarter}) = SquareMaze::emptyTile;
