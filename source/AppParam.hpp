@@ -3,13 +3,18 @@
 
 #include <string>
 #include <unordered_map>
+#include <optional>
 
 namespace Project {
     struct AppParam {
         std::string const description;
         std::string argument;
-        std::unordered_map<std::string, std::string> const describeValue;
-        static std::unordered_map<std::string, AppParam> parseArgv(int const argc, char const *const *argv);
+        using Acceptable = std::unordered_map<std::string, std::string>;
+        std::optional<Acceptable> const acceptable;
+        static std::unordered_map<std::string, AppParam> const &parseArgv(int const argc, char const *const *const argv);
+
+        private:
+            static std::unordered_map<std::string, AppParam> config;
     };
 }
 
