@@ -13,6 +13,7 @@ namespace Project::Global {/*
 #include "SquareMaze.hpp"
 #include "HexagonMaze.hpp"
 #include "Util.hpp"
+#include "config.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -96,30 +97,27 @@ namespace Project::Global {static void refreshWindow() {
     SDL_RenderPresent(Media::renderer);
 }}
 
+namespace Project::Global {
+    [[noreturn]] void errOutLn(std::string const &message) {
+        std::cerr << message << '\n';
+        std::exit(EXIT_FAILURE);
+    }
+}
+
 int main(int const argc, char *argv[]) {
-    using namespace std::string_literals;
-
-    std::unordered_map<std::string, std::string> config {
-        {"search"s, "depth"s },
-        {"seed"s,   "0"s     },
-        {"grid"s,   "square"s},
-        {"size"s,   "5"s     },
-        {"wrap"s,   "false"s },
-    };
-
-    for (int argIndex{0}; argIndex < argc; ++argIndex) {
+    for (int argIndex{1}; argIndex < argc; ++argIndex) {
         std::string const arg(argv[argIndex]);
-        std::size_t const delimPos(arg.find("="s));
-        if (delimPos == std::string::npos) {
-            std::cout << "skip: " << arg << '\n';
-            continue;
-        }
-        config[arg.substr(0, delimPos)] = arg.substr(delimPos+1);
+
+        std::size_t const delimPos(arg.find("="));
+
+        if (delimPos == std::string::npos) Global::errOutLn("Invalid argument: " + arg);
+
+        Global::config[arg.substr(0, delimPos)].argument = arg.substr(delimPos+1);
     }
     std::cout << '\n';
 
-    for (auto const &[key, value] : config) {
-        std::cout << key << " = " << value << '\n';
+    for (auto const &[key, param] : Global::config) {
+        std::cout << key << " = " << param.argument << '\n';
     }
 
     std::exit(EXIT_SUCCESS);
