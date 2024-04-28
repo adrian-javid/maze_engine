@@ -16,7 +16,7 @@ namespace Project {
 
 template <typename Storage_T>
 std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
-    Maze const &grid,
+    Maze const &maze,
     Vector2 const &start,
     Vector2 const &end,
     std::function<void(Vector2 const &)> const process
@@ -48,7 +48,7 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
             return path;
         }
 
-        grid.forEachNeighbor(key, [&grid, &upTree, &key, &storage](Vector2 const &neighbor) {
+        maze.forEachNeighbor(key, [&maze, &upTree, &key, &storage](Vector2 const &neighbor) {
             if (upTree.find(neighbor) == upTree.end()) {
                 upTree.insert({neighbor, key});
                 storage.push(neighbor);

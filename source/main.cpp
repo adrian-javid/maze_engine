@@ -19,84 +19,14 @@ namespace Project::Global {/*
 #include <cassert>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
-
-#endif
-#if true
-static auto &o = std::cout;
-static constexpr char ln = '\n';
 #endif
 
 using namespace Project;
 
-namespace Project::Global {static SquareMaze generateGrid(int rowCount, int columnCount) {
-    SquareMaze maze(rowCount, columnCount);
-    int const secondQuarter = maze.getColumnCount() / 4;
-    int const fourthQuarter = secondQuarter * 3;
-    for (int row{0}; row < maze.getRowCount(); ++row) {
-        // maze.putWall(row, secondQuarter);
-        // maze.putWall(row, fourthQuarter);
-        
-        // maze.putWall(row, 0);
-        // maze.putWall(row, maze.getColumnCount() - 1);
-    }
-
-    struct OneMem {
-        std::uint_least8_t a;
-    };
-
-    sizeof(std::uint_least8_t);
-    sizeof(OneMem);
-
-    Vector2 key;
-
-    maze.at(key={5, 5}) |= Maze::north | Maze::east;
-
-    maze.at(key={-3, -3}) |= Maze::north | Maze::east;
-    maze.at(key + SquareMaze::southOffset) |= Maze::north;
-    maze.at(key + SquareMaze::westOffset) |= Maze::east;
-
-    maze.at({(maze.getRowCount() - 1) - 1, secondQuarter}) = SquareMaze::emptyTile;
-    maze.at({1, fourthQuarter}) = SquareMaze::emptyTile;
-
-    for (int offset = 0; offset < 8; ++offset) {
-        // maze.putWall(16, secondQuarter + offset);
-        // maze.putWall(3, fourthQuarter - offset);
-    }
-
-    maze.at({(maze.getRowCount() - 1) - 2, secondQuarter}) = SquareMaze::emptyTile;
-    maze.at({2, fourthQuarter}) = SquareMaze::emptyTile;
-
-    for (int col{0}; col < maze.getRowCount(); ++col) {
-        // maze.putWall(0, col);
-        // maze.putWall(maze.getColumnCount() - 1, col);
-    }
-
-    return maze;
-}}
-
 namespace Project::Global {
-    static SquareMaze maze0(20, 20, 0xFFu);
+    static SquareMaze maze0(35, 50, 0xFFu);
+    static HexagonMaze maze1(25, 0xFFu);
 
-    Vector2 const start0 = {0 + 1, 0 + 1};
-    Vector2 const end0 = {(maze0.getRowCount() - 1) - 1, (maze0.getColumnCount() - 1) - 1};
-
-    static HexagonMaze maze1(4, 0xFFu);
-    
-    auto const genMaze1 = []() -> HexagonMaze {
-        HexagonMaze maze(4);
-        auto const center = Vector2(0, 0);
-
-        maze.at(center) |= HexagonMaze::northeast;
-        maze.at(center + HexagonMaze::southwestOffset) |= HexagonMaze::northeast;
-
-        maze.at(center) |= HexagonMaze::east;
-        maze.at(center + HexagonMaze::westOffset) |= HexagonMaze::east;
-
-        maze.at(center) |= HexagonMaze::southeast;
-        maze.at(center + HexagonMaze::northwestOffset) |= HexagonMaze::southeast;
-
-        return maze;
-    }();
     static Vector2::HashSet pathTileSet0;
     static Vector2::HashSet pathTileSet1;
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
@@ -168,62 +98,6 @@ namespace Project::Global {static void refreshWindow() {
 int main(int argc, char *argv[]) {
     static_cast<void>(argc); static_cast<void>(argv);
 
-    #if false
-    o << sizeof(std::variant<
-        decltype(HexagonMaze().getTable().begin()),
-        decltype(SquareMaze().getTable().begin())
-    >) << ln;
-    o << sizeof(std::any) << ln;
-    o << typeid(void *).name() << ' ' << sizeof(void *) << ln;
-    o << sizeof(std::function<Vector2 const &(std::any const &)>) << ln;
-    o << sizeof(std::function<void()>) << ln;
-    o << sizeof(std::ptrdiff_t) << ln;
-    o << typeid(std::size_t).name() << ' ' << sizeof(std::size_t) << ln;
-    #endif
-
-    #if false
-    int const radius = 4;
-    float const width = 250.0f;
-    float const height = 150.0f;
-    SDL_FPoint const center{width / 2.0f, height / 2.0f};
-
-    // Radius of 0 draws 1 hexagon.
-    assert(radius >= 0);
-
-    int const diameter = radius + 1 + radius;
-    float const diameterValue = static_cast<float>(diameter);
-
-    float const hexagonWidth = width / diameterValue;
-
-    // For height, first hexagon counts as 1, other hexagons count as 3/4.
-    float const hexagonHeight = height / (1.0f + (3.0f * (diameterValue - 1.0f)) / 4.0f);
-
-    float const threeQuartersHexagonHeight = (3 * hexagonHeight) / 4;
-    float const halfHexagonWidth = hexagonWidth / 2;
-
-    for (int verticalIndex = 0; verticalIndex <= radius; ++verticalIndex) {
-        float const verticalIndexValue = static_cast<float>(verticalIndex);
-
-        float const topHexagonCenterY = center.y - verticalIndexValue * threeQuartersHexagonHeight;
-        float const bottomHexagonCenterY = center.y + verticalIndexValue * threeQuartersHexagonHeight;
-
-        float const horizontalOffset = verticalIndexValue * halfHexagonWidth;
-
-        o << "axis 2: " << -verticalIndex << ", " << verticalIndex << '\n';
-
-        for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
-            float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
-            o << "\taxis 1: "
-            << horizontalIndex - radius + verticalIndex
-            << ", " << horizontalIndex - radius
-            << '\n';
-        }
-    }
-
-    o << "done\n";
-    return EXIT_SUCCESS;
-    #endif
-
     // Mazify mazes.
     Global::maze0.shuffle(4);
     Global::maze1.shuffle(4);
@@ -241,18 +115,23 @@ int main(int argc, char *argv[]) {
     std::atexit(&Media::exitHandler);
 
     // Search for a path that solves the maze.
-    auto const path0 = depthFirstSearch(Global::maze0, Global::start0, Global::end0);
+    auto const path0 = depthFirstSearch(
+        Global::maze0,
+        {Global::maze0.getRowCount() / 2, Global::maze0.getColumnCount() / 2},
+        {-1, -1}
+    );
 
     // Save the path tiles.
     if (path0)
         for (auto const &vector : path0.value()) Global::pathTileSet0.insert(vector);
 
-    auto const path1 = breadthFirstSearch(Global::maze1, {-1, -1}, {0, 2});
+    auto const path1 = breadthFirstSearch(Global::maze1, {0, 0}, {
+        0, Global::maze1.getRadius()
+    });
 
     if (path1)
         for (auto const &vector : path1.value()) Global::pathTileSet1.insert(vector);
 
-    // You couldn't have guessed that this creates the window and renderer.
     SDL_CreateWindowAndRenderer(
         Media::windowWidth, Media::windowHeight,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
