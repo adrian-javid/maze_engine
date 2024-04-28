@@ -24,8 +24,8 @@ namespace Project::Global {/*
 using namespace Project;
 
 namespace Project::Global {
-    static SquareMaze maze0(25, 25, 0xFFu);
-    static HexagonMaze maze1(15, 0xFFu);
+    static SquareMaze maze0(20, 20, 0xFFu);
+    static HexagonMaze maze1(10, 0xFFu);
 
     static Vector2::HashSet pathTileSet0;
     static Vector2::HashSet pathTileSet1;
