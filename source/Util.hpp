@@ -64,6 +64,11 @@ namespace Project::Util {
         assert(percentage <= 1.0);
         return start * (1.0 - percentage) + end * percentage;
     }
+
+    inline [[noreturn]] void errOutLn(std::string const &message) {
+        std::cerr << message << '\n';
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 #endif
