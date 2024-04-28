@@ -1,6 +1,6 @@
 #include "config.hpp"
 
-std::unordered_map<std::string, Project::Global::Param> Project::Global::config {
+std::unordered_map<std::string, Project::Global::Param> Project::Global::config{
     {"search", {
         "Search algorithm.",
         "depth",

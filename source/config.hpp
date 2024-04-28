@@ -9,7 +9,6 @@ namespace Project::Global {
         std::string const description;
         std::string argument;
         std::unordered_map<std::string, std::string> const describeValue;
-        Param() = delete;
     };
 
     extern std::unordered_map<std::string, Param> config;
