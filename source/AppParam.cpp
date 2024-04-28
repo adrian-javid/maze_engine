@@ -1,6 +1,6 @@
-#include "config.hpp"
+#include "AppParam.hpp"
 
-std::unordered_map<std::string, Project::Global::Param> Project::Global::config{
+static std::unordered_map<std::string, Project::AppParam> createConfig() {return {
     {"search", {
         "Search algorithm.",
         "depth",
@@ -22,14 +22,15 @@ std::unordered_map<std::string, Project::Global::Param> Project::Global::config{
         }
     }},
     {"seed", {
-        "Integer value. Seed for random number generator used to generate mazes etc."
+        "Integer value. Seed for random number generator used to generate mazes etc.",
         "0",
     }},
     {"grid", {
-        "Grid type to use."
+        "Grid type to use.",
         "square",
         {
-            {"square", }
+            {"square", "Use square maze."},
+            {"hexagon", "Use hexagon maze."},
         }
     }},
     {"size", {
@@ -44,4 +45,10 @@ std::unordered_map<std::string, Project::Global::Param> Project::Global::config{
         ),
         "false",
     }},
-};
+};}
+
+auto Project::AppParam::parseArgv(int const argc, char const *const *argv) -> std::unordered_map<std::string, AppParam> {
+    auto config(createConfig());
+
+    return config;
+}
