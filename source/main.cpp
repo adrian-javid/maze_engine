@@ -17,6 +17,7 @@ namespace Project::Global {/*
 #include <algorithm>
 #include <iostream>
 #include <cassert>
+#include <random>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
@@ -95,8 +96,51 @@ namespace Project::Global {static void refreshWindow() {
     SDL_RenderPresent(Media::renderer);
 }}
 
-int main(int argc, char *argv[]) {
-    static_cast<void>(argc); static_cast<void>(argv);
+int main(int const argc, char *argv[]) {
+    using namespace std::string_literals;
+
+    std::unordered_map<std::string, std::string> config {
+        {"search"s, "depth"s },
+        {"seed"s,   "0"s     },
+        {"grid"s,   "square"s},
+        {"size"s,   "5"s     },
+        {"wrap"s,   "false"s },
+    };
+
+    for (int argIndex{0}; argIndex < argc; ++argIndex) {
+        std::string const arg(argv[argIndex]);
+        std::size_t const delimPos(arg.find("="s));
+        if (delimPos == std::string::npos) {
+            std::cout << "skip: " << arg << '\n';
+            continue;
+        }
+        config[arg.substr(0, delimPos)] = arg.substr(delimPos+1);
+    }
+    std::cout << '\n';
+
+    for (auto const &[key, value] : config) {
+        std::cout << key << " = " << value << '\n';
+    }
+
+    std::exit(EXIT_SUCCESS);
+
+    /*
+        Example:
+            ./solve_maze seed=1124134 search=breadth grid=hexagon wrap=true sound=true seed=1231
+
+        seed -> natural number
+
+        search -> string:
+            depth
+            breadth
+            dijkstra (alias for breadth)
+            a_star
+            greedy
+
+        grid -> string
+            hexagon
+            grid
+    */
 
     // Mazify mazes.
     Global::maze0.shuffle(4);
