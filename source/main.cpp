@@ -75,12 +75,12 @@ namespace Project::Global {static SquareMaze generateGrid(int rowCount, int colu
 }}
 
 namespace Project::Global {
-    static SquareMaze const maze0(20, 20, 0xFFu);
+    static SquareMaze maze0(20, 20, 0xFFu);
 
     Vector2 const start0 = {0 + 1, 0 + 1};
     Vector2 const end0 = {(maze0.getRowCount() - 1) - 1, (maze0.getColumnCount() - 1) - 1};
 
-    static HexagonMaze const maze1(4, 0xFFu);
+    static HexagonMaze maze1(4, 0xFFu);
     
     auto const genMaze1 = []() -> HexagonMaze {
         HexagonMaze maze(4);
@@ -223,6 +223,10 @@ int main(int argc, char *argv[]) {
     o << "done\n";
     return EXIT_SUCCESS;
     #endif
+
+    // Mazify mazes.
+    Global::maze0.shuffle(4);
+    Global::maze1.shuffle(4);
 
     // Initialize the Simple Directmedia Layer library.
     SDL_Init(SDL_INIT_VIDEO);
