@@ -24,8 +24,8 @@ namespace Project::Global {/*
 using namespace Project;
 
 namespace Project::Global {
-    static SquareMaze maze0(5, 5, 0xFFu);
-    static HexagonMaze maze1(5, 0xFFu);
+    static SquareMaze maze0(25, 25, 0xFFu);
+    static HexagonMaze maze1(15, 0xFFu);
 
     static Vector2::HashSet pathTileSet0;
     static Vector2::HashSet pathTileSet1;
@@ -124,19 +124,19 @@ int main(int argc, char *argv[]) {
     */
 
     // Search for a path that solves the maze.
-    auto const path0 = depthFirstSearch(
+    auto const path0 = breadthFirstSearch(
         Global::maze0,
         {Global::maze0.getRowCount() / 2, Global::maze0.getColumnCount() / 2}
         ,
-        {0, 0}
+        {Global::maze0.getRowCount() / 4, Global::maze0.getColumnCount() / 4}
     );
 
     // Save the path tiles.
     if (path0)
         for (auto const &vector : path0.value()) Global::pathTileSet0.insert(vector);
 
-    auto const path1 = breadthFirstSearch(Global::maze1, {0, 0}, {
-        0, Global::maze1.getRadius()
+    auto const path1 = depthFirstSearch(Global::maze1, {0, 0}, {
+        0, -Global::maze1.getRadius() / 2
     });
 
     if (path1)
