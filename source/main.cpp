@@ -24,8 +24,8 @@ namespace Project::Global {/*
 using namespace Project;
 
 namespace Project::Global {
-    static SquareMaze maze0(35, 50, 0xFFu);
-    static HexagonMaze maze1(25, 0xFFu);
+    static SquareMaze maze0(5, 5, 0xFFu);
+    static HexagonMaze maze1(5, 0xFFu);
 
     static Vector2::HashSet pathTileSet0;
     static Vector2::HashSet pathTileSet1;
@@ -114,11 +114,21 @@ int main(int argc, char *argv[]) {
     */
     std::atexit(&Media::exitHandler);
 
+
+    /*
+        @TODO How should I handle this?
+
+        If the start of the search is out of bounds, the start tile will not show as path.
+
+        If the end of the search is out of bounds, the algorithm can't find the path to it.
+    */
+
     // Search for a path that solves the maze.
     auto const path0 = depthFirstSearch(
         Global::maze0,
-        {Global::maze0.getRowCount() / 2, Global::maze0.getColumnCount() / 2},
-        {-1, -1}
+        {Global::maze0.getRowCount() / 2, Global::maze0.getColumnCount() / 2}
+        ,
+        {0, 0}
     );
 
     // Save the path tiles.
