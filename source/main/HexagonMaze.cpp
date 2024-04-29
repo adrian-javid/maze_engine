@@ -126,5 +126,5 @@ Vector2 const &HexagonMaze::getOffset(Direction const direction) const {
 }
 
 bool HexagonMaze::isInBounds(Vector2 const &key) const {
-    return Util::abs(key.value1) <= radius and Util::abs(key.value2) <= radius;
+    return table.find(key) != table.end();
 }
