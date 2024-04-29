@@ -39,8 +39,9 @@ namespace Project::Global {
 
 static void Project::Global::refreshWindow() {
     constexpr Media::HslaColor pathTileColor(0.0);
-    constexpr Media::HslaColor wallTileColor(240.0);
-    constexpr Media::HslaColor emptyTileColor(155.0);
+    constexpr Media::HslaColor wallColor(240.0);
+    constexpr Media::HslaColor markedTileColor(100.0);
+    constexpr Media::HslaColor unmarkedTileColor(155.0);
 
     constexpr double zeroPercent{0.0};
     static double percentage{zeroPercent};
@@ -62,29 +63,32 @@ static void Project::Global::refreshWindow() {
     };
 
     Media::ColorTriplet const pathTileColorTriplet = getColorTriplet(pathTileColor);
-    Media::ColorTriplet const wallTileColorTriplet = getColorTriplet(wallTileColor);
-    Media::ColorTriplet const emptyTileColorTriplet = getColorTriplet(emptyTileColor);
+    Media::ColorTriplet const wallColorTriplet = getColorTriplet(wallColor);
+    Media::ColorTriplet const markedTileColorTriplet = getColorTriplet(markedTileColor);
+    Media::ColorTriplet const unmarkedTileColorTriplet = getColorTriplet(unmarkedTileColor);
 
     float const windowWidthValue = static_cast<float>(Media::windowWidth);
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
-    auto const mainColorGetter = [&emptyTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
-        if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
+    auto const mainColorGetter = [&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
+        /**/ if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
             return pathTileColorTriplet;
+        else if (Global::markedTileSet.find(key) != Global::markedTileSet.end())
+            return markedTileColorTriplet;
         else
-            return emptyTileColorTriplet;
+            return unmarkedTileColorTriplet;
     };
 
     if (Global::maze == &Global::squareMaze) Media::drawSquareMaze(
         squareMaze,
         {0.0f, 0.0f},
         windowWidthValue, windowHeightValue,
-        mainColorGetter, wallTileColorTriplet
+        mainColorGetter, wallColorTriplet
     ); else if (Global::maze == &Global::hexagonMaze) Media::drawHexagonMaze(
         hexagonMaze,
         {windowWidthValue / 2.0f, windowHeightValue / 2.0f},
         windowWidthValue, windowHeightValue,
-        mainColorGetter, wallTileColorTriplet
+        mainColorGetter, wallColorTriplet
     ); else
         throw Global::maze;
 
@@ -137,7 +141,7 @@ int main(int const argc, char *argv[]) {
     ) {
         Global::pathTileSet.insert(edge->first);
     }
-    Global::pathTileSet.insert(Global::mazeStart);
+    Global::pathTileSet.insert(Global::mazeStart); // include corner
 
     if (path)
         for (Vector2 const &tileKey : path.value())
