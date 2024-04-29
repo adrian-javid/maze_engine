@@ -30,6 +30,8 @@ namespace Project::Global {/*
 using namespace Project;
 
 namespace Project::Global {
+    using namespace std::chrono_literals;
+
     static Maze *maze = nullptr;
     static SquareMaze squareMaze;
     static HexagonMaze hexagonMaze;
@@ -38,9 +40,9 @@ namespace Project::Global {
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
     static void refreshWindow();
 
+    std::chrono::milliseconds sleepTime = 0ms;
     static void delay() {
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(7ms);
+        std::this_thread::sleep_for(sleepTime);
     }
 
     static std::mutex tileInfoMutex;
@@ -112,8 +114,11 @@ int main(int const argc, char *argv[]) {
     auto const &config = AppParam::parseArgv(argc, argv);
 
     std::string const &gridType = config.at("grid").argument;
-
     int const mazeSize{AppParam::castArg<int>(config.at("size").argument)};
+    unsigned int const seed{AppParam::castArg<unsigned int>(config.at("seed").argument)};
+    std::string const &searchAlgorithmName = config.at("search").argument;
+    Global::sleepTime = std::chrono::milliseconds(AppParam::castArg<unsigned int>(config.at("delay").argument));
+
     int constexpr mazeFillValue{0xFFu};
 
     // Create maze object with grid type.
@@ -128,7 +133,6 @@ int main(int const argc, char *argv[]) {
     }
 
     // Generate the maze corridors.
-    unsigned int const seed{AppParam::castArg<unsigned int>(config.at("seed").argument)};
     Global::maze->generateCorridors(seed);
 
     static constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
@@ -141,7 +145,6 @@ int main(int const argc, char *argv[]) {
     };
 
     static std::function<Vector2::HashMap<Vector2>(void)> searchMaze = nullptr;
-    std::string const &searchAlgorithmName = config.at("search").argument;
 
     // Get the search algorithm.
     if (searchAlgorithmName == "depth") {

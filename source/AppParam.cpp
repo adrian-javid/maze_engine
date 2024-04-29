@@ -47,6 +47,11 @@ std::unordered_map<std::string, Project::AppParam> Project::AppParam::config{
             {"false", "Disable wrapping."}
         },
     }},
+    {"delay", {
+        "Unsigned integer value. Delay to add in milliseconds after accessing a tile in the maze.",
+        "15ms",
+        std::nullopt,
+    }},
 };
 
 auto Project::AppParam::parseArgv(int const argc, char const *const *const argv) -> std::unordered_map<std::string, AppParam> const & {
