@@ -15,8 +15,10 @@ namespace Project::Global {/*
 #include "Util.hpp"
 #include "AppParam.hpp"
 
-#include <algorithm>
 #include <thread>
+#include <mutex>
+
+#include <algorithm>
 #include <iostream>
 #include <cassert>
 #include <random>
@@ -32,10 +34,12 @@ namespace Project::Global {
     static HexagonMaze hexagonMaze;
     static Vector2 mazeStart(0, 0);
     static Vector2 mazeEnd(0, 0);
-    static Vector2::HashSet pathTileSet;
-    static Vector2::HashSet markedTileSet;
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
     static void refreshWindow();
+
+    static std::mutex tileInfoMutex;
+    static Vector2::HashSet pathTileSet;
+    static Vector2::HashSet markedTileSet;
 }
 
 static void Project::Global::refreshWindow() {
@@ -72,6 +76,7 @@ static void Project::Global::refreshWindow() {
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
     auto const mainColorGetter = [&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
+        std::lock_guard const lock(tileInfoMutex);
         if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
             return pathTileColorTriplet;
         else if (Global::markedTileSet.find(key) != Global::markedTileSet.end())
@@ -104,6 +109,7 @@ int main(int const argc, char *argv[]) {
     int const mazeSize{AppParam::castArg<int>(config.at("size").argument)};
     int constexpr mazeFillValue{0xFFu};
 
+    // Create maze object with grid type.
     if (gridType == "square") {
         Global::maze = &(Global::squareMaze = SquareMaze(mazeSize, mazeSize, mazeFillValue));
         Global::mazeEnd = {Global::squareMaze.getRowCount() / 2, Global::squareMaze.getColumnCount() / 2};
@@ -114,18 +120,22 @@ int main(int const argc, char *argv[]) {
         Util::errOutLn("Unable to resolve grid type from string: `" + gridType + "`.");
     }
 
+    // Generate the maze corridors.
     unsigned int const seed{AppParam::castArg<unsigned int>(config.at("seed").argument)};
-    Global::maze->shuffle(seed);
+    Global::maze->generateCorridors(seed);
 
-    std::string const &searchAlgorithmName = config.at("search").argument;
-
-    constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
-        Global::markedTileSet.insert(vertex);
+    static constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
+        /* lock */ {
+            std::lock_guard const lock(Global::tileInfoMutex);
+            Global::markedTileSet.insert(vertex);
+        }
         return vertex == Global::mazeEnd;
     };
 
     static std::function<Vector2::HashMap<Vector2>(void)> searchMaze = nullptr;
+    std::string const &searchAlgorithmName = config.at("search").argument;
 
+    // Get the search algorithm.
     if (searchAlgorithmName == "depth") {
         searchMaze = []() { return depthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
     } else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
@@ -133,8 +143,9 @@ int main(int const argc, char *argv[]) {
     } else {
         Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
+    assert(searchMaze != nullptr);
 
-    auto const solveMaze = []() -> void {
+    static constexpr auto solveMaze = []() -> void {
         // Search for end of maze.
         auto const upTree = searchMaze();
 
@@ -143,15 +154,16 @@ int main(int const argc, char *argv[]) {
             auto edge(upTree.find(Global::mazeEnd));
             edge->first /* child vertex */ != Global::mazeStart;
             edge = upTree.find(edge->second /* parent vertex */)
-        ) {
+        ) /* lock */ {
+            std::lock_guard const lock(Global::tileInfoMutex);
             Global::pathTileSet.insert(edge->first);
         }
-        Global::pathTileSet.insert(Global::mazeStart); // include corner
+
+        /* lock */ {
+            std::lock_guard const lock(Global::tileInfoMutex);
+            Global::pathTileSet.insert(Global::mazeStart); // include corner
+        }
     };
-
-    std::thread mazeSolver(solveMaze);
-
-    mazeSolver.join();
 
     #if true
     std::cout << "\n";
@@ -189,6 +201,9 @@ int main(int const argc, char *argv[]) {
 
     // Set the window refresher. This is called every iteration in the main loop.
     Media::windowRefresher = &Global::refreshWindow;
+
+    // Start worker thread.
+    std::thread const mazeSolver(solveMaze);
 
     // Start the main loop.
     #ifdef __EMSCRIPTEN__
