@@ -15,11 +15,9 @@ namespace Project {
      * 
      * @param grid Maze will search in.
      * @param start Location of tile to start search from.
-     * @param end Location of tile to search for.
-     * @return `std::optional<std::vector<Vector2>>`
      */
-    std::optional<std::vector<Vector2>> depthFirstSearch(
-        Maze const &maze, Vector2 const &start, Vector2 const &end, std::function<void(Vector2 const &)> const processor=nullptr
+    void depthFirstSearch(
+        Maze const &maze, Vector2 const &start, std::function<bool(Vector2 const &)> const processKey
     );
 }
 

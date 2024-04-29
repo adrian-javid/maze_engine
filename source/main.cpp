@@ -116,10 +116,14 @@ int main(int const argc, char *argv[]) {
 
     std::optional<std::vector<Vector2>> path;
 
+    constexpr auto const forThisVertex = [](Vector2 const &vertex) -> bool {
+        return {};
+    };
+
     if (searchAlgorithmName == "depth") {
-        path = depthFirstSearch(*Global::maze, mazeStart, mazeEnd);
+        depthFirstSearch(*Global::maze, mazeStart, forThisVertex);
     } else if (searchAlgorithmName == "breadth") {
-        path = breadthFirstSearch(*Global::maze, mazeStart, mazeEnd);
+        breadthFirstSearch(*Global::maze, mazeStart, forThisVertex);
     } else {
         Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }

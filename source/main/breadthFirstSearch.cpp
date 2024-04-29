@@ -3,8 +3,8 @@
 #include <queue>
 #include "simpleSearch.hpp"
 
-std::optional<std::vector<Project::Vector2>> Project::breadthFirstSearch(
-    Maze const &maze, Vector2 const &start, Vector2 const &end, std::function<void(Vector2 const &)> const processor
+void Project::breadthFirstSearch(
+    Maze const &maze, Vector2 const &start, std::function<bool(Vector2 const &)> const processKey
 ) {
-    return Project::simpleSearch<std::queue<Vector2>>(maze, start, end, processor);
+    return Project::simpleSearch<std::queue<Vector2>>(maze, start, processKey);
 }

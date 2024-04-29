@@ -7,19 +7,18 @@
 
 namespace Project {
     template <typename Storage_T>
-    std::optional<std::vector<Vector2>> simpleSearch(
-        Maze const &, Vector2 const &, Vector2 const &,
-        std::function<void(Vector2 const &)> const process=nullptr
+    void simpleSearch(
+        Maze const &maze,
+        Vector2 const &start,
+        std::function<bool(Vector2 const &)> const process=nullptr
     );
-
 }
 
 template <typename Storage_T>
-std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
+void Project::simpleSearch(
     Maze const &maze,
     Vector2 const &start,
-    Vector2 const &end,
-    std::function<void(Vector2 const &)> const process
+    std::function<bool(Vector2 const &)> const processKey
 ) {
     using namespace Project;
 
@@ -38,14 +37,14 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
         }();
         storage.pop();
 
-        if (process) process(key);
-        if (key == end) {
+        if (processKey) processKey(key);
+        if (key == Vector2{0, 4}) {
             std::vector<Vector2> path;
             for (auto iterator = upTree.find(key); iterator->first != start; iterator = upTree.find(iterator->second)) {
                 path.push_back(iterator->first);
             }
             path.push_back(start);
-            return path;
+            return;
         }
 
         maze.forEachNeighbor(key, [&maze, &upTree, &key, &storage](Vector2 const &neighbor) {
@@ -55,8 +54,6 @@ std::optional<std::vector<Project::Vector2>> Project::simpleSearch(
             }
         });
     }
-
-    return std::nullopt;
 }
 
 #endif
