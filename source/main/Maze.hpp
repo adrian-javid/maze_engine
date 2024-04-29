@@ -69,7 +69,7 @@ class Project::Maze {
 
     void forEachNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const &) const;
 
-    void shuffle(unsigned int const seed);
+    void generateCorridors(unsigned int const seed);
 
     constexpr Maze() = default;
     constexpr Maze(Maze const &) = default;
