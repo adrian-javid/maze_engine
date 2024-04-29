@@ -126,6 +126,7 @@ int main(int const argc, char *argv[]) {
     unsigned int const seed{AppParam::castArg<unsigned int>(config.at("seed").argument)};
     std::string const &searchAlgorithmName = config.at("search").argument;
     Global::sleepTime = std::chrono::milliseconds(AppParam::castArg<unsigned int>(config.at("delay").argument));
+    bool const mazeWrap = AppParam::castArg<bool>(config.at("wrap").argument);
 
     int constexpr mazeFillValue{0xFFu};
 
@@ -141,7 +142,7 @@ int main(int const argc, char *argv[]) {
     }
 
     // Generate the maze corridors.
-    Global::maze->generateCorridors(seed);
+    Global::maze->generate(seed, mazeWrap);
 
     static constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
         /* lock */ {
