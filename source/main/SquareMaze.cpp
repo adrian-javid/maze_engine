@@ -2,6 +2,8 @@
 
 using namespace Project;
 
+SquareMaze::SquareMaze(): SquareMaze(0, 0, emptyTile) {}
+
 SquareMaze::SquareMaze(int const rowCount, int const columnCount, Tile const tileFillValue):
     table([rowCount, columnCount]() constexpr -> std::size_t {
         if (rowCount < 0)

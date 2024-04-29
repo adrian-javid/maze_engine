@@ -36,6 +36,7 @@ class Project::SquareMaze : public Project::Maze {
 
   public:
 
+    explicit SquareMaze();
     explicit SquareMaze(int const rowCount, int const columnCount, Tile const tileFillValue=emptyTile);
     int getRowCount() const;
     int getColumnCount() const;
