@@ -22,7 +22,7 @@ void Project::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vecto
     });
 }
 
-auto Project::Maze::generateCorridors(unsigned int const seed, bool const wrap) -> void {
+auto Project::Maze::generate(unsigned int const seed, bool const wrap) -> void {
     UnionFinder::Identifier indentifierCount{0};
     Vector2::HashMap<UnionFinder::Identifier> identity;
 
