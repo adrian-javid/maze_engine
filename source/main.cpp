@@ -51,10 +51,10 @@ namespace Project::Global {
 }
 
 static void Project::Global::refreshWindow() {
-    constexpr Media::HslaColor markedTileColor(91.0, 1.0, 0.49);
+    constexpr Media::HslaColor startEndColor(91.0, 1.0, 0.49);
     constexpr Media::HslaColor pathTileColor(0.0);
     constexpr Media::HslaColor wallColor(240.0);
-    constexpr Media::HslaColor startEndColor(300.0);
+    constexpr Media::HslaColor markedTileColor(300.0);
     constexpr Media::HslaColor unmarkedTileColor(155.0);
 
     constexpr double zeroPercent{0.0};
