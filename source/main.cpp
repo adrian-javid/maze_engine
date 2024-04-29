@@ -40,7 +40,7 @@ namespace Project::Global {
 
     static void delay() {
         using namespace std::chrono_literals;
-        std::this_thread::sleep_for(100ms);
+        std::this_thread::sleep_for(5ms);
     }
 
     static std::mutex tileInfoMutex;
