@@ -21,6 +21,7 @@ std::unordered_map<std::string, Project::AppParam> Project::AppParam::config{
     {"seed", {
         "Integer value. Seeds the random number generation. This affects how the maze is generated.",
         "0",
+        std::nullopt
     }},
     {"grid", {
         "Grid type to use.",

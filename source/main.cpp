@@ -93,8 +93,7 @@ int main(int const argc, char *argv[]) {
 
     std::string const &gridType = config.at("grid").argument;
 
-    // int const mazeSize{AppParam::castArg<int>(config.at("size").argument)};
-    int const mazeSize{3};
+    int const mazeSize{AppParam::castArg<int>(config.at("size").argument)};
     int constexpr mazeFillValue{0xFFu};
 
     Vector2 mazeStart(0, 0);
@@ -110,10 +109,8 @@ int main(int const argc, char *argv[]) {
         Util::errOutLn("Unable to resolve grid type from string: `" + gridType + "`.");
     }
 
-    // unsigned int const seed{AppParam::castArg<unsigned int>(config.at("seed").argument)};
-    unsigned int const seed{0};
+    unsigned int const seed{AppParam::castArg<unsigned int>(config.at("seed").argument)};
     Global::maze->shuffle(seed);
-
 
     std::string const &searchAlgorithmName = config.at("search").argument;
 

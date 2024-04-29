@@ -36,7 +36,7 @@ namespace Project {
 
             T value{};
             if ((std::istringstream(arg) >> value).fail()) Util::errOutLn(
-                "Unable to convert `" + arg + "` to `" + getTypeName + "` value."
+                "Unable to convert `" + arg + "` to `" + getTypeName() + "` value."
             );
 
             return value;
