@@ -40,7 +40,7 @@ namespace Project::Global {
 
     static void delay() {
         using namespace std::chrono_literals;
-        std::this_thread::sleep_for(5ms);
+        std::this_thread::sleep_for(7ms);
     }
 
     static std::mutex tileInfoMutex;
@@ -82,6 +82,7 @@ static void Project::Global::refreshWindow() {
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
     auto const mainColorGetter = [&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
+        // TODO: Maybe use "try get lock" here to go faster?
         std::lock_guard const lock(tileInfoMutex);
         if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
             return pathTileColorTriplet;
