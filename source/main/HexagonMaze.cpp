@@ -110,3 +110,7 @@ auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const ->
             throw direction;
     }
 }
+
+bool HexagonMaze::isInBounds(Vector2 const &key) const {
+    return Util::abs(key.value1) <= radius and Util::abs(key.value2) <= radius;
+}

@@ -78,3 +78,10 @@ std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) 
 std::ostream &Project::operator<<(std::ostream &outputStream, SquareMaze const &squareGrid) {
     outputStream << squareGrid.toString(); return outputStream;
 }
+
+bool SquareMaze::isInBounds(Vector2 const &key) const {
+    return
+        0 <= key.value1 and key.value1 < rowCount and
+        0 <= key.value2 and key.value2 < columnCount
+    ;
+}
