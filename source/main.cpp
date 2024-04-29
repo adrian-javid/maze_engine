@@ -51,6 +51,7 @@ namespace Project::Global {
 }
 
 static void Project::Global::refreshWindow() {
+    constexpr Media::HslaColor startEndColor(330, 1.0, 0.40);
     constexpr Media::HslaColor pathTileColor(0.0);
     constexpr Media::HslaColor wallColor(240.0);
     constexpr Media::HslaColor markedTileColor(300.0);
@@ -79,11 +80,18 @@ static void Project::Global::refreshWindow() {
     Media::ColorTriplet const wallColorTriplet = getColorTriplet(wallColor);
     Media::ColorTriplet const markedTileColorTriplet = getColorTriplet(markedTileColor);
     Media::ColorTriplet const unmarkedTileColorTriplet = getColorTriplet(unmarkedTileColor);
+    Media::ColorTriplet const startEndColorTriplet = getColorTriplet(startEndColor);
 
     float const windowWidthValue = static_cast<float>(Media::windowWidth);
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
-    auto const mainColorGetter = [&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
+    auto const mainColorGetter = [
+        &markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
+        &startEndColorTriplet
+    ](Vector2 const &key) -> Media::ColorTriplet {
+        if (key == Global::mazeStart or key == Global::mazeEnd)
+            return startEndColorTriplet;
+
         // TODO: Maybe use "try get lock" here to go faster?
         std::lock_guard const lock(tileInfoMutex);
         if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
