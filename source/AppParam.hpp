@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <optional>
+#include "Util.hpp"
 
 namespace Project {
     struct AppParam {
@@ -18,11 +19,14 @@ namespace Project {
             constexpr auto getTypeName = []() constexpr -> std::string {
                 if constexpr (std::is_same_v<T, int>)
                     return "int";
+                else if constexpr (std::is_same_v<T, unsigned int>)
+                    return "unsigned int";
                 else if constexpr (std::is_same_v<T, bool>)
                     return "bool";
-                else
-                    static_assert(false, "Unsupported type.");
-            }
+                else {
+                    static_assert(std::is_same_v<T, int> || std::is_same_v<T, unsigned int> || std::is_same_v<T, bool>, "Unsupported type.");
+                }
+            };
 
             T value{};
             if ((std::istringstream(arg) >> value).fail()) Util::errOutLn(

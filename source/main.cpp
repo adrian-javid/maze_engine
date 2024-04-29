@@ -13,7 +13,7 @@ namespace Project::Global {/*
 #include "SquareMaze.hpp"
 #include "HexagonMaze.hpp"
 #include "Util.hpp"
-#include "config.hpp"
+#include "AppParam.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -26,20 +26,20 @@ namespace Project::Global {/*
 using namespace Project;
 
 namespace Project::Global {
-    static SquareMaze maze0(20, 20, 0xFFu);
-    static HexagonMaze maze1(10, 0xFFu);
-
-    static Vector2::HashSet pathTileSet0;
-    static Vector2::HashSet pathTileSet1;
+    static Maze *maze = nullptr;
+    static SquareMaze squareMaze;
+    static HexagonMaze hexagonMaze;
+    static Vector2::HashSet pathTileSet;
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
+    static void refreshWindow();
 }
 
-namespace Project::Global {static void refreshWindow() {
+static void Project::Global::refreshWindow() {
     constexpr Media::HslaColor pathTileColor(0.0);
     constexpr Media::HslaColor wallTileColor(240.0);
     constexpr Media::HslaColor emptyTileColor(155.0);
 
-    constexpr double zeroPercent{0.0};    
+    constexpr double zeroPercent{0.0};
     static double percentage{zeroPercent};
     double const deltaPercentage = static_cast<double>(Media::deltaTime) * 0.00010;
 
@@ -65,90 +65,86 @@ namespace Project::Global {static void refreshWindow() {
     float const windowWidthValue = static_cast<float>(Media::windowWidth);
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
-    Media::drawSquareMaze(
-        Global::maze0,
-        {0.0f, 0.0f},
-        windowWidthValue / 2.0f,
-        windowHeightValue,
-        [&emptyTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
-            if (Global::pathTileSet0.find(key) != Global::pathTileSet0.end())
-                return pathTileColorTriplet;
-
+    auto const mainColorGetter = [&emptyTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
+        if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
+            return pathTileColorTriplet;
+        else
             return emptyTileColorTriplet;
-        },
-        wallTileColorTriplet
-    );
+    };
 
-    Media::drawHexagonMaze(
-        maze1,
-        {3.0f * windowWidthValue / 4.0f, 1.0f * windowHeightValue / 2.0f},
-        windowWidthValue / 2.0f, windowHeightValue,
-        [
-            &pathTileColorTriplet, &emptyTileColorTriplet
-        ](Vector2 const &key) -> Media::ColorTriplet {
-            if (Global::pathTileSet1.find(key) != Global::pathTileSet1.end())
-                return pathTileColorTriplet;
-            else
-                return emptyTileColorTriplet;
-        },
-        wallTileColorTriplet
-    );
+    if (Global::maze == &Global::squareMaze) Media::drawSquareMaze(
+        squareMaze,
+        {0.0f, 0.0f},
+        windowWidthValue, windowHeightValue,
+        mainColorGetter, wallTileColorTriplet
+    ); else if (Global::maze == &Global::hexagonMaze) Media::drawHexagonMaze(
+        hexagonMaze,
+        {windowWidthValue / 2.0f, windowHeightValue / 2.0f},
+        windowWidthValue, windowHeightValue,
+        mainColorGetter, wallTileColorTriplet
+    ); else
+        throw Global::maze;
 
     SDL_RenderPresent(Media::renderer);
-}}
-
-namespace Project::Global {
-    [[noreturn]] void errOutLn(std::string const &message) {
-        std::cerr << message << '\n';
-        std::exit(EXIT_FAILURE);
-    }
 }
 
 int main(int const argc, char *argv[]) {
-    for (int argIndex{1}; argIndex < argc; ++argIndex) {
-        std::string const arg(argv[argIndex]);
+    auto const &config = AppParam::parseArgv(argc, argv);
 
-        std::size_t const delimPos(arg.find("="));
+    std::string const &gridType = config.at("grid").argument;
 
-        if (delimPos == std::string::npos) Global::errOutLn("Invalid argument: " + arg);
+    // int const mazeSize{AppParam::castArg<int>(config.at("size").argument)};
+    int const mazeSize{3};
+    int constexpr mazeFillValue{0xFFu};
 
-        Global::config[arg.substr(0, delimPos)].argument = arg.substr(delimPos+1);
+    Vector2 mazeStart(0, 0);
+    Vector2 mazeEnd(0, 0);
+
+    if (gridType == "square") {
+        Global::maze = &(Global::squareMaze = SquareMaze(mazeSize, mazeSize, mazeFillValue));
+        mazeEnd = {Global::squareMaze.getRowCount() / 2, Global::squareMaze.getColumnCount() / 2};
+    } else if (gridType == "hexagon") {
+        Global::maze = &(Global::hexagonMaze = HexagonMaze(mazeSize, mazeFillValue));
+        mazeStart.value2 = -Global::hexagonMaze.getRadius();
+    } else {
+        Util::errOutLn("Unable to resolve grid type from string: `" + gridType + "`.");
     }
-    std::cout << '\n';
 
-    for (auto const &[key, param] : Global::config) {
-        std::cout << key << " = " << param.argument << '\n';
+    // unsigned int const seed{AppParam::castArg<unsigned int>(config.at("seed").argument)};
+    unsigned int const seed{0};
+    Global::maze->shuffle(seed);
+
+
+    std::string const &searchAlgorithmName = config.at("search").argument;
+
+    std::optional<std::vector<Vector2>> path;
+
+    if (searchAlgorithmName == "depth") {
+        path = depthFirstSearch(*Global::maze, mazeStart, mazeEnd);
+    } else if (searchAlgorithmName == "breadth") {
+        path = breadthFirstSearch(*Global::maze, mazeStart, mazeEnd);
+    } else {
+        Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
 
-    std::exit(EXIT_SUCCESS);
+    if (path)
+        for (Vector2 const &tileKey : path.value())
+            Global::pathTileSet.insert(tileKey);
 
-    /*
-        Example:
-            ./solve_maze seed=1124134 search=breadth grid=hexagon wrap=true sound=true seed=1231
-
-        seed -> natural number
-
-        search -> string:
-            depth
-            breadth
-            dijkstra (alias for breadth)
-            a_star
-            greedy
-
-        grid -> string
-            hexagon
-            grid
-    */
-
-    // Mazify mazes.
-    Global::maze0.shuffle(4);
-    Global::maze1.shuffle(4);
+    #if true
+    std::cout << "\n";
+    for (auto const &[name, param] : config) {
+        std::cout << name << " : " << param.argument << '\n';
+    }
+    #endif
 
     // Initialize the Simple Directmedia Layer library.
     SDL_Init(SDL_INIT_VIDEO);
 
     // Register exit handler.
     /*
+        Note to self:
+
         I don't understand why
         calling this before `SDL_Init` causes a segmentation fault.
 
@@ -156,41 +152,13 @@ int main(int const argc, char *argv[]) {
     */
     std::atexit(&Media::exitHandler);
 
-
-    /*
-        @TODO How should I handle this?
-
-        If the start of the search is out of bounds, the start tile will not show as path.
-
-        If the end of the search is out of bounds, the algorithm can't find the path to it.
-    */
-
-    // Search for a path that solves the maze.
-    auto const path0 = breadthFirstSearch(
-        Global::maze0,
-        {Global::maze0.getRowCount() / 2, Global::maze0.getColumnCount() / 2}
-        ,
-        {Global::maze0.getRowCount() / 4, Global::maze0.getColumnCount() / 4}
-    );
-
-    // Save the path tiles.
-    if (path0)
-        for (auto const &vector : path0.value()) Global::pathTileSet0.insert(vector);
-
-    auto const path1 = depthFirstSearch(Global::maze1, {0, 0}, {
-        0, -Global::maze1.getRadius() / 2
-    });
-
-    if (path1)
-        for (auto const &vector : path1.value()) Global::pathTileSet1.insert(vector);
-
     SDL_CreateWindowAndRenderer(
         Media::windowWidth, Media::windowHeight,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
         &Media::window, &Media::renderer
     );
 
-    // Assert window and renderer were created.
+    // Assert window and renderer were successfully created.
     assert(Media::window != nullptr);
     assert(Media::renderer != nullptr);
 
@@ -202,6 +170,15 @@ int main(int const argc, char *argv[]) {
 
     // Start the main loop.
     #ifdef __EMSCRIPTEN__
+    /*
+        Note to self:
+
+        `simulate_infinite_loop` is `true`, so will not continue execution after this function ends.
+
+        "...if simulate_infinite_loop is false, and you created an object on the stack,
+        it will be cleaned up before the main loop is called for the first time.""
+        (https://emscripten.org/docs/api_reference/emscripten.h.html#id3)
+    */
     emscripten_set_main_loop(&Media::mainLoop, -1, true);
     #else
     while (true) Media::mainLoop();
