@@ -22,7 +22,7 @@ void Project::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vecto
     });
 }
 
-auto Project::Maze::generateCorridors(unsigned int const seed) -> void {
+auto Project::Maze::generateCorridors(unsigned int const seed, bool const wrap) -> void {
     UnionFinder::Identifier indentifierCount{0};
     Vector2::HashMap<UnionFinder::Identifier> identity;
 
@@ -33,9 +33,10 @@ auto Project::Maze::generateCorridors(unsigned int const seed) -> void {
 
     std::vector<Wall> wallList;
 
-    forEachKey([this, &wallList, &identity, &indentifierCount](Vector2 const &key) {
+    forEachKey([this, wrap, &wallList, &identity, &indentifierCount](Vector2 const &key) {
         identity.insert({key, indentifierCount++});
-        forEachPrincipalDirection([this, &wallList, &key](Direction const direction) {
+        forEachPrincipalDirection([this, wrap, &wallList, &key](Direction const direction) {
+            if (not wrap and not isInBounds(key + getOffset(direction))) return;
             if (checkAdjacent(key, direction).hasWall) wallList.push_back({key, direction});
         });
     });

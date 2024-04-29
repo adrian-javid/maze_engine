@@ -79,6 +79,18 @@ std::ostream &Project::operator<<(std::ostream &outputStream, SquareMaze const &
     outputStream << squareGrid.toString(); return outputStream;
 }
 
+Vector2 const &SquareMaze::getOffset(Direction const direction) const {
+    switch (direction) {
+        case Direction::north: return northOffset;
+        case Direction::east : return eastOffset;
+        case Direction::south: return southOffset;
+        case Direction::west : return westOffset;
+
+        default:
+            throw direction;
+    }
+}
+
 bool SquareMaze::isInBounds(Vector2 const &key) const {
     return
         0 <= key.value1 and key.value1 < rowCount and

@@ -67,11 +67,12 @@ class Project::Maze {
     };
     virtual TileAdjacency checkAdjacent(Vector2, Direction const) const = 0;
 
+    virtual Vector2 const &getOffset(Direction const direction) const = 0;
     virtual bool isInBounds(Vector2 const &key) const = 0;
 
     void forEachNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const &) const;
 
-    void generateCorridors(unsigned int const seed);
+    void generateCorridors(unsigned int const seed, bool const wrap=true);
 
     constexpr Maze() = default;
     constexpr Maze(Maze const &) = default;

@@ -41,6 +41,8 @@ class Project::HexagonMaze : public Project::Maze {
 
     TileAdjacency checkAdjacent(Vector2 key, Direction const direction) const override;
 
+    Vector2 const &getOffset(Direction const direction) const override;
+
     bool isInBounds(Vector2 const &key) const override;
 
     Vector2 wrapKey(Vector2 const &key) const;

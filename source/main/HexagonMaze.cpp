@@ -111,6 +111,20 @@ auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const ->
     }
 }
 
+Vector2 const &HexagonMaze::getOffset(Direction const direction) const {
+    switch (direction) {
+        case northeast: return northeastOffset;
+        case east     : return eastOffset;
+        case southeast: return southeastOffset;
+        case southwest: return southwestOffset;
+        case west     : return westOffset;
+        case northwest: return northwestOffset;
+
+        default:
+            throw direction;
+    }   
+}
+
 bool HexagonMaze::isInBounds(Vector2 const &key) const {
     return Util::abs(key.value1) <= radius and Util::abs(key.value2) <= radius;
 }

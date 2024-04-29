@@ -62,6 +62,8 @@ class Project::SquareMaze : public Project::Maze {
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
+    Vector2 const &getOffset(Direction const direction) const override;
+
     bool isInBounds(Vector2 const &key) const override;
 };
 
