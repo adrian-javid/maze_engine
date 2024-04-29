@@ -16,6 +16,7 @@ namespace Project::Global {/*
 #include "AppParam.hpp"
 
 #include <algorithm>
+#include <thread>
 #include <iostream>
 #include <cassert>
 #include <random>
@@ -71,7 +72,7 @@ static void Project::Global::refreshWindow() {
     float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
     auto const mainColorGetter = [&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet](Vector2 const &key) -> Media::ColorTriplet {
-        /**/ if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
+        if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
             return pathTileColorTriplet;
         else if (Global::markedTileSet.find(key) != Global::markedTileSet.end())
             return markedTileColorTriplet;
@@ -118,34 +119,39 @@ int main(int const argc, char *argv[]) {
 
     std::string const &searchAlgorithmName = config.at("search").argument;
 
-    std::optional<std::vector<Vector2>> path;
-    Vector2::HashMap<Vector2> upTree;
-
-    auto const processVertex = [](Vector2 const &vertex) -> bool {
+    constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
         Global::markedTileSet.insert(vertex);
         return vertex == Global::mazeEnd;
     };
 
+    static std::function<Vector2::HashMap<Vector2>(void)> searchMaze = nullptr;
+
     if (searchAlgorithmName == "depth") {
-        upTree = depthFirstSearch(*Global::maze, Global::mazeStart, processVertex);
+        searchMaze = []() { return depthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
     } else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
-        upTree = breadthFirstSearch(*Global::maze, Global::mazeStart, processVertex);
+        searchMaze = []() { return breadthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
     } else {
         Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
 
-    for (
-        auto edge(upTree.find(Global::mazeEnd));
-        edge->first /* child vertex */ != Global::mazeStart;
-        edge = upTree.find(edge->second /* parent vertex */)
-    ) {
-        Global::pathTileSet.insert(edge->first);
-    }
-    Global::pathTileSet.insert(Global::mazeStart); // include corner
+    auto const solveMaze = []() -> void {
+        // Search for end of maze.
+        auto const upTree = searchMaze();
 
-    if (path)
-        for (Vector2 const &tileKey : path.value())
-            Global::pathTileSet.insert(tileKey);
+        // Path tiles.
+        for (
+            auto edge(upTree.find(Global::mazeEnd));
+            edge->first /* child vertex */ != Global::mazeStart;
+            edge = upTree.find(edge->second /* parent vertex */)
+        ) {
+            Global::pathTileSet.insert(edge->first);
+        }
+        Global::pathTileSet.insert(Global::mazeStart); // include corner
+    };
+
+    std::thread mazeSolver(solveMaze);
+
+    mazeSolver.join();
 
     #if true
     std::cout << "\n";
