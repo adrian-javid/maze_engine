@@ -19,7 +19,7 @@ SDL_Color Media::makeRgbaColor(
 ) {
     assert(0 <= hue and hue < 360);
     assert(0 <= saturation and saturation <= 1);
-    assert(0 <= luminance and saturation <= 1);
+    assert(0 <= luminance and luminance <= 1);
     assert(0 <= alpha and alpha <= 1);
 
     auto const chroma = (1.0 - std::fabs(2.0 * luminance - 1.0)) * saturation;
