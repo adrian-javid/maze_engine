@@ -7,7 +7,7 @@
 
 namespace Project {
     template <typename Storage_T>
-    void simpleSearch(
+    Vector2::HashMap<Vector2> simpleSearch(
         Maze const &maze,
         Vector2 const &start,
         std::function<bool(Vector2 const &)> const process=nullptr
@@ -15,11 +15,11 @@ namespace Project {
 }
 
 template <typename Storage_T>
-void Project::simpleSearch(
+auto Project::simpleSearch(
     Maze const &maze,
     Vector2 const &start,
     std::function<bool(Vector2 const &)> const processKey
-) {
+) -> Vector2::HashMap<Vector2> {
     using namespace Project;
 
     Storage_T storage;
@@ -44,7 +44,7 @@ void Project::simpleSearch(
                 path.push_back(iterator->first);
             }
             path.push_back(start);
-            return;
+            return upTree;
         }
 
         maze.forEachNeighbor(key, [&maze, &upTree, &key, &storage](Vector2 const &neighbor) {
@@ -54,6 +54,8 @@ void Project::simpleSearch(
             }
         });
     }
+
+    return upTree;
 }
 
 #endif

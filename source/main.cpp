@@ -115,15 +115,16 @@ int main(int const argc, char *argv[]) {
     std::string const &searchAlgorithmName = config.at("search").argument;
 
     std::optional<std::vector<Vector2>> path;
+    Vector2::HashMap<Vector2> upTree;
 
-    constexpr auto const forThisVertex = [](Vector2 const &vertex) -> bool {
-        return {};
+    constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
+        return false;
     };
 
     if (searchAlgorithmName == "depth") {
-        depthFirstSearch(*Global::maze, mazeStart, forThisVertex);
+        depthFirstSearch(*Global::maze, mazeStart, processVertex);
     } else if (searchAlgorithmName == "breadth") {
-        breadthFirstSearch(*Global::maze, mazeStart, forThisVertex);
+        breadthFirstSearch(*Global::maze, mazeStart, processVertex);
     } else {
         Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
