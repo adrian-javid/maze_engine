@@ -133,10 +133,14 @@ int main(int const argc, char *argv[]) {
     // Create maze object with grid type.
     if (gridType == "square") {
         Global::maze = &(Global::squareMaze = SquareMaze(mazeSize, mazeSize, mazeFillValue));
-        Global::mazeEnd = {Global::squareMaze.getRowCount() / 2, Global::squareMaze.getColumnCount() / 2};
+        if (mazeWrap)
+            Global::mazeEnd = {Global::squareMaze.getRowCount() / 2, Global::squareMaze.getColumnCount() / 2};
+        else
+            Global::mazeEnd = {Global::squareMaze.getRowCount() - 1, Global::squareMaze.getColumnCount() - 1};
     } else if (gridType == "hexagon") {
         Global::maze = &(Global::hexagonMaze = HexagonMaze(mazeSize, mazeFillValue));
         Global::mazeStart.value2 = -Global::hexagonMaze.getRadius();
+        if (not mazeWrap) Global::mazeEnd.value2 = Global::hexagonMaze.getRadius();
     } else {
         Util::errOutLn("Unable to resolve grid type from string: `" + gridType + "`.");
     }
