@@ -17,6 +17,7 @@ namespace Project::Global {/*
 
 #include <thread>
 #include <mutex>
+#include <chrono>
 
 #include <algorithm>
 #include <iostream>
@@ -36,6 +37,11 @@ namespace Project::Global {
     static Vector2 mazeEnd(0, 0);
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
     static void refreshWindow();
+
+    static void delay() {
+        using namespace std::chrono_literals;
+        std::this_thread::sleep_for(100ms);
+    }
 
     static std::mutex tileInfoMutex;
     static Vector2::HashSet pathTileSet;
@@ -129,6 +135,7 @@ int main(int const argc, char *argv[]) {
             std::lock_guard const lock(Global::tileInfoMutex);
             Global::markedTileSet.insert(vertex);
         }
+        Global::delay();
         return vertex == Global::mazeEnd;
     };
 
@@ -154,9 +161,12 @@ int main(int const argc, char *argv[]) {
             auto edge(upTree.find(Global::mazeEnd));
             edge->first /* child vertex */ != Global::mazeStart;
             edge = upTree.find(edge->second /* parent vertex */)
-        ) /* lock */ {
-            std::lock_guard const lock(Global::tileInfoMutex);
-            Global::pathTileSet.insert(edge->first);
+        ) {
+            /* lock */ {
+                std::lock_guard const lock(Global::tileInfoMutex);
+                Global::pathTileSet.insert(edge->first);
+            }
+            Global::delay();
         }
 
         /* lock */ {
