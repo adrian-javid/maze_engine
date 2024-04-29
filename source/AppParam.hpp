@@ -16,6 +16,13 @@ namespace Project {
 
         template<typename T>
         static T castArg(std::string const &arg) {
+            static_assert(
+                std::is_same_v<T, int> or
+                std::is_same_v<T, unsigned int> or
+                std::is_same_v<T, bool>,
+                "Unsupported type."
+            );
+            
             constexpr auto getTypeName = []() constexpr -> std::string {
                 if constexpr (std::is_same_v<T, int>)
                     return "int";
@@ -23,9 +30,8 @@ namespace Project {
                     return "unsigned int";
                 else if constexpr (std::is_same_v<T, bool>)
                     return "bool";
-                else {
-                    static_assert(std::is_same_v<T, int> || std::is_same_v<T, unsigned int> || std::is_same_v<T, bool>, "Unsupported type.");
-                }
+                else
+                    return "";
             };
 
             T value{};
