@@ -55,7 +55,7 @@ static void Project::Global::refreshWindow() {
     percentage = Global::percentageWrap(percentage + deltaPercentage);
     assert(percentage >= 0.0); assert(percentage < 1.0);
 
-    constexpr double hueDepth{45.0 + 5.0};
+    constexpr double hueDepth{45.0 + 5.0 + 5.0};
     constexpr auto getColorTriplet = [](Media::HslaColor const &tileColor) -> Media::ColorTriplet {
         constexpr auto getCyclicHue = [](double const hue, double const percentageAddend) -> double {
             return Media::HslaColor::getCyclicHue(hue, Global::percentageWrap(percentage + percentageAddend), hueDepth);
