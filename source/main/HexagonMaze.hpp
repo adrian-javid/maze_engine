@@ -24,7 +24,7 @@ class Project::HexagonMaze : public Project::Maze {
     static Vector2 constexpr southwestOffset{-1, +1};
     static Vector2 constexpr westOffset     {-1,  0};
 
-    explicit HexagonMaze(int const radiusValue, Tile const tileFillValue=emptyTile);
+    explicit HexagonMaze(int const radiusValue=0, Tile const tileFillValue=emptyTile);
 
     constexpr int getRadius() const { return radius; }
 
