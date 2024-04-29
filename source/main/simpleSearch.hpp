@@ -37,15 +37,7 @@ auto Project::simpleSearch(
         }();
         storage.pop();
 
-        if (processKey) processKey(key);
-        if (key == Vector2{0, 4}) {
-            std::vector<Vector2> path;
-            for (auto iterator = upTree.find(key); iterator->first != start; iterator = upTree.find(iterator->second)) {
-                path.push_back(iterator->first);
-            }
-            path.push_back(start);
-            return upTree;
-        }
+        if (processKey) if (processKey(key)) break;
 
         maze.forEachNeighbor(key, [&maze, &upTree, &key, &storage](Vector2 const &neighbor) {
             if (upTree.find(neighbor) == upTree.end()) {
