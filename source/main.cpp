@@ -40,7 +40,7 @@ namespace Project::Global {
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
     static void refreshWindow();
 
-    std::chrono::milliseconds sleepTime = 0ms;
+    static std::chrono::milliseconds sleepTime = 0ms;
     static void delay() {
         std::this_thread::sleep_for(sleepTime);
     }
@@ -51,7 +51,7 @@ namespace Project::Global {
 }
 
 static void Project::Global::refreshWindow() {
-    constexpr Media::HslaColor startEndColor(330, 1.0, 0.40);
+    constexpr Media::HslaColor startEndColor(90.0, 1.0, 0.57);
     constexpr Media::HslaColor pathTileColor(0.0);
     constexpr Media::HslaColor wallColor(240.0);
     constexpr Media::HslaColor markedTileColor(300.0);
