@@ -29,7 +29,10 @@ namespace Project::Global {
     static Maze *maze = nullptr;
     static SquareMaze squareMaze;
     static HexagonMaze hexagonMaze;
+    static Vector2 mazeStart(0, 0);
+    static Vector2 mazeEnd(0, 0);
     static Vector2::HashSet pathTileSet;
+    static Vector2::HashSet markedTileSet;
     static double percentageWrap(double const value) { return Util::wrapValue(value, 1.00); }
     static void refreshWindow();
 }
@@ -96,15 +99,12 @@ int main(int const argc, char *argv[]) {
     int const mazeSize{AppParam::castArg<int>(config.at("size").argument)};
     int constexpr mazeFillValue{0xFFu};
 
-    Vector2 mazeStart(0, 0);
-    Vector2 mazeEnd(0, 0);
-
     if (gridType == "square") {
         Global::maze = &(Global::squareMaze = SquareMaze(mazeSize, mazeSize, mazeFillValue));
-        mazeEnd = {Global::squareMaze.getRowCount() / 2, Global::squareMaze.getColumnCount() / 2};
+        Global::mazeEnd = {Global::squareMaze.getRowCount() / 2, Global::squareMaze.getColumnCount() / 2};
     } else if (gridType == "hexagon") {
         Global::maze = &(Global::hexagonMaze = HexagonMaze(mazeSize, mazeFillValue));
-        mazeStart.value2 = -Global::hexagonMaze.getRadius();
+        Global::mazeStart.value2 = -Global::hexagonMaze.getRadius();
     } else {
         Util::errOutLn("Unable to resolve grid type from string: `" + gridType + "`.");
     }
@@ -117,17 +117,27 @@ int main(int const argc, char *argv[]) {
     std::optional<std::vector<Vector2>> path;
     Vector2::HashMap<Vector2> upTree;
 
-    constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
-        return false;
+    auto const processVertex = [](Vector2 const &vertex) -> bool {
+        Global::markedTileSet.insert(vertex);
+        return vertex == Global::mazeEnd;
     };
 
     if (searchAlgorithmName == "depth") {
-        depthFirstSearch(*Global::maze, mazeStart, processVertex);
-    } else if (searchAlgorithmName == "breadth") {
-        breadthFirstSearch(*Global::maze, mazeStart, processVertex);
+        upTree = depthFirstSearch(*Global::maze, Global::mazeStart, processVertex);
+    } else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
+        upTree = breadthFirstSearch(*Global::maze, Global::mazeStart, processVertex);
     } else {
         Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
+
+    for (
+        auto edge(upTree.find(Global::mazeEnd));
+        edge->first /* child vertex */ != Global::mazeStart;
+        edge = upTree.find(edge->second /* parent vertex */)
+    ) {
+        Global::pathTileSet.insert(edge->first);
+    }
+    Global::pathTileSet.insert(Global::mazeStart);
 
     if (path)
         for (Vector2 const &tileKey : path.value())
