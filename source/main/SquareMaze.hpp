@@ -62,7 +62,7 @@ class Project::SquareMaze : public Project::Maze {
 
     std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
-    bool isInBounds(Vector2 const &key) const;
+    bool isInBounds(Vector2 const &key) const override;
 };
 
 #endif
