@@ -26,7 +26,7 @@ namespace Project {
                 "Unsupported type."
             );
 
-            constexpr auto getTypeName = []() constexpr -> std::string {
+            constexpr auto getTypeName = []() -> std::string {
                 if constexpr (std::is_same_v<T, int>)
                     return "int";
                 else if constexpr (std::is_same_v<T, unsigned int>)
@@ -48,7 +48,7 @@ namespace Project {
 
         static std::string validParametersStr(bool const verbose=false);
 
-        static std::string acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues, std::string const prefix="\t");
+        static std::string acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues);
 
         private:
             static std::unordered_map<std::string, AppParamInfo> config;

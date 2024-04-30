@@ -66,7 +66,7 @@ std::string Project::AppParamInfo::validParametersStr(bool const verbose) {
         return stream.str();
 }
 
-std::string Project::AppParamInfo::acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues, std::string const prefix) {
+std::string Project::AppParamInfo::acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues) {
     std::ostringstream stream;
     for (auto const &[value, description] : acceptableValues) {
         stream << "\t\t`" << value << "`: " << description << '\n';
