@@ -31,13 +31,12 @@ auto Project::aStarSearch(
 
         maze.forEachNeighbor(vertex.key, [&vertex, &costMap, &frontier, &upTree, &maze, &end](Vector2 const &neighbor) {
             int const derivedCost{costMap.at(vertex.key) + /* cost to move adjacent */1};
-            auto const costIter(costMap.find(neighbor));
 
-            if (costIter == costMap.end() or derivedCost < costIter->second) {
-                costIter->second = derivedCost;
+            if (costMap.find(neighbor) == costMap.end() or derivedCost < costMap.at(neighbor)) {
+                costMap.insert({neighbor, derivedCost});
                 int priority{derivedCost + /* heuristic */maze.length(neighbor - end)};
-                frontier.push({vertex.key, priority});
-                upTree[neighbor] = vertex.key;
+                frontier.push({neighbor, priority});
+                upTree.insert({neighbor, vertex.key});
             }
         });
     }
