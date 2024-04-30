@@ -23,7 +23,6 @@ namespace Project::Global {/*
 #include <chrono>
 
 #include <algorithm>
-#include <iostream>
 #include <cassert>
 #include <random>
 #ifdef __EMSCRIPTEN__
@@ -150,7 +149,9 @@ int main(int const argc, char *argv[]) {
     // Generate the maze corridors.
     Global::maze->generate(seed, mazeWrap);
 
+    static std::size_t exploredCount{0u};
     static constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
+        ++exploredCount;
         /* lock */ {
             std::lock_guard const lock(Global::tileInfoMutex);
             Global::markedTileSet.insert(vertex);
@@ -175,6 +176,7 @@ int main(int const argc, char *argv[]) {
     }
     assert(searchMaze != nullptr);
 
+    static std::size_t pathLength{0u};
     static constexpr auto solveMaze = []() -> void {
         // Search for end of maze.
         auto const upTree = searchMaze();
@@ -185,6 +187,7 @@ int main(int const argc, char *argv[]) {
             edge->first /* child vertex */ != Global::mazeStart;
             edge = upTree.find(edge->second /* parent vertex */)
         ) {
+            ++pathLength;
             /* lock */ {
                 std::lock_guard const lock(Global::tileInfoMutex);
                 Global::pathTileSet.insert(edge->first);
@@ -192,18 +195,24 @@ int main(int const argc, char *argv[]) {
             Global::delay();
         }
 
+        ++pathLength;
         /* lock */ {
             std::lock_guard const lock(Global::tileInfoMutex);
             Global::pathTileSet.insert(Global::mazeStart); // include corner
         }
+
+        Util::synchronizedPrint((std::ostringstream()
+            << "Explored count: " << exploredCount << '\n'
+            << "Path length: " << pathLength << '\n'
+        ).str(), '\0');
     };
 
-    #if true
-    std::cout << "\n";
+    std::ostringstream outputStream;
     for (auto const &[name, param] : config) {
-        std::cout << name << " : " << param.argument << '\n';
+        outputStream.str(std::string());
+        outputStream << name << ": " << param.argument << '\n';
+        Util::synchronizedPrint(outputStream.str(), '\0');
     }
-    #endif
 
     // Initialize the Simple Directmedia Layer library.
     SDL_Init(SDL_INIT_VIDEO);
