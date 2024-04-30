@@ -8,12 +8,12 @@
 #include <sstream>
 
 namespace Project {
-    struct AppParam {
+    struct AppParamInfo {
         std::string const description;
         std::string argument;
         using Acceptable = std::unordered_map<std::string, std::string>;
         std::optional<Acceptable> const acceptable;
-        static std::unordered_map<std::string, AppParam> const &parseArgv(int const argc, char const *const *const argv);
+        static std::unordered_map<std::string, AppParamInfo> const &parseArgv(int const argc, char const *const *const argv);
 
         static constexpr char helpTipString[] = "Run with `help` for information about this program.";
 
@@ -46,8 +46,12 @@ namespace Project {
             return value;
         }
 
+        static std::string validParametersStr(bool const verbose=false);
+
+        static std::string acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues, std::string const prefix="\t");
+
         private:
-            static std::unordered_map<std::string, AppParam> config;
+            static std::unordered_map<std::string, AppParamInfo> config;
     };
 }
 

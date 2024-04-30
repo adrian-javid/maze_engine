@@ -1,10 +1,10 @@
 #include "AppParam.hpp"
 #include <sstream>
 
-std::unordered_map<std::string, Project::AppParam> Project::AppParam::config{
+std::unordered_map<std::string, Project::AppParamInfo> Project::AppParamInfo::config{
     {"search", {
         "Search algorithm.",
-        "dijkstra",
+        "depth",
         Acceptable{
             {"depth", "Depth-first search."},
             {"breadth", "Breadth-first search."},
@@ -48,13 +48,50 @@ std::unordered_map<std::string, Project::AppParam> Project::AppParam::config{
         },
     }},
     {"delay", {
-        "Unsigned integer value. Delay to add in milliseconds after accessing a tile in the maze.",
+        "Unsigned integer value. Delay to add in milliseconds after accessing a tile in the maze. ",
         "15",
         std::nullopt,
     }},
 };
 
-auto Project::AppParam::parseArgv(int const argc, char const *const *const argv) -> std::unordered_map<std::string, AppParam> const & {
+std::string Project::AppParamInfo::validParametersStr(bool const verbose) {
+        std::ostringstream stream;
+        for (auto const &[paramName, info] : config) {
+            stream << "\t`" << paramName << "`: " << info.description;
+            if (verbose) stream << "\n\tdefault value: `" << info.argument << '`';
+            stream << '\n';
+            if (verbose and info.acceptable) stream << "\tAcceptable values:\n" << acceptableValuesStr(info.acceptable.value());
+            else stream << '\n';
+        }
+        return stream.str();
+}
+
+std::string Project::AppParamInfo::acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues, std::string const prefix) {
+    std::ostringstream stream;
+    for (auto const &[value, description] : acceptableValues) {
+        stream << "\t\t`" << value << "`: " << description << '\n';
+    }
+
+    stream << '\n';
+
+    return stream.str();
+}
+
+auto Project::AppParamInfo::parseArgv(int const argc, char const *const *const argv) -> std::unordered_map<std::string, AppParamInfo> const & {
+    // Check for "help".
+    for (int argIndex{1}; argIndex < argc; ++argIndex) {
+        if (std::string(argv[argIndex]) == "help") {
+            std::cout <<
+            "This program generates mazes, then solves them using a chosen algorithm.\n"
+            "It opens a window with a view of the algorithm solving the maze in real time.\n"
+            "Parameters are set using their name and a value after `=`. For example, `search=dijkstra`.\n\n" <<
+            "Parameters:\n" <<
+            validParametersStr(true) <<
+            "Run without `help` to generate and solve mazes.\n";
+            std::exit(EXIT_SUCCESS);
+        }
+    }
+
     for (int argIndex{1}; argIndex < argc; ++argIndex) {
         std::string const arg(argv[argIndex]);
 
@@ -80,19 +117,14 @@ auto Project::AppParam::parseArgv(int const argc, char const *const *const argv)
             }() + "\n" + helpTipString
         );
 
-        AppParam &param = paramPtr->second;
+        AppParamInfo &param = paramPtr->second;
         param.argument = arg.substr(delimPos + 1);
 
         if (not param.acceptable) continue;
 
         if (param.acceptable.value().find(param.argument) == param.acceptable.value().end()) Util::errOut(
             "Unnacceptable value `" + param.argument + "` for parameter `" + paramName + "`.\n"
-            "Acceptable values:\n" + [&param]() -> std::string {
-                std::ostringstream stream;
-                for (auto const &[value, description] : param.acceptable.value())
-                    stream << '\t' << value << ": " << description << '\n';
-                return stream.str();
-            }() + "\n" + helpTipString
+            "Acceptable values:\n" + acceptableValuesStr(param.acceptable.value()) + "\n" + helpTipString
         );
     }
 
