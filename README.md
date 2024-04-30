@@ -1,15 +1,29 @@
 # Maze Solver
 It is a program that solves mazes.
 
+It generates a maze based on a seed, then displays a window displaying a specified search algorithm solving the maze in real time.
+
 ## Running
 
-...
+The executable is in the `build` directory.
+
+Run with `help` to see the program's parameters.
+
+```PowerShell
+.\build\Windows\main\solve_maze.exe help
+```
+
+```bash
+./build/Linux/main/solve_maze help
+```
 
 ## Building
 
 To build, you need to [install the neccessary dependencies for your platform](#dependencies).
 
 Run `scons` on the command-line in the root of the porject to build the executable in the generated `build` directory, regardless of the platform.
+
+> Note: the WebAssembly `web` target is currently unsupported.
 
 ## Dependencies
 
