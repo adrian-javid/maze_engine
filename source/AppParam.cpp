@@ -4,7 +4,7 @@
 std::unordered_map<std::string, Project::AppParam> Project::AppParam::config{
     {"search", {
         "Search algorithm.",
-        "depth",
+        "dijkstra",
         Acceptable{
             {"depth", "Depth-first search."},
             {"breadth", "Breadth-first search."},
@@ -49,7 +49,7 @@ std::unordered_map<std::string, Project::AppParam> Project::AppParam::config{
     }},
     {"delay", {
         "Unsigned integer value. Delay to add in milliseconds after accessing a tile in the maze.",
-        "15ms",
+        "15",
         std::nullopt,
     }},
 };
