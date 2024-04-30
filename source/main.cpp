@@ -95,7 +95,6 @@ static void Project::Global::refreshWindow() {
         if (key == Global::mazeStart or key == Global::mazeEnd)
             return startEndColorTriplet;
 
-        // TODO: Maybe use "try get lock" here to go faster?
         std::lock_guard const lock(tileInfoMutex);
         if (Global::pathTileSet.find(key) != Global::pathTileSet.end())
             return pathTileColorTriplet;
