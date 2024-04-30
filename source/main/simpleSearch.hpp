@@ -4,6 +4,7 @@
 #include <optional>
 #include <type_traits>
 #include <stack>
+#include <queue>
 
 namespace Project {
     template <typename Storage_T>
@@ -32,8 +33,10 @@ auto Project::simpleSearch(
         Vector2 const key = [&storage]() constexpr -> Vector2 const & {
             if constexpr (std::is_same_v<Storage_T, std::stack<Vector2>>)
                 return storage.top();
-            else
+            else if constexpr (std::is_same_v<Storage_T, std::queue<Vector2>>)
                 return storage.front();
+            else /* other, such as priority queue */
+                return storage.top();
         }();
         storage.pop();
 
