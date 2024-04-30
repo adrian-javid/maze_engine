@@ -67,9 +67,13 @@ namespace Project::Util {
         return start * (1.0 - percentage) + end * percentage;
     }
 
+    inline void print(std::string const &message, char const end='\n') {
+        std::cout << message << end;
+    }
+
     [[noreturn]]
-    inline void errOutLn(std::string const &message) {
-        std::cerr << message << '\n';
+    inline void errOut(std::string const &message, char const end='\n') {
+        std::cerr << message << end;
         std::exit(EXIT_FAILURE);
     }
 }
