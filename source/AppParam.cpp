@@ -61,8 +61,9 @@ auto Project::AppParam::parseArgv(int const argc, char const *const *const argv)
         std::size_t const delimPos(arg.find("="));
 
         if (delimPos == std::string::npos) Util::errOut(
-            "Parameter with no value: \"" + arg + "\". Please specify value after `=`.\n"
-            "Example: `" + arg + "=value" + "`."
+            "Parameter with no value: \"" + arg + "\". Please specify value after `=`.\n" +
+            "Example: `" + arg + "=value" + "`.\n\n" +
+            helpTipString
         );
 
         std::string const paramName = arg.substr(0u, delimPos);
@@ -76,7 +77,7 @@ auto Project::AppParam::parseArgv(int const argc, char const *const *const argv)
                     stream << '\t' << paramName << ": " << info.description << '\n';
                 }
                 return stream.str();
-            }()
+            }() + "\n" + helpTipString
         );
 
         AppParam &param = paramPtr->second;
@@ -91,7 +92,7 @@ auto Project::AppParam::parseArgv(int const argc, char const *const *const argv)
                 for (auto const &[value, description] : param.acceptable.value())
                     stream << '\t' << value << ": " << description << '\n';
                 return stream.str();
-            }()
+            }() + "\n" + helpTipString
         );
     }
 

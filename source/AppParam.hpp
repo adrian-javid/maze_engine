@@ -15,6 +15,8 @@ namespace Project {
         std::optional<Acceptable> const acceptable;
         static std::unordered_map<std::string, AppParam> const &parseArgv(int const argc, char const *const *const argv);
 
+        static constexpr char helpTipString[] = "Run with `help` for information about this program.";
+
         template<typename T>
         static T castArg(std::string const &arg) {
             static_assert(
@@ -23,7 +25,7 @@ namespace Project {
                 std::is_same_v<T, bool>,
                 "Unsupported type."
             );
-            
+
             constexpr auto getTypeName = []() constexpr -> std::string {
                 if constexpr (std::is_same_v<T, int>)
                     return "int";
@@ -38,7 +40,7 @@ namespace Project {
             T value{};
             std::istringstream stream(arg);
             if ((stream >> std::boolalpha >> value).fail()) Util::errOut(
-                "Unable to convert `" + arg + "` to `" + getTypeName() + "` value."
+                "Unable to convert `" + arg + "` to `" + getTypeName() + "` value. \n\n" + helpTipString
             );
 
             return value;
