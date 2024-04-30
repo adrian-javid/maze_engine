@@ -3,7 +3,7 @@
 
 #include "Maze.hpp"
 #include "Vector2.hpp"
-#include "simpleSearch.hpp"
+#include "abstractSearch.hpp"
 
 #include <optional>
 

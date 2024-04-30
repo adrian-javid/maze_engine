@@ -1,6 +1,5 @@
 #include "greedyBestFirstSearch.hpp"
-#include "simpleSearch.hpp"
-#include <queue>
+#include "abstractSearch.hpp"
 
 auto Project::greedyBestFirstSearch(
     Maze const &maze,

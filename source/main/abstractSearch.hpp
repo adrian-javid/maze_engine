@@ -6,6 +6,8 @@
 #include <stack>
 #include <queue>
 
+#include "Vector2.hpp"
+
 namespace Project {
     template <typename Storage_T>
     Vector2::HashMap<Vector2> abstractSearch(
