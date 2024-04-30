@@ -120,14 +120,14 @@ static void Project::Global::refreshWindow() {
 }
 
 int main(int const argc, char *argv[]) {
-    auto const &config = AppParam::parseArgv(argc, argv);
+    auto const &config = AppParamInfo::parseArgv(argc, argv);
 
     std::string const &gridType = config.at("grid").argument;
-    int const mazeSize{AppParam::castArg<int>(config.at("size").argument)};
-    unsigned int const seed{AppParam::castArg<unsigned int>(config.at("seed").argument)};
+    int const mazeSize{AppParamInfo::castArg<int>(config.at("size").argument)};
+    unsigned int const seed{AppParamInfo::castArg<unsigned int>(config.at("seed").argument)};
     std::string const &searchAlgorithmName = config.at("search").argument;
-    Global::sleepTime = std::chrono::milliseconds(AppParam::castArg<unsigned int>(config.at("delay").argument));
-    bool const mazeWrap = AppParam::castArg<bool>(config.at("wrap").argument);
+    Global::sleepTime = std::chrono::milliseconds(AppParamInfo::castArg<unsigned int>(config.at("delay").argument));
+    bool const mazeWrap = AppParamInfo::castArg<bool>(config.at("wrap").argument);
 
     int constexpr mazeFillValue{0xFFu};
 
@@ -181,6 +181,8 @@ int main(int const argc, char *argv[]) {
         // Search for end of maze.
         auto const upTree = searchMaze();
 
+        Util::synchronizedPrint((std::ostringstream() << "Explored count: " << exploredCount).str());
+
         // Path tiles.
         for (
             auto edge(upTree.find(Global::mazeEnd));
@@ -201,10 +203,7 @@ int main(int const argc, char *argv[]) {
             Global::pathTileSet.insert(Global::mazeStart); // include corner
         }
 
-        Util::synchronizedPrint((std::ostringstream()
-            << "Explored count: " << exploredCount << '\n'
-            << "Path length: " << pathLength << '\n'
-        ).str(), '\0');
+        Util::synchronizedPrint((std::ostringstream() << "Path length: " << pathLength).str());
     };
 
     std::ostringstream outputStream;
