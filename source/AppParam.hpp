@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <optional>
 #include "Util.hpp"
+#include <sstream>
 
 namespace Project {
     struct AppParam {
