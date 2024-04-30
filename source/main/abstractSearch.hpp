@@ -43,7 +43,7 @@ auto Project::abstractSearch(
         }();
         storage.pop();
 
-        if (processKey) if (processKey(key)) break;
+        if (processKey != nullptr and processKey(key)) break;
 
         maze.forEachNeighbor(key, [&maze, &upTree, &key, &storage](Vector2 const &neighbor) {
             if (upTree.find(neighbor) == upTree.end()) {
