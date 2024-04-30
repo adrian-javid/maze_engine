@@ -8,6 +8,7 @@
 #include <any>
 #include <string>
 #include <iostream>
+#include <mutex>
 
 namespace Project::Util {
 
@@ -65,6 +66,12 @@ namespace Project::Util {
         assert(percentage >= 0.0);
         assert(percentage <= 1.0);
         return start * (1.0 - percentage) + end * percentage;
+    }
+
+    inline void synchronizedPrint(std::string const &message, char const end='\n') {
+        static std::mutex mutex;
+        std::lock_guard const lock(mutex);
+        std::cout << message << end;
     }
 
     inline void print(std::string const &message, char const end='\n') {
