@@ -65,6 +65,8 @@ class Project::SquareMaze : public Project::Maze {
     Vector2 const &getOffset(Direction const direction) const override;
 
     bool isInBounds(Vector2 const &key) const override;
+
+    int length(Vector2 const &key) const override;
 };
 
 #endif

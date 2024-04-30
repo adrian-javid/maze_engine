@@ -128,3 +128,7 @@ Vector2 const &HexagonMaze::getOffset(Direction const direction) const {
 bool HexagonMaze::isInBounds(Vector2 const &key) const {
     return table.find(key) != table.end();
 }
+
+int HexagonMaze::length(Vector2 const &key) const {
+    return key.hexManhattanLength();
+}

@@ -97,3 +97,7 @@ bool SquareMaze::isInBounds(Vector2 const &key) const {
         0 <= key.value2 and key.value2 < columnCount
     ;
 }
+
+int SquareMaze::length(Vector2 const &key) const {
+    return key.manhattanLength();
+}

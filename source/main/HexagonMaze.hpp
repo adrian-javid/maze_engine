@@ -45,6 +45,8 @@ class Project::HexagonMaze : public Project::Maze {
 
     bool isInBounds(Vector2 const &key) const override;
 
+    int length(Vector2 const &key) const override;
+
     Vector2 wrapKey(Vector2 const &key) const;
 };
 

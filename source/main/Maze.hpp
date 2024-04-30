@@ -70,6 +70,8 @@ class Project::Maze {
     virtual Vector2 const &getOffset(Direction const direction) const = 0;
     virtual bool isInBounds(Vector2 const &key) const = 0;
 
+    virtual int length(Vector2 const &key) const = 0;
+
     void forEachNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const &) const;
 
     void generate(unsigned int const seed, bool const wrap=true);
