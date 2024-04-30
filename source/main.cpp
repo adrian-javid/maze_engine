@@ -8,6 +8,7 @@ namespace Project::Global {/*
 
 #include "breadthFirstSearch.hpp"
 #include "depthFirstSearch.hpp"
+#include "greedyBestFirstSearch.hpp"
 #include "simpleDirectmediaLayer.hpp"
 #include "window.hpp"
 #include "SquareMaze.hpp"
@@ -165,6 +166,8 @@ int main(int const argc, char *argv[]) {
     } else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
         searchMaze = []() { return breadthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
     } else if (searchAlgorithmName == "greedy") {
+        searchMaze = []() { return greedyBestFirstSearch(*Global::maze, Global::mazeStart, Global::mazeEnd, processVertex); };
+    } else {
         Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
     assert(searchMaze != nullptr);
