@@ -26,14 +26,14 @@ auto Project::aStarSearch(
 
         if (processKey != nullptr and processKey(vertex.key)) break;
 
-        maze.forEachNeighbor(vertex.key, [&vertex, &costMap, &frontier, &upTree](Vector2 const &neighbor) {
+        maze.forEachNeighbor(vertex.key, [&vertex, &costMap, &frontier, &upTree, &maze, &end](Vector2 const &neighbor) {
             if (
-                int const derivedCost{costMap.at(vertex.key) + int()},
+                int const derivedCost{costMap.at(vertex.key) + /* cost to move adjacent */1},
                 decltype(costMap.end()) const costIter(costMap.find(neighbor));
                 costIter == costMap.end() or derivedCost < costIter->second
             ) {
                 costIter->second = derivedCost;
-                int priority{derivedCost + int()};
+                int priority{derivedCost + /* heuristic */maze.length(neighbor - end)};
                 frontier.emplace(vertex.key, priority);
                 upTree[neighbor] = vertex.key;
             }
