@@ -21,7 +21,9 @@ Run with `help` to see the program's parameters.
 
 To build, you need to [install the neccessary dependencies for your platform](#dependencies).
 
-Run `scons` on the command-line in the root of the porject to build the executable in the generated `build` directory, regardless of the platform.
+Run `scons` on the command-line in the root of the project to build the executable in the generated `build` directory, regardless of the platform.
+
+For all targets including compile commands for intellisense to be included, run `scons .`.
 
 > Note: the WebAssembly `web` target is currently unsupported.
 
