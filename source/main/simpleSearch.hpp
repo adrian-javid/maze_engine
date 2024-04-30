@@ -8,7 +8,7 @@
 
 namespace Project {
     template <typename Storage_T>
-    Vector2::HashMap<Vector2> simpleSearch(
+    Vector2::HashMap<Vector2> abstractSearch(
         Maze const &maze,
         Vector2 const &start,
         Storage_T &storage,
@@ -17,7 +17,7 @@ namespace Project {
 }
 
 template <typename Storage_T>
-auto Project::simpleSearch(
+auto Project::abstractSearch(
     Maze const &maze,
     Vector2 const &start,
     Storage_T &storage,

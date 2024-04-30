@@ -22,5 +22,5 @@ auto Project::greedyBestFirstSearch(
 
     std::priority_queue<Vector2, std::vector<Vector2>, decltype(heuristicComparator)> priorityQueue(heuristicComparator);
 
-    return simpleSearch<decltype(priorityQueue)>(maze, start, priorityQueue, processKey);
+    return abstractSearch<decltype(priorityQueue)>(maze, start, priorityQueue, processKey);
 }
