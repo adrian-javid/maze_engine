@@ -220,9 +220,7 @@ int main(int const argc, char *argv[]) {
     /*
         Note to self:
 
-        I don't understand why
-        calling this before `SDL_Init` causes a segmentation fault.
-
+        I don't understand why calling this before `SDL_Init` causes a segmentation fault.
         I believe it has something to do with `SDL_Quit`.
     */
     std::atexit(&Media::exitHandler);
