@@ -12,7 +12,7 @@ namespace Project {
         Maze const &maze,
         Vector2 const &start,
         Storage_T &storage,
-        std::function<bool(Vector2 const &)> const processKey=nullptr
+        std::function<bool(Vector2 const &)> const processKey
     );
 }
 
