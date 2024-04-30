@@ -37,7 +37,7 @@ namespace Project {
 
             T value{};
             std::istringstream stream(arg);
-            if ((stream >> std::boolalpha >> value).fail()) Util::errOutLn(
+            if ((stream >> std::boolalpha >> value).fail()) Util::errOut(
                 "Unable to convert `" + arg + "` to `" + getTypeName() + "` value."
             );
 

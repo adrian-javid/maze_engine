@@ -60,7 +60,7 @@ auto Project::AppParam::parseArgv(int const argc, char const *const *const argv)
 
         std::size_t const delimPos(arg.find("="));
 
-        if (delimPos == std::string::npos) Util::errOutLn(
+        if (delimPos == std::string::npos) Util::errOut(
             "Parameter with no value: \"" + arg + "\". Please specify value after `=`.\n"
             "Example: `" + arg + "=value" + "`."
         );
@@ -68,7 +68,7 @@ auto Project::AppParam::parseArgv(int const argc, char const *const *const argv)
         std::string const paramName = arg.substr(0u, delimPos);
 
         auto const paramPtr = config.find(paramName);
-        if (paramPtr == config.end()) Util::errOutLn(
+        if (paramPtr == config.end()) Util::errOut(
             "Invalid parameter: `" + paramName + "` from `" + arg + "`.\n"
             "Valid parameters:\n" + []() -> std::string {
                 std::ostringstream stream;
@@ -84,7 +84,7 @@ auto Project::AppParam::parseArgv(int const argc, char const *const *const argv)
 
         if (not param.acceptable) continue;
 
-        if (param.acceptable.value().find(param.argument) == param.acceptable.value().end()) Util::errOutLn(
+        if (param.acceptable.value().find(param.argument) == param.acceptable.value().end()) Util::errOut(
             "Unnacceptable value `" + param.argument + "` for parameter `" + paramName + "`.\n"
             "Acceptable values:\n" + [&param]() -> std::string {
                 std::ostringstream stream;
