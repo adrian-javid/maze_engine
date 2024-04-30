@@ -164,7 +164,7 @@ int main(int const argc, char *argv[]) {
         searchMaze = []() { return depthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
     } else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
         searchMaze = []() { return breadthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
-    } else {
+    } else if (searchAlgorithmName == "greedy") {
         Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
     assert(searchMaze != nullptr);
