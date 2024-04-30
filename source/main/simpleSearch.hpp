@@ -11,7 +11,8 @@ namespace Project {
     Vector2::HashMap<Vector2> simpleSearch(
         Maze const &maze,
         Vector2 const &start,
-        std::function<bool(Vector2 const &)> const process=nullptr
+        Storage_T &storage,
+        std::function<bool(Vector2 const &)> const processKey=nullptr
     );
 }
 
@@ -19,11 +20,11 @@ template <typename Storage_T>
 auto Project::simpleSearch(
     Maze const &maze,
     Vector2 const &start,
+    Storage_T &storage,
     std::function<bool(Vector2 const &)> const processKey
 ) -> Vector2::HashMap<Vector2> {
     using namespace Project;
 
-    Storage_T storage;
     Vector2::HashMap<Vector2> upTree;
 
     storage.push(start);
