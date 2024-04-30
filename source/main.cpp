@@ -145,7 +145,7 @@ int main(int const argc, char *argv[]) {
         Global::mazeStart.value2 = -Global::hexagonMaze.getRadius();
         if (not mazeWrap) Global::mazeEnd.value2 = Global::hexagonMaze.getRadius();
     } else {
-        Util::errOutLn("Unable to resolve grid type from string: `" + gridType + "`.");
+        Util::errOut("Unable to resolve grid type from string: `" + gridType + "`.");
     }
 
     // Generate the maze corridors.
@@ -172,7 +172,7 @@ int main(int const argc, char *argv[]) {
     } else if (searchAlgorithmName == "a_star") {
         searchMaze = []() { return aStarSearch(*Global::maze, Global::mazeStart, Global::mazeEnd, processVertex); };
     } else {
-        Util::errOutLn("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
+        Util::errOut("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
     assert(searchMaze != nullptr);
 
