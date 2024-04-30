@@ -1,5 +1,5 @@
-#ifndef simpleSearch_hpp
-#define simpleSearch_hpp
+#ifndef abstractSearch_hpp
+#define abstractSearch_hpp
 
 #include <optional>
 #include <type_traits>
