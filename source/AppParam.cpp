@@ -108,13 +108,7 @@ auto Project::AppParamInfo::parseArgv(int const argc, char const *const *const a
         auto const paramPtr = config.find(paramName);
         if (paramPtr == config.end()) Util::errOut(
             "Invalid parameter: `" + paramName + "` from `" + arg + "`.\n"
-            "Valid parameters:\n" + []() -> std::string {
-                std::ostringstream stream;
-                for (auto const &[paramName, info] : config) {
-                    stream << '\t' << paramName << ": " << info.description << '\n';
-                }
-                return stream.str();
-            }() + "\n" + helpTipString
+            "Valid parameters:\n" + validParametersStr() + "\n" + helpTipString
         );
 
         AppParamInfo &param = paramPtr->second;
