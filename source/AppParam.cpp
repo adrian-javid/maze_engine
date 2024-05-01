@@ -123,7 +123,7 @@ auto Project::AppParamInfo::parseArgv(int const argc, char const *const *const a
         if (not param.acceptable) continue;
 
         if (param.acceptable.value().find(param.argument) == param.acceptable.value().end()) Util::errOut(
-            "Unnacceptable value `" + param.argument + "` for parameter `" + paramName + "`.\n"
+            "Unacceptable value `" + param.argument + "` for parameter `" + paramName + "`.\n" +
             "Acceptable values:\n" + acceptableValuesStr(param.acceptable.value()) + "\n" + helpTipString
         );
     }
