@@ -123,10 +123,18 @@ int main(int const argc, char *argv[]) {
     auto const &config = AppParamInfo::parseArgv(argc, argv);
 
     std::string const &gridType = config.at("grid").argument;
-    int const mazeSize{AppParamInfo::castArg<int>(config.at("size").argument)};
+    int const mazeSize{
+        AppParamInfo::assertPositive(
+            AppParamInfo::castArg<int>(config.at("size").argument),
+        (std::ostringstream() << "Bad value for `size`." ).str())
+    };
     unsigned int const seed{AppParamInfo::castArg<unsigned int>(config.at("seed").argument)};
     std::string const &searchAlgorithmName = config.at("search").argument;
-    Global::sleepTime = std::chrono::milliseconds(AppParamInfo::castArg<unsigned int>(config.at("delay").argument));
+    Global::sleepTime = std::chrono::milliseconds(
+        AppParamInfo::assertNonnegative(
+            AppParamInfo::castArg<int>(config.at("delay").argument),
+        (std::ostringstream() << "Bad value for `delay`." ).str())
+    );
     bool const mazeWrap = AppParamInfo::castArg<bool>(config.at("wrap").argument);
 
     int constexpr mazeFillValue{0xFFu};
