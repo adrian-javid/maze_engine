@@ -17,6 +17,8 @@ Run with `help` to see the program's parameters.
 ./build/Linux/main/solve_maze help
 ```
 
+<!-- `size=550 seed=7722214 grid=square search=greedy delay=0` -->
+
 ## Building
 
 To build, you need to [install the neccessary dependencies for your platform](#dependencies).
