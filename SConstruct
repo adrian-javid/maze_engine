@@ -42,8 +42,8 @@ linuxLibEnv = C.parse(baseEnv.Clone(), C.GCC_CORE, C.GCC_RELEASE)
 
 webLibEnv = C.parse(linuxLibEnv.Clone(), EMSCRIPTEN)
 webMainEnv = C.parse(webLibEnv.Clone(), C.GCC_WARNING)
-webMainEnv.Append(CXXFLAGS='-sUSE_SDL=2')
-webMainEnv.Append(LINKFLAGS='-sUSE_SDL=2')
+webMainEnv.Append(CXXFLAGS=['-sUSE_SDL=2'])
+webMainEnv.Append(LINKFLAGS=['-sUSE_SDL=2'])
 
 match NATIVE_PLATFORM:
     case 'Windows':
