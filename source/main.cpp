@@ -26,6 +26,9 @@ namespace Project::Global {/*
 #include <cassert>
 #include <random>
 #ifdef __EMSCRIPTEN__
+#ifndef __EMSCRIPTEN_PTHREADS__
+#error "POSIX threads are not enabled."
+#endif
 #include <emscripten.h>
 #endif
 
