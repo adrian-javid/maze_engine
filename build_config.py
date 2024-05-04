@@ -83,11 +83,13 @@ GCC_DEBUG = make(
 
 MSVC_CORE = make(
     CXXFLAGS=[
+        "/O2",
         "/permissive-", # stricter conformance to C++ standard
         "/std:c++17",
         "/EHsc",
     ],
-    LINKFLAGS=["/SUBSYSTEM:CONSOLE"]
+    LINKFLAGS=["/SUBSYSTEM:CONSOLE"],
+    CPPDEFINES=['NDEBUG'],
 )
 
 MSVC_WARNING = make(CXXFLAGS=["/W4"])
