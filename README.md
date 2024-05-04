@@ -25,9 +25,14 @@ To build, you need to [install the neccessary dependencies for your platform](#d
 
 Run `scons` on the command-line in the root of the project to build the executable in the generated `build` directory, regardless of the platform.
 
-For all targets including compile commands for intellisense to be included, run `scons .`.
+To also generate compile commands to be used for intellisense in an editor such as VSCode, run `scons .`.
+The `compile_commands.json` are put into the `build/<platform>` directory.
 
-> Note: the WebAssembly `web` target is currently unsupported.
+To clean the build, run `scons -c` or `scons -c .` respectively.
+
+> Note: If you want to move the Windows executable `solve_maze.exe` to a different location,
+> move the `SDL2.dll` along with it to the same directory.
+> The executable needs that dynamic-link library to run.
 
 ## Dependencies
 
@@ -42,7 +47,7 @@ The Windows build uses the command-line toolset from the
 
 #### C++ Compiler for Linux & Unix
 
-This project builds with `g++` and `clang++`.
+This project builds with `g++`.
 
 ### Build System: SCons (Software Construction)
 This project uses [SCons](https://scons.org/) as its build system, so [Python](https://www.python.org/) is required to build it.
