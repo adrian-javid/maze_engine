@@ -195,6 +195,7 @@ static void drawHexagon(
     SDL_RenderGeometry(Media::renderer, nullptr, vertexList.data(), vertexCount, nullptr, 0);
 }
 
+[[maybe_unused]]
 static void drawPointyTopHexagon(
     float const size,
     SDL_FPoint const &center,
