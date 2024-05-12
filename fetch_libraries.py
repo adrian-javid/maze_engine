@@ -3,8 +3,10 @@ from pathlib import Path
 from zipfile import ZipFile
 from shutil import copytree as copyRecursively
 
-# Create a `cache` directory to store downloaded files.
-Path("cache/").mkdir(parents=True, exist_ok=True)
+
+# Create a directory to store downloaded files.
+downloadDir: str = "downloaded"
+Path(F"{downloadDir}/").mkdir(parents=True, exist_ok=True)
 
 for url, includeDir, libDir, platform, simpleName in (
 
@@ -20,7 +22,7 @@ for url, includeDir, libDir, platform, simpleName in (
 ):
     basename = url[url.rindex("/")+1:]
 
-    zipFilePath = Path(F"cache/{basename}")
+    zipFilePath = Path(F"{downloadDir}/{basename}")
 
     # Download the ZIP file containing SDL.
     if not zipFilePath.exists(): download(url=url, filename=zipFilePath)
@@ -34,12 +36,12 @@ for url, includeDir, libDir, platform, simpleName in (
         )
 
         # Extract all header files and library binaries.
-        zipFile.extractall(members=libraryCore, path="cache/")
+        zipFile.extractall(members=libraryCore, path=F"{downloadDir}/")
 
         # Copy header files to relevant directory.
         if not (libraryPath := Path(F"library/{platform}/include/{simpleName}")).exists():
-            copyRecursively(dst=str(libraryPath), src=F"cache/{includeDir}/")
+            copyRecursively(dst=str(libraryPath), src=F"{downloadDir}/{includeDir}/")
 
         # Copy library binaries to relevant directory.
         if not (libraryPath := Path(F"library/{platform}/lib/{simpleName}")).exists():    
-            copyRecursively(dst=libraryPath, src=F"cache/{libDir}/")
+            copyRecursively(dst=libraryPath, src=F"{downloadDir}/{libDir}/")
