@@ -7,7 +7,7 @@ Uint64 Project::Media::deltaTime = 0;
 
 void Project::Media::mainLoop() {
     // Time of the previous iteration.
-    static Uint64 previousTime = 0;
+    static Uint64 previousTime{0u};
 
     // Get the time of this iteration.
     Uint64 const currentTime = SDL_GetTicks64();
@@ -22,7 +22,7 @@ void Project::Media::mainLoop() {
                 SDL_SetWindowFullscreen(Media::window, SDL_WINDOW_FULLSCREEN);
                 break;
             case SDLK_ESCAPE:
-                SDL_SetWindowFullscreen(Media::window, 0);
+                SDL_SetWindowFullscreen(Media::window, 0u);
                 break;
         } break;
         case SDL_WINDOWEVENT: switch (event.window.event) {
@@ -43,7 +43,7 @@ void Project::Media::mainLoop() {
     previousTime = currentTime;
 
     // Give the CPU a break.
-    SDL_Delay(1);
+    SDL_Delay(1u);
 }
 
 void Project::Media::exitHandler() {
