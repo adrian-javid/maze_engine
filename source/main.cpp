@@ -64,7 +64,7 @@ static void Project::Global::refreshWindow() {
 
     static constexpr double zeroPercent{0.0};
     static double percentage{zeroPercent};
-    double const deltaPercentage = static_cast<double>(Media::deltaTime) * 0.00011;
+    double const deltaPercentage{static_cast<double>(Media::deltaTime) * 0.00011};
 
     percentage = Global::percentageWrap(percentage + deltaPercentage);
     assert(percentage >= 0.0); assert(percentage < 1.0);
@@ -105,6 +105,8 @@ static void Project::Global::refreshWindow() {
         else
             return unmarkedTileColorTriplet;
     };
+
+    SDL_RenderClear(Media::renderer);
 
     if (Global::maze == &Global::squareMaze) Media::drawSquareMaze(
         squareMaze,
@@ -254,6 +256,8 @@ int main(int const argc, char *argv[]) {
 
     // Start worker thread.
     std::thread const mazeSolver(solveMaze);
+
+    SDL_SetRenderDrawColor(Media::renderer, 0u, 0u, 0u, 1u);
 
     // Start the main loop.
     #ifdef __EMSCRIPTEN__
