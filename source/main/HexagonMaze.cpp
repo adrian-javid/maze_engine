@@ -3,7 +3,7 @@
 using namespace Project;
 
 static Vector2 calculateMirrorCenter(int const index, int const radius) {
-    constexpr Vector2 center(0, 0);
+    static constexpr Vector2 center(0, 0);
     Vector2 const startPosition{2 * radius + 1, -radius};
     Vector2 const difference = startPosition - center;
     Vector2 const rotatedDifference = difference.hexagonalRotate(index);
@@ -58,7 +58,7 @@ HexagonMaze::HexagonMaze(int const setRadius, Tile const tileFillValue):
 {
     assert(radius >= 0);
 
-    constexpr Vector2 center(0, 0);
+    static constexpr Vector2 center(0, 0);
 
     for (int q = -radius; q <= radius; ++q) {
         int r1 = std::max<int>(-radius, -q - radius);

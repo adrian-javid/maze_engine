@@ -3,7 +3,7 @@
 using namespace Project;
 
 double Util::wrapValue(double value, double const upperBound) {
-    constexpr double zero{0.0};
+    static constexpr double zero{0.0};
 
     assert(upperBound != 0);
     assert(zero < upperBound);

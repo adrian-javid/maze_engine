@@ -56,22 +56,22 @@ namespace Project::Global {
 }
 
 static void Project::Global::refreshWindow() {
-    constexpr Media::HslaColor startEndColor(91.0, 1.0, 0.49);
-    constexpr Media::HslaColor pathTileColor(0.0);
-    constexpr Media::HslaColor wallColor(240.0);
-    constexpr Media::HslaColor markedTileColor(300.0);
-    constexpr Media::HslaColor unmarkedTileColor(155.0);
+    static constexpr Media::HslaColor startEndColor(91.0, 1.0, 0.49);
+    static constexpr Media::HslaColor pathTileColor(0.0);
+    static constexpr Media::HslaColor wallColor(240.0);
+    static constexpr Media::HslaColor markedTileColor(300.0);
+    static constexpr Media::HslaColor unmarkedTileColor(155.0);
 
-    constexpr double zeroPercent{0.0};
+    static constexpr double zeroPercent{0.0};
     static double percentage{zeroPercent};
     double const deltaPercentage = static_cast<double>(Media::deltaTime) * 0.00011;
 
     percentage = Global::percentageWrap(percentage + deltaPercentage);
     assert(percentage >= 0.0); assert(percentage < 1.0);
 
-    constexpr double hueDepth{45.0 + 5.0 + 5.0};
-    constexpr auto getColorTriplet = [](Media::HslaColor const &tileColor) -> Media::ColorTriplet {
-        constexpr auto getCyclicHue = [](double const hue, double const percentageAddend) -> double {
+    static constexpr double hueDepth{45.0 + 5.0 + 5.0};
+    static constexpr auto getColorTriplet = [](Media::HslaColor const &tileColor) -> Media::ColorTriplet {
+        static constexpr auto getCyclicHue = [](double const hue, double const percentageAddend) -> double {
             return Media::HslaColor::getCyclicHue(hue, Global::percentageWrap(percentage + percentageAddend), hueDepth);
         };
         return std::make_tuple(
@@ -140,7 +140,7 @@ int main(int const argc, char *argv[]) {
     );
     bool const mazeWrap = AppParamInfo::castArg<bool>(config.at("wrap").argument);
 
-    int constexpr mazeFillValue{0xFFu};
+    static constexpr int mazeFillValue{0xFFu};
 
     // Create maze object with grid type.
     if (gridType == "square") {

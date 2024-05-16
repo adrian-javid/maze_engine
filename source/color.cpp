@@ -46,7 +46,7 @@ SDL_Color Media::makeRgbaColor(
 }
 
 double Media::HslaColor::hueWrap(double const value) {
-    constexpr double fullCycle{360.0};
+    static constexpr double fullCycle{360.0};
     return Util::wrapValue(value, fullCycle);
 }
 
@@ -66,7 +66,7 @@ double Media::HslaColor::getCyclicHue(
 Media::ColorTriplet Media::HslaColor::getColorTriplet(double const percentage, double const colorDepth) const {
     double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2.0 * colorDepth)};
 
-    constexpr auto getHueValue = [](double const hue, double const hueOffset, double const colorDepth) -> double {
+    static constexpr auto getHueValue = [](double const hue, double const hueOffset, double const colorDepth) -> double {
         if (hueOffset < colorDepth)
             return hueWrap(hue + hueOffset);
         else

@@ -5,7 +5,8 @@
 using namespace Project;
 
 TEST_CASE("Neighbors", "[Vector2]") {
-    int constexpr rowCount = 20; int constexpr columnCount = 20;
+    static constexpr int rowCount = 20;
+    static constexpr int columnCount = 20;
 
     Vector2 const vector(1, 1);
     CHECK(vector == Vector2(1, 1));

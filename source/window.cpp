@@ -41,7 +41,7 @@ static void drawQuadrilateral(
     SDL_Vertex const bottomLeftVertex{southwestPoint, southwestColor, zeroPoint};
     SDL_Vertex const bottomRightVertex{southeastPoint, southeastColor, zeroPoint};
 
-    constexpr int vertexCount = 2 * (3);
+    static constexpr int vertexCount = 2 * (3);
     std::array<SDL_Vertex, vertexCount> const vertexList = {
         // Top left triangle.
         topLeftVertex, topRightVertex, bottomLeftVertex,

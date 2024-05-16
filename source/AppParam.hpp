@@ -44,7 +44,7 @@ namespace Project {
                 "Unsupported type."
             );
 
-            constexpr auto getTypeName = []() -> std::string {
+            static constexpr auto getTypeName = []() -> std::string {
                 if constexpr (std::is_same_v<T, int>)
                     return "int";
                 else if constexpr (std::is_same_v<T, unsigned int>)
