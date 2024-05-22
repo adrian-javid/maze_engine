@@ -21,7 +21,7 @@ struct Project::Vector2 {
     constexpr int thirdAxis() const { return -value1 - value2; }
 
     template<int index, int upperBound>
-    inline static constexpr std::size_t rotateIndex(int const indexOffsetter) {
+    static constexpr std::size_t rotateIndex(int const indexOffsetter) {
         static_assert(index >= 0);
         static_assert(index < upperBound);
         return static_cast<std::size_t>(Util::wrapValue(index - indexOffsetter, upperBound));
