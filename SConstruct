@@ -66,7 +66,7 @@ def runScript(mainEnv, libEnv, platform: str):
 mainProgram, testProgram, compilationDatabase = runScript(nativeMainEnv, nativeLibEnv, NATIVE_PLATFORM)
 
 if NATIVE_PLATFORM == "Windows":
-    windowsSdl2Dll = Command("build/Windows/main/SDL2.dll", "library/Windows/lib/SDL2/SDL2.dll", Copy("$TARGET", "$SOURCE"))
+    windowsSdl2Dll = Command("build/Windows/SDL2.dll", "library/Windows/lib/SDL2/SDL2.dll", Copy("$TARGET", "$SOURCE"))
     Depends(mainProgram, windowsSdl2Dll)
 
 if not undiscoveredEmscripten: runScript(webMainEnv, webLibEnv, "web")
