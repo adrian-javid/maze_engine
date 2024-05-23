@@ -10,11 +10,13 @@ The executable is in the `build` directory.
 Run with `help` to see the program's parameters.
 
 ```PowerShell
-.\build\Windows\main\solve_maze.exe help
+# Windows
+.\build\Windows\solve_maze.exe help
 ```
 
 ```bash
-./build/Linux/main/solve_maze help
+# Linux
+./build/Linux/solve_maze help
 ```
 
 <!-- `size=550 seed=7722214 grid=square search=greedy delay=0` -->
