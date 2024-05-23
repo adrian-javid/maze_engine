@@ -79,7 +79,7 @@ py fetch_libraries.py
 
 #### SDL for Linux & Unix
 
-These commands are copied from the [official SDL installation guide](https://wiki.libsdl.org/SDL2/Installation).
+These commands are copied from the [official SDL installation guide](https://wiki.libsdl.org/SDL2/Installation#linuxunix).
 
 Debian-based systems (including Ubuntu):
 ```bash
