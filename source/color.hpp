@@ -14,7 +14,7 @@ namespace Project::Media {
 
     using ColorGetter = std::function<ColorTriplet(Vector2 const &)>;
 
-    static constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
+    inline constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
 
     std::string toString(SDL_Color const &color);
 
