@@ -238,14 +238,21 @@ int main(int const argc, char *argv[]) {
     */
     std::atexit(&Media::exitHandler);
 
-    SDL_CreateWindowAndRenderer(
+    Media::window = SDL_CreateWindow(
+        "Maze Solver",
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         Media::windowWidth, Media::windowHeight,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE,
-        &Media::window, &Media::renderer
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
-
-    // Assert window and renderer were successfully created.
+    // Assert window was successfully created.
     assert(Media::window != nullptr);
+
+    /*
+        The software renderer supports VSync, so can always fallback on software renderr
+        unless not using SDL renderers.
+    */
+    Media::renderer = SDL_CreateRenderer(Media::window, -1, SDL_RENDERER_PRESENTVSYNC);
+    // Assert renderer was successfully created.
     assert(Media::renderer != nullptr);
 
     SDL_SetWindowTitle(Media::window, "Maze Solver");
