@@ -6,7 +6,7 @@
 #else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
-#include <SDL.h>
+#include "SDL.h"
 #pragma GCC diagnostic pop
 #endif
 
