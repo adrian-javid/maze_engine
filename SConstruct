@@ -16,8 +16,8 @@ emscriptenRequirementTools = {
 
 EMSCRIPTEN = C.make(
     **{toolType: WhereIs(toolName) for toolType, toolName in emscriptenRequirementTools.items()},
-    CCFLAGS=['-fexceptions'],
-    LINKFLAGS=['-fexceptions'],
+    CCFLAGS=['-fexceptions', '-pthread'],
+    LINKFLAGS=['-fexceptions', '-pthread', "-sPTHREAD_POOL_SIZE=2"],
     PROGSUFFIX='.html',
 )
 
