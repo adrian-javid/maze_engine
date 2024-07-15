@@ -9,20 +9,22 @@
 #include "Vector2.hpp"
 
 namespace Project {
-    template <typename Storage_T>
+    template <typename StorageT>
     Vector2::HashMap<Vector2> abstractSearch(
         Maze const &maze,
         Vector2 const &start,
-        Storage_T &storage,
+        StorageT &storage,
         std::function<bool(Vector2 const &)> const processKey
     );
+
+    template <typename StorageT>
 }
 
-template <typename Storage_T>
+template <typename StorageT>
 auto Project::abstractSearch(
     Maze const &maze,
     Vector2 const &start,
-    Storage_T &storage,
+    StorageT &storage,
     std::function<bool(Vector2 const &)> const processKey
 ) -> Vector2::HashMap<Vector2> {
     using namespace Project;
@@ -34,9 +36,9 @@ auto Project::abstractSearch(
 
     while (not storage.empty()) {
         Vector2 const key = [&storage]() constexpr -> Vector2 const & {
-            if constexpr (std::is_same_v<Storage_T, std::stack<Vector2>>)
+            if constexpr (std::is_same_v<StorageT, std::stack<Vector2>>)
                 return storage.top();
-            else if constexpr (std::is_same_v<Storage_T, std::queue<Vector2>>)
+            else if constexpr (std::is_same_v<StorageT, std::queue<Vector2>>)
                 return storage.front();
             else /* other, such as priority queue */
                 return storage.top();
