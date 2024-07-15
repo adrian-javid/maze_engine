@@ -29,10 +29,10 @@ auto Project::abstractSearch(
 ) -> Vector2::HashMap<Vector2> {
     using namespace Project;
 
-    Vector2::HashMap<Vector2> upTree;
+    Vector2::HashMap<Vector2> history;
 
     storage.push(start);
-    upTree.insert({start, start});
+    history.insert({start, start});
 
     while (not storage.empty()) {
         Vector2 const key = [&storage]() constexpr -> Vector2 const & {
@@ -47,15 +47,16 @@ auto Project::abstractSearch(
 
         if (processKey != nullptr and processKey(key)) break;
 
-        maze.forEachNeighbor(key, [&maze, &upTree, &key, &storage](Vector2 const &neighbor) {
-            if (upTree.find(neighbor) == upTree.end()) {
-                upTree.insert({neighbor, key});
+        maze.forEachNeighbor(key, [&maze, &history, &key, &storage](Vector2 const &neighbor) {
+            if (history.find(neighbor) == history.end()) {
+                history.insert({neighbor, key});
                 storage.push(neighbor);
             }
         });
     }
 
-    return upTree;
+    return history;
 }
+
 
 #endif
