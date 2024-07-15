@@ -17,6 +17,8 @@ namespace Project {
         std::function<bool(Vector2 const &)> const processKey
     );
 
+    class MazeSearchIterator;
+
     template <typename StorageT>
     class AbstractSearchIterator;
 }
@@ -58,8 +60,17 @@ auto Project::abstractSearch(
     return history;
 }
 
+class Project::MazeSearchIterator {
+    public:
+        virtual MazeSearchIterator &operator++() = 0;
+        [[nodiscard]] virtual Vector2 const &operator*() const = 0;
+        [[nodiscard]] virtual bool isEnd() const = 0;
+        [[nodiscard]] virtual Vector2::HashMap<Vector2> const &getHistory() const = 0;
+        virtual ~MazeSearchIterator() = default;
+};
+
 template <typename StorageT>
-class Project::AbstractSearchIterator {
+class Project::AbstractSearchIterator : MazeSearchIterator {
     private:
         Maze const *maze;
 
@@ -104,7 +115,7 @@ class Project::AbstractSearchIterator {
             return key;
         }
 
-        AbstractSearchIterator &operator++() {
+        AbstractSearchIterator &operator++() override {
             assert(not storage.empty());
 
             key = popFrom(storage);
@@ -113,9 +124,13 @@ class Project::AbstractSearchIterator {
             return *this;
         }
 
-        [[nodiscard]] constexpr Vector2 const &operator*() const { return key; }
+        [[nodiscard]] constexpr Vector2 const &operator*() const override { return key; }
 
-        [[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const { return history; }
+        [[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const override { return history; }
+
+        [[nodiscard]] StorageT const &getStorage() const { return storage; }
+
+        [[nodiscard]] bool isEnd() const override { return storage.empty(); };
 };
 
 #endif
