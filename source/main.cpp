@@ -255,7 +255,7 @@ int main(int const argc, char *argv[]) {
     assert(Media::window != nullptr);
 
     /*
-        The software renderer supports VSync, so can always fallback on software renderr
+        The software renderer supports VSync, so can always fallback on software renderer
         unless not using SDL renderers.
     */
     Media::renderer = SDL_CreateRenderer(Media::window, -1, SDL_RENDERER_PRESENTVSYNC);
