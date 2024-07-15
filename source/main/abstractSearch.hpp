@@ -70,7 +70,7 @@ class Project::MazeSearchIterator {
 };
 
 template <typename StorageT>
-class Project::AbstractSearchIterator : MazeSearchIterator {
+class Project::AbstractSearchIterator : public MazeSearchIterator {
     private:
         Maze const *maze;
 
