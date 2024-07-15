@@ -251,6 +251,7 @@ int main(int const argc, char *argv[]) {
         Media::windowWidth, Media::windowHeight,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
+
     // Assert window was successfully created.
     assert(Media::window != nullptr);
 
