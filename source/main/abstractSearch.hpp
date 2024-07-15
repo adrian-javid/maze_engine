@@ -102,8 +102,8 @@ class Project::AbstractSearchIterator : MazeSearchIterator {
             gatherNeighbors();
         }
 
-        static void popFrom(StorageT &storage) {
-            Vector2 const key([&storage]() constexpr -> Vector2 const {
+        static Vector2 popFrom(StorageT &storage) {
+            Vector2 const key([&storage]() constexpr -> Vector2 {
                 if constexpr (std::is_same_v<StorageT, std::stack<Vector2>>)
                     return storage.top();
                 else if constexpr (std::is_same_v<StorageT, std::queue<Vector2>>)
