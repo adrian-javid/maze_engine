@@ -175,31 +175,50 @@ int main(int const argc, char *argv[]) {
     };
 
     static std::function<Vector2::HashMap<Vector2>(void)> searchMaze = nullptr;
-    std::variant<std::nullptr_t, DepthFirstSearchIterator, BreadthFirstSearchIterator, GreedyBestFirstSearchIterator> mazeSearchIterator;
+    static std::variant<std::nullptr_t, DepthFirstSearchIterator, BreadthFirstSearchIterator, GreedyBestFirstSearchIterator> mazeSearchIteratorVariant;
+    static MazeSearchIterator *mazeSearchIterator = nullptr;
 
     // Get the search algorithm.
     if (searchAlgorithmName == "depth") {
         searchMaze = []() { return depthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
-        mazeSearchIterator = DepthFirstSearchIterator(*Global::maze, Global::mazeStart);
+        mazeSearchIteratorVariant = DepthFirstSearchIterator(*Global::maze, Global::mazeStart);
     } else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
         searchMaze = []() { return breadthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
-        mazeSearchIterator = BreadthFirstSearchIterator(*Global::maze, Global::mazeStart);
+        mazeSearchIteratorVariant = BreadthFirstSearchIterator(*Global::maze, Global::mazeStart);
     } else if (searchAlgorithmName == "greedy") {
         searchMaze = []() { return greedyBestFirstSearch(*Global::maze, Global::mazeStart, Global::mazeEnd, processVertex); };
-        mazeSearchIterator = GreedyBestFirstSearchIterator(*Global::maze, Global::mazeStart, Global::mazeEnd);
+        mazeSearchIteratorVariant = GreedyBestFirstSearchIterator(*Global::maze, Global::mazeStart, Global::mazeEnd);
     } else if (searchAlgorithmName == "a_star") {
         searchMaze = []() { return aStarSearch(*Global::maze, Global::mazeStart, Global::mazeEnd, processVertex); };
-        mazeSearchIterator = nullptr;
+        mazeSearchIteratorVariant = nullptr;
     } else {
         Util::errOut("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
     assert(searchMaze != nullptr);
-    assert(not std::holds_alternative<std::nullptr_t>(mazeSearchIterator));
+    assert(not std::holds_alternative<std::nullptr_t>(mazeSearchIteratorVariant));
 
     static std::size_t pathLength{0u};
+
+    mazeSearchIterator = std::visit(
+        [](auto &iterator) -> MazeSearchIterator *{
+            if constexpr (std::is_same_v<decltype(iterator), std::nullptr_t &>)
+                return nullptr;
+            else
+                return &iterator;
+        },
+        mazeSearchIteratorVariant
+    );
+
+    assert(mazeSearchIterator != nullptr);
+
     static constexpr auto solveMaze = []() -> void {
         // Search for end of maze.
-        auto const upTree = searchMaze();
+
+        for (; not mazeSearchIterator->isEnd(); ++*mazeSearchIterator) {
+            if (processVertex(**mazeSearchIterator)) break;
+        }
+
+        auto const upTree(mazeSearchIterator->getHistory());
 
         Util::synchronizedPrint((std::ostringstream() << "Explored count: " << exploredCount).str());
 
