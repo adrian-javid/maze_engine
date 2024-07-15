@@ -175,20 +175,26 @@ int main(int const argc, char *argv[]) {
     };
 
     static std::function<Vector2::HashMap<Vector2>(void)> searchMaze = nullptr;
+    std::variant<std::nullptr_t, DepthFirstSearchIterator, BreadthFirstSearchIterator, GreedyBestFirstSearchIterator> mazeSearchIterator;
 
     // Get the search algorithm.
     if (searchAlgorithmName == "depth") {
         searchMaze = []() { return depthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
+        mazeSearchIterator = DepthFirstSearchIterator(*Global::maze, Global::mazeStart);
     } else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
         searchMaze = []() { return breadthFirstSearch(*Global::maze, Global::mazeStart, processVertex); };
+        mazeSearchIterator = BreadthFirstSearchIterator(*Global::maze, Global::mazeStart);
     } else if (searchAlgorithmName == "greedy") {
         searchMaze = []() { return greedyBestFirstSearch(*Global::maze, Global::mazeStart, Global::mazeEnd, processVertex); };
+        mazeSearchIterator = GreedyBestFirstSearchIterator(*Global::maze, Global::mazeStart, Global::mazeEnd);
     } else if (searchAlgorithmName == "a_star") {
         searchMaze = []() { return aStarSearch(*Global::maze, Global::mazeStart, Global::mazeEnd, processVertex); };
+        mazeSearchIterator = nullptr;
     } else {
         Util::errOut("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
     }
     assert(searchMaze != nullptr);
+    assert(not std::holds_alternative<std::nullptr_t>(mazeSearchIterator));
 
     static std::size_t pathLength{0u};
     static constexpr auto solveMaze = []() -> void {
