@@ -3,6 +3,7 @@
 
 #include "Vector2.hpp"
 #include "Maze.hpp"
+#include "abstractSearch.hpp"
 
 namespace Project {
     Vector2::HashMap<Vector2> greedyBestFirstSearch(
