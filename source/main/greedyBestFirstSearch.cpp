@@ -10,10 +10,10 @@ auto Project::greedyBestFirstSearch(
         The comparator returns whether `(left, right)` are in sorted order, least to greatest.
 
         In other words,
-        "Is `(heuristic(left), heuristic(right))` sorted from worst value to best value?"
+        "Is `(heuristic(left), heuristic(right))` sorted from "worst" value to "best" value?"
 
         The heuristic is the distance to end of the maze, so, `(left, right)` are sorted if
-        `distance(left) > distance(right)`, because a higher distance is worse.
+        `distance(left) > distance(right)`, because a higher distance is "worse".
     */
     auto const heuristicComparator = [&maze, &end](Vector2 const &leftKey, Vector2 const &rightKey) -> bool {
         return maze.length(leftKey - end) > maze.length(rightKey - end);
