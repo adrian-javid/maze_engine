@@ -18,6 +18,7 @@ namespace Project {
     );
 
     template <typename StorageT>
+    class AbstractSearchIterator;
 }
 
 template <typename StorageT>
@@ -58,5 +59,64 @@ auto Project::abstractSearch(
     return history;
 }
 
+template <typename StorageT>
+class Project::AbstractSearchIterator {
+    private:
+        Maze const *maze;
+
+    public:
+        Vector2 key;
+
+    private:
+        StorageT storage;
+        Vector2::HashMap<Vector2> history;
+
+        [[gnu::always_inline]] void gatherNeighbors() {
+            maze->forEachNeighbor(key, [this](Vector2 const &neighbor) {
+                if (this->history.find(neighbor) == this->history.end()) {
+                    this->history.insert({neighbor, this->key});
+                    this->storage.push(neighbor);
+                }
+            });
+        }
+
+    public:
+        explicit AbstractSearchIterator(
+            Maze const &maze,
+            Vector2 start,
+            StorageT storage
+        ): 
+            maze(&maze), key(std::move(start)), storage(std::move(storage)), history()
+        {
+            history.insert({key, key});
+            gatherNeighbors();
+        }
+
+        static void popFrom(StorageT &storage) {
+            Vector2 const key([&storage]() constexpr -> Vector2 const {
+                if constexpr (std::is_same_v<StorageT, std::stack<Vector2>>)
+                    return storage.top();
+                else if constexpr (std::is_same_v<StorageT, std::queue<Vector2>>)
+                    return storage.front();
+                else /* other, such as priority queue */
+                    return storage.top();
+            }());
+            storage.pop();
+            return key;
+        }
+
+        AbstractSearchIterator &operator++() {
+            assert(not storage.empty());
+
+            key = popFrom(storage);
+            gatherNeighbors();
+
+            return *this;
+        }
+
+        [[nodiscard]] constexpr Vector2 const &operator*() const { return key; }
+
+        [[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const { return history; }
+};
 
 #endif
