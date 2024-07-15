@@ -259,6 +259,10 @@ int main(int const argc, char *argv[]) {
         unless not using SDL renderers.
     */
     Media::renderer = SDL_CreateRenderer(Media::window, -1, SDL_RENDERER_PRESENTVSYNC);
+
+    if (Media::renderer == nullptr)
+        Media::renderer = SDL_CreateRenderer(Media::window, -1, 0u);
+
     // Assert renderer was successfully created.
     assert(Media::renderer != nullptr);
 
