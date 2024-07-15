@@ -18,6 +18,12 @@ namespace Project {
     Vector2::HashMap<Vector2> breadthFirstSearch(
         Maze const &maze, Vector2 const &start, std::function<bool(Vector2 const &)> const processKey=nullptr
     );
+
+    struct BreadthFirstSearchIterator : AbstractSearchIterator<std::queue<Vector2>> {
+        explicit BreadthFirstSearchIterator(Maze const &maze, Vector2 start):
+            AbstractSearchIterator<std::queue<Vector2>>(maze, std::move(start), std::queue<Vector2>())
+        {}
+    };
 }
 
 #endif
