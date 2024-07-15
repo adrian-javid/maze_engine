@@ -28,7 +28,6 @@ auto Project::abstractSearch(
     StorageT &storage,
     std::function<bool(Vector2 const &)> const processKey
 ) -> Vector2::HashMap<Vector2> {
-    using namespace Project;
 
     Vector2::HashMap<Vector2> history;
 
