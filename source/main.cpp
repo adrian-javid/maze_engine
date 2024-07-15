@@ -21,6 +21,7 @@ namespace Project::Global {/*
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include <variant>
 
 #include <algorithm>
 #include <cassert>
