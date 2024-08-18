@@ -268,8 +268,10 @@ int main(int const argc, char *argv[]) {
 	*/
 	std::atexit(&Media::exitHandler);
 
+	static constexpr char const *windowTitle = "Maze Engine";
+
 	Media::window = SDL_CreateWindow(
-		"Maze Solver",
+		windowTitle,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		Media::windowWidth, Media::windowHeight,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
@@ -290,7 +292,7 @@ int main(int const argc, char *argv[]) {
 	// Assert renderer was successfully created.
 	assert(Media::renderer != nullptr);
 
-	SDL_SetWindowTitle(Media::window, "Maze Solver");
+	SDL_SetWindowTitle(Media::window, windowTitle);
 	SDL_SetWindowMinimumSize(Media::window, 250, 150);
 
 	// Set the window refresher. This is called every iteration in the main loop.
