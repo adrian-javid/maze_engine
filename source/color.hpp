@@ -3,7 +3,7 @@
 
 #include "simpleDirectmediaLayer.hpp"
 #include "Util.hpp"
-#include "Vector2.hpp"
+#include "./core/Vector2.hpp"
 
 #include <tuple>
 #include <string>

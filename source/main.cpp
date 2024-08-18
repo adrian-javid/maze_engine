@@ -6,15 +6,15 @@ namespace Project::Global {/*
 
 */}
 
-#include "breadthFirstSearch.hpp"
-#include "depthFirstSearch.hpp"
-#include "greedyBestFirstSearch.hpp"
-#include "aStarSearch.hpp"
+#include "./core/breadthFirstSearch.hpp"
+#include "./core/depthFirstSearch.hpp"
+#include "./core/greedyBestFirstSearch.hpp"
+#include "./core/aStarSearch.hpp"
 
 #include "simpleDirectmediaLayer.hpp"
 #include "window.hpp"
-#include "SquareMaze.hpp"
-#include "HexagonMaze.hpp"
+#include "./core/SquareMaze.hpp"
+#include "./core/HexagonMaze.hpp"
 #include "Util.hpp"
 #include "AppParam.hpp"
 

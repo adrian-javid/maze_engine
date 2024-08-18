@@ -2,7 +2,7 @@ Import("mainEnv", "libEnv")
 
 rootSourceList = Glob("*.cpp")
 
-mainSourceList = Glob("main/*.cpp")
+mainSourceList = Glob("core/*.cpp")
 
 mainProgram = mainEnv.Program(target="maze_engine", source=[*rootSourceList, *mainSourceList])
 

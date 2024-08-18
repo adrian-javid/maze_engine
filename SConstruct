@@ -31,7 +31,7 @@ if undiscoveredEmscripten:
     warn(F"Cannot build web target. {' '.join(undiscoveredEmscripten)}")
 
 baseEnv = Environment(
-    CPPPATH=[Dir("source"), Dir("source/main"), Dir(F"library/{NATIVE_PLATFORM}/include/")],
+    CPPPATH=[Dir("source"), Dir(F"library/{NATIVE_PLATFORM}/include/")],
     LIBPATH=[*Glob(F"library/{NATIVE_PLATFORM}/lib/*")],
     COMPILATIONDB_USE_ABSPATH=False,
     COMPILATIONDB_PATH_FILTER=F"build/{NATIVE_PLATFORM}/*",
