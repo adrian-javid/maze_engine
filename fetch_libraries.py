@@ -1,3 +1,7 @@
+"""
+	Fetch and unpack the Simple Directmedia Layer library version 2 for Windows.
+"""
+
 from urllib.request import urlretrieve as download
 from pathlib import Path
 from zipfile import ZipFile
