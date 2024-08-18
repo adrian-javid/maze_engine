@@ -10,54 +10,54 @@
 #include <cassert>
 
 namespace Project::Media {
-    using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
+	using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
 
-    using ColorGetter = std::function<ColorTriplet(Vector2 const &)>;
+	using ColorGetter = std::function<ColorTriplet(Vector2 const &)>;
 
-    inline constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
+	inline constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
 
-    std::string toString(SDL_Color const &color);
+	std::string toString(SDL_Color const &color);
 
-    SDL_Color makeRgbaColor(
-        double const hue,
-        double const saturation=1.0,
-        double const luminance=0.5,
-        double const alpha=1.0
-    );
+	SDL_Color makeRgbaColor(
+		double const hue,
+		double const saturation=1.0,
+		double const luminance=0.5,
+		double const alpha=1.0
+	);
 
-    struct HslaColor;
+	struct HslaColor;
 }
 
 struct Project::Media::HslaColor {
 
-    double hue, saturation, luminance, alpha;
+	double hue, saturation, luminance, alpha;
 
-    constexpr HslaColor(
-        double const hueValue,
-        double const saturationValue=1.0,
-        double const luminanceValue=0.5,
-        double const alphaValue=1.0
-    ):
-        hue{hueValue},
-        saturation{saturationValue},
-        luminance{luminanceValue},
-        alpha{alphaValue}
-    {}
+	constexpr HslaColor(
+		double const hueValue,
+		double const saturationValue=1.0,
+		double const luminanceValue=0.5,
+		double const alphaValue=1.0
+	):
+		hue{hueValue},
+		saturation{saturationValue},
+		luminance{luminanceValue},
+		alpha{alphaValue}
+	{}
 
-    static double getCyclicHue(
-        double const hue,
-        double const percentage,
-        double const depth
-    );
+	static double getCyclicHue(
+		double const hue,
+		double const percentage,
+		double const depth
+	);
 
-    static double hueWrap(double const value);
+	static double hueWrap(double const value);
 
-    ColorTriplet getColorTriplet(double const percentage, double const colorDepth) const;
+	ColorTriplet getColorTriplet(double const percentage, double const colorDepth) const;
 
-    SDL_Color toRgbaColor() const;
-    SDL_Color toRgbaColor(double const overrideHue) const;
-    void addHue(double const hueSupplement);
-    std::string toString() const;
+	SDL_Color toRgbaColor() const;
+	SDL_Color toRgbaColor(double const overrideHue) const;
+	void addHue(double const hueSupplement);
+	std::string toString() const;
 };
 
 #endif

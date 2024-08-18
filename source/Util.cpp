@@ -3,16 +3,16 @@
 using namespace Project;
 
 double Util::wrapValue(double value, double const upperBound) {
-    static constexpr double zero{0.0};
+	static constexpr double zero{0.0};
 
-    assert(upperBound != 0);
-    assert(zero < upperBound);
+	assert(upperBound != 0);
+	assert(zero < upperBound);
 
-    value = std::fmod(value, upperBound);
+	value = std::fmod(value, upperBound);
 
-    if (value < zero) value += upperBound;
-    
-    if (value >= upperBound) value = zero;
+	if (value < zero) value += upperBound;
 
-    return value;
+	if (value >= upperBound) value = zero;
+
+	return value;
 }

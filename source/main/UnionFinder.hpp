@@ -6,25 +6,27 @@
 namespace Project { class UnionFinder; }
 
 class Project::UnionFinder {
-  public:
-    using Identifier = int;
-    static_assert(std::is_signed_v<Identifier>);
-    static_assert(std::is_integral_v<Identifier>);
+	public:
 
-  private:
-    std::vector<Identifier> forest;
+	using Identifier = int;
+	static_assert(std::is_signed_v<Identifier>);
+	static_assert(std::is_integral_v<Identifier>);
 
-  public:
+	private:
 
-    UnionFinder(std::size_t const count=0u);
+	std::vector<Identifier> forest;
 
-    void addElements(std::size_t const count);
+	public:
 
-    void unionThem(Identifier const element1, Identifier const element2);
+	UnionFinder(std::size_t const count=0u);
 
-    Identifier find(Identifier const element);
+	void addElements(std::size_t const count);
 
-    Identifier size(Identifier const element);
+	void unionThem(Identifier const element1, Identifier const element2);
+
+	Identifier find(Identifier const element);
+
+	Identifier size(Identifier const element);
 
 };
 
