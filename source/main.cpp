@@ -57,11 +57,12 @@ namespace Project::Global {
 }
 
 static void Project::Global::refreshWindow() {
-	static constexpr Media::HslaColor startEndColor(91.0, 1.0, 0.49);
-	static constexpr Media::HslaColor pathTileColor(0.0);
-	static constexpr Media::HslaColor wallColor(240.0);
-	static constexpr Media::HslaColor markedTileColor(300.0);
-	static constexpr Media::HslaColor unmarkedTileColor(155.0);
+	static constexpr Media::HslaColor
+		startEndColor    (91.0, 1.0, 0.49),
+		pathTileColor    (0.0            ),
+		wallColor        (240.0          ),
+		markedTileColor  (300.0          ),
+		unmarkedTileColor(155.0          );
 
 	static constexpr double zeroPercent{0.0};
 	static double percentage{zeroPercent};
@@ -82,13 +83,14 @@ static void Project::Global::refreshWindow() {
 		);
 	};
 
-	Media::ColorTriplet const pathTileColorTriplet = getColorTriplet(pathTileColor);
-	Media::ColorTriplet const wallColorTriplet = getColorTriplet(wallColor);
-	Media::ColorTriplet const markedTileColorTriplet = getColorTriplet(markedTileColor);
-	Media::ColorTriplet const unmarkedTileColorTriplet = getColorTriplet(unmarkedTileColor);
-	Media::ColorTriplet const startEndColorTriplet = getColorTriplet(startEndColor);
+	Media::ColorTriplet const
+		pathTileColorTriplet     = getColorTriplet(pathTileColor    ),
+		wallColorTriplet         = getColorTriplet(wallColor        ),
+		markedTileColorTriplet   = getColorTriplet(markedTileColor  ),
+		unmarkedTileColorTriplet = getColorTriplet(unmarkedTileColor),
+		startEndColorTriplet     = getColorTriplet(startEndColor    );
 
-	float const windowWidthValue = static_cast<float>(Media::windowWidth);
+	float const windowWidthValue  = static_cast<float>(Media::windowWidth );
 	float const windowHeightValue = static_cast<float>(Media::windowHeight);
 
 	auto const mainColorGetter = [
@@ -127,6 +129,8 @@ static void Project::Global::refreshWindow() {
 
 int main(int const argc, char *argv[]) {
 	auto const &config = AppParamInfo::parseArgv(argc, argv);
+
+	// Get values from `config`.
 
 	std::string const &gridType = config.at("grid").argument;
 	int const mazeSize{
