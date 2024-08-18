@@ -13,10 +13,6 @@
 #include <functional>
 
 namespace Project::Media {
-	extern Uint64 deltaTime;
-
-	void mainLoop();
-
 	void exitHandler();
 }
 

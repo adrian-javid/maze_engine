@@ -17,6 +17,7 @@ namespace Project::Global {/*
 #include "./core/HexagonMaze.hpp"
 #include "Util.hpp"
 #include "AppParam.hpp"
+#include "main.hpp"
 
 #include <thread>
 #include <mutex>
@@ -66,7 +67,7 @@ static void Project::Global::refreshWindow() {
 
 	static constexpr double zeroPercent{0.0};
 	static double percentage{zeroPercent};
-	double const deltaPercentage{static_cast<double>(Media::deltaTime) * 0.00011};
+	double const deltaPercentage{static_cast<double>(Main::deltaTime) * 0.00011};
 
 	percentage = Global::percentageWrap(percentage + deltaPercentage);
 	assert(percentage >= 0.0); assert(percentage < 1.0);
@@ -314,9 +315,9 @@ int main(int const argc, char *argv[]) {
 		it will be cleaned up before the main loop is called for the first time.""
 		(https://emscripten.org/docs/api_reference/emscripten.h.html#id3)
 	*/
-	emscripten_set_main_loop(&Media::mainLoop, -1, true);
+	emscripten_set_main_loop(&Main::loop, -1, true);
 	#else
-	while (true) Media::mainLoop();
+	while (true) Main::loop();
 	#endif
 
 	return EXIT_SUCCESS;
