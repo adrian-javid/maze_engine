@@ -4,7 +4,7 @@ rootSourceList = Glob("*.cpp")
 
 mainSourceList = Glob("main/*.cpp")
 
-mainProgram = mainEnv.Program(target="solve_maze", source=[*rootSourceList, *mainSourceList])
+mainProgram = mainEnv.Program(target="maze_engine", source=[*rootSourceList, *mainSourceList])
 
 catch2Object = libEnv.StaticObject(File("test/catch2/catch_amalgamated.cpp"))
 

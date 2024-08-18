@@ -11,12 +11,12 @@ Run with `help` to see the program's parameters.
 
 ```PowerShell
 # Windows
-.\build\Windows\solve_maze.exe help
+.\build\Windows\maze_engine.exe help
 ```
 
 ```bash
 # Linux
-./build/Linux/solve_maze help
+./build/Linux/maze_engine help
 ```
 
 <!-- `size=550 seed=7722214 grid=square search=greedy delay=0` -->
@@ -32,7 +32,7 @@ The `compile_commands.json` are put into the `build/<platform>` directory.
 
 To clean the build, run `scons -c` or `scons -c .` respectively.
 
-> Note: If you want to move the Windows executable `solve_maze.exe` to a different location,
+> Note: If you want to move the Windows executable `maze_engine.exe` to a different location,
 > move the `SDL2.dll` along with it to the same directory.
 > The executable needs that dynamic-link library to run.
 
