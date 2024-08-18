@@ -6,11 +6,9 @@
 #include <functional>
 #include <optional>
 
-namespace Project { class Maze; }
+namespace Project { struct Maze; }
 
-class Project::Maze {
-
-	public:
+struct Project::Maze {
 
 	using Tile = std::uint_least8_t;
 
