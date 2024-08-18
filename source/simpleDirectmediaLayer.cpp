@@ -3,7 +3,7 @@
 #include "window.hpp"
 
 // Change in time.
-Uint64 Project::Media::deltaTime = 0;
+Uint64 Project::Media::deltaTime{0u};
 
 void Project::Media::mainLoop() {
 	// Time of the previous iteration.
