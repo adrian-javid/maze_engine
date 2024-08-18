@@ -7,7 +7,6 @@ from pathlib import Path
 from zipfile import ZipFile
 from shutil import copytree as copyRecursively
 
-
 # Create a directory to store downloaded files.
 downloadDir: str = "downloaded"
 Path(F"{downloadDir}/").mkdir(parents=True, exist_ok=True)
