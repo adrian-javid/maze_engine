@@ -2,6 +2,9 @@ build
 downloaded
 library
 
+# Visual Studio Code settings
+.vscode
+
 # SCons cache
 .sconsign.dblite
 
