@@ -1,7 +1,7 @@
 #ifndef window_hpp
 #define window_hpp
 
-#include "simpleDirectmediaLayer.hpp"
+#include "simple_directmedia_layer.hpp"
 #include "./core/SquareMaze.hpp"
 #include "./core/HexagonMaze.hpp"
 #include "color.hpp"

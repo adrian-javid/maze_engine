@@ -11,7 +11,7 @@ namespace Project::Global {/*
 #include "./core/greedyBestFirstSearch.hpp"
 #include "./core/aStarSearch.hpp"
 
-#include "simpleDirectmediaLayer.hpp"
+#include "simple_directmedia_layer.hpp"
 #include "window.hpp"
 #include "./core/SquareMaze.hpp"
 #include "./core/HexagonMaze.hpp"
@@ -267,7 +267,7 @@ int main(int const argc, char *argv[]) {
 		I don't understand why calling this before `SDL_Init` causes a segmentation fault.
 		I believe it has something to do with `SDL_Quit`.
 	*/
-	std::atexit(&Media::exitHandler);
+	std::atexit(&Main::exitHandler);
 
 	static constexpr char const *windowTitle = "Maze Engine";
 

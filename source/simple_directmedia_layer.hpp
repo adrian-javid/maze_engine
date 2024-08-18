@@ -1,5 +1,5 @@
-#ifndef simpleDirectmediaLayer_hpp
-#define simpleDirectmediaLayer_hpp
+#ifndef SIMPLE_DIRECTMEDIA_LATER_HPP
+#define SIMPLE_DIRECTMEDIA_LATER_HPP
 
 #ifdef _WIN64
 #include "SDL2/SDL.h"
@@ -9,11 +9,5 @@
 #include "SDL.h"
 #pragma GCC diagnostic pop
 #endif
-
-#include <functional>
-
-namespace Project::Media {
-	void exitHandler();
-}
 
 #endif

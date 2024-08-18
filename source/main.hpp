@@ -1,12 +1,14 @@
 #ifndef MAIN_HPP
 #define MAIN_HPP
 
-#include "simpleDirectmediaLayer.hpp"
+#include "simple_directmedia_layer.hpp"
 
 namespace Project::Main {
 	extern Uint64 deltaTime;
 
 	void loop();
+
+	void exitHandler();
 }
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef color_hpp
 #define color_hpp
 
-#include "simpleDirectmediaLayer.hpp"
+#include "simple_directmedia_layer.hpp"
 #include "Util.hpp"
 #include "./core/Vector2.hpp"
 
