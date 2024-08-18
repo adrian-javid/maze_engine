@@ -8,13 +8,15 @@ from shutil import copytree as copyRecursively
 downloadDir: str = "downloaded"
 Path(F"{downloadDir}/").mkdir(parents=True, exist_ok=True)
 
+SDL2_VERSION: str = "2.30.6"
+
 for url, includeDir, libDir, platform, simpleName in (
 
     # This is information for downloading SDL for 64-bit Windows.
     (
-        "https://github.com/libsdl-org/SDL/releases/download/release-2.28.5/SDL2-devel-2.28.5-VC.zip",
-        "SDL2-2.28.5/include/",
-        "SDL2-2.28.5/lib/x64/",
+        F"https://github.com/libsdl-org/SDL/releases/download/release-{SDL2_VERSION}/SDL2-devel-{SDL2_VERSION}-VC.zip",
+        F"SDL2-{SDL2_VERSION}/include/",
+        F"SDL2-{SDL2_VERSION}/lib/x64/",
         'Windows',
         "SDL2",
     ),
@@ -43,5 +45,5 @@ for url, includeDir, libDir, platform, simpleName in (
             copyRecursively(dst=str(libraryPath), src=F"{downloadDir}/{includeDir}/")
 
         # Copy library binaries to relevant directory.
-        if not (libraryPath := Path(F"library/{platform}/lib/{simpleName}")).exists():    
+        if not (libraryPath := Path(F"library/{platform}/lib/{simpleName}")).exists():
             copyRecursively(dst=libraryPath, src=F"{downloadDir}/{libDir}/")
