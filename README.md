@@ -1,5 +1,5 @@
-# Maze Solver
-It is a program that solves mazes.
+# Maze Engine
+It is a program that generates and solves mazes.
 
 It generates a maze based on a seed, then displays a window displaying a specified search algorithm solving the maze in real time.
 
