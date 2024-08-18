@@ -13,7 +13,7 @@
 namespace Project::Util {
 
 	template<typename T>
-	class OpaqueIterator {
+	class [[deprecated]] OpaqueIterator {
 		private:
 			std::function<T(std::any const &)> dereference;
 			std::function<void(std::any &)> increment;
