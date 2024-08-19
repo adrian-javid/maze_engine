@@ -64,7 +64,8 @@ int main(int const argc, char *argv[]) {
 	);
 	bool const mazeWrap = App::ParamInfo::castArg<bool>(config.at("wrap").argument);
 
-	static constexpr int mazeFillValue{0xFFu};
+	// The maze will be constructed with all walls before generating corridors.
+	static constexpr Engine::Maze::Tile mazeFillValue{0xFFu};
 
 	// Create maze object with grid type.
 	if (gridType == "square") {
