@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <cassert>
+#include "maze_engine/auxiliary.hpp"
 
 std::string App::toString(SDL_Color const &color) {
 	std::stringstream buffer;
@@ -45,7 +46,7 @@ SDL_Color App::makeRgbaColor(
 
 double App::HslaColor::hueWrap(double const value) {
 	static constexpr double fullCycle{360.0};
-	return Util::wrapValue(value, fullCycle);
+	return MazeEngine::Aux::wrap(value, fullCycle);
 }
 
 double App::HslaColor::getCyclicHue(

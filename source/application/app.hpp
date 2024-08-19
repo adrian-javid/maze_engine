@@ -7,6 +7,7 @@
 #include "maze_engine/maze/square.hpp"
 #include "maze_engine/maze/hexagon.hpp"
 #include "maze_engine/vector2.hpp"
+#include <mutex>
 
 // Application stuff.
 namespace App {

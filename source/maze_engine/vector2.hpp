@@ -1,13 +1,12 @@
 #ifndef MazeEngine_Vector2_hpp
 #define MazeEngine_Vector2_hpp
 
-#include "application/util.hpp"
-
 #include <functional>
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
 #include <array>
+#include "auxiliary.hpp"
 
 namespace MazeEngine { struct Vector2; }
 
@@ -24,7 +23,7 @@ struct MazeEngine::Vector2 {
 	static constexpr std::size_t rotateIndex(int const indexOffsetter) {
 		static_assert(index >= 0);
 		static_assert(index < upperBound);
-		return static_cast<std::size_t>(App::Util::wrapValue(index - indexOffsetter, upperBound));
+		return static_cast<std::size_t>(Aux::wrap(index - indexOffsetter, upperBound));
 	}
 
 	constexpr Vector2 hexagonalRotate(int const indexDegree60) const {
@@ -44,11 +43,11 @@ struct MazeEngine::Vector2 {
 	constexpr Vector2(int row=0, int column=0): value1{row}, value2{column} {}
 
 	constexpr int manhattanLength() const {
-		return App::Util::abs(value1) + App::Util::abs(value2);
+		return Aux::abs(value1) + Aux::abs(value2);
 	}
 
 	constexpr int hexManhattanLength() const {
-		return (manhattanLength() + App::Util::abs(thirdAxis())) / 2;
+		return (manhattanLength() + Aux::abs(thirdAxis())) / 2;
 	}
 
 	constexpr Vector2 operator+(Vector2 const &vector) const {
@@ -89,7 +88,7 @@ struct MazeEngine::Vector2 {
 	}
 
 	constexpr Vector2 wrap(int const rowCount, int const columnCount) const {
-		return Vector2(App::Util::wrapValue(value1, rowCount), App::Util::wrapValue(value2, columnCount));
+		return Vector2(Aux::wrap(value1, rowCount), Aux::wrap(value2, columnCount));
 	}
 
 	struct Hash { std::size_t operator()(Vector2 const &vector) const noexcept; };

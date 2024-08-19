@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <mutex>
+#include "maze_engine/auxiliary.hpp"
 
 namespace App::Util {
 
@@ -40,24 +41,8 @@ namespace App::Util {
 			bool operator!=(OpaqueIterator const &otherIterator) const { return not (*this == otherIterator); }
 	};
 
-	template<class T>
-	[[nodiscard]] constexpr auto abs(T const& x) noexcept {
-		static_assert(std::is_arithmetic_v<T>);
-		return x < T{} ? -x : x;
-	}
-
-	constexpr int wrapValue(int value, int const upperBound) {
-		assert(upperBound > 0);
-		value %= upperBound;
-		if (value < 0) value += upperBound;
-		assert(value >= 0);
-		return value;
-	}
-
-	double wrapValue(double value, double const upperBound);
-
 	[[gnu::always_inline]] inline
-	double percentageWrap(double const value) { return wrapValue(value, 1.00); }
+	double percentageWrap(double const value) { return MazeEngine::Aux::wrap(value, 1.00); }
 
 	constexpr float linearInterpolation(float const percentage, float const start, float const end) {
 		assert(percentage >= 0.0f);
