@@ -7,6 +7,7 @@
 #include <queue>
 
 #include "maze_engine/vector2.hpp"
+#include "application/macros.hpp"
 
 namespace MazeEngine {
 	template <typename StorageT>
@@ -82,7 +83,7 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 		StorageT storage;
 		Vector2::HashMap<Vector2> history;
 
-		[[gnu::always_inline]] void gatherNeighbors() {
+		FORCE_INLINE void gatherNeighbors() {
 			maze->forEachNeighbor(key, [this](Vector2 const &neighbor) {
 				if (this->history.find(neighbor) == this->history.end()) {
 					this->history.insert({neighbor, this->key});

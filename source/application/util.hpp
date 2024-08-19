@@ -10,6 +10,7 @@
 #include <iostream>
 #include <mutex>
 #include "maze_engine/auxiliary.hpp"
+#include "macros.hpp"
 
 namespace App::Util {
 
@@ -41,7 +42,7 @@ namespace App::Util {
 			bool operator!=(OpaqueIterator const &otherIterator) const { return not (*this == otherIterator); }
 	};
 
-	[[gnu::always_inline]] inline
+	FORCE_INLINE inline
 	double percentageWrap(double const value) { return MazeEngine::Aux::wrap(value, 1.00); }
 
 	constexpr float linearInterpolation(float const percentage, float const start, float const end) {
