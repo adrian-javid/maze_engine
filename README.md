@@ -11,18 +11,18 @@ Run with `help` to see the program's parameters.
 
 ```PowerShell
 # Windows release build
-.\build\Windows\release\maze_engine.exe help
+.\build\Windows\release\run\maze_engine.exe help
 
 # Windows debug build
-.\build\Windows\debug\maze_engine.exe help
+.\build\Windows\debug\run\maze_engine.exe help
 ```
 
 ```Shell
 # Linux release build
-./build/Linux/release/maze_engine help
+./build/Linux/release/run/maze_engine help
 
 # Linux debug build
-/build/Linux/debug/maze_engine help
+/build/Linux/debug/run/maze_engine help
 ```
 
 <!--
@@ -34,11 +34,11 @@ Run with `help` to see the program's parameters.
 
 To build, you need to [install the neccessary dependencies for your platform](#dependencies).
 
-Running `scons` on the command-line will build the default target, which is the release build for your native platform, `build/<platform>/release/maze_engine<file_extension>`.
+Running `scons` on the command-line will build the default target, which is the release build for your native platform, `build/<platform>/release/run/maze_engine<file_extension>`.
 
 To build all available targets&mdash;including the test suite and the JSON compilation database&mdash;run `scons .` on the command-line.
 
-The test suite executable is put at `build/<platform>/<build_type>/test/suite<file_extension>`.
+The test suite executable is put at `build/<platform>/<build_type>/run/test_suite<file_extension>`.
 
 The JSON compilation database is put at `build/<platform>/<build_type>/compile_commands.json`. You can configure Visual Studio Code to use this database with the Microsoft C++ extension, for example:
 > `.vscode/c_cpp_properties.json`
