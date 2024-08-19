@@ -74,7 +74,15 @@ GCC_RELEASE = make(
 )
 
 GCC_DEBUG = make(
-    CCFLAGS=['-O0', '-ggdb'],
+    CCFLAGS=[
+        "-O0", # zero optimization for faster compilation
+        "-Werror", # treat warnings as errors
+    ],
+    CPPDEFINES=[
+        "_GLIBCXX_DEBUG",
+        "_GLIBCXX_DEBUG_PEDANTIC",
+        "_LIBCPP_DEBUG=1", # for Clang's `libc++`
+    ]
 )
 
 #endregion
@@ -83,13 +91,27 @@ GCC_DEBUG = make(
 
 MSVC_CORE = make(
     CXXFLAGS=[
-        "/O2",
-        "/permissive-", # stricter conformance to C++ standard
         "/std:c++17",
         "/EHsc",
+        "/permissive-", # stricter conformance to C++ standard
     ],
     LINKFLAGS=["/SUBSYSTEM:CONSOLE"],
-    CPPDEFINES=['NDEBUG'],
+)
+
+MSVC_RELEASE = make(
+    CXXFLAGS=["/O2"],
+    CPPDEFINES=["NDEBUG"],
+)
+
+MSVC_DEBUG = make(
+    CXXFLAGS=[
+        "/Od", # disable optimization for faster compilation
+        "/MDd", # use dynamically loaded debug library
+        "/WX", # treat warnings as errors
+        "/RTC1", # runtime checks
+        "/analyze", # static code analysis
+    ],
+    CPPDEFINES=["_ITERATOR_DEBUG_LEVEL=2"]
 )
 
 MSVC_WARNING = make(CXXFLAGS=["/W4"])

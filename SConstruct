@@ -1,5 +1,6 @@
 from platform import system as getPlatform
 from warnings import warn
+from typing import Literal
 import build_config as C
 
 NATIVE_PLATFORM = getPlatform()
@@ -47,28 +48,49 @@ webMainEnv.Append(LINKFLAGS=['-sUSE_SDL=2'])
 
 match NATIVE_PLATFORM:
 	case 'Windows':
-		nativeLibEnv = C.parse(baseEnv.Clone(), C.MSVC_CORE)
-		nativeMainEnv = C.parse(nativeLibEnv.Clone(), C.MSVC_SDL2, C.MSVC_WARNING)
+		nativeLibEnv = C.parse(baseEnv.Clone(), C.MSVC_CORE, C.MSVC_RELEASE)
+		nativeReleaseMainEnv = C.parse(nativeLibEnv.Clone(), C.MSVC_SDL2, C.MSVC_WARNING)
+		nativeDebugMainEnv = C.parse(baseEnv.Clone(), C.MSVC_CORE, C.MSVC_DEBUG, C.MSVC_SDL2, C.MSVC_WARNING)
 	case 'Linux':
 		nativeLibEnv = linuxLibEnv
-		nativeMainEnv = C.parse(nativeLibEnv.Clone(), C.GCC_WARNING)
-		nativeMainEnv.ParseConfig("sdl2-config --cflags --libs")
+		nativeReleaseMainEnv = C.parse(nativeLibEnv.Clone(), C.GCC_WARNING)
+		nativeReleaseMainEnv.ParseConfig("sdl2-config --cflags --libs")
+		nativeDebugMainEnv = C.parse(baseEnv.Clone(), C.GCC_CORE, C.GCC_DEBUG, C.GCC_WARNING)
+		nativeDebugMainEnv.ParseConfig("sdl2-config --cflags --libs")
 
-def runScript(mainEnv, libEnv, platform: str):
+def runScript(mainEnv, libEnv, platform: str, buildType: Literal["release", "debug"]):
 	return SConscript(
 		"source/SConscript",
 		exports={"mainEnv": mainEnv, "libEnv": libEnv, "PLATFORM": platform},
-		variant_dir=F"build/{platform}",
+		variant_dir=F"build/{platform}/{buildType}",
 		must_exist=True,
 		duplicate=0,
 	)
 
-mainProgram, testProgram, compilationDatabase = runScript(nativeMainEnv, nativeLibEnv, NATIVE_PLATFORM)
+mainReleaseProgram, testReleaseProgram, releaseCompilationDatabase = runScript(
+	buildType="release",
+	mainEnv=nativeReleaseMainEnv,
+	libEnv=nativeLibEnv,
+	platform=NATIVE_PLATFORM,
+)
+
+mainDebugProgram, testDebugProgram, debugCompilationDatabase = runScript(
+	buildType="debug",
+	mainEnv=nativeDebugMainEnv,
+	libEnv=nativeLibEnv,
+	platform=NATIVE_PLATFORM,
+)
 
 if NATIVE_PLATFORM == "Windows":
-	windowsSdl2Dll = Command("build/Windows/SDL2.dll", "library/Windows/lib/SDL2/SDL2.dll", Copy("$TARGET", "$SOURCE"))
-	Depends(mainProgram, windowsSdl2Dll)
+	for mainProgram, buildType in ((mainReleaseProgram, "release"), (mainDebugProgram, "debug")):
+		windowsSdl2Dll = Command(F"build/Windows/{buildType}/SDL2.dll", "library/Windows/lib/SDL2/SDL2.dll", Copy("$TARGET", "$SOURCE"))
+		Depends(mainProgram, windowsSdl2Dll)
 
-if not undiscoveredEmscripten: runScript(webMainEnv, webLibEnv, "web")
+if not undiscoveredEmscripten: runScript(
+	buildType="release",
+	mainEnv=webMainEnv,
+	libEnv=webLibEnv,
+	platform="web",
+)
 
-Default(mainProgram)
+Default(mainReleaseProgram)
