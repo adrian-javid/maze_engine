@@ -1,5 +1,5 @@
-#ifndef Application_AppParam_hpp
-#define Application_AppParam_hpp
+#ifndef Application_ParamInfo_hpp
+#define Application_ParamInfo_hpp
 
 #include <string>
 #include <unordered_map>
@@ -8,12 +8,12 @@
 #include <sstream>
 
 namespace App {
-	struct AppParamInfo {
+	struct ParamInfo {
 		std::string const description;
 		std::string argument;
 		using Acceptable = std::unordered_map<std::string, std::string>;
 		std::optional<Acceptable> const acceptable;
-		static std::unordered_map<std::string, AppParamInfo> const &parseArgv(int const argc, char const *const *const argv);
+		static std::unordered_map<std::string, ParamInfo> const &parseArgv(int const argc, char const *const *const argv);
 
 		static constexpr char helpTipString[] = "Run with `help` for information about this program.";
 
@@ -66,10 +66,10 @@ namespace App {
 
 		static std::string validParametersStr(bool const verbose=false);
 
-		static std::string acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues);
+		static std::string acceptableValuesStr(ParamInfo::Acceptable const &acceptableValues);
 
 		private:
-			static std::unordered_map<std::string, AppParamInfo> config;
+			static std::unordered_map<std::string, ParamInfo> config;
 	};
 }
 

@@ -16,7 +16,7 @@ namespace MazeEngine::Global {/*
 #include "maze_engine/maze/square.hpp"
 #include "maze_engine/maze/hexagon.hpp"
 #include "application/util.hpp"
-#include "application/app_param.hpp"
+#include "application/param_info.hpp"
 #include "application/app.hpp"
 
 #include <thread>
@@ -38,24 +38,24 @@ int main(int const argc, char *argv[]) {
 	using namespace App;
 	using namespace MazeEngine;
 
-	auto const &config = AppParamInfo::parseArgv(argc, argv);
+	auto const &config = ParamInfo::parseArgv(argc, argv);
 
 	// Get values from `config`.
 
 	std::string const &gridType = config.at("grid").argument;
 	int const mazeSize{
-		AppParamInfo::assertPositive(
-			AppParamInfo::castArg<int>(config.at("size").argument),
+		ParamInfo::assertPositive(
+			ParamInfo::castArg<int>(config.at("size").argument),
 		(std::ostringstream() << "Bad value for `size`." ).str())
 	};
-	unsigned int const seed{AppParamInfo::castArg<unsigned int>(config.at("seed").argument)};
+	unsigned int const seed{ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
 	std::string const &searchAlgorithmName = config.at("search").argument;
 	App::sleepTime = std::chrono::milliseconds(
-		AppParamInfo::assertNonnegative(
-			AppParamInfo::castArg<int>(config.at("delay").argument),
+		ParamInfo::assertNonnegative(
+			ParamInfo::castArg<int>(config.at("delay").argument),
 		(std::ostringstream() << "Bad value for `delay`." ).str())
 	);
-	bool const mazeWrap = AppParamInfo::castArg<bool>(config.at("wrap").argument);
+	bool const mazeWrap = ParamInfo::castArg<bool>(config.at("wrap").argument);
 
 	static constexpr int mazeFillValue{0xFFu};
 

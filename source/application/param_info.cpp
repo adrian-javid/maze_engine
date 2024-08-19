@@ -1,7 +1,9 @@
-#include "app_param.hpp"
-#include <sstream>
+#include "param_info.hpp"
 
-std::unordered_map<std::string, App::AppParamInfo> App::AppParamInfo::config{
+#include <sstream>
+#include <unordered_map>
+
+std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 	{"search", {
 		"Search algorithm.",
 		"depth",
@@ -54,7 +56,7 @@ std::unordered_map<std::string, App::AppParamInfo> App::AppParamInfo::config{
 	}},
 };
 
-std::string App::AppParamInfo::validParametersStr(bool const verbose) {
+std::string App::ParamInfo::validParametersStr(bool const verbose) {
 		std::ostringstream stream;
 		for (auto const &[paramName, info] : config) {
 			stream << "\t`" << paramName << "`: " << info.description;
@@ -66,7 +68,7 @@ std::string App::AppParamInfo::validParametersStr(bool const verbose) {
 		return stream.str();
 }
 
-std::string App::AppParamInfo::acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues) {
+std::string App::ParamInfo::acceptableValuesStr(ParamInfo::Acceptable const &acceptableValues) {
 	std::ostringstream stream;
 	for (auto const &[value, description] : acceptableValues) {
 		stream << "\t\t`" << value << "`: " << description << '\n';
@@ -77,7 +79,7 @@ std::string App::AppParamInfo::acceptableValuesStr(AppParamInfo::Acceptable cons
 	return stream.str();
 }
 
-auto App::AppParamInfo::parseArgv(int const argc, char const *const *const argv) -> std::unordered_map<std::string, AppParamInfo> const & {
+auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) -> std::unordered_map<std::string, ParamInfo> const & {
 	// Check for "help".
 	for (int argIndex{1}; argIndex < argc; ++argIndex) {
 		if (std::string(argv[argIndex]) == "help") {
@@ -111,7 +113,7 @@ auto App::AppParamInfo::parseArgv(int const argc, char const *const *const argv)
 			"Valid parameters:\n" + validParametersStr() + "\n" + helpTipString
 		);
 
-		AppParamInfo &param = paramPtr->second;
+		ParamInfo &param = paramPtr->second;
 		param.argument = arg.substr(delimPos + 1);
 
 		if (not param.acceptable) continue;
