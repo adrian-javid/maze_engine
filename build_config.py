@@ -106,15 +106,16 @@ MSVC_RELEASE = make(
 MSVC_DEBUG = make(
 	CXXFLAGS=[
 		"/Od", # disable optimization for faster compilation
-		"/MDd", # use dynamically loaded debug library
 		"/WX", # treat warnings as errors
 		"/RTC1", # runtime checks
 		"/analyze", # static code analysis
 	],
-	CPPDEFINES=["_ITERATOR_DEBUG_LEVEL=2"]
 )
 
-MSVC_WARNING = make(CXXFLAGS=["/W4"])
+MSVC_WARNING = make(CXXFLAGS=[
+	"/W4",
+	"/wd4996", # suppress deprecation warnings so they are not errors
+])
 
 MSVC_SDL2 = make(LIBS=["SDL2", "SDL2main", "shell32"])
 
