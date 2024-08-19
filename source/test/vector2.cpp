@@ -1,6 +1,6 @@
 #include "catch2/catch_amalgamated.hpp"
-#include "core/vector2.hpp"
-#include "core/maze/square.hpp"
+#include "maze_engine/vector2.hpp"
+#include "maze_engine/maze/square.hpp"
 
 using namespace MazeEngine;
 

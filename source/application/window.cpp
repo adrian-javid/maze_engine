@@ -1,4 +1,4 @@
-#include "app/window.hpp"
+#include "application/window.hpp"
 
 #include <array>
 #include <cassert>

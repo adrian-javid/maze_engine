@@ -1,8 +1,8 @@
-#ifndef core_maze_SQUARE_HPP
-#define core_maze_SQUARE_HPP
+#ifndef MazeEngine_Maze_Square_hpp
+#define MazeEngine_Maze_Square_hpp
 
 // parent class
-#include "core/maze.hpp"
+#include "maze_engine/maze.hpp"
 
 // grid to string
 #include <string>
@@ -11,7 +11,7 @@
 // table of tiles
 #include <vector>
 
-#include "core/vector2.hpp"
+#include "maze_engine/vector2.hpp"
 
 namespace MazeEngine {
 	class SquareMaze;

@@ -1,5 +1,5 @@
-#ifndef app_APP_PARAM_HPP
-#define app_APP_PARAM_HPP
+#ifndef Application_AppParam_hpp
+#define Application_AppParam_hpp
 
 #include <string>
 #include <unordered_map>

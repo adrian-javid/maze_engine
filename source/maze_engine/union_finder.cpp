@@ -1,4 +1,4 @@
-#include "core/union_finder.hpp"
+#include "maze_engine/union_finder.hpp"
 
 MazeEngine::UnionFinder::UnionFinder(std::size_t const count): forest(count, -1) {}
 

@@ -1,8 +1,8 @@
-#ifndef core_search_A_STAR_HPP
-#define core_search_A_STAR_HPP
+#ifndef MazeEngine_Search_AStar_hpp
+#define MazeEngine_Search_AStar_hpp
 
-#include "core/vector2.hpp"
-#include "core/maze.hpp"
+#include "maze_engine/vector2.hpp"
+#include "maze_engine/maze.hpp"
 
 namespace MazeEngine {
 	Vector2::HashMap<Vector2> aStarSearch(

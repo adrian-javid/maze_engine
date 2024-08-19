@@ -1,7 +1,7 @@
-#include "app/window.hpp"
+#include "application/window.hpp"
 
-#include "app/application.hpp"
-#include "app/util.hpp"
+#include "application/application.hpp"
+#include "application/util.hpp"
 
 void App::Window::refresh() {
 

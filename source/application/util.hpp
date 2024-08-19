@@ -1,5 +1,5 @@
-#ifndef app_UTIL_HPP
-#define app_UTIL_HPP
+#ifndef Application_Util_hpp
+#define Application_Util_hpp
 
 #include <cmath>
 #include <cassert>

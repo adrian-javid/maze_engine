@@ -1,9 +1,9 @@
-#ifndef core_search_GREEDY_BEST_FIRST_HPP
-#define core_search_GREEDY_BEST_FIRST_HPP
+#ifndef MazeEngine_Search_GreedyBestFirst_hpp
+#define MazeEngine_Search_GreedyBestFirst_hpp
 
-#include "core/vector2.hpp"
-#include "core/maze.hpp"
-#include "core/search/abstract.hpp"
+#include "maze_engine/vector2.hpp"
+#include "maze_engine/maze.hpp"
+#include "maze_engine/search/abstract.hpp"
 
 namespace MazeEngine {
 	Vector2::HashMap<Vector2> greedyBestFirstSearch(

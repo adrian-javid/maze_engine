@@ -1,9 +1,9 @@
-#ifndef core_search_BREADTH_FIRST_HPP
-#define core_search_BREADTH_FIRST_HPP
+#ifndef MazeEngine_Search_BreadthFirst_hpp
+#define MazeEngine_Search_BreadthFirst_hpp
 
-#include "core/maze.hpp"
-#include "core/vector2.hpp"
-#include "core/search/abstract.hpp"
+#include "maze_engine/maze.hpp"
+#include "maze_engine/vector2.hpp"
+#include "maze_engine/search/abstract.hpp"
 #include <optional>
 
 namespace MazeEngine {

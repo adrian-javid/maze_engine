@@ -1,12 +1,12 @@
-#ifndef core_search_ABSTRACT_HPP
-#define core_search_ABSTRACT_HPP
+#ifndef MazeEngine_Search_Abstract_hpp
+#define MazeEngine_Search_Abstract_hpp
 
 #include <optional>
 #include <type_traits>
 #include <stack>
 #include <queue>
 
-#include "core/vector2.hpp"
+#include "maze_engine/vector2.hpp"
 
 namespace MazeEngine {
 	template <typename StorageT>

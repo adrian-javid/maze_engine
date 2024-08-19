@@ -1,12 +1,12 @@
-#ifndef app_APPLICATION_HPP
-#define app_APPLICATION_HPP
+#ifndef Application_Application_hpp
+#define Application_Application_hpp
 
 #include "simple_directmedia_layer.hpp"
 #include <thread>
-#include "core/maze.hpp"
-#include "core/maze/square.hpp"
-#include "core/maze/hexagon.hpp"
-#include "core/vector2.hpp"
+#include "maze_engine/maze.hpp"
+#include "maze_engine/maze/square.hpp"
+#include "maze_engine/maze/hexagon.hpp"
+#include "maze_engine/vector2.hpp"
 
 // Application stuff.
 namespace App {

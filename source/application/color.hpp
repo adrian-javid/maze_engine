@@ -1,9 +1,9 @@
-#ifndef app_COLOR_HPP
-#define app_COLOR_HPP
+#ifndef Application_Color_hpp
+#define Application_Color_hpp
 
 #include "simple_directmedia_layer.hpp"
 #include "Util.hpp"
-#include "core/vector2.hpp"
+#include "maze_engine/vector2.hpp"
 
 #include <tuple>
 #include <string>

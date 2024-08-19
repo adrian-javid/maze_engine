@@ -1,5 +1,5 @@
-#ifndef core_UNION_FINDER_HPP
-#define core_UNION_FINDER_HPP
+#ifndef MazeEngine_UnionFinder_hpp
+#define MazeEngine_UnionFinder_hpp
 
 #include <vector>
 

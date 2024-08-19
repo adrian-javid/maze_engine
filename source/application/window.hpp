@@ -1,9 +1,9 @@
-#ifndef app_WINDOW_HPP
-#define app_WINDOW_HPP
+#ifndef Application_Window_hpp
+#define Application_Window_hpp
 
 #include "simple_directmedia_layer.hpp"
-#include "core/maze/square.hpp"
-#include "core/maze/hexagon.hpp"
+#include "maze_engine/maze/square.hpp"
+#include "maze_engine/maze/hexagon.hpp"
 #include "color.hpp"
 
 namespace App::Window {

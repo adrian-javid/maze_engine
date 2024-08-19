@@ -1,5 +1,5 @@
-#ifndef app_SIMPLE_DIRECTMEDIA_LAYER_HPP
-#define app_SIMPLE_DIRECTMEDIA_LAYER_HPP
+#ifndef Application_SimpleDirectmediaLayer_hpp
+#define Application_SimpleDirectmediaLayer_hpp
 
 #ifdef _WIN64
 #include "SDL2/SDL.h"

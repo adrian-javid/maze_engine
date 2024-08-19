@@ -6,18 +6,18 @@ namespace MazeEngine::Global {/*
 
 */}
 
-#include "core/search/breadth_first.hpp"
-#include "core/search/depth_first.hpp"
-#include "core/search/greedy_best_first.hpp"
-#include "core/search/a_star.hpp"
+#include "maze_engine/search/breadth_first.hpp"
+#include "maze_engine/search/depth_first.hpp"
+#include "maze_engine/search/greedy_best_first.hpp"
+#include "maze_engine/search/a_star.hpp"
 
-#include "app/simple_directmedia_layer.hpp"
-#include "app/window.hpp"
-#include "core/maze/square.hpp"
-#include "core/maze/hexagon.hpp"
-#include "app/util.hpp"
-#include "app/app_param.hpp"
-#include "app/application.hpp"
+#include "application/simple_directmedia_layer.hpp"
+#include "application/window.hpp"
+#include "maze_engine/maze/square.hpp"
+#include "maze_engine/maze/hexagon.hpp"
+#include "application/util.hpp"
+#include "application/app_param.hpp"
+#include "application/application.hpp"
 
 #include <thread>
 #include <mutex>

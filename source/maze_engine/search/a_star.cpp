@@ -1,6 +1,6 @@
 #include "a_star.hpp"
 
-#include "core/search/abstract.hpp"
+#include "maze_engine/search/abstract.hpp"
 #include <queue>
 
 auto MazeEngine::aStarSearch(
