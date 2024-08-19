@@ -35,7 +35,6 @@ baseEnv = Environment(
 	CPPPATH=[Dir("source"), Dir(F"library/{NATIVE_PLATFORM}/include/")],
 	LIBPATH=[*Glob(F"library/{NATIVE_PLATFORM}/lib/*")],
 	COMPILATIONDB_USE_ABSPATH=False,
-	COMPILATIONDB_PATH_FILTER=F"build/{NATIVE_PLATFORM}/*",
 )
 baseEnv.Tool('compilation_db')
 
@@ -46,17 +45,32 @@ webMainEnv = C.parse(webLibEnv.Clone(), C.GCC_WARNING)
 webMainEnv.Append(CXXFLAGS=['-sUSE_SDL=2'])
 webMainEnv.Append(LINKFLAGS=['-sUSE_SDL=2'])
 
+def setCompilationDatabasePathFilter(env, buildType: Literal["release", "debug"]):
+	# This should be after `Tool('compilation_db')`
+	env["COMPILATIONDB_PATH_FILTER"] = F"build/{NATIVE_PLATFORM}/{buildType}/*"
+	return env
+
 match NATIVE_PLATFORM:
 	case 'Windows':
 		nativeLibEnv = C.parse(baseEnv.Clone(), C.MSVC_CORE, C.MSVC_RELEASE)
-		nativeReleaseMainEnv = C.parse(nativeLibEnv.Clone(), C.MSVC_SDL2, C.MSVC_WARNING)
-		nativeDebugMainEnv = C.parse(baseEnv.Clone(), C.MSVC_CORE, C.MSVC_DEBUG, C.MSVC_SDL2, C.MSVC_WARNING)
+		setCompilationDatabasePathFilter(
+			nativeReleaseMainEnv := C.parse(nativeLibEnv.Clone(), C.MSVC_SDL2, C.MSVC_WARNING),
+			buildType="release"
+		)
+		setCompilationDatabasePathFilter(
+			nativeDebugMainEnv := C.parse(baseEnv.Clone(), C.MSVC_CORE, C.MSVC_DEBUG, C.MSVC_SDL2, C.MSVC_WARNING),
+			buildType="debug"
+		)
 	case 'Linux':
 		nativeLibEnv = linuxLibEnv
-		nativeReleaseMainEnv = C.parse(nativeLibEnv.Clone(), C.GCC_WARNING)
-		nativeReleaseMainEnv.ParseConfig("sdl2-config --cflags --libs")
-		nativeDebugMainEnv = C.parse(baseEnv.Clone(), C.GCC_CORE, C.GCC_DEBUG, C.GCC_WARNING)
-		nativeDebugMainEnv.ParseConfig("sdl2-config --cflags --libs")
+		setCompilationDatabasePathFilter(
+			nativeReleaseMainEnv := C.parse(nativeLibEnv.Clone(), C.GCC_WARNING),
+			buildType="release"
+		).ParseConfig("sdl2-config --cflags --libs")
+		setCompilationDatabasePathFilter(
+			nativeDebugMainEnv := C.parse(baseEnv.Clone(), C.GCC_CORE, C.GCC_DEBUG, C.GCC_WARNING),
+			buildType="debug"
+		).ParseConfig("sdl2-config --cflags --libs")
 
 def runScript(mainEnv, libEnv, platform: str, buildType: Literal["release", "debug"]):
 	return SConscript(
