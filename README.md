@@ -10,31 +10,68 @@ The executable is in the `build` directory.
 Run with `help` to see the program's parameters.
 
 ```PowerShell
-# Windows
-.\build\Windows\maze_engine.exe help
+# Windows release build
+.\build\Windows\release\maze_engine.exe help
+
+# Windows debug build
+.\build\Windows\debug\maze_engine.exe help
 ```
 
-```bash
-# Linux
-./build/Linux/maze_engine help
+```Shell
+# Linux release build
+./build/Linux/release/maze_engine help
+
+# Linux debug build
+/build/Linux/debug/maze_engine help
 ```
 
-<!-- `size=550 seed=7722214 grid=square search=greedy delay=0` -->
+<!--
+	Interesting program arguments for future reference:
+	`size=550 seed=7722214 grid=square search=greedy delay=0`
+-->
 
 ## Building
 
 To build, you need to [install the neccessary dependencies for your platform](#dependencies).
 
-Run `scons` on the command-line in the root of the project to build the executable in the generated `build` directory, regardless of the platform.
+Running `scons` on the command-line will build the default target, which is the release build for your native platform, `build/<platform>/release/maze_engine<file_extension>`.
 
-To also generate compile commands to be used for intellisense in an editor such as VSCode, run `scons .`.
-The `compile_commands.json` are put into the `build/<platform>` directory.
+To build all available targets&mdash;including the test suite and the JSON compilation database&mdash;run `scons .` on the command-line.
 
-To clean the build, run `scons -c` or `scons -c .` respectively.
+The test suite executable is put at `build/<platform>/<build_type>/test/suite<file_extension>`.
+
+The JSON compilation database is put at `build/<platform>/<build_type>/compile_commands.json`. You can configure Visual Studio Code to use this database with the Microsoft C++ extension, for example:
+> `.vscode/c_cpp_properties.json`
+```JSON
+{
+	"configurations": [
+		{
+			"name": "Win32",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"compileCommands": "build\\Windows\\debug\\compile_commands.json"
+		},
+		{
+			"name": "Linux",
+			"cStandard": "c17",
+			"cppStandard": "c++17",
+			"compileCommands": "build/Linux/debug/compile_commands.json"
+		}
+	],
+	"version": 4
+}
+```
+
+Also, if you would like to build a specific file,
+you can run `scons <file>` where `<file>` is a file you want to build.
+For example, to build only the compilation database for the debug build on Windows,
+you would run `scons .\build\Windows\debug\compile_commands.json`.
+
+To clean the build, run `scons -c` or `scons -c .`, for the default target or all targets, respectively.
 
 > Note: If you want to move the Windows executable `maze_engine.exe` to a different location,
-> move the `SDL2.dll` along with it to the same directory.
-> The executable needs that dynamic-link library to run.
+move `SDL2.dll` along with it to the same directory.
+The executable needs that dynamic-link library to run.
 
 ## Dependencies
 
