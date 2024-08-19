@@ -1,8 +1,10 @@
 Import("mainEnv", "libEnv")
 
-mainSourceList = Glob("core/*.cpp") + Glob("core/*/*.cpp") + Glob("main/*.cpp") + Glob("main/*/*.cpp")
+main_cpp = File("main.cpp")
 
-mainProgram = mainEnv.Program(target="maze_engine", source=mainSourceList)
+mainSourceList = Glob("core/*.cpp") + Glob("core/*/*.cpp") + Glob("app/*.cpp") + Glob("app/*/*.cpp")
+
+mainProgram = mainEnv.Program(target="maze_engine", source=[main_cpp] + mainSourceList)
 
 catch2Object = libEnv.StaticObject(File("test/catch2/catch_amalgamated.cpp"))
 

@@ -1,7 +1,7 @@
 #include "app_param.hpp"
 #include <sstream>
 
-std::unordered_map<std::string, Project::AppParamInfo> Project::AppParamInfo::config{
+std::unordered_map<std::string, App::AppParamInfo> App::AppParamInfo::config{
 	{"search", {
 		"Search algorithm.",
 		"depth",
@@ -54,7 +54,7 @@ std::unordered_map<std::string, Project::AppParamInfo> Project::AppParamInfo::co
 	}},
 };
 
-std::string Project::AppParamInfo::validParametersStr(bool const verbose) {
+std::string App::AppParamInfo::validParametersStr(bool const verbose) {
 		std::ostringstream stream;
 		for (auto const &[paramName, info] : config) {
 			stream << "\t`" << paramName << "`: " << info.description;
@@ -66,7 +66,7 @@ std::string Project::AppParamInfo::validParametersStr(bool const verbose) {
 		return stream.str();
 }
 
-std::string Project::AppParamInfo::acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues) {
+std::string App::AppParamInfo::acceptableValuesStr(AppParamInfo::Acceptable const &acceptableValues) {
 	std::ostringstream stream;
 	for (auto const &[value, description] : acceptableValues) {
 		stream << "\t\t`" << value << "`: " << description << '\n';
@@ -77,7 +77,7 @@ std::string Project::AppParamInfo::acceptableValuesStr(AppParamInfo::Acceptable 
 	return stream.str();
 }
 
-auto Project::AppParamInfo::parseArgv(int const argc, char const *const *const argv) -> std::unordered_map<std::string, AppParamInfo> const & {
+auto App::AppParamInfo::parseArgv(int const argc, char const *const *const argv) -> std::unordered_map<std::string, AppParamInfo> const & {
 	// Check for "help".
 	for (int argIndex{1}; argIndex < argc; ++argIndex) {
 		if (std::string(argv[argIndex]) == "help") {

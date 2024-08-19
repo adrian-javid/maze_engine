@@ -3,15 +3,13 @@
 #include <sstream>
 #include <cassert>
 
-using namespace Project;
-
-std::string Media::toString(SDL_Color const &color) {
+std::string App::toString(SDL_Color const &color) {
 	std::stringstream buffer;
 	buffer << "(R=" << +color.r << ", G=" << +color.g << ", B=" << +color.b << ", A=" << +color.a << ")";
 	return buffer.str();
 }
 
-SDL_Color Media::makeRgbaColor(
+SDL_Color App::makeRgbaColor(
 	double const hue,
 	double const saturation,
 	double const luminance,
@@ -45,12 +43,12 @@ SDL_Color Media::makeRgbaColor(
 	};
 }
 
-double Media::HslaColor::hueWrap(double const value) {
+double App::HslaColor::hueWrap(double const value) {
 	static constexpr double fullCycle{360.0};
 	return Util::wrapValue(value, fullCycle);
 }
 
-double Media::HslaColor::getCyclicHue(
+double App::HslaColor::getCyclicHue(
 	double const hue,
 	double const percentage,
 	double const depth
@@ -63,7 +61,7 @@ double Media::HslaColor::getCyclicHue(
 		return hueWrap((hue + depth) - (hueOffset - depth));
 }
 
-Media::ColorTriplet Media::HslaColor::getColorTriplet(double const percentage, double const colorDepth) const {
+auto App::HslaColor::getColorTriplet(double const percentage, double const colorDepth) const -> ColorTriplet {
 	double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2.0 * colorDepth)};
 
 	static constexpr auto getHueValue = [](double const hue, double const hueOffset, double const colorDepth) -> double {
@@ -80,17 +78,17 @@ Media::ColorTriplet Media::HslaColor::getColorTriplet(double const percentage, d
 	};
 }
 
-SDL_Color Media::HslaColor::toRgbaColor() const { return toRgbaColor(this->hue); }
+SDL_Color App::HslaColor::toRgbaColor() const { return toRgbaColor(this->hue); }
 
-SDL_Color Media::HslaColor::toRgbaColor(double const overrideHue) const {
+SDL_Color App::HslaColor::toRgbaColor(double const overrideHue) const {
 	return makeRgbaColor(overrideHue, this->saturation, this->luminance, this->alpha);
 }
 
-void Media::HslaColor::addHue(double const hueSupplement) {
+void App::HslaColor::addHue(double const hueSupplement) {
 	hue = hueWrap(hue + hueSupplement);
 }
 
-std::string Media::HslaColor::toString() const {
+std::string App::HslaColor::toString() const {
 	std::stringstream buffer;
 	buffer << "(H=" << hue << ", S=" << saturation << ", L=" << luminance << ", A=" << alpha << ")";
 	return buffer.str();

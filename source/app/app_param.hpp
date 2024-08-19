@@ -1,5 +1,5 @@
-#ifndef main_APP_PARAM_HPP
-#define main_APP_PARAM_HPP
+#ifndef app_APP_PARAM_HPP
+#define app_APP_PARAM_HPP
 
 #include <string>
 #include <unordered_map>
@@ -7,7 +7,7 @@
 #include "Util.hpp"
 #include <sstream>
 
-namespace Project {
+namespace App {
 	struct AppParamInfo {
 		std::string const description;
 		std::string argument;

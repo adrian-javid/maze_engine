@@ -1,11 +1,8 @@
-#include "main.hpp"
+#include "application.hpp"
 
 #include "window.hpp"
 
-// Change in time.
-Uint64 Project::Main::deltaTime{0u};
-
-void Project::Main::loop() {
+void App::mainLoop() {
 	// Time of the previous iteration.
 	static Uint64 previousTime{0u};
 
@@ -19,16 +16,16 @@ void Project::Main::loop() {
 	while (SDL_PollEvent(&event)) switch (event.type) {
 		case SDL_KEYDOWN: switch (event.key.keysym.sym) {
 			case SDLK_BACKQUOTE:
-				SDL_SetWindowFullscreen(Media::window, SDL_WINDOW_FULLSCREEN);
+				SDL_SetWindowFullscreen(Window::window, SDL_WINDOW_FULLSCREEN);
 				break;
 			case SDLK_ESCAPE:
-				SDL_SetWindowFullscreen(Media::window, 0u);
+				SDL_SetWindowFullscreen(Window::window, 0u);
 				break;
 		} break;
 		case SDL_WINDOWEVENT: switch (event.window.event) {
 			case SDL_WINDOWEVENT_RESIZED:
-				Media::windowWidth = event.window.data1;
-				Media::windowHeight = event.window.data2;
+				Window::windowWidth = event.window.data1;
+				Window::windowHeight = event.window.data2;
 				break;
 		} break;
 		case SDL_QUIT:
@@ -37,7 +34,7 @@ void Project::Main::loop() {
 	}
 
 	// Refresh window.
-	Media::windowRefresher();
+	Window::windowRefresher();
 
 	// As this iteration ends, update the previous time.
 	previousTime = currentTime;

@@ -1,12 +1,12 @@
-#ifndef main_WINDOW_HPP
-#define main_WINDOW_HPP
+#ifndef app_WINDOW_HPP
+#define app_WINDOW_HPP
 
 #include "simple_directmedia_layer.hpp"
 #include "core/maze/square.hpp"
 #include "core/maze/hexagon.hpp"
 #include "color.hpp"
 
-namespace Project::Media {
+namespace App::Window {
 	extern SDL_Window *window;
 	extern SDL_Renderer *renderer;
 	extern int windowWidth;
@@ -14,16 +14,16 @@ namespace Project::Media {
 	extern std::function<void()> windowRefresher;
 
 	static constexpr float wallFramePercent = 0.35f;
-	static_assert(wallFramePercent >= 0.0f); static_assert(wallFramePercent <= 1.0f);
+	static_assert(wallFramePercent >= 0.0f and wallFramePercent <= 1.0f);
 
 	void setRenderDrawColor(SDL_Color const &color);
 
 	void drawSquareMaze(
-		SquareMaze const &maze,
+		Project::SquareMaze const &maze,
 		SDL_FPoint const &position,
 		float const width, float const height,
 		ColorGetter const getMainColorTriplet,
-		Media::ColorTriplet const &wallColor
+		ColorTriplet const &wallColor
 	);
 
 	/**
@@ -36,12 +36,14 @@ namespace Project::Media {
 	 * @param getColorTriplet
 	 */
 	void drawHexagonMaze(
-		HexagonMaze const &maze,
+		Project::HexagonMaze const &maze,
 		SDL_FPoint const &center,
 		float const width, float const height,
 		ColorGetter const getMainColorTriplet,
-		Media::ColorTriplet const &wallColor
+		ColorTriplet const &wallColor
 	);
+
+	void refresh();
 }
 
 #endif

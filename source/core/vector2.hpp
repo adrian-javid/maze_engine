@@ -1,7 +1,7 @@
 #ifndef core_VECTOR2_HPP
 #define core_VECTOR2_HPP
 
-#include "main/Util.hpp"
+#include "app/Util.hpp"
 
 #include <functional>
 #include <string>
@@ -24,7 +24,7 @@ struct Project::Vector2 {
 	static constexpr std::size_t rotateIndex(int const indexOffsetter) {
 		static_assert(index >= 0);
 		static_assert(index < upperBound);
-		return static_cast<std::size_t>(Util::wrapValue(index - indexOffsetter, upperBound));
+		return static_cast<std::size_t>(App::Util::wrapValue(index - indexOffsetter, upperBound));
 	}
 
 	constexpr Vector2 hexagonalRotate(int const indexDegree60) const {
@@ -44,11 +44,11 @@ struct Project::Vector2 {
 	constexpr Vector2(int row=0, int column=0): value1{row}, value2{column} {}
 
 	constexpr int manhattanLength() const {
-		return Util::abs(value1) + Util::abs(value2);
+		return App::Util::abs(value1) + App::Util::abs(value2);
 	}
 
 	constexpr int hexManhattanLength() const {
-		return (manhattanLength() + Util::abs(thirdAxis())) / 2;
+		return (manhattanLength() + App::Util::abs(thirdAxis())) / 2;
 	}
 
 	constexpr Vector2 operator+(Vector2 const &vector) const {
@@ -89,7 +89,7 @@ struct Project::Vector2 {
 	}
 
 	constexpr Vector2 wrap(int const rowCount, int const columnCount) const {
-		return Vector2(Util::wrapValue(value1, rowCount), Util::wrapValue(value2, columnCount));
+		return Vector2(App::Util::wrapValue(value1, rowCount), App::Util::wrapValue(value2, columnCount));
 	}
 
 	struct Hash { std::size_t operator()(Vector2 const &vector) const noexcept; };

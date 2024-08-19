@@ -1,7 +1,7 @@
 #ifndef core_MAZE_HPP
 #define core_MAZE_HPP
 
-#include "Vector2.hpp"
+#include "vector2.hpp"
 
 #include <functional>
 #include <optional>

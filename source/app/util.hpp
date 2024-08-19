@@ -1,5 +1,5 @@
-#ifndef main_UTIL_HPP
-#define main_UTIL_HPP
+#ifndef app_UTIL_HPP
+#define app_UTIL_HPP
 
 #include <cmath>
 #include <cassert>
@@ -10,7 +10,7 @@
 #include <iostream>
 #include <mutex>
 
-namespace Project::Util {
+namespace App::Util {
 
 	template<typename T>
 	class [[deprecated]] OpaqueIterator {
@@ -55,6 +55,9 @@ namespace Project::Util {
 	}
 
 	double wrapValue(double value, double const upperBound);
+
+	[[gnu::always_inline]] inline
+	double percentageWrap(double const value) { return wrapValue(value, 1.00); }
 
 	constexpr float linearInterpolation(float const percentage, float const start, float const end) {
 		assert(percentage >= 0.0f);

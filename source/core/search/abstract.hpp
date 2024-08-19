@@ -124,7 +124,7 @@ class Project::AbstractSearchIterator : public MazeSearchIterator {
 			return *this;
 		}
 
-		[[nodiscard]] constexpr Vector2 const &operator*() const override { return key; }
+		[[nodiscard]] Vector2 const &operator*() const override { return key; }
 
 		[[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const override { return history; }
 

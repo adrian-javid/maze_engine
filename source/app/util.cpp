@@ -1,8 +1,6 @@
 #include "Util.hpp"
 
-using namespace Project;
-
-double Util::wrapValue(double value, double const upperBound) {
+double App::Util::wrapValue(double value, double const upperBound) {
 	static constexpr double zero{0.0};
 
 	assert(upperBound != 0);

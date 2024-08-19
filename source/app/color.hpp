@@ -1,18 +1,18 @@
-#ifndef main_COLOR_HPP
-#define main_COLOR_HPP
+#ifndef app_COLOR_HPP
+#define app_COLOR_HPP
 
 #include "simple_directmedia_layer.hpp"
 #include "Util.hpp"
-#include "core/Vector2.hpp"
+#include "core/vector2.hpp"
 
 #include <tuple>
 #include <string>
 #include <cassert>
 
-namespace Project::Media {
+namespace App {
 	using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
 
-	using ColorGetter = std::function<ColorTriplet(Vector2 const &)>;
+	using ColorGetter = std::function<ColorTriplet(Project::Vector2 const &)>;
 
 	inline constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
 
@@ -28,7 +28,7 @@ namespace Project::Media {
 	struct HslaColor;
 }
 
-struct Project::Media::HslaColor {
+struct App::HslaColor {
 
 	double hue, saturation, luminance, alpha;
 
