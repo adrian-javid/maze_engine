@@ -3,6 +3,7 @@
 
 #include <type_traits>
 #include <cassert>
+#include <cmath>
 
 namespace MazeEngine::Aux {
 	template<class T>
