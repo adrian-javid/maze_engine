@@ -41,8 +41,10 @@ namespace App {
 }
 
 int main(int const argc, char *argv[]) {
+	// Maze engine.
 	namespace Engine = MazeEngine;
 
+	// Parse arguments into a key-value pairs.
 	auto const &config = App::ParamInfo::parseArgv(argc, argv);
 
 	// Get values from `config`.
