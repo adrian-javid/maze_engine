@@ -1,5 +1,5 @@
-#ifndef MAIN_HPP
-#define MAIN_HPP
+#ifndef main_MAIN_HPP
+#define main_MAIN_HPP
 
 #include "simple_directmedia_layer.hpp"
 

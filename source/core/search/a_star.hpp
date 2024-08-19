@@ -1,8 +1,8 @@
-#ifndef aStarSearch_hpp
-#define aStarSearch_hpp
+#ifndef core_search_A_STAR_HPP
+#define core_search_A_STAR_HPP
 
-#include "Vector2.hpp"
-#include "Maze.hpp"
+#include "core/vector2.hpp"
+#include "core/maze.hpp"
 
 namespace Project {
 	Vector2::HashMap<Vector2> aStarSearch(

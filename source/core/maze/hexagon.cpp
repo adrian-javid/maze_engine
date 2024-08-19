@@ -1,4 +1,4 @@
-#include "HexagonMaze.hpp"
+#include "hexagon.hpp"
 
 using namespace Project;
 

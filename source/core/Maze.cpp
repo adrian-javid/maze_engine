@@ -1,6 +1,6 @@
+#include "maze.hpp"
 
-#include "Maze.hpp"
-#include "UnionFinder.hpp"
+#include "core/union_finder.hpp"
 
 #include <algorithm>
 #include <random>

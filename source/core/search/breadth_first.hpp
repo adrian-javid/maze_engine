@@ -1,10 +1,9 @@
-#ifndef depthFirstSearch_hpp
-#define depthFirstSearch_hpp
+#ifndef core_search_BREADTH_FIRST_HPP
+#define core_search_BREADTH_FIRST_HPP
 
-#include "Maze.hpp"
-#include "Vector2.hpp"
-#include "abstractSearch.hpp"
-
+#include "core/maze.hpp"
+#include "core/vector2.hpp"
+#include "core/search/abstract.hpp"
 #include <optional>
 
 namespace Project {
@@ -16,13 +15,13 @@ namespace Project {
 	 * @param grid Maze will search in.
 	 * @param start Location of tile to start search from.
 	 */
-	Vector2::HashMap<Vector2> depthFirstSearch(
+	Vector2::HashMap<Vector2> breadthFirstSearch(
 		Maze const &maze, Vector2 const &start, std::function<bool(Vector2 const &)> const processKey=nullptr
 	);
 
-	struct DepthFirstSearchIterator : AbstractSearchIterator<std::stack<Vector2>> {
-		explicit DepthFirstSearchIterator(Maze const &maze, Vector2 start):
-			AbstractSearchIterator<std::stack<Vector2>>(maze, std::move(start), std::stack<Vector2>())
+	struct BreadthFirstSearchIterator : AbstractSearchIterator<std::queue<Vector2>> {
+		explicit BreadthFirstSearchIterator(Maze const &maze, Vector2 start):
+			AbstractSearchIterator<std::queue<Vector2>>(maze, std::move(start), std::queue<Vector2>())
 		{}
 	};
 }

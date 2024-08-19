@@ -1,4 +1,4 @@
-#include "SquareMaze.hpp"
+#include "square.hpp"
 
 using namespace Project;
 

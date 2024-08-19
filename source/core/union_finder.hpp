@@ -1,5 +1,5 @@
-#ifndef UnionFinder_hpp
-#define UnionFinder_hpp
+#ifndef core_UNION_FINDER_HPP
+#define core_UNION_FINDER_HPP
 
 #include <vector>
 

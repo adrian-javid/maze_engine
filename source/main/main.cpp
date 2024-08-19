@@ -6,17 +6,17 @@ namespace Project::Global {/*
 
 */}
 
-#include "./core/breadthFirstSearch.hpp"
-#include "./core/depthFirstSearch.hpp"
-#include "./core/greedyBestFirstSearch.hpp"
-#include "./core/aStarSearch.hpp"
+#include "core/search/breadth_first.hpp"
+#include "core/search/depth_first.hpp"
+#include "core/search/greedy_best_first.hpp"
+#include "core/search/a_star.hpp"
 
 #include "simple_directmedia_layer.hpp"
 #include "window.hpp"
-#include "./core/SquareMaze.hpp"
-#include "./core/HexagonMaze.hpp"
+#include "core/maze/square.hpp"
+#include "core/maze/hexagon.hpp"
 #include "Util.hpp"
-#include "AppParam.hpp"
+#include "app_param.hpp"
 #include "main.hpp"
 
 #include <thread>

@@ -1,4 +1,4 @@
-#include "depthFirstSearch.hpp"
+#include "depth_first.hpp"
 
 auto Project::depthFirstSearch(
 	Maze const &maze, Vector2 const &start, std::function<bool(Vector2 const &)> const processKey

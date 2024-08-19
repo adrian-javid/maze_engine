@@ -1,9 +1,9 @@
-#ifndef color_hpp
-#define color_hpp
+#ifndef main_COLOR_HPP
+#define main_COLOR_HPP
 
 #include "simple_directmedia_layer.hpp"
 #include "Util.hpp"
-#include "./core/Vector2.hpp"
+#include "core/Vector2.hpp"
 
 #include <tuple>
 #include <string>

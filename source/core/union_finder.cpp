@@ -1,4 +1,4 @@
-#include "UnionFinder.hpp"
+#include "core/union_finder.hpp"
 
 Project::UnionFinder::UnionFinder(std::size_t const count): forest(count, -1) {}
 

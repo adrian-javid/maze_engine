@@ -1,4 +1,4 @@
-#include "greedyBestFirstSearch.hpp"
+#include "greedy_best_first.hpp"
 
 auto Project::greedyBestFirstSearch(
 	Maze const &maze,

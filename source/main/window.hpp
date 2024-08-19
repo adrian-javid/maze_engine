@@ -1,9 +1,9 @@
-#ifndef window_hpp
-#define window_hpp
+#ifndef main_WINDOW_HPP
+#define main_WINDOW_HPP
 
 #include "simple_directmedia_layer.hpp"
-#include "./core/SquareMaze.hpp"
-#include "./core/HexagonMaze.hpp"
+#include "core/maze/square.hpp"
+#include "core/maze/hexagon.hpp"
 #include "color.hpp"
 
 namespace Project::Media {

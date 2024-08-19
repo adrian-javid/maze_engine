@@ -1,5 +1,5 @@
-#ifndef Maze_hpp
-#define Maze_hpp
+#ifndef core_MAZE_HPP
+#define core_MAZE_HPP
 
 #include "Vector2.hpp"
 

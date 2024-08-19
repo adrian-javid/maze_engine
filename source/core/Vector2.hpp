@@ -1,5 +1,5 @@
-#ifndef Vector2_hpp
-#define Vector2_hpp
+#ifndef core_VECTOR2_HPP
+#define core_VECTOR2_HPP
 
 #include "main/Util.hpp"
 

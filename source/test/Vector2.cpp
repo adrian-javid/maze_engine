@@ -1,6 +1,6 @@
 #include "catch2/catch_amalgamated.hpp"
-#include "./core/Vector2.hpp"
-#include "./core/SquareMaze.hpp"
+#include "core/Vector2.hpp"
+#include "core/maze/square.hpp"
 
 using namespace Project;
 

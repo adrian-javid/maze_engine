@@ -1,12 +1,12 @@
-#ifndef abstractSearch_hpp
-#define abstractSearch_hpp
+#ifndef core_search_ABSTRACT_HPP
+#define core_search_ABSTRACT_HPP
 
 #include <optional>
 #include <type_traits>
 #include <stack>
 #include <queue>
 
-#include "Vector2.hpp"
+#include "core/vector2.hpp"
 
 namespace Project {
 	template <typename StorageT>

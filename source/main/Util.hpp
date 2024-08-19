@@ -1,5 +1,5 @@
-#ifndef Util_hpp
-#define Util_hpp
+#ifndef main_UTIL_HPP
+#define main_UTIL_HPP
 
 #include <cmath>
 #include <cassert>

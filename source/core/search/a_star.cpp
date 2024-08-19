@@ -1,6 +1,6 @@
-#include "aStarSearch.hpp"
+#include "a_star.hpp"
 
-#include "abstractSearch.hpp"
+#include "core/search/abstract.hpp"
 #include <queue>
 
 auto Project::aStarSearch(

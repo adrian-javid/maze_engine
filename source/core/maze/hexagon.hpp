@@ -1,7 +1,7 @@
-#ifndef HexagonMaze_hpp
-#define HexagonMaze_hpp
+#ifndef core_maze_HEXAGON_HPP
+#define core_maze_HEXAGON_HPP
 
-#include "Maze.hpp"
+#include "core/Maze.hpp"
 
 #include <array>
 
