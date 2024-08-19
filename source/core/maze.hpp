@@ -6,9 +6,9 @@
 #include <functional>
 #include <optional>
 
-namespace Project { struct Maze; }
+namespace MazeEngine { struct Maze; }
 
-struct Project::Maze {
+struct MazeEngine::Maze {
 
 	using Tile = std::uint_least8_t;
 
@@ -76,7 +76,7 @@ struct Project::Maze {
 
 	constexpr Maze() = default;
 	constexpr Maze(Maze const &) = default;
-	Project::Maze &operator=(const Project::Maze &) = default;
+	MazeEngine::Maze &operator=(const MazeEngine::Maze &) = default;
 	virtual ~Maze() = default;
 
 };

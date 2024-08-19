@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <random>
 
-void Project::Maze::forEachValidDirection(std::function<void(Direction const)> const &forThisDirection) const {
+void MazeEngine::Maze::forEachValidDirection(std::function<void(Direction const)> const &forThisDirection) const {
 	forEachPrincipalDirection([&forThisDirection](Direction const direction) -> void {
 		forThisDirection(direction);
 	});
@@ -15,14 +15,14 @@ void Project::Maze::forEachValidDirection(std::function<void(Direction const)> c
 	});
 }
 
-void Project::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &forThisNeighbor) const {
+void MazeEngine::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &forThisNeighbor) const {
 	forEachValidDirection([this, &key, &forThisNeighbor](Direction const direction) {
 		auto const &&[neighbor, wallFlag] = checkAdjacent(key, direction);
 		if (not wallFlag) forThisNeighbor(neighbor);
 	});
 }
 
-auto Project::Maze::generate(unsigned int const seed, bool const wrap) -> void {
+auto MazeEngine::Maze::generate(unsigned int const seed, bool const wrap) -> void {
 	UnionFinder::Identifier indentifierCount{0};
 	Vector2::HashMap<UnionFinder::Identifier> identity;
 

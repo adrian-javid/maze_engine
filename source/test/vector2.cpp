@@ -2,7 +2,7 @@
 #include "core/vector2.hpp"
 #include "core/maze/square.hpp"
 
-using namespace Project;
+using namespace MazeEngine;
 
 TEST_CASE("Neighbors", "[Vector2]") {
 	static constexpr int rowCount = 20;

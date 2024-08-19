@@ -13,12 +13,12 @@
 
 #include "core/vector2.hpp"
 
-namespace Project {
+namespace MazeEngine {
 	class SquareMaze;
 	std::ostream &operator<<(std::ostream &outputStream, SquareMaze const &squareGrid);
 }
 
-class Project::SquareMaze : public Project::Maze {
+class MazeEngine::SquareMaze : public MazeEngine::Maze {
 
 	public:
 

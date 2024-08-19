@@ -8,7 +8,7 @@
 
 #include "core/vector2.hpp"
 
-namespace Project {
+namespace MazeEngine {
 	template <typename StorageT>
 	Vector2::HashMap<Vector2> abstractSearch(
 		Maze const &maze,
@@ -24,7 +24,7 @@ namespace Project {
 }
 
 template <typename StorageT>
-auto Project::abstractSearch(
+auto MazeEngine::abstractSearch(
 	Maze const &maze,
 	Vector2 const &start,
 	StorageT &storage,
@@ -60,7 +60,7 @@ auto Project::abstractSearch(
 	return history;
 }
 
-class Project::MazeSearchIterator {
+class MazeEngine::MazeSearchIterator {
 	public:
 		virtual MazeSearchIterator &operator++() = 0;
 		[[nodiscard]] virtual Vector2 const &operator*() const = 0;
@@ -70,7 +70,7 @@ class Project::MazeSearchIterator {
 };
 
 template <typename StorageT>
-class Project::AbstractSearchIterator : public MazeSearchIterator {
+class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 	private:
 		Maze const *maze;
 

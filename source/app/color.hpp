@@ -12,7 +12,7 @@
 namespace App {
 	using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
 
-	using ColorGetter = std::function<ColorTriplet(Project::Vector2 const &)>;
+	using ColorGetter = std::function<ColorTriplet(MazeEngine::Vector2 const &)>;
 
 	inline constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
 

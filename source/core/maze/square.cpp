@@ -1,6 +1,6 @@
 #include "square.hpp"
 
-using namespace Project;
+using namespace MazeEngine;
 
 SquareMaze::SquareMaze(): SquareMaze(0, 0, emptyTile) {}
 
@@ -75,7 +75,7 @@ std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) 
 	return buffer.str();
 }
 
-std::ostream &Project::operator<<(std::ostream &outputStream, SquareMaze const &squareGrid) {
+std::ostream &MazeEngine::operator<<(std::ostream &outputStream, SquareMaze const &squareGrid) {
 	outputStream << squareGrid.toString(); return outputStream;
 }
 

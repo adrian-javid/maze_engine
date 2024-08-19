@@ -1,6 +1,6 @@
 #include "greedy_best_first.hpp"
 
-auto Project::greedyBestFirstSearch(
+auto MazeEngine::greedyBestFirstSearch(
 	Maze const &maze,
 	Vector2 const &start, Vector2 const &end,
 	std::function<bool(Vector2 const &)> const processKey

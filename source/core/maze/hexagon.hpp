@@ -5,9 +5,9 @@
 
 #include <array>
 
-namespace Project { class HexagonMaze; }
+namespace MazeEngine { class HexagonMaze; }
 
-class Project::HexagonMaze : public Project::Maze {
+class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 
 	private:
 

@@ -10,18 +10,18 @@
 
 // Application stuff.
 namespace App {
-	extern Project::Maze *maze;
-	extern Project::SquareMaze squareMaze;
-	extern Project::HexagonMaze hexagonMaze;
-	extern Project::Vector2 mazeStart;
-	extern Project::Vector2 mazeEnd;
+	extern MazeEngine::Maze *maze;
+	extern MazeEngine::SquareMaze squareMaze;
+	extern MazeEngine::HexagonMaze hexagonMaze;
+	extern MazeEngine::Vector2 mazeStart;
+	extern MazeEngine::Vector2 mazeEnd;
 
 	extern std::chrono::milliseconds sleepTime;
 	inline void delay() { std::this_thread::sleep_for(sleepTime); }
 
 	extern std::mutex tileInfoMutex;
-	extern Project::Vector2::HashSet pathTileSet;
-	extern Project::Vector2::HashSet markedTileSet;
+	extern MazeEngine::Vector2::HashSet pathTileSet;
+	extern MazeEngine::Vector2::HashSet markedTileSet;
 
 	// Change in time.
 	extern Uint64 deltaTime;

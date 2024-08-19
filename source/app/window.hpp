@@ -19,7 +19,7 @@ namespace App::Window {
 	void setRenderDrawColor(SDL_Color const &color);
 
 	void drawSquareMaze(
-		Project::SquareMaze const &maze,
+		MazeEngine::SquareMaze const &maze,
 		SDL_FPoint const &position,
 		float const width, float const height,
 		ColorGetter const getMainColorTriplet,
@@ -36,7 +36,7 @@ namespace App::Window {
 	 * @param getColorTriplet
 	 */
 	void drawHexagonMaze(
-		Project::HexagonMaze const &maze,
+		MazeEngine::HexagonMaze const &maze,
 		SDL_FPoint const &center,
 		float const width, float const height,
 		ColorGetter const getMainColorTriplet,

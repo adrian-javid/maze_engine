@@ -5,7 +5,7 @@
 #include "core/maze.hpp"
 #include "core/search/abstract.hpp"
 
-namespace Project {
+namespace MazeEngine {
 	Vector2::HashMap<Vector2> greedyBestFirstSearch(
 		Maze const &maze,
 		Vector2 const &start, Vector2 const &end,

@@ -3,7 +3,7 @@
 #include "core/search/abstract.hpp"
 #include <queue>
 
-auto Project::aStarSearch(
+auto MazeEngine::aStarSearch(
 	Maze const &maze,
 	Vector2 const &start, Vector2 const &end,
 	std::function<bool(Vector2 const &)> const processKey

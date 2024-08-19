@@ -44,7 +44,7 @@ void App::Window::refresh() {
 	auto const mainColorGetter = [
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
 		&startEndColorTriplet
-	](Project::Vector2 const &key) -> ColorTriplet {
+	](MazeEngine::Vector2 const &key) -> ColorTriplet {
 		if (key == App::mazeStart or key == App::mazeEnd)
 			return startEndColorTriplet;
 

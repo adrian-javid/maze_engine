@@ -3,9 +3,9 @@
 
 #include <vector>
 
-namespace Project { class UnionFinder; }
+namespace MazeEngine { class UnionFinder; }
 
-class Project::UnionFinder {
+class MazeEngine::UnionFinder {
 	public:
 
 		using Identifier = int;

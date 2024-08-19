@@ -1,4 +1,4 @@
-namespace Project::Global {/*
+namespace MazeEngine::Global {/*
 
 
 	This program solves mazes!
@@ -36,7 +36,7 @@ namespace Project::Global {/*
 
 int main(int const argc, char *argv[]) {
 	using namespace App;
-	using namespace Project;
+	using namespace MazeEngine;
 
 	auto const &config = AppParamInfo::parseArgv(argc, argv);
 

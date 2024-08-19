@@ -1,6 +1,6 @@
 #include "hexagon.hpp"
 
-using namespace Project;
+using namespace MazeEngine;
 
 static Vector2 calculateMirrorCenter(int const index, int const radius) {
 	static constexpr Vector2 center(0, 0);

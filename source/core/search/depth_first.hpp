@@ -7,7 +7,7 @@
 
 #include <optional>
 
-namespace Project {
+namespace MazeEngine {
 	/**
 	 * @brief Search the `grid` until starting from `start` until `end` is found.
 	 * Returns a path of tiles `std::vector<Vector2>` from `end` to `start` if such a path exists.

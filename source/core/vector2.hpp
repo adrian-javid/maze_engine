@@ -9,12 +9,12 @@
 #include <unordered_map>
 #include <array>
 
-namespace Project { struct Vector2; }
+namespace MazeEngine { struct Vector2; }
 
 /**
  * @brief Ordered pair of `int`. Can represent the identifier of a tile in a grid.
  */
-struct Project::Vector2 {
+struct MazeEngine::Vector2 {
 	int value1;
 	int value2;
 
@@ -106,7 +106,7 @@ struct Project::Vector2 {
 	std::string toString() const;
 };
 
-namespace Project {
+namespace MazeEngine {
 
 	std::ostream& operator<<(std::ostream &outputStream, Vector2 const &vector);
 

@@ -2,7 +2,7 @@
 #include <sstream>
 #include <cassert>
 
-using Project::Vector2;
+using MazeEngine::Vector2;
 
 std::size_t Vector2::Hash::operator()(Vector2 const &vector) const noexcept {
 	static_assert(std::is_same_v<decltype(vector.value1), decltype(vector.value2)>);
@@ -22,6 +22,6 @@ std::string Vector2::toString() const {
 	return buffer.str();
 }
 
-std::ostream& Project::operator<<(std::ostream &outputStream, Vector2 const &vector) {
+std::ostream& MazeEngine::operator<<(std::ostream &outputStream, Vector2 const &vector) {
 	outputStream << vector.toString(); return outputStream;
 }
