@@ -85,9 +85,10 @@ int main(int const argc, char *argv[]) {
 	// Generate the maze corridors.
 	App::maze->generate(seed, mazeWrap);
 
-	static std::size_t exploredCount{0u};
+
+	static std::size_t exploredVertexCount{0u};
 	static constexpr auto const processVertex = [](Engine::Vector2 const &vertex) -> bool {
-		++exploredCount;
+		++exploredVertexCount;
 		/* lock */ {
 			std::lock_guard const lock(App::tileInfoMutex);
 			App::markedTileSet.insert(vertex);
