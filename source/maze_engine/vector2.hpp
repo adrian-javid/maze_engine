@@ -1,7 +1,7 @@
 #ifndef MazeEngine_Vector2_hpp
 #define MazeEngine_Vector2_hpp
 
-#include "application/Util.hpp"
+#include "application/util.hpp"
 
 #include <functional>
 #include <string>

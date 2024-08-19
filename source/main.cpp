@@ -17,7 +17,7 @@ namespace MazeEngine::Global {/*
 #include "maze_engine/maze/hexagon.hpp"
 #include "application/util.hpp"
 #include "application/app_param.hpp"
-#include "application/application.hpp"
+#include "application/app.hpp"
 
 #include <thread>
 #include <mutex>

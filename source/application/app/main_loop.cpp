@@ -1,6 +1,6 @@
-#include "application.hpp"
+#include "application/app.hpp"
 
-#include "window.hpp"
+#include "application/window.hpp"
 
 void App::mainLoop() {
 	// Time of the previous iteration.

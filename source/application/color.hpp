@@ -2,7 +2,7 @@
 #define Application_Color_hpp
 
 #include "simple_directmedia_layer.hpp"
-#include "Util.hpp"
+#include "util.hpp"
 #include "maze_engine/vector2.hpp"
 
 #include <tuple>

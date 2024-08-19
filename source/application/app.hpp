@@ -1,5 +1,5 @@
-#ifndef Application_Application_hpp
-#define Application_Application_hpp
+#ifndef Application_App_hpp
+#define Application_App_hpp
 
 #include "simple_directmedia_layer.hpp"
 #include <thread>

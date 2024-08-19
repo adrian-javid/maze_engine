@@ -1,4 +1,4 @@
-#include "Util.hpp"
+#include "util.hpp"
 
 double App::Util::wrapValue(double value, double const upperBound) {
 	static constexpr double zero{0.0};
