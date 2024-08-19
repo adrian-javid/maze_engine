@@ -97,7 +97,7 @@ mainDebugProgram, testDebugProgram, debugCompilationDatabase = runScript(
 
 if NATIVE_PLATFORM == "Windows":
 	for mainProgram, buildType in ((mainReleaseProgram, "release"), (mainDebugProgram, "debug")):
-		windowsSdl2Dll = Command(F"build/Windows/{buildType}/SDL2.dll", "library/Windows/lib/SDL2/SDL2.dll", Copy("$TARGET", "$SOURCE"))
+		windowsSdl2Dll = Command(F"build/Windows/{buildType}/run/SDL2.dll", "library/Windows/lib/SDL2/SDL2.dll", Copy("$TARGET", "$SOURCE"))
 		Depends(mainProgram, windowsSdl2Dll)
 
 if not undiscoveredEmscripten: runScript(
