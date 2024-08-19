@@ -16,7 +16,19 @@ namespace App::Window {
 	static constexpr float wallFramePercent = 0.35f;
 	static_assert(wallFramePercent >= 0.0f and wallFramePercent <= 1.0f);
 
-	void setRenderDrawColor(SDL_Color const &color);
+	inline void setRenderDrawColor(SDL_Color const &color) {
+		SDL_SetRenderDrawColor(
+			Window::renderer,
+			color.r, color.g, color.b, color.a
+		);
+	}
+
+	void drawQuadrilateral(
+		SDL_FPoint const &northwestPoint, SDL_FPoint const &northeastPoint,
+		SDL_FPoint const &southwestPoint, SDL_FPoint const &southeastPoint,
+		SDL_Color  const &northwestColor, SDL_Color  const &northeastColor,
+		SDL_Color  const &southwestColor, SDL_Color  const &southeastColor
+	);
 
 	void drawSquareMaze(
 		MazeEngine::SquareMaze const &maze,
