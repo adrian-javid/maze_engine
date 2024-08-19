@@ -35,50 +35,49 @@ namespace MazeEngine::Global {/*
 #endif
 
 int main(int const argc, char *argv[]) {
-	using namespace App;
-	using namespace MazeEngine;
+	namespace Engine = MazeEngine;
 
-	auto const &config = ParamInfo::parseArgv(argc, argv);
+	auto const &config = App::ParamInfo::parseArgv(argc, argv);
 
 	// Get values from `config`.
 
 	std::string const &gridType = config.at("grid").argument;
 	int const mazeSize{
-		ParamInfo::assertPositive(
-			ParamInfo::castArg<int>(config.at("size").argument),
+		App::ParamInfo::assertPositive(
+			App::ParamInfo::castArg<int>(config.at("size").argument),
 		(std::ostringstream() << "Bad value for `size`." ).str())
 	};
-	unsigned int const seed{ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
+	unsigned int const seed{App::ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
 	std::string const &searchAlgorithmName = config.at("search").argument;
 	App::sleepTime = std::chrono::milliseconds(
-		ParamInfo::assertNonnegative(
-			ParamInfo::castArg<int>(config.at("delay").argument),
+		App::ParamInfo::assertNonnegative(
+			App::ParamInfo::castArg<int>(config.at("delay").argument),
 		(std::ostringstream() << "Bad value for `delay`." ).str())
 	);
-	bool const mazeWrap = ParamInfo::castArg<bool>(config.at("wrap").argument);
+	bool const mazeWrap = App::ParamInfo::castArg<bool>(config.at("wrap").argument);
 
 	static constexpr int mazeFillValue{0xFFu};
 
 	// Create maze object with grid type.
 	if (gridType == "square") {
-		App::maze = &(App::squareMaze = SquareMaze(mazeSize, mazeSize, mazeFillValue));
+		App::maze = &(App::squareMaze = Engine::SquareMaze(mazeSize, mazeSize, mazeFillValue));
 		if (mazeWrap)
 			App::mazeEnd = {App::squareMaze.getRowCount() / 2, App::squareMaze.getColumnCount() / 2};
 		else
 			App::mazeEnd = {App::squareMaze.getRowCount() - 1, App::squareMaze.getColumnCount() - 1};
 	} else if (gridType == "hexagon") {
-		App::maze = &(App::hexagonMaze = HexagonMaze(mazeSize, mazeFillValue));
+		App::maze = &(App::hexagonMaze = Engine::HexagonMaze(mazeSize, mazeFillValue));
 		App::mazeStart.value2 = -App::hexagonMaze.getRadius();
 		if (not mazeWrap) App::mazeEnd.value2 = App::hexagonMaze.getRadius();
 	} else {
-		Util::errOut("Unable to resolve grid type from string: `" + gridType + "`.");
+		App::Util::errOut("Unable to resolve grid type from string: `" + gridType + "`.");
 	}
 
 	// Generate the maze corridors.
 	App::maze->generate(seed, mazeWrap);
 
 	static std::size_t exploredCount{0u};
-	static constexpr auto const processVertex = [](Vector2 const &vertex) -> bool {
+	static constexpr auto const processVertex = [](Engine::Vector2 const &vertex) -> bool {
 		++exploredCount;
 		/* lock */ {
 			std::lock_guard const lock(App::tileInfoMutex);
@@ -88,25 +87,30 @@ int main(int const argc, char *argv[]) {
 		return vertex == App::mazeEnd;
 	};
 
-	static std::function<Vector2::HashMap<Vector2>(void)> searchMaze = nullptr;
-	static std::variant<std::nullptr_t, DepthFirstSearchIterator, BreadthFirstSearchIterator, GreedyBestFirstSearchIterator> mazeSearchIteratorVariant;
-	static MazeSearchIterator *mazeSearchIterator = nullptr;
+	static std::function<Engine::Vector2::HashMap<Engine::Vector2>(void)> searchMaze = nullptr;
+	static std::variant<
+		std::nullptr_t,
+		Engine::DepthFirstSearchIterator,
+		Engine::BreadthFirstSearchIterator,
+		Engine::GreedyBestFirstSearchIterator
+	> mazeSearchIteratorVariant;
+	static Engine::MazeSearchIterator *mazeSearchIterator = nullptr;
 
 	// Get the search algorithm.
 	if (searchAlgorithmName == "depth") {
 		searchMaze = []() { return depthFirstSearch(*App::maze, App::mazeStart, processVertex); };
-		mazeSearchIteratorVariant = DepthFirstSearchIterator(*App::maze, App::mazeStart);
+		mazeSearchIteratorVariant = Engine::DepthFirstSearchIterator(*App::maze, App::mazeStart);
 	} else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
 		searchMaze = []() { return breadthFirstSearch(*App::maze, App::mazeStart, processVertex); };
-		mazeSearchIteratorVariant = BreadthFirstSearchIterator(*App::maze, App::mazeStart);
+		mazeSearchIteratorVariant = Engine::BreadthFirstSearchIterator(*App::maze, App::mazeStart);
 	} else if (searchAlgorithmName == "greedy") {
 		searchMaze = []() { return greedyBestFirstSearch(*App::maze, App::mazeStart, App::mazeEnd, processVertex); };
-		mazeSearchIteratorVariant = GreedyBestFirstSearchIterator(*App::maze, App::mazeStart, App::mazeEnd);
+		mazeSearchIteratorVariant = Engine::GreedyBestFirstSearchIterator(*App::maze, App::mazeStart, App::mazeEnd);
 	} else if (searchAlgorithmName == "a_star") {
 		searchMaze = []() { return aStarSearch(*App::maze, App::mazeStart, App::mazeEnd, processVertex); };
 		mazeSearchIteratorVariant = nullptr;
 	} else {
-		Util::errOut("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
+		App::Util::errOut("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
 	}
 	assert(searchMaze != nullptr);
 	assert(not std::holds_alternative<std::nullptr_t>(mazeSearchIteratorVariant));
@@ -114,7 +118,7 @@ int main(int const argc, char *argv[]) {
 	static std::size_t pathLength{0u};
 
 	mazeSearchIterator = std::visit(
-		[](auto &iterator) -> MazeSearchIterator *{
+		[](auto &iterator) -> Engine::MazeSearchIterator *{
 			if constexpr (std::is_same_v<decltype(iterator), std::nullptr_t &>)
 				return nullptr;
 			else
@@ -134,7 +138,7 @@ int main(int const argc, char *argv[]) {
 
 		auto const upTree(mazeSearchIterator->getHistory());
 
-		Util::synchronizedPrint((std::ostringstream() << "Explored count: " << exploredCount).str());
+		App::Util::synchronizedPrint((std::ostringstream() << "Explored count: " << exploredCount).str());
 
 		// Path tiles.
 		for (
@@ -156,14 +160,14 @@ int main(int const argc, char *argv[]) {
 			App::pathTileSet.insert(App::mazeStart); // include corner
 		}
 
-		Util::synchronizedPrint((std::ostringstream() << "Path length: " << pathLength).str());
+		App::Util::synchronizedPrint((std::ostringstream() << "Path length: " << pathLength).str());
 	};
 
 	std::ostringstream outputStream;
 	for (auto const &[name, param] : config) {
 		outputStream.str(std::string());
 		outputStream << name << ": " << param.argument << '\n';
-		Util::synchronizedPrint(outputStream.str(), '\0');
+		App::Util::synchronizedPrint(outputStream.str(), '\0');
 	}
 
 	// Initialize the Simple Directmedia Layer library.
@@ -177,42 +181,42 @@ int main(int const argc, char *argv[]) {
 		I believe it has something to do with `SDL_Quit`.
 	*/
 	std::atexit(+[]() -> void {
-		if (Window::window) SDL_DestroyWindow(Window::window);
-		if (Window::renderer) SDL_DestroyRenderer(Window::renderer);
+		if (App::Window::window) SDL_DestroyWindow(App::Window::window);
+		if (App::Window::renderer) SDL_DestroyRenderer(App::Window::renderer);
 		SDL_Quit();
 	});
 
 	static constexpr char const *windowTitle = "Maze Engine";
 
-	Window::window = SDL_CreateWindow(
+	App::Window::window = SDL_CreateWindow(
 		windowTitle,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		Window::windowWidth, Window::windowHeight,
+		App::Window::windowWidth, App::Window::windowHeight,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 	);
 
 	// Assert window was successfully created.
-	assert(Window::window != nullptr);
+	assert(App::Window::window != nullptr);
 
 	/*
 		The software renderer supports VSync, so can always fallback on software renderer
 		unless not using SDL renderers.
 	*/
-	Window::renderer = SDL_CreateRenderer(Window::window, -1, SDL_RENDERER_PRESENTVSYNC);
+	App::Window::renderer = SDL_CreateRenderer(App::Window::window, -1, SDL_RENDERER_PRESENTVSYNC);
 
-	if (Window::renderer == nullptr)
-		Window::renderer = SDL_CreateRenderer(Window::window, -1, 0u);
+	if (App::Window::renderer == nullptr)
+		App::Window::renderer = SDL_CreateRenderer(App::Window::window, -1, 0u);
 
 	// Assert renderer was successfully created.
-	assert(Window::renderer != nullptr);
+	assert(App::Window::renderer != nullptr);
 
-	SDL_SetWindowTitle(Window::window, windowTitle);
-	SDL_SetWindowMinimumSize(Window::window, 250, 150);
+	SDL_SetWindowTitle(App::Window::window, windowTitle);
+	SDL_SetWindowMinimumSize(App::Window::window, 250, 150);
 
 	// Start worker thread.
 	std::thread const mazeSolver(solveMaze);
 
-	SDL_SetRenderDrawColor(Window::renderer, 0u, 0u, 0u, 1u);
+	SDL_SetRenderDrawColor(App::Window::renderer, 0u, 0u, 0u, 1u);
 
 	// Start the main loop.
 	#ifdef __EMSCRIPTEN__
@@ -225,9 +229,9 @@ int main(int const argc, char *argv[]) {
 		it will be cleaned up before the main loop is called for the first time.""
 		(https://emscripten.org/docs/api_reference/emscripten.h.html#id3)
 	*/
-	emscripten_set_main_loop(&mainLoop, -1, true);
+	emscripten_set_main_loop(&App::mainLoop, -1, true);
 	#else
-	while (true) mainLoop();
+	while (true) App::mainLoop();
 	#endif
 
 	return EXIT_SUCCESS;
