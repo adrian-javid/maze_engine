@@ -65,7 +65,7 @@ GCC_WARNING = make(CXXFLAGS=[
 	'-Walloca', # usage of `alloca`
 	'-Wimplicit-fallthrough', # unannotated fall-through between switch labels
 
-	'-Wno-error=deprecated-declarations',
+	'-Wno-error=deprecated-declarations', # deprecation warnings are not errors
 ])
 
 GCC_RELEASE = make(
