@@ -6,6 +6,5 @@ namespace App::Window {
 	SDL_Renderer *renderer = nullptr;
 	int windowWidth = 420;
 	int windowHeight = 420;
-	std::function<void()> windowRefresher = []() constexpr -> void {};
 }
 

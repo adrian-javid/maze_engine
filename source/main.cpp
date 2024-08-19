@@ -209,9 +209,6 @@ int main(int const argc, char *argv[]) {
 	SDL_SetWindowTitle(Window::window, windowTitle);
 	SDL_SetWindowMinimumSize(Window::window, 250, 150);
 
-	// Set the window refresher. This is called every iteration in the main loop.
-	Window::windowRefresher = &Window::refresh;
-
 	// Start worker thread.
 	std::thread const mazeSolver(solveMaze);
 

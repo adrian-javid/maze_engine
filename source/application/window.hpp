@@ -11,7 +11,6 @@ namespace App::Window {
 	extern SDL_Renderer *renderer;
 	extern int windowWidth;
 	extern int windowHeight;
-	extern std::function<void()> windowRefresher;
 
 	static constexpr float wallFramePercent = 0.35f;
 	static_assert(wallFramePercent >= 0.0f and wallFramePercent <= 1.0f);

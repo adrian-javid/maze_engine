@@ -34,7 +34,7 @@ void App::mainLoop() {
 	}
 
 	// Refresh window.
-	Window::windowRefresher();
+	Window::refresh();
 
 	// As this iteration ends, update the previous time.
 	previousTime = currentTime;
