@@ -148,7 +148,7 @@ int main(int const argc, char *argv[]) {
 
 		auto const upTree(mazeSearchIterator->getHistory());
 
-		App::Util::synchronizedPrint((std::ostringstream() << "Explored count: " << exploredCount).str());
+		App::Util::synchronizedPrint((std::ostringstream() << "Explored count: " << exploredVertexCount).str());
 
 		// Path tiles.
 		for (
