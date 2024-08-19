@@ -4,13 +4,13 @@ main_cpp = File("main.cpp")
 
 mainSourceList = Glob("maze_engine/*.cpp") + Glob("maze_engine/*/*.cpp") + Glob("application/*.cpp") + Glob("application/*/*.cpp")
 
-mainProgram = mainEnv.Program(target="maze_engine", source=[main_cpp] + mainSourceList)
+mainProgram = mainEnv.Program(target="run/maze_engine", source=[main_cpp] + mainSourceList)
 
 catch2Object = libEnv.StaticObject(File("test/catch2/catch_amalgamated.cpp"))
 
 testSourceList = Glob("test/*.cpp")
 
-testProgram = mainEnv.Program(target="test/suite", source=[*mainSourceList, *testSourceList, catch2Object])
+testProgram = mainEnv.Program(target="run/test_suite", source=[*mainSourceList, *testSourceList, catch2Object])
 
 compilationDatabase = mainEnv.CompilationDatabase()
 
