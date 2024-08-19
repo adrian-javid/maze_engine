@@ -16,6 +16,7 @@ namespace MazeEngine {
 	 * @param grid Maze will search in.
 	 * @param start Location of tile to start search from.
 	 */
+	[[deprecated]]
 	Vector2::HashMap<Vector2> depthFirstSearch(
 		Maze const &maze, Vector2 const &start, std::function<bool(Vector2 const &)> const processKey=nullptr
 	);

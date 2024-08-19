@@ -6,6 +6,7 @@
 #include "maze_engine/search/abstract.hpp"
 
 namespace MazeEngine {
+	[[deprecated]]
 	Vector2::HashMap<Vector2> greedyBestFirstSearch(
 		Maze const &maze,
 		Vector2 const &start, Vector2 const &end,

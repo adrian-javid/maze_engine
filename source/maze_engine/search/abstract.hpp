@@ -10,6 +10,7 @@
 
 namespace MazeEngine {
 	template <typename StorageT>
+	[[deprecated]]
 	Vector2::HashMap<Vector2> abstractSearch(
 		Maze const &maze,
 		Vector2 const &start,
