@@ -17,9 +17,6 @@ namespace App {
 	extern MazeEngine::Vector2 mazeStart;
 	extern MazeEngine::Vector2 mazeEnd;
 
-	extern std::chrono::milliseconds sleepTime;
-	inline void delay() { std::this_thread::sleep_for(sleepTime); }
-
 	extern std::mutex tileInfoMutex;
 	extern MazeEngine::Vector2::HashSet pathTileSet;
 	extern MazeEngine::Vector2::HashSet markedTileSet;

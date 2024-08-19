@@ -34,6 +34,12 @@ namespace MazeEngine::Global {/*
 #include <emscripten.h>
 #endif
 
+namespace App {
+	using namespace std::chrono_literals;
+	static std::chrono::milliseconds sleepTime(0ms);
+	static inline void delay() { std::this_thread::sleep_for(sleepTime); }
+}
+
 int main(int const argc, char *argv[]) {
 	namespace Engine = MazeEngine;
 

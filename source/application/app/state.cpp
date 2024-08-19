@@ -9,8 +9,6 @@ namespace App {
 	MazeEngine::Vector2 mazeStart(0, 0);
 	MazeEngine::Vector2 mazeEnd(0, 0);
 
-	std::chrono::milliseconds sleepTime = 0ms;
-
 	std::mutex tileInfoMutex;
 	MazeEngine::Vector2::HashSet pathTileSet;
 	MazeEngine::Vector2::HashSet markedTileSet;
