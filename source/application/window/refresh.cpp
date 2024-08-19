@@ -1,6 +1,6 @@
 #include "application/window.hpp"
 
-#include "application/app.hpp"
+#include "application/common.hpp"
 #include "application/util.hpp"
 
 void App::Window::refresh() {

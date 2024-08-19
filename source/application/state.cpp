@@ -1,4 +1,4 @@
-#include "application/app.hpp"
+#include "application/common.hpp"
 
 namespace App {
 	using namespace std::chrono_literals;
