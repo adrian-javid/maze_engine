@@ -2,6 +2,8 @@
 
 #include "maze_engine/maze.hpp"
 
+#include <iostream>
+
 App::Performer::Performer(
 	MazeType const mazeType, int const mazeSize,
 	unsigned int const seed, bool const mazeWrap,
@@ -63,4 +65,52 @@ App::Performer::Performer(
 	getMaze().generate(seed, mazeWrap);
 }
 
-void App::Performer::update() { throw std::logic_error("Not implemented."); }
+void App::Performer::update() {
+	switch (state) {
+		case State::searching: {
+			if (getMazeSearchIterator().isEnd()) goto switchToBacktracking;
+
+			/* process vertex */ {
+				MazeEngine::Vector2 const &vertex(*getMazeSearchIterator());
+				markedTileSet.insert(vertex);
+				SDL_Delay(sleepTime);
+
+				if (vertex == mazeEnd) goto switchToBacktracking;
+			}
+
+			++getMazeSearchIterator();
+
+			return;
+		}
+
+		switchToBacktracking: {
+			std::cout << "Explored count: " << markedTileSet.size() << '\n';
+			edge = getMazeSearchIterator().getHistory().find(mazeEnd);
+			state = State::backtracking;
+			return;
+		}
+
+		case State::backtracking: {
+			auto const &history = getMazeSearchIterator().getHistory();
+
+			if (edge->/* child vertex */first == mazeStart) goto switchToComplete;
+
+			/* process edge */ {
+				pathTileSet.insert(edge->/* child vertex */first);
+				SDL_Delay(sleepTime);
+			}
+
+			edge = history.find(edge->/* parent vertex */second);
+			return;
+		}
+
+		switchToComplete: {
+			pathTileSet.insert(mazeStart); // include corner
+			std::cout << "Path length: " << pathTileSet.size() << '\n';
+			state = State::complete;
+			return;
+		}
+
+		case State::complete: return;
+	}
+}
