@@ -1,6 +1,8 @@
 #include "application/common.hpp"
 
+
 namespace App {
+	#if false
 	using namespace std::chrono_literals;
 
 	MazeEngine::Maze *maze = nullptr;
@@ -12,7 +14,9 @@ namespace App {
 	std::mutex tileInfoMutex;
 	MazeEngine::Vector2::HashSet pathTileSet;
 	MazeEngine::Vector2::HashSet markedTileSet;
+	#endif
 
 	// Change in time.
 	Uint64 deltaTime{0u};
 }
+

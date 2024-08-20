@@ -2,26 +2,6 @@
 
 #include "application/window.hpp"
 
-/*
-	There are several state the program can be in.
-
-	1. Idle
-		In this state, the program is waiting until the user prompts
-		for the program to begin solving the maze.
-	2. Performing
-		In this state, the program is generating or solving a maze.
-*/
-
-#if false
-namespace App {
-	static void idle() {}
-	static void perform() {}
-	static void (*actionState)() = perform;
-	static void doIdle() { actionState = idle; }
-	static void doPerform() { actionState = perform; }
-}
-#endif
-
 void App::mainLoop() {
 	// Time of the previous iteration.
 	static Uint64 previousTime{0u};

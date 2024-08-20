@@ -20,8 +20,6 @@ class App::Performer {
 
 		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy };
 
-		enum struct State : std::uint_least8_t { searching = 1u, backtracking, complete };
-
 	private:
 
 		std::variant<MazeEngine::SquareMaze, MazeEngine::HexagonMaze> mazeVariant;
@@ -32,6 +30,7 @@ class App::Performer {
 			MazeEngine::BreadthFirstSearchIterator,
 			MazeEngine::GreedyBestFirstSearchIterator
 		> mazeSearchIteratorVariant;
+		Uint32 sleepTime;
 
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
@@ -40,8 +39,11 @@ class App::Performer {
 			`edge->second` is the parent vertex
 		*/
 		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator edge;
-		Uint32 sleepTime{0u};
-		State state{State::searching};
+		enum struct State : std::uint_least8_t {
+			searching = 1u, backtracking, complete
+		} state{State::searching};
+
+		static std::optional<Performer> performer;
 
 	public:
 
@@ -49,10 +51,36 @@ class App::Performer {
 		Performer(
 			MazeType const mazeType, int const mazeSize,
 			unsigned int const seed, bool const mazeWrap,
-			SearchType const searchType
+			SearchType const searchType,
+			decltype(Performer::sleepTime) sleepTimeMilliseconds
 		);
 
-		FORCE_INLINE
+		FORCE_INLINE static
+		void initialize(Performer &&performerValue) {
+			performer = std::move(performerValue);
+		}
+
+		/*
+			Make sure to initialize the global performer before calling
+			this function because otherwise will invoke undefined behavior
+			when accessing the empty `std::optional`.
+		*/
+		[[nodiscard]] FORCE_INLINE static
+		App::Performer const & get() {
+			return *performer;
+		}
+
+		[[nodiscard]] FORCE_INLINE
+		MazeEngine::Vector2 const & getMazeStart() const {
+			return mazeStart;
+		}
+
+		[[nodiscard]] FORCE_INLINE
+		MazeEngine::Vector2 const & getMazeEnd() const {
+			return mazeEnd;
+		}
+
+		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Maze const & getMaze() const {
 			return std::visit(
 				[](auto &&maze) -> MazeEngine::Maze const & {
@@ -62,12 +90,21 @@ class App::Performer {
 			);
 		}
 
-		FORCE_INLINE
-		MazeEngine::Maze & getMaze() {
-			return const_cast<MazeEngine::Maze &>(std::as_const(*this).getMaze());
+		[[nodiscard]] FORCE_INLINE
+		decltype(markedTileSet) const &getMarkedTileSet() const {
+			return markedTileSet;
 		}
 
-		FORCE_INLINE
+		decltype(pathTileSet) const &getPathTileSet() const {
+			return pathTileSet;
+		}
+
+		[[nodiscard]] FORCE_INLINE
+		decltype(mazeVariant) const & getUnderlyingMaze() const {
+			return mazeVariant;
+		}
+
+		[[nodiscard]] FORCE_INLINE
 		MazeEngine::MazeSearchIterator const & getMazeSearchIterator() const {
 			return std::visit(
 				[](auto &&mazeSearchIterator) -> MazeEngine::MazeSearchIterator const & {
@@ -77,12 +114,19 @@ class App::Performer {
 			);
 		}
 
-		FORCE_INLINE
+		[[nodiscard]] FORCE_INLINE
 		MazeEngine::MazeSearchIterator & getMazeSearchIterator() {
 			return const_cast<MazeEngine::MazeSearchIterator &>(std::as_const(*this).getMazeSearchIterator());
 		}
 
 		void update();
+
+	private:
+
+		[[nodiscard]] FORCE_INLINE
+		MazeEngine::Maze & getMaze() {
+			return const_cast<MazeEngine::Maze &>(std::as_const(*this).getMaze());
+		}
 };
 
 #endif

@@ -18,18 +18,18 @@ namespace App {
 		static constexpr char helpTipString[] = "Run with `help` for information about this program.";
 
 		template <typename T>
-		static T assertNonnegative(T const value, std::string const &preMessage=std::string()) {
+		static T assertNonnegative(T const value, std::string const &errorMessage=std::string()) {
 			static_assert(std::is_signed_v<T>);
-			if (value < T{0}) Util::errOut((std::ostringstream() << preMessage <<
+			if (value < T{0}) Util::errOut((std::ostringstream() << errorMessage <<
 				"\n\tValue `" << value << "` should not be negative.").str()
 			);
 			return value;
 		}
 
 		template <typename T>
-		static T assertPositive(T const value, std::string const &preMessage=std::string()) {
+		static T assertPositive(T const value, std::string const &errorMessage=std::string()) {
 			static_assert(std::is_signed_v<T>);
-			if (not (value > T{0})) Util::errOut((std::ostringstream() << preMessage <<
+			if (not (value > T{0})) Util::errOut((std::ostringstream() << errorMessage <<
 				"\n\tValue `" << value << "` should be positive.").str()
 			);
 			return value;

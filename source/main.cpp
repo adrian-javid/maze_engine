@@ -1,4 +1,4 @@
-namespace MazeEngine::Global {/*
+namespace App {/*
 
 
 	This program solves mazes!
@@ -20,50 +20,82 @@ namespace MazeEngine::Global {/*
 #include "application/param_info.hpp"
 #include "application/common.hpp"
 
+#if false
 #include <thread>
 #include <mutex>
 #include <chrono>
 #include <variant>
+#endif
 
 #include <algorithm>
 #include <cassert>
 #include <random>
+
 #ifdef __EMSCRIPTEN__
-#ifndef __EMSCRIPTEN_PTHREADS__
-#error "POSIX threads are not enabled."
-#endif
 #include <emscripten.h>
+#ifdef __EMSCRIPTEN_PTHREADS__
+#error "Should not use POSIX threads for this program."
+#endif
 #endif
 
+#if false
 namespace App {
 	using namespace std::chrono_literals;
 	static std::chrono::milliseconds sleepTime(0ms);
 	static inline void delay() { std::this_thread::sleep_for(sleepTime); }
 }
+#endif
 
 int main(int const argc, char *argv[]) {
+	#if false
 	// Maze engine.
 	namespace Engine = MazeEngine;
+	#endif
 
 	// Parse arguments into key-value pairs.
 	auto const &config = App::ParamInfo::parseArgv(argc, argv);
 
 	// Get values from `config`.
 
-	std::string const &gridType = config.at("grid").argument;
+	std::string_view const gridType = config.at("grid").argument;
 	int const mazeSize{
 		App::ParamInfo::assertPositive(
 			App::ParamInfo::castArg<int>(config.at("size").argument),
 		(std::ostringstream() << "Bad value for `size`." ).str())
 	};
 	unsigned int const seed{App::ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
-	std::string const &searchAlgorithmName = config.at("search").argument;
+	std::string_view const searchAlgorithmName = config.at("search").argument;
+	#if false
 	App::sleepTime = std::chrono::milliseconds(
 		App::ParamInfo::assertNonnegative(
 			App::ParamInfo::castArg<int>(config.at("delay").argument),
 		(std::ostringstream() << "Bad value for `delay`." ).str())
 	);
+	#else
+	int sleepTimeMilliseconds{
+		App::ParamInfo::assertNonnegative(
+			App::ParamInfo::castArg<int>(config.at("delay").argument),
+			(std::ostringstream() << "Bad value for `delay`." ).str()
+		)
+	};
+	#endif
 	bool const mazeWrap = App::ParamInfo::castArg<bool>(config.at("wrap").argument);
+	App::Performer::MazeType const mazeType{[gridType]() -> App::Performer::MazeType {
+		/**/ if (gridType == "square") return App::Performer::MazeType::square;
+		else if (gridType == "hexagon") return App::Performer::MazeType::hexagon;
+		else App::Util::errOut("Unable to resolve grid type from string: `", gridType, "`.");
+	}()};
+	App::Performer::SearchType const searchType{[searchAlgorithmName]() -> App::Performer::SearchType {
+		/**/ if (searchAlgorithmName == "depth") return App::Performer::SearchType::depth;
+		else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") return App::Performer::SearchType::breadth;
+		else if (searchAlgorithmName == "greedy") return App::Performer::SearchType::greedy;
+		else if (searchAlgorithmName == "a_star") App::Util::errOut("A Star is currently unsupported.");
+		else App::Util::errOut("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
+	}()};
+
+	App::Performer::initialize(App::Performer(mazeType, mazeSize, seed, mazeWrap, searchType, sleepTimeMilliseconds));
+
+	#if false
 
 	// The maze will be constructed with all walls before generating corridors.
 	static constexpr Engine::Maze::Tile mazeFillValue{0xFFu};
@@ -80,7 +112,7 @@ int main(int const argc, char *argv[]) {
 		App::mazeStart.value2 = -App::hexagonMaze.getRadius();
 		if (not mazeWrap) App::mazeEnd.value2 = App::hexagonMaze.getRadius();
 	} else {
-		App::Util::errOut("Unable to resolve grid type from string: `" + gridType + "`.");
+		App::Util::errOut("Unable to resolve grid type from string: `", gridType, "`.");
 	}
 
 	// Generate the maze corridors.
@@ -118,7 +150,7 @@ int main(int const argc, char *argv[]) {
 		searchMaze = []() { return aStarSearch(*App::maze, App::mazeStart, App::mazeEnd, processVertex); };
 		mazeSearchIteratorVariant = nullptr;
 	} else {
-		App::Util::errOut("Unable to resolve graph search algorithm from string: `" + searchAlgorithmName + "`.");
+		App::Util::errOut("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
 	}
 	assert(searchMaze != nullptr);
 	assert(not std::holds_alternative<std::nullptr_t>(mazeSearchIteratorVariant));
@@ -167,6 +199,8 @@ int main(int const argc, char *argv[]) {
 		App::Util::synchronizedPrint((std::ostringstream() << "Path length: " << App::pathTileSet.size()).str());
 	};
 
+	#endif
+
 	std::ostringstream outputStream;
 	for (auto const &[name, param] : config) {
 		outputStream.str(std::string());
@@ -177,13 +211,13 @@ int main(int const argc, char *argv[]) {
 	// Initialize the Simple Directmedia Layer library.
 	SDL_Init(SDL_INIT_VIDEO);
 
-	// Register exit handler.
 	/*
 		Note to self:
 
-		I don't understand why calling this before `SDL_Init` causes a segmentation fault.
+		I don't understand why calling this before `SDL_Init` causes a segmentation fault;
 		I believe it has something to do with `SDL_Quit`.
 	*/
+	// Register exit handler.
 	std::atexit(+[]() -> void {
 		if (App::Window::window) SDL_DestroyWindow(App::Window::window);
 		if (App::Window::renderer) SDL_DestroyRenderer(App::Window::renderer);
@@ -217,8 +251,10 @@ int main(int const argc, char *argv[]) {
 	SDL_SetWindowTitle(App::Window::window, windowTitle);
 	SDL_SetWindowMinimumSize(App::Window::window, 250, 150);
 
+	#if false
 	// Start worker thread.
 	std::thread const mazeSolver(solveMaze);
+	#endif
 
 	SDL_SetRenderDrawColor(App::Window::renderer, 0u, 0u, 0u, 1u);
 

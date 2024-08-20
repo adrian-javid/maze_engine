@@ -2,6 +2,7 @@
 
 #include "application/common.hpp"
 #include "application/util.hpp"
+#include "application/performer.hpp"
 
 void App::Window::refresh() {
 
@@ -41,17 +42,29 @@ void App::Window::refresh() {
 	float const windowWidthValue  = static_cast<float>(windowWidth );
 	float const windowHeightValue = static_cast<float>(windowHeight);
 
+	App::Performer const &performer = App::Performer::get();
+
 	auto const mainColorGetter = [
+		&performer,
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
 		&startEndColorTriplet
 	](MazeEngine::Vector2 const &key) -> ColorTriplet {
-		if (key == App::mazeStart or key == App::mazeEnd)
+		if (key == performer.getMazeStart() or key == performer.getMazeEnd())
 			return startEndColorTriplet;
 
+		#if false
 		std::lock_guard const lock(tileInfoMutex);
-		if (App::pathTileSet.find(key) != App::pathTileSet.end())
+		#endif
+
+		if (
+			auto const &pathTiles = performer.getPathTileSet();
+			pathTiles.find(key) != pathTiles.end()
+		)
 			return pathTileColorTriplet;
-		else if (App::markedTileSet.find(key) != App::markedTileSet.end())
+		else if (
+			auto const &markedTiles = performer.getMarkedTileSet();
+			markedTiles.find(key) != markedTiles.end()
+		)
 			return markedTileColorTriplet;
 		else
 			return unmarkedTileColorTriplet;
@@ -59,6 +72,29 @@ void App::Window::refresh() {
 
 	SDL_RenderClear(renderer);
 
+	std::visit(
+		[
+			windowWidthValue, windowHeightValue,
+			&mainColorGetter, &wallColorTriplet
+		](auto &&maze) -> void {
+			using MazeT = std::decay_t<decltype(maze)>;
+
+			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) drawSquareMaze(
+				std::forward<decltype(maze)>(maze),
+				{0.0f, 0.0f},
+				windowWidthValue, windowHeightValue,
+				mainColorGetter, wallColorTriplet
+			); else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) drawHexagonMaze(
+				std::forward<decltype(maze)>(maze),
+				{windowWidthValue / 2.0f, windowHeightValue / 2.0f},
+				windowWidthValue, windowHeightValue,
+				mainColorGetter, wallColorTriplet
+			);
+		},
+		performer.getUnderlyingMaze()
+	);
+
+	#if false
 	if (App::maze == &App::squareMaze) drawSquareMaze(
 		squareMaze,
 		{0.0f, 0.0f},
@@ -71,6 +107,7 @@ void App::Window::refresh() {
 		mainColorGetter, wallColorTriplet
 	); else
 		throw App::maze;
+	#endif
 
 	SDL_RenderPresent(renderer);
 }

@@ -4,10 +4,13 @@
 
 #include <iostream>
 
+std::optional<App::Performer> App::Performer::performer(std::nullopt);
+
 App::Performer::Performer(
 	MazeType const mazeType, int const mazeSize,
 	unsigned int const seed, bool const mazeWrap,
-	SearchType const searchType
+	SearchType const searchType,
+	decltype(Performer::sleepTime) sleepTimeMilliseconds
 ):
 	mazeVariant([mazeType, mazeSize]() -> decltype(Performer::mazeVariant) {
 		static constexpr MazeEngine::Maze::Tile mazeFillValue{0xFFu};
@@ -60,7 +63,8 @@ App::Performer::Performer(
 			default:
 				throw searchType;
 		}
-	}())
+	}()),
+	sleepTime{sleepTimeMilliseconds}
 {
 	getMaze().generate(seed, mazeWrap);
 }

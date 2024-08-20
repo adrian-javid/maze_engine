@@ -57,19 +57,25 @@ namespace App::Util {
 		return start * (1.0 - percentage) + end * percentage;
 	}
 
+	[[deprecated]]
 	inline void synchronizedPrint(std::string const &message, char const end='\n') {
 		static std::mutex mutex;
 		std::lock_guard const lock(mutex);
 		std::cout << message << end;
 	}
 
+	[[deprecated]]
 	inline void print(std::string const &message, char const end='\n') {
 		std::cout << message << end;
 	}
 
-	[[noreturn]]
-	inline void errOut(std::string const &message, char const end='\n') {
-		std::cerr << message << end;
+	/*
+		Print message with trailing newline character, then exit with failure code.
+	*/
+	template<typename... ParamsT>
+	[[noreturn]] FORCE_INLINE
+	void errOut(ParamsT &&...args) {
+		(std::cerr << ... << std::forward<ParamsT>(args)) << '\n';
 		std::exit(EXIT_FAILURE);
 	}
 }
