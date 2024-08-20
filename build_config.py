@@ -76,6 +76,7 @@ GCC_RELEASE = make(
 GCC_DEBUG = make(
 	CCFLAGS=[
 		"-O0", # zero optimization for faster compilation
+		"-g", # add debug symbols
 		"-Werror", # treat warnings as errors
 	],
 	CPPDEFINES=[
