@@ -86,9 +86,7 @@ int main(int const argc, char *argv[]) {
 	// Generate the maze corridors.
 	App::maze->generate(seed, mazeWrap);
 
-	static std::size_t exploredVertexCount{0u};
 	static constexpr auto const processVertex = [](Engine::Vector2 const &vertex) -> bool {
-		++exploredVertexCount;
 		/* lock */ {
 			std::lock_guard const lock(App::tileInfoMutex);
 			App::markedTileSet.insert(vertex);
@@ -125,8 +123,6 @@ int main(int const argc, char *argv[]) {
 	assert(searchMaze != nullptr);
 	assert(not std::holds_alternative<std::nullptr_t>(mazeSearchIteratorVariant));
 
-	static std::size_t pathLength{0u};
-
 	mazeSearchIterator = std::visit(
 		[](auto &iterator) -> Engine::MazeSearchIterator *{
 			if constexpr (std::is_same_v<decltype(iterator), std::nullptr_t &>)
@@ -148,7 +144,7 @@ int main(int const argc, char *argv[]) {
 
 		auto const upTree(mazeSearchIterator->getHistory());
 
-		App::Util::synchronizedPrint((std::ostringstream() << "Explored count: " << exploredVertexCount).str());
+		App::Util::synchronizedPrint((std::ostringstream() << "Explored count: " << App::markedTileSet.size()).str());
 
 		// Path tiles.
 		for (
@@ -156,7 +152,6 @@ int main(int const argc, char *argv[]) {
 			edge->first /* child vertex */ != App::mazeStart;
 			edge = upTree.find(edge->second /* parent vertex */)
 		) {
-			++pathLength;
 			/* lock */ {
 				std::lock_guard const lock(App::tileInfoMutex);
 				App::pathTileSet.insert(edge->first);
@@ -164,13 +159,12 @@ int main(int const argc, char *argv[]) {
 			App::delay();
 		}
 
-		++pathLength;
 		/* lock */ {
 			std::lock_guard const lock(App::tileInfoMutex);
 			App::pathTileSet.insert(App::mazeStart); // include corner
 		}
 
-		App::Util::synchronizedPrint((std::ostringstream() << "Path length: " << pathLength).str());
+		App::Util::synchronizedPrint((std::ostringstream() << "Path length: " << App::pathTileSet.size()).str());
 	};
 
 	std::ostringstream outputStream;
