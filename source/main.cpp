@@ -45,7 +45,7 @@ int main(int const argc, char *argv[]) {
 	// Maze engine.
 	namespace Engine = MazeEngine;
 
-	// Parse arguments into a key-value pairs.
+	// Parse arguments into key-value pairs.
 	auto const &config = App::ParamInfo::parseArgv(argc, argv);
 
 	// Get values from `config`.
@@ -85,7 +85,6 @@ int main(int const argc, char *argv[]) {
 
 	// Generate the maze corridors.
 	App::maze->generate(seed, mazeWrap);
-
 
 	static std::size_t exploredVertexCount{0u};
 	static constexpr auto const processVertex = [](Engine::Vector2 const &vertex) -> bool {
