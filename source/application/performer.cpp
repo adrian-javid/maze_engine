@@ -87,7 +87,8 @@ void App::Performer::update() {
 			std::cout << "Explored count: " << markedTileSet.size() << '\n';
 			edge = getMazeSearchIterator().getHistory().find(mazeEnd);
 			state = State::backtracking;
-			return;
+
+			[[fallthrough]];
 		}
 
 		case State::backtracking: {
@@ -108,7 +109,8 @@ void App::Performer::update() {
 			pathTileSet.insert(mazeStart); // include corner
 			std::cout << "Path length: " << pathTileSet.size() << '\n';
 			state = State::complete;
-			return;
+
+			[[fallthrough]];
 		}
 
 		case State::complete: return;
