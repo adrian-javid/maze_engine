@@ -108,12 +108,12 @@ MSVC_DEBUG = make(
 		"/Od", # disable optimization for faster compilation
 		"/WX", # treat warnings as errors
 		"/RTC1", # runtime checks
-		"/analyze", # static code analysis
 	],
 )
 
 MSVC_WARNING = make(CXXFLAGS=[
 	"/W4",
+	"/w45262", # warn on implicit fall-through in switch statement after `case` label
 	"/wd4996", # suppress deprecation warnings so they are not errors
 ])
 
