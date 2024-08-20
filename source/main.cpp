@@ -10,6 +10,7 @@ namespace MazeEngine::Global {/*
 #include "maze_engine/search/depth_first.hpp"
 #include "maze_engine/search/greedy_best_first.hpp"
 #include "maze_engine/search/a_star.hpp"
+#include "application/performer.hpp"
 
 #include "application/simple_directmedia_layer.hpp"
 #include "application/window.hpp"
