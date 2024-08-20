@@ -42,8 +42,8 @@ linuxLibEnv = C.parse(baseEnv.Clone(), C.GCC_CORE, C.GCC_RELEASE)
 
 webLibEnv = C.parse(linuxLibEnv.Clone(), EMSCRIPTEN)
 webMainEnv = C.parse(webLibEnv.Clone(), C.GCC_WARNING)
-webMainEnv.Append(CXXFLAGS=['-sUSE_SDL=2'])
-webMainEnv.Append(LINKFLAGS=['-sUSE_SDL=2'])
+webMainEnv.Append(CXXFLAGS=['--use-port=sdl2'])
+webMainEnv.Append(LINKFLAGS=['--use-port=sdl2'])
 
 def setCompilationDatabasePathFilter(env, buildType: Literal["release", "debug"]):
 	# This should be after `Tool('compilation_db')`
