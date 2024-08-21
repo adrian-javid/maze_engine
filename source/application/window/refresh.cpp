@@ -7,11 +7,11 @@
 void App::Window::refresh() {
 
 	static constexpr HslaColor
-		startEndColor    (91.0, 1.0, 0.49),
-		pathTileColor    (0.0            ),
-		wallColor        (240.0          ),
-		markedTileColor  (300.0          ),
-		unmarkedTileColor(155.0          );
+		startEndColor    ( 91.0, 1.0, 0.49),
+		pathTileColor    (  0.0           ),
+		wallColor        (240.0           ),
+		markedTileColor  (300.0           ),
+		unmarkedTileColor(155.0           );
 
 	static constexpr double zeroPercent{0.0};
 	static double percentage{zeroPercent};
