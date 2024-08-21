@@ -86,7 +86,7 @@ int main(int const argc, char *argv[]) {
 		else App::Util::errOut("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
 	}()};
 
-	App::Performer::initialize(App::Performer(mazeType, mazeSize, seed, mazeWrap, searchType, sleepTimeMilliseconds));
+	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, sleepTimeMilliseconds);
 
 	#if false
 
