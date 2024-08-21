@@ -51,7 +51,7 @@ auto MazeEngine::abstractSearch(
 
 		if (processKey != nullptr and processKey(key)) break;
 
-		maze.forEachNeighbor(key, [&maze, &history, &key, &storage](Vector2 const &neighbor) {
+		maze.forEachNeighbor(key, [&history, &key, &storage](Vector2 const &neighbor) {
 			if (history.find(neighbor) == history.end()) {
 				history.insert({neighbor, key});
 				storage.push(neighbor);
