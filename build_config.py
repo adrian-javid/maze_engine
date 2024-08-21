@@ -57,6 +57,8 @@ GCC_WARNING = make(CXXFLAGS=[
 	'-Wold-style-cast', '-Wcast-qual', '-Wcast-function-type',
 	'-Wcast-align', '-Wunused-macros', '-Wzero-as-null-pointer-constant',
 
+	'-Wshadow',
+
 	'-Wreturn-local-addr',
 
 	'-Wundef', # undefined identifier in `#if` directive
