@@ -19,6 +19,7 @@ namespace App {/*
 #include "application/util.hpp"
 #include "application/param_info.hpp"
 #include "application/common.hpp"
+#include "application/print.hpp"
 
 #include <algorithm>
 #include <cassert>
