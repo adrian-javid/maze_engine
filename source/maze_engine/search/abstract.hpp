@@ -68,6 +68,8 @@ class MazeEngine::MazeSearchIterator {
 		[[nodiscard]] virtual Vector2 const &operator*() const = 0;
 		[[nodiscard]] virtual bool isEnd() const = 0;
 		[[nodiscard]] virtual Vector2::HashMap<Vector2> const &getHistory() const = 0;
+		[[nodiscard]] explicit MazeSearchIterator() = default;
+		[[nodiscard]] explicit MazeSearchIterator(MazeSearchIterator const &) = default;
 		virtual ~MazeSearchIterator() = default;
 };
 
