@@ -94,11 +94,11 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 
 	public:
 		explicit AbstractSearchIterator(
-			Maze const &maze,
+			Maze const &mazeReference,
 			Vector2 start,
-			StorageT storage
-		): 
-			maze(&maze), key(std::move(start)), storage(std::move(storage)), history()
+			StorageT storageValue
+		):
+			maze(&mazeReference), key(std::move(start)), storage(std::move(storageValue)), history()
 		{
 			history.insert({key, key});
 			gatherNeighbors();

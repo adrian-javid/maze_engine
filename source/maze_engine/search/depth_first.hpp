@@ -22,8 +22,8 @@ namespace MazeEngine {
 	);
 
 	struct DepthFirstSearchIterator : AbstractSearchIterator<std::stack<Vector2>> {
-		explicit DepthFirstSearchIterator(Maze const &maze, Vector2 start):
-			AbstractSearchIterator<std::stack<Vector2>>(maze, std::move(start), std::stack<Vector2>())
+		explicit DepthFirstSearchIterator(Maze const &mazeReference, Vector2 start):
+			AbstractSearchIterator<std::stack<Vector2>>(mazeReference, std::move(start), std::stack<Vector2>())
 		{}
 	};
 }

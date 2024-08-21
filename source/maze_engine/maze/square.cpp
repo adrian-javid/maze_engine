@@ -4,16 +4,16 @@ using namespace MazeEngine;
 
 SquareMaze::SquareMaze(): SquareMaze(0, 0, emptyTile) {}
 
-SquareMaze::SquareMaze(int const rowCount, int const columnCount, Tile const tileFillValue):
-	table([rowCount, columnCount]() constexpr -> std::size_t {
-		if (rowCount < 0)
-			throw std::invalid_argument("row count " + std::to_string(rowCount) + " should not be negative");
+SquareMaze::SquareMaze(int const paramRowCount, int const paramColumnCount, Tile const tileFillValue):
+	table([paramRowCount, paramColumnCount]() constexpr -> std::size_t {
+		if (paramRowCount < 0)
+			throw std::invalid_argument("row count " + std::to_string(paramRowCount) + " should not be negative");
 
-		if (columnCount < 0)
-			throw std::invalid_argument("column count " + std::to_string(columnCount) + " should not be negative");
+		if (paramColumnCount < 0)
+			throw std::invalid_argument("column count " + std::to_string(paramColumnCount) + " should not be negative");
 
-		return static_cast<std::size_t>(rowCount) * static_cast<std::size_t>(columnCount);
-	}(), tileFillValue), rowCount{rowCount}, columnCount{columnCount}
+		return static_cast<std::size_t>(paramRowCount) * static_cast<std::size_t>(paramColumnCount);
+	}(), tileFillValue), rowCount{paramRowCount}, columnCount{paramColumnCount}
 {}
 
 int SquareMaze::getRowCount() const { return rowCount; }

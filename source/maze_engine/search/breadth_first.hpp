@@ -21,8 +21,8 @@ namespace MazeEngine {
 	);
 
 	struct BreadthFirstSearchIterator : AbstractSearchIterator<std::queue<Vector2>> {
-		explicit BreadthFirstSearchIterator(Maze const &maze, Vector2 start):
-			AbstractSearchIterator<std::queue<Vector2>>(maze, std::move(start), std::queue<Vector2>())
+		explicit BreadthFirstSearchIterator(Maze const &mazeReference, Vector2 start):
+			AbstractSearchIterator<std::queue<Vector2>>(mazeReference, std::move(start), std::queue<Vector2>())
 		{}
 	};
 }

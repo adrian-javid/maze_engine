@@ -15,7 +15,7 @@ namespace MazeEngine {
 
 	struct GreedyBestFirstSearchHeuristicComparator {
 		Maze const *maze; Vector2 end;
-		explicit GreedyBestFirstSearchHeuristicComparator(Maze const &maze, Vector2 end): maze(&maze), end(std::move(end)) {}
+		explicit GreedyBestFirstSearchHeuristicComparator(Maze const &mazeReference, Vector2 endPosition): maze(&mazeReference), end(std::move(endPosition)) {}
 		[[nodiscard]] bool operator()(Vector2 const &leftKey, Vector2 const &rightKey) const {
 			return maze->length(leftKey - end) > maze->length(rightKey - end);
 		};
@@ -24,11 +24,11 @@ namespace MazeEngine {
 	using GreedyBestFirstSearchPriorityQueue = std::priority_queue<Vector2, std::vector<Vector2>, GreedyBestFirstSearchHeuristicComparator>;
 
 	struct GreedyBestFirstSearchIterator : AbstractSearchIterator<GreedyBestFirstSearchPriorityQueue> {
-		explicit GreedyBestFirstSearchIterator(Maze const &maze, Vector2 start, Vector2 end):
+		explicit GreedyBestFirstSearchIterator(Maze const &mazeReference, Vector2 start, Vector2 end):
 			AbstractSearchIterator<GreedyBestFirstSearchPriorityQueue>(
-				maze,
+				mazeReference,
 				std::move(start),
-				GreedyBestFirstSearchPriorityQueue(GreedyBestFirstSearchHeuristicComparator(maze, std::move(end)))
+				GreedyBestFirstSearchPriorityQueue(GreedyBestFirstSearchHeuristicComparator(mazeReference, std::move(end)))
 			)
 		{}
 	};
