@@ -42,14 +42,11 @@ void App::Window::refresh() {
 	float const windowWidthValue  = static_cast<float>(windowWidth );
 	float const windowHeightValue = static_cast<float>(windowHeight);
 
-	App::Performer const &performer = App::Performer::get();
-
 	auto const mainColorGetter = [
-		&performer,
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
 		&startEndColorTriplet
 	](MazeEngine::Vector2 const &key) -> ColorTriplet {
-		if (key == performer.getMazeStart() or key == performer.getMazeEnd())
+		if (key == performer->getMazeStart() or key == performer->getMazeEnd())
 			return startEndColorTriplet;
 
 		#if false
@@ -57,12 +54,12 @@ void App::Window::refresh() {
 		#endif
 
 		if (
-			auto const &pathTiles = performer.getPathTileSet();
+			auto const &pathTiles = performer->getPathTileSet();
 			pathTiles.find(key) != pathTiles.end()
 		)
 			return pathTileColorTriplet;
 		else if (
-			auto const &markedTiles = performer.getMarkedTileSet();
+			auto const &markedTiles = performer->getMarkedTileSet();
 			markedTiles.find(key) != markedTiles.end()
 		)
 			return markedTileColorTriplet;
@@ -91,7 +88,7 @@ void App::Window::refresh() {
 				mainColorGetter, wallColorTriplet
 			);
 		},
-		performer.getUnderlyingMaze()
+		performer->getUnderlyingMaze()
 	);
 
 	#if false

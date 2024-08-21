@@ -2,6 +2,8 @@
 
 #include "application/window.hpp"
 
+#include "application/performer.hpp"
+
 void App::mainLoop() {
 	// Time of the previous iteration.
 	static Uint64 previousTime{0u};
@@ -32,6 +34,8 @@ void App::mainLoop() {
 			std::exit(EXIT_SUCCESS);
 			break;
 	}
+
+	performer->update();
 
 	// Refresh window.
 	Window::refresh();

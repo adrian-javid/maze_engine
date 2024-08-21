@@ -1,5 +1,5 @@
-#ifndef Applciation_Performer_hpp
-#define Applciation_Performer_hpp
+#ifndef Application_Performer_hpp
+#define Application_Performer_hpp
 
 #include <variant>
 
@@ -11,7 +11,10 @@
 #include "maze_engine/search/a_star.hpp"
 #include "simple_directmedia_layer.hpp"
 
-namespace App { class Performer; }
+namespace App {
+	class Performer;
+	extern std::optional<Performer> performer;
+}
 
 class App::Performer {
 	public:
@@ -25,6 +28,9 @@ class App::Performer {
 		std::variant<MazeEngine::SquareMaze, MazeEngine::HexagonMaze> mazeVariant;
 		MazeEngine::Vector2 mazeStart;
 		MazeEngine::Vector2 mazeEnd;
+		/*
+			Careful, as the maze search iterator holds a pointer to the maze.
+		*/
 		std::variant<
 			MazeEngine::DepthFirstSearchIterator,
 			MazeEngine::BreadthFirstSearchIterator,
@@ -43,8 +49,6 @@ class App::Performer {
 			searching = 1u, backtracking, complete
 		} state{State::searching};
 
-		static std::optional<Performer> performer;
-
 	public:
 
 		[[nodiscard]] explicit
@@ -55,20 +59,11 @@ class App::Performer {
 			decltype(Performer::sleepTime) sleepTimeMilliseconds
 		);
 
-		FORCE_INLINE static
-		void initialize(Performer &&performerValue) {
-			performer = std::move(performerValue);
-		}
-
-		/*
-			Make sure to initialize the global performer before calling
-			this function because otherwise will invoke undefined behavior
-			when accessing the empty `std::optional`.
-		*/
-		[[nodiscard]] FORCE_INLINE static
-		App::Performer const & get() {
-			return *performer;
-		}
+		Performer() = delete;
+		Performer(Performer const &) = delete;
+		Performer & operator=(Performer const &) = delete;
+		Performer(Performer &&) = delete;
+		Performer & operator=(Performer &&) = delete;
 
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Vector2 const & getMazeStart() const {
@@ -91,11 +86,11 @@ class App::Performer {
 		}
 
 		[[nodiscard]] FORCE_INLINE
-		decltype(markedTileSet) const &getMarkedTileSet() const {
+		decltype(markedTileSet) const & getMarkedTileSet() const {
 			return markedTileSet;
 		}
 
-		decltype(pathTileSet) const &getPathTileSet() const {
+		decltype(pathTileSet) const & getPathTileSet() const {
 			return pathTileSet;
 		}
 
@@ -114,11 +109,6 @@ class App::Performer {
 			);
 		}
 
-		[[nodiscard]] FORCE_INLINE
-		MazeEngine::MazeSearchIterator & getMazeSearchIterator() {
-			return const_cast<MazeEngine::MazeSearchIterator &>(std::as_const(*this).getMazeSearchIterator());
-		}
-
 		void update();
 
 	private:
@@ -126,6 +116,11 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Maze & getMaze() {
 			return const_cast<MazeEngine::Maze &>(std::as_const(*this).getMaze());
+		}
+
+		[[nodiscard]] FORCE_INLINE
+		MazeEngine::MazeSearchIterator & getMazeSearchIterator() {
+			return const_cast<MazeEngine::MazeSearchIterator &>(std::as_const(*this).getMazeSearchIterator());
 		}
 };
 

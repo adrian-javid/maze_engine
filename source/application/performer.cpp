@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-std::optional<App::Performer> App::Performer::performer(std::nullopt);
+std::optional<App::Performer> App::performer(std::nullopt);
 
 App::Performer::Performer(
 	MazeType const mazeType, int const mazeSize,
@@ -49,7 +49,20 @@ App::Performer::Performer(
 				return {0, maze.getRadius()};
 		}
 	}, mazeVariant)),
-	mazeSearchIteratorVariant([this, searchType]() -> decltype(Performer::mazeSearchIteratorVariant) {
+	mazeSearchIteratorVariant([this, searchType, seed, mazeWrap]() -> decltype(Performer::mazeSearchIteratorVariant) {
+		/*
+			The maze starts out fully walled.
+
+			If the maze search iterator is constructed with a maze
+			that is fully walled, then it will get zero neighbors when it attempts
+			to get neighbors of the maze start vertex on construction.
+			So, it will be an ended iterator to begin with, which is not ideal.
+
+			That is why, here, the maze needs to be generated before the
+			maze search iterator is constructed.
+		*/
+		getMaze().generate(seed, mazeWrap);
+
 		switch (searchType) {
 			case SearchType::depth:
 				return MazeEngine::DepthFirstSearchIterator(getMaze(), mazeStart);
@@ -66,7 +79,8 @@ App::Performer::Performer(
 	}()),
 	sleepTime{sleepTimeMilliseconds}
 {
-	getMaze().generate(seed, mazeWrap);
+	assert(not mazeVariant.valueless_by_exception());
+	assert(not mazeSearchIteratorVariant.valueless_by_exception());
 }
 
 void App::Performer::update() {
@@ -76,7 +90,8 @@ void App::Performer::update() {
 
 			/* process vertex */ {
 				MazeEngine::Vector2 const &vertex(*getMazeSearchIterator());
-				markedTileSet.insert(vertex);
+				
+				markedTileSet.insert(MazeEngine::Vector2(vertex));
 				SDL_Delay(sleepTime);
 
 				if (vertex == mazeEnd) goto switchToBacktracking;
