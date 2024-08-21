@@ -5,10 +5,7 @@
 #include <cassert>
 #include <type_traits>
 #include <functional>
-#include <any>
 #include <string>
-#include <iostream>
-#include <mutex>
 #include "maze_engine/auxiliary.hpp"
 #include "macros.hpp"
 
