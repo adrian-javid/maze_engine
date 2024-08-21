@@ -20,6 +20,9 @@ namespace App {
 	// Change in time.
 	extern Uint64 deltaTime;
 
+	/*
+		Not thread safe.
+	*/
 	void mainLoop();
 }
 
