@@ -65,11 +65,13 @@ double App::HslaColor::getCyclicHue(
 auto App::HslaColor::getColorTriplet(double const percentage, double const colorDepth) const -> ColorTriplet {
 	double const hueOffset{Util::linearInterpolation(percentage, 0.0, 2.0 * colorDepth)};
 
-	static constexpr auto getHueValue = [](double const hue, double const hueOffset, double const colorDepth) -> double {
-		if (hueOffset < colorDepth)
-			return hueWrap(hue + hueOffset);
+	static constexpr auto getHueValue = [](
+		double const hueValue, double const hueOffsetValue, double const colorDepthValue
+	) -> double {
+		if (hueOffsetValue < colorDepthValue)
+			return hueWrap(hueValue + hueOffsetValue);
 		else
-			return hueWrap((hue + colorDepth) - (hueOffset - colorDepth));
+			return hueWrap((hueValue + colorDepthValue) - (hueOffsetValue - colorDepthValue));
 	};
 
 	return {
