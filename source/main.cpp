@@ -196,9 +196,7 @@ int main(int const argc, char *argv[]) {
 
 	// Print the parameter values.
 	for (auto const &[name, param] : config) {
-		outputStream.str(std::string());
-		outputStream << name << ": " << param.argument << '\n';
-		App::Util::synchronizedPrint(outputStream.str(), '\0');
+		App::println(name, ": ", param.argument);
 	}
 
 	// Initialize the Simple Directmedia Layer library.
