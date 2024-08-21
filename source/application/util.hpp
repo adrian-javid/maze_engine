@@ -8,9 +8,11 @@
 #include <string>
 #include "maze_engine/auxiliary.hpp"
 #include "macros.hpp"
+#include <iostream>
 
 namespace App::Util {
 
+	#if false
 	template<typename T>
 	class [[deprecated]] OpaqueIterator {
 		private:
@@ -38,6 +40,7 @@ namespace App::Util {
 			bool operator==(OpaqueIterator const &otherIterator) const { return equals(baseIterator, otherIterator.baseIterator); }
 			bool operator!=(OpaqueIterator const &otherIterator) const { return not (*this == otherIterator); }
 	};
+	#endif
 
 	FORCE_INLINE inline
 	double percentageWrap(double const value) { return MazeEngine::Aux::wrap(value, 1.00); }
@@ -54,6 +57,8 @@ namespace App::Util {
 		return start * (1.0 - percentage) + end * percentage;
 	}
 
+	#if false
+
 	[[deprecated]]
 	inline void synchronizedPrint(std::string const &message, char const end='\n') {
 		static std::mutex mutex;
@@ -66,11 +71,13 @@ namespace App::Util {
 		std::cout << message << end;
 	}
 
+	#endif
+
 	/*
 		Print message with trailing newline character, then exit with failure code.
 	*/
 	template<typename... ParamsT>
-	[[noreturn]] FORCE_INLINE
+	[[noreturn]] FORCE_INLINE inline
 	void errOut(ParamsT &&...args) {
 		(std::cerr << ... << std::forward<ParamsT>(args)) << '\n';
 		std::exit(EXIT_FAILURE);
