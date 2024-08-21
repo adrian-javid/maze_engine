@@ -50,14 +50,14 @@ int main(int const argc, char *argv[]) {
 
 	// Get values from `config`.
 
-	std::string_view const gridType = config.at("grid").argument;
+	std::string_view const gridType(config.at("grid").argument);
 	int const mazeSize{
 		App::ParamInfo::assertPositive(
 			App::ParamInfo::castArg<int>(config.at("size").argument),
 		(std::ostringstream() << "Bad value for `size`." ).str())
 	};
 	unsigned int const seed{App::ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
-	std::string_view const searchAlgorithmName = config.at("search").argument;
+	std::string_view const searchAlgorithmName(config.at("search").argument);
 	#if false
 	App::sleepTime = std::chrono::milliseconds(
 		App::ParamInfo::assertNonnegative(
@@ -72,7 +72,7 @@ int main(int const argc, char *argv[]) {
 		)
 	};
 	#endif
-	bool const mazeWrap = App::ParamInfo::castArg<bool>(config.at("wrap").argument);
+	bool const mazeWrap{App::ParamInfo::castArg<bool>(config.at("wrap").argument)};
 	App::Performer::MazeType const mazeType{[gridType]() -> App::Performer::MazeType {
 		/**/ if (gridType == "square") return App::Performer::MazeType::square;
 		else if (gridType == "hexagon") return App::Performer::MazeType::hexagon;
@@ -194,7 +194,7 @@ int main(int const argc, char *argv[]) {
 
 	#endif
 
-	std::ostringstream outputStream;
+	// Print the parameter values.
 	for (auto const &[name, param] : config) {
 		outputStream.str(std::string());
 		outputStream << name << ": " << param.argument << '\n';
