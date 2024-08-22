@@ -12,16 +12,16 @@ std::optional<App::Performer> App::performer(std::nullopt);
 
 EMSCRIPTEN_BINDINGS(MazeEngine) {
 
-	emscripten::enum_<App::Performer::MazeType>("MazeType")
+	emscripten::enum_<App::Performer::MazeType>("MazeEngine_MazeType")
 		.value("hexagon", App::Performer::MazeType::hexagon)
 		.value("square" , App::Performer::MazeType::square );
 
-	emscripten::enum_<App::Performer::SearchType>("SearchType")
+	emscripten::enum_<App::Performer::SearchType>("MazeEngine_SearchType")
 		.value("depth"  , App::Performer::SearchType::depth  )
 		.value("breadth", App::Performer::SearchType::breadth)
 		.value("greedy" , App::Performer::SearchType::greedy );
 
-	emscripten::function("resetPerformer", +[](
+	emscripten::function("MazeEngine_resetPerformer", +[](
 		App::Performer::MazeType const mazeType, int const mazeSize,
 		App::Performer::Seed const seed, bool const mazeWrap,
 		App::Performer::SearchType const searchType,
