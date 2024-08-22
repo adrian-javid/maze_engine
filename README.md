@@ -47,15 +47,18 @@ The JSON compilation database is put at `build/<platform>/<build_type>/compile_c
 	"configurations": [
 		{
 			"name": "Win32",
-			"cStandard": "c17",
-			"cppStandard": "c++17",
-			"compileCommands": "build\\Windows\\debug\\compile_commands.json"
+			"compileCommands": "build\\Windows\\debug\\compile_commands.json",
+			"cStandard": "c17", "cppStandard": "c++17"
 		},
 		{
 			"name": "Linux",
-			"cStandard": "c17",
-			"cppStandard": "c++17",
-			"compileCommands": "build/Linux/debug/compile_commands.json"
+			"compileCommands": "build/Linux/debug/compile_commands.json",
+			"cStandard": "c17", "cppStandard": "c++17"
+		},
+		{
+			"name": "emscripten",
+			"compileCommands": "build/web/release/compile_commands.json",
+			"cStandard": "c17", "cppStandard": "c++17"
 		}
 	],
 	"version": 4
