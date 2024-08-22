@@ -1,4 +1,10 @@
 
+from sys import exit as sys_exit
+
+if __name__ == "__main__": sys_exit(
+	"This is not meant to be a standalone script; this script is used by `SConstruct`."
+)
+
 from typing import TypeAlias
 
 EnvConfig: TypeAlias = dict[str, str|list[str]]
