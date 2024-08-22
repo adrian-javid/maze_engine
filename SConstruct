@@ -19,7 +19,7 @@ EMSCRIPTEN = C.make(
 	**{toolType: WhereIs(toolName) for toolType, toolName in emscriptenRequirementTools.items()},
 	CCFLAGS=['-fexceptions'],
 	LINKFLAGS=['-fexceptions'],
-	PROGSUFFIX='.html',
+	PROGSUFFIX='.js',
 )
 
 undiscoveredEmscripten = [
@@ -100,11 +100,17 @@ if NATIVE_PLATFORM == "Windows":
 		windowsSdl2Dll = Command(F"build/Windows/{buildType}/run/SDL2.dll", "library/Windows/lib/SDL2/SDL2.dll", Copy("$TARGET", "$SOURCE"))
 		Depends(mainProgram, windowsSdl2Dll)
 
-if not undiscoveredEmscripten: runScript(
-	buildType="release",
-	mainEnv=webMainEnv,
-	libEnv=webLibEnv,
-	platform="web",
-)
+if not undiscoveredEmscripten:
+	webBuildType: str = "release"
+	webProgram, webTestProgram, webCompilationDatabase = runScript(
+		buildType=webBuildType,
+		mainEnv=webMainEnv,
+		libEnv=webLibEnv,
+		platform="web",
+	)
+	javaScript = Command(F"website/generated/maze_engine.js", F"build/web/{webBuildType}/run/maze_engine.js", Copy("$TARGET", "$SOURCE"))
+	Depends(javaScript, webProgram)
+	webAssembly = Command(F"website/generated/maze_engine.wasm", F"build/web/{webBuildType}/run/maze_engine.wasm", Copy("$TARGET", "$SOURCE"))
+	Depends(webAssembly, webProgram)
 
 Default(mainReleaseProgram)
