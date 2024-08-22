@@ -261,6 +261,32 @@ int main(int const argc, char *argv[]) {
 
 	SDL_SetRenderDrawColor(App::Window::renderer, 0u, 0u, 0u, 1u);
 
+	#ifdef __EMSCRIPTEN__
+	/*
+		Notify JavaScript that exported application functions can be called.
+		Note: only use single quotes `'` instead of double quotes `"` when using `EM_ASM` macro.
+	*/
+	if (int const success{
+			EM_ASM_INT(
+				{
+					if (typeof onMazeEngineApplicationInitialized === 'function') {
+						onMazeEngineApplicationInitialized();
+						return true; // success
+					} else {
+						return false; // failure
+					}
+				},
+				/* no arguments */
+			)
+		};
+		not success
+	) {
+		std::cerr <<
+			"JavaScript function `onMazeEngineApplicationInitialized` was not called successfully." " "
+			"Check if it's defined." "\n";
+	}
+	#endif
+
 	// Start the main loop.
 	#ifdef __EMSCRIPTEN__
 	/*
