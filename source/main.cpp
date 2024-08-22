@@ -249,7 +249,10 @@ int main(int const argc, char *argv[]) {
 	assert(App::Window::renderer != nullptr);
 
 	SDL_SetWindowTitle(App::Window::window, windowTitle);
+
+	#ifndef __EMSCRIPTEN__
 	SDL_SetWindowMinimumSize(App::Window::window, 250, 150);
+	#endif
 
 	#if false
 	// Start worker thread.
