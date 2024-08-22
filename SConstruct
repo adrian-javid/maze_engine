@@ -49,7 +49,7 @@ webLibEnv = C.parse(linuxLibEnv.Clone(), EMSCRIPTEN)
 webMainEnv = C.parse(webLibEnv.Clone(), C.GCC_WARNING)
 setCompilationDatabasePathFilter(webMainEnv, platform='web', buildType="release")
 webMainEnv.Append(CXXFLAGS=['--use-port=sdl2'])
-webMainEnv.Append(LINKFLAGS=['--use-port=sdl2'])
+webMainEnv.Append(LINKFLAGS=['--use-port=sdl2', '-lembind'])
 
 match NATIVE_PLATFORM:
 	case 'Windows':
