@@ -126,6 +126,19 @@
 		<button type="submit">Start</button>
 	</form>
 
+	<script>
+		document.getElementById("maze_form").addEventListener("submit", function(event) {
+			event.preventDefault();
+
+			const formData = new FormData(event.target);
+
+			console.log("form data:");
+			formData.forEach((value, key) => {
+				console.log(`\t${key}: ${value}`);
+			})
+		});
+	</script>
+
 </body>
 
 </html>
