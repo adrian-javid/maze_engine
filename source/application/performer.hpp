@@ -127,28 +127,4 @@ class App::Performer {
 		}
 };
 
-namespace App {
-
-	#if false
-	extern "C" {
-		inline void resetPerformer(
-			int const mazeType, int const mazeSize,
-			int const seed, int const mazeWrap,
-			int const searchType,
-			int const sleepTimeMilliseconds
-		) {
-			performer.emplace(
-				Performer::MazeType{static_cast<Performer::MazeType>(mazeType)},
-				int{mazeSize},
-				Performer::Seed{static_cast<Performer::Seed>(seed)},
-				bool{static_cast<bool>(mazeWrap)},
-				Performer::SearchType{static_cast<Performer::SearchType>(searchType)},
-				Performer::Milliseconds{static_cast<Performer::Milliseconds>(sleepTimeMilliseconds)}
-			);
-		}
-	}
-	#endif
-
-}
-
 #endif
