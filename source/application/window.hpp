@@ -15,6 +15,19 @@ namespace App::Window {
 	static constexpr float wallFramePercent = 0.35f;
 	static_assert(wallFramePercent >= 0.0f and wallFramePercent <= 1.0f);
 
+	inline void setFullscreen(bool const fullscreen) {
+		assert(window != nullptr);
+		if (fullscreen) {
+			#ifdef __EMSCRIPTEN__
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			#else
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+			#endif
+		} else {
+			SDL_SetWindowFullscreen(window, 0u);
+		}
+	}
+
 	inline void setRenderDrawColor(SDL_Color const &color) {
 		SDL_SetRenderDrawColor(
 			Window::renderer,
