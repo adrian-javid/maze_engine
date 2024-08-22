@@ -8,9 +8,9 @@ std::optional<App::Performer> App::performer(std::nullopt);
 
 App::Performer::Performer(
 	MazeType const mazeType, int const mazeSize,
-	unsigned int const seed, bool const mazeWrap,
+	Seed const seed, bool const mazeWrap,
 	SearchType const searchType,
-	decltype(Performer::sleepTime) sleepTimeMilliseconds
+	decltype(Performer::sleepTime) const sleepTimeMilliseconds
 ):
 	mazeVariant([mazeType, mazeSize]() -> decltype(Performer::mazeVariant) {
 		static constexpr MazeEngine::Maze::Tile mazeFillValue{0xFFu};

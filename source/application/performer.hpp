@@ -23,6 +23,10 @@ class App::Performer {
 
 		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy };
 
+		using Milliseconds = Uint32;
+		
+		using Seed = unsigned int;
+
 	private:
 
 		std::variant<MazeEngine::SquareMaze, MazeEngine::HexagonMaze> mazeVariant;
@@ -36,7 +40,7 @@ class App::Performer {
 			MazeEngine::BreadthFirstSearchIterator,
 			MazeEngine::GreedyBestFirstSearchIterator
 		> mazeSearchIteratorVariant;
-		Uint32 sleepTime;
+		Milliseconds sleepTime;
 
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
@@ -51,12 +55,11 @@ class App::Performer {
 
 	public:
 
-		[[nodiscard]] explicit
-		Performer(
+		[[nodiscard]] explicit Performer(
 			MazeType const mazeType, int const mazeSize,
-			unsigned int const seed, bool const mazeWrap,
+			Seed const seed, bool const mazeWrap,
 			SearchType const searchType,
-			decltype(Performer::sleepTime) sleepTimeMilliseconds
+			Milliseconds const sleepTimeMilliseconds
 		);
 
 		Performer() = delete;
