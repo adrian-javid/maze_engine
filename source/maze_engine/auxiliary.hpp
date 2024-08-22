@@ -38,6 +38,23 @@ namespace MazeEngine::Aux {
 
 		return value;
 	}
+
+	namespace Enum {
+		template <typename EnumT>
+		struct Trait {
+			static_assert(std::is_enum_v<EnumT>);
+			using Int = std::underlying_type_t<EnumT>;
+			static_assert(std::is_integral_v<Int>);
+		};
+
+		template <typename EnumT>
+		using Int = typename Trait<EnumT>::Int;
+
+		template <typename EnumT>
+		[[nodiscard]] constexpr Int<EnumT> asInt(EnumT const value) {
+			return static_cast<Int<EnumT>>(value);
+		}
+	}
 }
 
 #endif
