@@ -17,10 +17,10 @@ void App::mainLoop() {
 	for (static SDL_Event event; SDL_PollEvent(&event);) switch (event.type) {
 		case SDL_KEYDOWN: switch (event.key.keysym.sym) {
 			case SDLK_BACKQUOTE:
-				SDL_SetWindowFullscreen(Window::window, SDL_WINDOW_FULLSCREEN);
+				Window::setFullscreen(true);
 				break;
 			case SDLK_ESCAPE:
-				SDL_SetWindowFullscreen(Window::window, 0u);
+				Window::setFullscreen(false);
 				break;
 		} break;
 		case SDL_WINDOWEVENT: switch (event.window.event) {
