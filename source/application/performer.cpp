@@ -43,7 +43,7 @@ App::Performer::Performer(
 	MazeType const mazeType, int const mazeSize,
 	Seed const seed, bool const mazeWrap,
 	SearchType const searchType,
-	decltype(Performer::sleepTime) const sleepTimeMilliseconds
+	Milliseconds const sleepTimeMilliseconds
 ):
 	mazeVariant([mazeType, mazeSize]() -> decltype(Performer::mazeVariant) {
 		static constexpr MazeEngine::Maze::Tile mazeFillValue{0xFFu};
