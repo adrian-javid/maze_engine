@@ -203,6 +203,14 @@ int main(int const argc, char *argv[]) {
 	// Initialize the Simple Directmedia Layer library.
 	SDL_Init(SDL_INIT_VIDEO);
 
+	#ifdef __EMSCRIPTEN__
+
+	if (SDL_SetHintWithPriority(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, "#canvas", SDL_HINT_OVERRIDE) == SDL_FALSE) {
+		std::cerr << "Binding element for keyboard inputs was not set to canvas." << '\n';
+	}
+
+	#endif
+
 	/*
 		Note to self:
 
