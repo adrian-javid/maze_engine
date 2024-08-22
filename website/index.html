@@ -96,22 +96,22 @@
 
 	<form id="maze_form">
 		<label for="maze_type">Grid</label>
-		<select id="maze_type" name="maze_type">
+		<select id="maze_type" name="maze_type" required>
 			<option value="square" selected>Square</option>
 			<option value="hexagon">Hexagon</option>
 		</select>
 
 		<label for="maze_size">Maze Size</label>
-		<input type="number" id="maze_size" name="maze_size" min="1" value="10" required>
+		<input type="number" id="maze_size" name="maze_size" min="1" value="10" step="1" required>
 
 		<label for="seed">Seed</label>
-		<input type="number" id="seed" min="0" value="0" required>
+		<input type="number" id="seed" name="seed" min="0" value="0" step="1" required>
 
 		<label for="maze_wrap">Maze Wrap</label>
 		<input type="checkbox" id="maze_wrap" name="maze_wrap">
 
 		<label for="search_type">Search Algorithm</label>
-		<select id="search_type" name="search_type">
+		<select id="search_type" name="search_type" required>
 			<option value="depth" selected>Depth-First Search</option>
 			<option value="breadth">Breadth-First Search</option>
 			<option value="greedy">Greedy Best-First Search</option>
@@ -119,7 +119,7 @@
 
 		<label for="delay">Delay</label>
 		<div style="display: inline-block;">
-			<input type="number" id="delay" name="delay" min="0" value="15" required>
+			<input type="number" id="delay" name="delay" min="0" value="15" step="1" required>
 			<span>milliseconds</span>
 		</div>
 
