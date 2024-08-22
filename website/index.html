@@ -41,34 +41,6 @@
 <body>
 	<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
 
-	<script>
-		var Module = {
-			print: (function() {
-				return (...args) => {
-					let text = args.join(' ');
-					console.log(text);
-				};
-			})(),
-			printErr: function(text) {
-				if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-				console.error(text);
-			},
-			canvas: (() => {
-				let canvas = document.getElementById('canvas');
-
-				/*
-					"As a default initial behavior, pop up an alert when webgl context is lost. To make your
-					application robust, you may want to override this behavior before shipping!
-					See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2"
-				*/
-				canvas.addEventListener("webglcontextlost", (e) => { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
-
-				return canvas;
-			})()
-		};
-	</script>
-	<script async type="text/javascript" src="generated/maze_engine.js"></script>
-
 	<form id="maze_form">
 		<label for="maze_type">Grid</label>
 		<select id="maze_type" name="maze_type" required>
@@ -98,21 +70,63 @@
 			<span>milliseconds</span>
 		</div>
 
-		<button type="submit">Start</button>
+		<button id="submit_button" type="submit" disabled>Start</button>
 	</form>
 
+	<button id="fullscreen_button" disabled>Fullscreen</button>
+
 	<script>
-		document.getElementById("maze_form").addEventListener("submit", function(event) {
-			event.preventDefault();
+		var Module = {
+			print: (function() {
+				return (...args) => {
+					let text = args.join(' ');
+					console.log(text);
+				};
+			})(),
+			printErr: function(text) {
+				if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+				console.error(text);
+			},
+			canvas: (() => {
+				let canvas = document.getElementById('canvas');
 
-			const formData = new FormData(event.target);
+				/*
+					"As a default initial behavior, pop up an alert when webgl context is lost. To make your
+					application robust, you may want to override this behavior before shipping!
+					See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2"
+				*/
+				canvas.addEventListener("webglcontextlost", (e) => { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
 
-			console.log("form data:");
-			formData.forEach((value, key) => {
-				console.log(`\t${key}: ${value}`);
-			})
-		});
+				return canvas;
+			})()
+		};
+
+		function onMazeEngineApplicationInitialized() {
+			document.getElementById("maze_form").addEventListener("submit", function(event) {
+				event.preventDefault();
+			
+				const formData = new FormData(event.target);
+			
+				console.log("form data:");
+				formData.forEach((value, key) => {
+					console.log(`\t${key}: ${value}`);
+				})
+
+				console.log(`wrap: ${formData.get("maze_wrap")}`);
+			});
+
+			document.getElementById("submit_button").disabled = false;
+
+			const fullscreenButton = document.getElementById("fullscreen_button");
+			fullscreenButton.addEventListener("click", function() {
+				Module.Window_setFullscreen(true);
+			});
+			fullscreenButton.disabled = false;
+		}
 	</script>
+
+	<!-- This should eventually call `onMazeEngineApplicationInitialized`. -->
+	<script async type="text/javascript" src="generated/maze_engine.js"></script>
 
 </body>
 
