@@ -106,21 +106,38 @@
 				event.preventDefault();
 			
 				const formData = new FormData(event.target);
-			
-				console.log("form data:");
-				formData.forEach((value, key) => {
-					console.log(`\t${key}: ${value}`);
-				})
 
-				console.log(`wrap: ${formData.get("maze_wrap")}`);
+				const mazeType = (() => {
+					switch (formData.get("maze_type")) {
+						case "square" : return Module.MazeEngine_MazeType.SQUARE ;
+						case "hexagon": return Module.MazeEngine_MazeType.HEXAGON;
+					}
+				})();
+
+				const searchType = (() => {
+					switch (formData.get("search_type")) {
+						case "depth"  : return Module.MazeEngine_SearchType.DEPTH  ;
+						case "breadth": return Module.MazeEngine_SearchType.BREADTH;
+						case "greedy" : return Module.MazeEngine_SearchType.GREEDY ;
+					}
+				})();
+
+				Module.MazeEngine_resetPerformer(
+					mazeType, parseInt(formData.get("maze_size"), 10),
+					parseInt(formData.get("seed"), 10), Boolean(formData.get("maze_wrap")),
+					searchType,
+					parseInt(formData.get("delay"), 10)
+				);
 			});
 
 			document.getElementById("submit_button").disabled = false;
 
 			const fullscreenButton = document.getElementById("fullscreen_button");
+
 			fullscreenButton.addEventListener("click", function() {
 				Module.Window_setFullscreen(true);
 			});
+
 			fullscreenButton.disabled = false;
 		}
 	</script>
