@@ -40,15 +40,16 @@ baseEnv.Tool('compilation_db')
 
 linuxLibEnv = C.parse(baseEnv.Clone(), C.GCC_CORE, C.GCC_RELEASE)
 
+def setCompilationDatabasePathFilter(env, buildType: Literal["release", "debug"], platform: str=NATIVE_PLATFORM):
+	# This should be after `Tool('compilation_db')`
+	env["COMPILATIONDB_PATH_FILTER"] = F"build/{platform}/{buildType}/*"
+	return env
+
 webLibEnv = C.parse(linuxLibEnv.Clone(), EMSCRIPTEN)
 webMainEnv = C.parse(webLibEnv.Clone(), C.GCC_WARNING)
+setCompilationDatabasePathFilter(webMainEnv, platform='web', buildType="release")
 webMainEnv.Append(CXXFLAGS=['--use-port=sdl2'])
 webMainEnv.Append(LINKFLAGS=['--use-port=sdl2'])
-
-def setCompilationDatabasePathFilter(env, buildType: Literal["release", "debug"]):
-	# This should be after `Tool('compilation_db')`
-	env["COMPILATIONDB_PATH_FILTER"] = F"build/{NATIVE_PLATFORM}/{buildType}/*"
-	return env
 
 match NATIVE_PLATFORM:
 	case 'Windows':
