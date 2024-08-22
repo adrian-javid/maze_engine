@@ -10,3 +10,6 @@ library
 
 # Python cache
 __pycache__
+
+# files generated for website
+website/generated/
