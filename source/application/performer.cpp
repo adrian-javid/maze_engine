@@ -26,7 +26,7 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 		App::Performer::MazeType const mazeType, int const mazeSize,
 		App::Performer::Seed const seed, bool const mazeWrap,
 		App::Performer::SearchType const searchType,
-		App::Performer::Milliseconds const sleepTimeMilliseconds
+		App::UnsignedMilliseconds const sleepTimeMilliseconds
 	) -> void {
 		App::performer.emplace(
 			mazeType, mazeSize,
@@ -44,7 +44,7 @@ App::Performer::Performer(
 	MazeType const mazeType, int const mazeSizeHint,
 	Seed const seed, bool const mazeWrap,
 	SearchType const searchType,
-	Milliseconds const sleepTimeMilliseconds
+	UnsignedMilliseconds const sleepTimeMilliseconds
 ):
 	mazeVariant([mazeType, mazeSizeHint]() -> decltype(Performer::mazeVariant) {
 		static constexpr MazeEngine::Maze::Tile mazeFillValue{0xFFu};
@@ -124,14 +124,14 @@ App::Performer::Performer(
 				return MazeEngine::GreedyBestFirstSearchIterator(getMaze(), mazeStart, mazeEnd);
 		}
 	}()),
-	sleepTime{sleepTimeMilliseconds}
+	timer(sleepTimeMilliseconds)
 {
 	assert(not mazeVariant.valueless_by_exception());
 	assert(not mazeSearchIteratorVariant.valueless_by_exception());
 }
 
 void App::Performer::update() {
-	switch (state) {
+	if (timer.update()) switch (state) {
 		case State::searching: {
 			if (getMazeSearchIterator().isEnd()) goto switchToBacktracking;
 
@@ -139,7 +139,6 @@ void App::Performer::update() {
 				MazeEngine::Vector2 const &vertex(*getMazeSearchIterator());
 				
 				markedTileSet.insert(MazeEngine::Vector2(vertex));
-				SDL_Delay(sleepTime);
 
 				if (vertex == mazeEnd) goto switchToBacktracking;
 			}
@@ -164,7 +163,6 @@ void App::Performer::update() {
 
 			/* process edge */ {
 				pathTileSet.insert(edge->/* child vertex */first);
-				SDL_Delay(sleepTime);
 			}
 
 			edge = history.find(edge->/* parent vertex */second);

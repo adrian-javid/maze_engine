@@ -10,6 +10,7 @@
 #include "maze_engine/search/greedy_best_first.hpp"
 #include "maze_engine/search/a_star.hpp"
 #include "simple_directmedia_layer.hpp"
+#include "timer.hpp"
 
 namespace App {
 	class Performer;
@@ -22,8 +23,6 @@ class App::Performer {
 		enum struct MazeType : std::uint_least8_t { hexagon = 1u, square };
 
 		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy };
-
-		using Milliseconds = Uint32;
 
 		using Seed = unsigned int;
 
@@ -40,7 +39,7 @@ class App::Performer {
 			MazeEngine::BreadthFirstSearchIterator,
 			MazeEngine::GreedyBestFirstSearchIterator
 		> mazeSearchIteratorVariant;
-		Milliseconds sleepTime;
+		Timer timer;
 
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
@@ -59,7 +58,7 @@ class App::Performer {
 			MazeType const mazeType, int const mazeSizeHint,
 			Seed const seed, bool const mazeWrap,
 			SearchType const searchType,
-			Milliseconds const sleepTimeMilliseconds
+			UnsignedMilliseconds const sleepTimeMilliseconds
 		);
 
 		Performer() = delete;
