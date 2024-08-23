@@ -1,6 +1,6 @@
 #include "application/window.hpp"
 
-#include "application/common.hpp"
+#include "application/delta_time.hpp"
 #include "application/util.hpp"
 #include "application/performer.hpp"
 
@@ -15,7 +15,7 @@ void App::Window::refresh() {
 
 	static constexpr double zeroPercent{0.0};
 	static double percentage{zeroPercent};
-	double const deltaPercentage{static_cast<double>(App::deltaTime) * 0.00011};
+	double const deltaPercentage{static_cast<double>(App::getDeltaTime()) * 0.00011};
 
 	percentage = Util::percentageWrap(percentage + deltaPercentage);
 	assert(percentage >= 0.0); assert(percentage < 1.0);

@@ -1,8 +1,18 @@
-#include "application/common.hpp"
+#include "main_loop.hpp"
+#include "delta_time.hpp"
 
-#include "application/window.hpp"
+#include "window.hpp"
 
-#include "application/performer.hpp"
+#include "performer.hpp"
+
+namespace App {
+	static decltype(getDeltaTime()) deltaTime{0u};
+
+	decltype(getDeltaTime()) getDeltaTime() {
+		return deltaTime;
+	}
+}
+
 
 void App::mainLoop() {
 	// Time of the previous iteration.

@@ -18,7 +18,7 @@ namespace App {/*
 #include "maze_engine/maze/hexagon.hpp"
 #include "application/util.hpp"
 #include "application/param_info.hpp"
-#include "application/common.hpp"
+#include "application/main_loop.hpp"
 #include "application/print.hpp"
 
 #include <algorithm>
