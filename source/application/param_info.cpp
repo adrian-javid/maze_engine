@@ -113,7 +113,7 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 			"Valid parameters:\n" + validParametersStr() + "\n" + helpTipString
 		);
 
-		ParamInfo &param = paramPtr->second;
+		ParamInfo &param{paramPtr->second};
 		param.argument = arg.substr(delimPos + 1);
 
 		if (not param.acceptable) continue;

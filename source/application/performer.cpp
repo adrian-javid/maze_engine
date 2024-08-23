@@ -157,7 +157,7 @@ void App::Performer::update() {
 		}
 
 		case State::backtracking: {
-			auto const &history = getMazeSearchIterator().getHistory();
+			MazeEngine::Vector2::HashMap<MazeEngine::Vector2> const &history{getMazeSearchIterator().getHistory()};
 
 			if (edge->/* child vertex */first == mazeStart) goto switchToComplete;
 

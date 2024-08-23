@@ -59,7 +59,7 @@ namespace App {
 			T value{};
 			std::istringstream stream(arg);
 			if ((stream >> std::boolalpha >> value).fail()) errorExit(
-				"Unable to convert `" + arg + "` to `" + getTypeName() + "` value. \n\n" + helpTipString
+				"Unable to convert `", arg, "` to `", getTypeName(), "` value. \n\n", helpTipString
 			);
 
 			return value;
