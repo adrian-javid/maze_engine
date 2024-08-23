@@ -1,8 +1,15 @@
 #include "application/window.hpp"
 
 #include "application/delta_time.hpp"
-#include "application/util.hpp"
+#include "application/linear_interpolation.hpp"
 #include "application/performer.hpp"
+
+namespace App {
+	FORCE_INLINE static inline
+	double percentageWrap(double const value) {
+		return MazeEngine::Aux::wrap(value, 1.00);
+	}
+}
 
 void App::Window::refresh() {
 
@@ -17,13 +24,13 @@ void App::Window::refresh() {
 	static double percentage{zeroPercent};
 	double const deltaPercentage{static_cast<double>(App::getDeltaTime()) * 0.00011};
 
-	percentage = Util::percentageWrap(percentage + deltaPercentage);
+	percentage = App::percentageWrap(percentage + deltaPercentage);
 	assert(percentage >= 0.0); assert(percentage < 1.0);
 
 	static constexpr double hueDepth{45.0 + 5.0 + 5.0};
 	static constexpr auto getColorTriplet = [](HslaColor const &tileColor) -> ColorTriplet {
 		static constexpr auto getCyclicHue = [](double const hue, double const percentageAddend) -> double {
-			return HslaColor::getCyclicHue(hue, Util::percentageWrap(percentage + percentageAddend), hueDepth);
+			return HslaColor::getCyclicHue(hue, App::percentageWrap(percentage + percentageAddend), hueDepth);
 		};
 		return std::make_tuple(
 			tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.00)),

@@ -1,5 +1,5 @@
-#ifndef Application_Util_hpp
-#define Application_Util_hpp
+#ifndef Application_LinearInterpolation_hpp
+#define Application_LinearInterpolation_hpp
 
 #include <cmath>
 #include <cassert>
@@ -10,10 +10,7 @@
 #include "macros.hpp"
 #include <iostream>
 
-namespace App::Util {
-
-	FORCE_INLINE inline
-	double percentageWrap(double const value) { return MazeEngine::Aux::wrap(value, 1.00); }
+namespace App {
 
 	constexpr float linearInterpolation(float const percentage, float const start, float const end) {
 		assert(percentage >= 0.0f);

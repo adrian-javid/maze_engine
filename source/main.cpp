@@ -16,7 +16,7 @@ namespace App {/*
 #include "application/window.hpp"
 #include "maze_engine/maze/square.hpp"
 #include "maze_engine/maze/hexagon.hpp"
-#include "application/util.hpp"
+#include "application/linear_interpolation.hpp"
 #include "application/param_info.hpp"
 #include "application/main_loop.hpp"
 #include "application/print.hpp"
