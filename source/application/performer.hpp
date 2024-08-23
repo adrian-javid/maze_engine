@@ -24,7 +24,7 @@ class App::Performer {
 		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy };
 
 		using Milliseconds = Uint32;
-		
+
 		using Seed = unsigned int;
 
 	private:

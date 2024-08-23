@@ -97,7 +97,7 @@
 		function onMazeEngineApplicationInitialized() {
 			document.getElementById("maze_form").addEventListener("submit", function(event) {
 				event.preventDefault();
-			
+
 				const formData = new FormData(event.target);
 
 				const mazeType = (() => {
