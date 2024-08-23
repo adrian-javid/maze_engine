@@ -41,26 +41,34 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 #endif
 
 App::Performer::Performer(
-	MazeType const mazeType, int const mazeSize,
+	MazeType const mazeType, int const mazeSizeHint,
 	Seed const seed, bool const mazeWrap,
 	SearchType const searchType,
 	Milliseconds const sleepTimeMilliseconds
 ):
-	mazeVariant([mazeType, mazeSize]() -> decltype(Performer::mazeVariant) {
+	mazeVariant([mazeType, mazeSizeHint]() -> decltype(Performer::mazeVariant) {
 		static constexpr MazeEngine::Maze::Tile mazeFillValue{0xFFu};
+		static constexpr int mazeSizeMin{1}, mazeSizeMax{1 << 6};
+		
+		assert(mazeSizeHint >= mazeSizeMin);
+		assert(mazeSizeHint <= mazeSizeMax);
 
-		switch (mazeType) {
-			case MazeType::square:
-				return MazeEngine::SquareMaze(mazeSize, mazeSize, mazeFillValue);
-			
-			case MazeType::hexagon:
-				return MazeEngine::HexagonMaze(mazeSize, mazeFillValue);
-
+		switch (int const mazeSize{std::clamp(mazeSizeHint, mazeSizeMin, mazeSizeMax)}; mazeType) {
 			default:
 				std::cerr << "Invalid maze type: " << MazeEngine::Aux::Enum::asInt(mazeType) << '.' << '\n';
 				assert(false);
 				[[fallthrough]];
 
+			case MazeType::square: {
+				int const squareLength{2 * mazeSize - 1};
+				return MazeEngine::SquareMaze(squareLength, squareLength, mazeFillValue);
+			}
+			
+			case MazeType::hexagon: {
+				// Doesn't count center hexagon as part of the radius.
+				int const hexagonRadius{mazeSize >= 1 ? mazeSize - 1 : 0};
+				return MazeEngine::HexagonMaze(hexagonRadius, mazeFillValue);
+			}
 		}
 	}()),
 	mazeStart(std::visit([](auto &&maze) -> MazeEngine::Vector2 {
