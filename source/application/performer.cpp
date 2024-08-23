@@ -118,7 +118,7 @@ App::Performer::Performer(
 			default:
 				std::cerr << "Invalid search type: " << MazeEngine::Aux::Enum::asInt(searchType) << '.' << '\n';
 				assert(false);
-				[[fallthrough]]
+				[[fallthrough]];
 
 			case SearchType::greedy:
 				return MazeEngine::GreedyBestFirstSearchIterator(getMaze(), mazeStart, mazeEnd);
