@@ -52,6 +52,8 @@ void App::mainLoop() {
 	// As this iteration ends, update the previous time.
 	previousTime = currentTime;
 
+	#ifndef __EMSCRIPTEN__
 	// Give the CPU a break.
 	SDL_Delay(1u);
+	#endif
 }
