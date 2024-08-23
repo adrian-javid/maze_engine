@@ -103,11 +103,13 @@ App::Performer::Performer(
 			case SearchType::breadth:
 				return MazeEngine::BreadthFirstSearchIterator(getMaze(), mazeStart);
 
+			default:
+				std::cerr << "Invalid search type: " << MazeEngine::Aux::Enum::asInt(searchType) << '.' << '\n';
+				assert(false);
+				[[fallthrough]]
+
 			case SearchType::greedy:
 				return MazeEngine::GreedyBestFirstSearchIterator(getMaze(), mazeStart, mazeEnd);
-
-			default:
-				throw searchType;
 		}
 	}()),
 	sleepTime{sleepTimeMilliseconds}
