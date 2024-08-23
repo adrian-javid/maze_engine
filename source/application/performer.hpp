@@ -56,7 +56,7 @@ class App::Performer {
 	public:
 
 		[[nodiscard]] explicit Performer(
-			MazeType const mazeType, int const mazeSize,
+			MazeType const mazeType, int const mazeSizeHint,
 			Seed const seed, bool const mazeWrap,
 			SearchType const searchType,
 			Milliseconds const sleepTimeMilliseconds
