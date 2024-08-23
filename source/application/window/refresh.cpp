@@ -49,10 +49,6 @@ void App::Window::refresh() {
 		if (key == performer->getMazeStart() or key == performer->getMazeEnd())
 			return startEndColorTriplet;
 
-		#if false
-		std::lock_guard const lock(tileInfoMutex);
-		#endif
-
 		if (
 			auto const &pathTiles = performer->getPathTileSet();
 			pathTiles.find(key) != pathTiles.end()
@@ -90,21 +86,6 @@ void App::Window::refresh() {
 		},
 		performer->getUnderlyingMaze()
 	);
-
-	#if false
-	if (App::maze == &App::squareMaze) drawSquareMaze(
-		squareMaze,
-		{0.0f, 0.0f},
-		windowWidthValue, windowHeightValue,
-		mainColorGetter, wallColorTriplet
-	); else if (App::maze == &App::hexagonMaze) drawHexagonMaze(
-		hexagonMaze,
-		{windowWidthValue / 2.0f, windowHeightValue / 2.0f},
-		windowWidthValue, windowHeightValue,
-		mainColorGetter, wallColorTriplet
-	); else
-		throw App::maze;
-	#endif
 
 	SDL_RenderPresent(renderer);
 }

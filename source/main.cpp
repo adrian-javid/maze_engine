@@ -32,20 +32,9 @@ namespace App {/*
 #endif
 #endif
 
-#if false
-namespace App {
-	using namespace std::chrono_literals;
-	static std::chrono::milliseconds sleepTime(0ms);
-	static inline void delay() { std::this_thread::sleep_for(sleepTime); }
-}
-#endif
+
 
 int main(int const argc, char *argv[]) {
-	#if false
-	// Maze engine.
-	namespace Engine = MazeEngine;
-	#endif
-
 	// Parse arguments into key-value pairs.
 	auto const &config = App::ParamInfo::parseArgv(argc, argv);
 
@@ -59,20 +48,12 @@ int main(int const argc, char *argv[]) {
 	};
 	unsigned int const seed{App::ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
 	std::string_view const searchAlgorithmName(config.at("search").argument);
-	#if false
-	App::sleepTime = std::chrono::milliseconds(
-		App::ParamInfo::assertNonnegative(
-			App::ParamInfo::castArg<int>(config.at("delay").argument),
-		(std::ostringstream() << "Bad value for `delay`." ).str())
-	);
-	#else
 	int sleepTimeMilliseconds{
 		App::ParamInfo::assertNonnegative(
 			App::ParamInfo::castArg<int>(config.at("delay").argument),
 			(std::ostringstream() << "Bad value for `delay`." ).str()
 		)
 	};
-	#endif
 	bool const mazeWrap{App::ParamInfo::castArg<bool>(config.at("wrap").argument)};
 	App::Performer::MazeType const mazeType{[gridType]() -> App::Performer::MazeType {
 		/**/ if (gridType == "square") return App::Performer::MazeType::square;
@@ -88,112 +69,6 @@ int main(int const argc, char *argv[]) {
 	}()};
 
 	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, sleepTimeMilliseconds);
-
-	#if false
-
-	// The maze will be constructed with all walls before generating corridors.
-	static constexpr Engine::Maze::Tile mazeFillValue{0xFFu};
-
-	// Create maze object with grid type.
-	if (gridType == "square") {
-		App::maze = &(App::squareMaze = Engine::SquareMaze(mazeSize, mazeSize, mazeFillValue));
-		if (mazeWrap)
-			App::mazeEnd = {App::squareMaze.getRowCount() / 2, App::squareMaze.getColumnCount() / 2};
-		else
-			App::mazeEnd = {App::squareMaze.getRowCount() - 1, App::squareMaze.getColumnCount() - 1};
-	} else if (gridType == "hexagon") {
-		App::maze = &(App::hexagonMaze = Engine::HexagonMaze(mazeSize, mazeFillValue));
-		App::mazeStart.value2 = -App::hexagonMaze.getRadius();
-		if (not mazeWrap) App::mazeEnd.value2 = App::hexagonMaze.getRadius();
-	} else {
-		App::Util::errOut("Unable to resolve grid type from string: `", gridType, "`.");
-	}
-
-	// Generate the maze corridors.
-	App::maze->generate(seed, mazeWrap);
-
-	static constexpr auto const processVertex = [](Engine::Vector2 const &vertex) -> bool {
-		/* lock */ {
-			std::lock_guard const lock(App::tileInfoMutex);
-			App::markedTileSet.insert(vertex);
-		}
-		App::delay();
-		return vertex == App::mazeEnd;
-	};
-
-	static std::function<Engine::Vector2::HashMap<Engine::Vector2>(void)> searchMaze = nullptr;
-	static std::variant<
-		std::nullptr_t,
-		Engine::DepthFirstSearchIterator,
-		Engine::BreadthFirstSearchIterator,
-		Engine::GreedyBestFirstSearchIterator
-	> mazeSearchIteratorVariant;
-	static Engine::MazeSearchIterator *mazeSearchIterator = nullptr;
-
-	// Get the search algorithm.
-	if (searchAlgorithmName == "depth") {
-		searchMaze = []() { return depthFirstSearch(*App::maze, App::mazeStart, processVertex); };
-		mazeSearchIteratorVariant = Engine::DepthFirstSearchIterator(*App::maze, App::mazeStart);
-	} else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") {
-		searchMaze = []() { return breadthFirstSearch(*App::maze, App::mazeStart, processVertex); };
-		mazeSearchIteratorVariant = Engine::BreadthFirstSearchIterator(*App::maze, App::mazeStart);
-	} else if (searchAlgorithmName == "greedy") {
-		searchMaze = []() { return greedyBestFirstSearch(*App::maze, App::mazeStart, App::mazeEnd, processVertex); };
-		mazeSearchIteratorVariant = Engine::GreedyBestFirstSearchIterator(*App::maze, App::mazeStart, App::mazeEnd);
-	} else if (searchAlgorithmName == "a_star") {
-		searchMaze = []() { return aStarSearch(*App::maze, App::mazeStart, App::mazeEnd, processVertex); };
-		mazeSearchIteratorVariant = nullptr;
-	} else {
-		App::Util::errOut("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
-	}
-	assert(searchMaze != nullptr);
-	assert(not std::holds_alternative<std::nullptr_t>(mazeSearchIteratorVariant));
-
-	mazeSearchIterator = std::visit(
-		[](auto &iterator) -> Engine::MazeSearchIterator *{
-			if constexpr (std::is_same_v<decltype(iterator), std::nullptr_t &>)
-				return nullptr;
-			else
-				return &iterator;
-		},
-		mazeSearchIteratorVariant
-	);
-
-	assert(mazeSearchIterator != nullptr);
-
-	static constexpr auto solveMaze = []() -> void {
-		// Search for end of maze.
-
-		for (; not mazeSearchIterator->isEnd(); ++*mazeSearchIterator) {
-			if (processVertex(**mazeSearchIterator)) break;
-		}
-
-		auto const upTree(mazeSearchIterator->getHistory());
-
-		App::Util::synchronizedPrint((std::ostringstream() << "Explored count: " << App::markedTileSet.size()).str());
-
-		// Path tiles.
-		for (
-			auto edge(upTree.find(App::mazeEnd));
-			edge->first /* child vertex */ != App::mazeStart;
-			edge = upTree.find(edge->second /* parent vertex */)
-		) {
-			/* lock */ {
-				std::lock_guard const lock(App::tileInfoMutex);
-				App::pathTileSet.insert(edge->first);
-			}
-			App::delay();
-		}
-
-		/* lock */ {
-			std::lock_guard const lock(App::tileInfoMutex);
-			App::pathTileSet.insert(App::mazeStart); // include corner
-		}
-
-		App::Util::synchronizedPrint((std::ostringstream() << "Path length: " << App::pathTileSet.size()).str());
-	};
-
-	#endif
 
 	// Print the parameter values.
 	for (auto const &[name, param] : config) {
@@ -252,11 +127,6 @@ int main(int const argc, char *argv[]) {
 
 	#ifndef __EMSCRIPTEN__
 	SDL_SetWindowMinimumSize(App::Window::window, 250, 150);
-	#endif
-
-	#if false
-	// Start worker thread.
-	std::thread const mazeSolver(solveMaze);
 	#endif
 
 	SDL_SetRenderDrawColor(App::Window::renderer, 0u, 0u, 0u, 1u);
