@@ -57,7 +57,10 @@ App::Performer::Performer(
 				return MazeEngine::HexagonMaze(mazeSize, mazeFillValue);
 
 			default:
-				throw mazeType;
+				std::cerr << "Invalid maze type: " << MazeEngine::Aux::Enum::asInt(mazeType) << '.' << '\n';
+				assert(false);
+				[[fallthrough]];
+
 		}
 	}()),
 	mazeStart(std::visit([](auto &&maze) -> MazeEngine::Vector2 {
