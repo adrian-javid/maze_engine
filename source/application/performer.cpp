@@ -1,6 +1,7 @@
 #include "performer.hpp"
 
 #include "maze_engine/maze.hpp"
+#include "maze_engine/auxiliary.hpp"
 
 #include <iostream>
 
