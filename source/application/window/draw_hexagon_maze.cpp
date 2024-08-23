@@ -114,7 +114,7 @@ void App::Window::drawHexagonMaze(
 		for (int horizontalIndex{0}; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
 			float const hexagonCenterX{center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset};
 
-			auto const drawTile = [
+			auto const drawTile([
 				&getMainColorTriplet, &wallColor1, &wallColor2, &wallColor3,
 				hexagonCenterX, hexagonWidth, hexagonHeight,
 				&maze
@@ -181,7 +181,7 @@ void App::Window::drawHexagonMaze(
 					wallColor3, wallColor1,
 					wallColor3, wallColor1
 				);
-			};
+			});
 
 			/* top hexagon */
 			drawTile({horizontalIndex - radius + verticalIndex, topAxis2}, topHexagonCenterY);

@@ -5,15 +5,15 @@ using namespace MazeEngine;
 static Vector2 calculateMirrorCenter(int const index, int const radius) {
 	static constexpr Vector2 center(0, 0);
 	Vector2 const startPosition{2 * radius + 1, -radius};
-	Vector2 const difference = startPosition - center;
-	Vector2 const rotatedDifference = difference.hexagonalRotate(index);
-	Vector2 const rotatedPosition = rotatedDifference + center;
+	Vector2 const difference(startPosition - center);
+	Vector2 const rotatedDifference(difference.hexagonalRotate(index));
+	Vector2 const rotatedPosition(rotatedDifference + center);
 	return rotatedPosition;
 }
 
 Vector2 HexagonMaze::wrapKey(Vector2 const &key) const {
 	// return early if key is in table
-	auto iterator = table.find(key);
+	auto iterator(table.find(key));
 	if (iterator != table.end())
 		return key;
 
@@ -32,7 +32,7 @@ Vector2 HexagonMaze::wrapKey(Vector2 const &key) const {
 	}
 
 	// subtract mirror center from key until the key is in-bounds
-	auto safeKey = key - closestMirrorCenter.mirrorCenter; 
+	Vector2 safeKey(key - closestMirrorCenter.mirrorCenter); 
 	for (
 		iterator = table.find(safeKey);
 		iterator == table.end();

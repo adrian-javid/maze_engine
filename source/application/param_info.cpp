@@ -105,9 +105,9 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 			helpTipString
 		);
 
-		std::string const paramName = arg.substr(0u, delimPos);
+		std::string const paramName(arg.substr(0u, delimPos));
 
-		auto const paramPtr = config.find(paramName);
+		auto const paramPtr(config.find(paramName));
 		if (paramPtr == config.end()) errorExit(
 			"Invalid parameter: `" + paramName + "` from `" + arg + "`.\n"
 			"Valid parameters:\n" + validParametersStr() + "\n" + helpTipString

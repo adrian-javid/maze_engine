@@ -45,7 +45,7 @@ namespace App {
 				"Unsupported type."
 			);
 
-			static constexpr auto getTypeName = []() -> std::string {
+			static constexpr auto getTypeName([]() -> std::string {
 				if constexpr (std::is_same_v<T, int>)
 					return "int";
 				else if constexpr (std::is_same_v<T, unsigned int>)
@@ -54,7 +54,7 @@ namespace App {
 					return "bool";
 				else
 					return "";
-			};
+			});
 
 			T value{};
 			std::istringstream stream(arg);

@@ -39,14 +39,14 @@ auto MazeEngine::abstractSearch(
 	history.insert({start, start});
 
 	while (not storage.empty()) {
-		Vector2 const key = [&storage]() constexpr -> Vector2 const &{
+		Vector2 const key([&storage]() constexpr -> Vector2 const & {
 			if constexpr (std::is_same_v<StorageT, std::stack<Vector2>>)
 				return storage.top();
 			else if constexpr (std::is_same_v<StorageT, std::queue<Vector2>>)
 				return storage.front();
 			else /* other, such as priority queue */
 				return storage.top();
-		}();
+		}());
 		storage.pop();
 
 		if (processKey != nullptr and processKey(key)) break;

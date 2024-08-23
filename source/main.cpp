@@ -36,7 +36,7 @@ namespace App {/*
 
 int main(int const argc, char *argv[]) {
 	// Parse arguments into key-value pairs.
-	auto const &config = App::ParamInfo::parseArgv(argc, argv);
+	auto const &config(App::ParamInfo::parseArgv(argc, argv));
 
 	// Get values from `config`.
 

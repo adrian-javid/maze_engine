@@ -28,16 +28,16 @@ void App::Window::refresh() {
 	assert(percentage >= 0.0); assert(percentage < 1.0);
 
 	static constexpr double hueDepth{45.0 + 5.0 + 5.0};
-	static constexpr auto getColorTriplet = [](HslaColor const &tileColor) -> ColorTriplet {
-		static constexpr auto getCyclicHue = [](double const hue, double const percentageAddend) -> double {
+	static constexpr auto getColorTriplet([](HslaColor const &tileColor) -> ColorTriplet {
+		static constexpr auto getCyclicHue([](double const hue, double const percentageAddend) -> double {
 			return HslaColor::getCyclicHue(hue, App::percentageWrap(percentage + percentageAddend), hueDepth);
-		};
+		});
 		return std::make_tuple(
 			tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.00)),
 			tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.10)),
 			tileColor.toRgbaColor(getCyclicHue(tileColor.hue, -.20))
 		);
-	};
+	});
 
 	ColorTriplet const
 		pathTileColorTriplet    {getColorTriplet(pathTileColor    )},
@@ -49,7 +49,7 @@ void App::Window::refresh() {
 	float const windowWidthValue {static_cast<float>(windowWidth )};
 	float const windowHeightValue{static_cast<float>(windowHeight)};
 
-	auto const mainColorGetter = [
+	auto const mainColorGetter([
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
 		&startEndColorTriplet
 	](MazeEngine::Vector2 const &key) -> ColorTriplet {
@@ -68,7 +68,7 @@ void App::Window::refresh() {
 			return markedTileColorTriplet;
 		else
 			return unmarkedTileColorTriplet;
-	};
+	});
 
 	SDL_RenderClear(renderer);
 
