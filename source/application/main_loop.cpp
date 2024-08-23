@@ -6,20 +6,19 @@
 #include "performer.hpp"
 
 namespace App {
-	static decltype(getDeltaTime()) deltaTime{0u};
+	static UnsignedMilliseconds deltaTime{0u};
 
-	decltype(getDeltaTime()) getDeltaTime() {
+	UnsignedMilliseconds getDeltaTime() {
 		return deltaTime;
 	}
 }
 
-
 void App::mainLoop() {
 	// Time of the previous iteration.
-	static Uint64 previousTime{0u};
+	static UnsignedMilliseconds previousTime{0u};
 
 	// Get the time of this iteration.
-	Uint64 const currentTime{SDL_GetTicks64()};
+	UnsignedMilliseconds const currentTime{SDL_GetTicks64()};
 
 	// Get the change in time.
 	deltaTime = currentTime - previousTime;
