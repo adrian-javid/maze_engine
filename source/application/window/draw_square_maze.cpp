@@ -22,26 +22,26 @@ void App::Window::drawSquareMaze(
 	int const columnCount{maze.getColumnCount()};
 	int const rowCount{maze.getRowCount()};
 
-	float const rectangleWidth = width / static_cast<float>(columnCount);
-	float const rectangleHeight = height / static_cast<float>(rowCount);
+	float const rectangleWidth{width / static_cast<float>(columnCount)};
+	float const rectangleHeight{height / static_cast<float>(rowCount)};
 
-	float const rectangleWidthHalf = rectangleWidth / 2.0f;
-	float const rectangleHeightHalf = rectangleHeight / 2.0f;
+	float const rectangleWidthHalf{rectangleWidth / 2.0f};
+	float const rectangleHeightHalf{rectangleHeight / 2.0f};
 
 	for (MazeEngine::Vector2 key(0); key.value1 < rowCount; ++key.value1) {
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
-			auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet(key);
+			auto const &&[mainColor1, mainColor2, mainColor3]{getMainColorTriplet(key)};
 
 			auto const &&[
 				outerNorthwestPoint, outerNortheastPoint,
 				outerSouthwestPoint, outerSoutheastPoint
-			] = getQuadrilateralPointList(
+			]{getQuadrilateralPointList(
 				/* northwest corner of rectangle */ {
 					static_cast<float>(key.value2) * rectangleWidth + position.x,
 					static_cast<float>(key.value1) * rectangleHeight + position.y
 				},
 				rectangleWidth, rectangleHeight
-			);
+			)};
 
 			// Draw main tile base.
 			drawQuadrilateral(
@@ -56,15 +56,15 @@ void App::Window::drawSquareMaze(
 			auto const &&[
 				innerNorthwestPoint, innerNortheastPoint,
 				innerSouthwestPoint, innerSoutheastPoint
-			] = getQuadrilateralPointList(
+			]{getQuadrilateralPointList(
 				{
 					linearInterpolation(wallFramePercent, outerNorthwestPoint.x, outerNorthwestPoint.x + rectangleWidthHalf),
 					linearInterpolation(wallFramePercent, outerNorthwestPoint.y, outerNorthwestPoint.y + rectangleHeightHalf)
 				},
 				rectangleWidth * (1.0f - wallFramePercent), rectangleHeight * (1.0f - wallFramePercent)
-			);
+			)};
 
-			auto const &[wallColor1, wallColor2, wallColor3] = wallColorTriplet;
+			auto const &[wallColor1, wallColor2, wallColor3]{wallColorTriplet};
 
 			if (maze.checkAdjacent(key, MazeEngine::SquareMaze::Direction::north).hasWall) drawQuadrilateral(
 				outerNorthwestPoint, outerNortheastPoint,

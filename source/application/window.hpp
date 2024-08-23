@@ -12,7 +12,7 @@ namespace App::Window {
 	extern int windowWidth;
 	extern int windowHeight;
 
-	static constexpr float wallFramePercent = 0.35f;
+	static constexpr float wallFramePercent{0.35f};
 	static_assert(wallFramePercent >= 0.0f and wallFramePercent <= 1.0f);
 
 	inline void setFullscreen(bool const fullscreen) {

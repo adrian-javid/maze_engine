@@ -25,8 +25,8 @@ Vector2 HexagonMaze::wrapKey(Vector2 const &key) const {
 	} closestMirrorCenter{mirrorCenterTable[0], (key - mirrorCenterTable[0]).hexManhattanLength()};
 
 	// find the closest mirror center
-	for (std::uint_fast8_t mirrorIndex = 0u + 1u; mirrorIndex < 6u; ++mirrorIndex) {
-		auto const distance = (key - mirrorCenterTable[mirrorIndex]).hexManhattanLength();
+	for (std::uint_fast8_t mirrorIndex{0u + 1u}; mirrorIndex < 6u; ++mirrorIndex) {
+		int const distance{(key - mirrorCenterTable[mirrorIndex]).hexManhattanLength()};
 		if (distance < closestMirrorCenter.distance)
 		closestMirrorCenter = {mirrorCenterTable[mirrorIndex], distance};
 	}
@@ -60,11 +60,11 @@ HexagonMaze::HexagonMaze(int const setRadius, Tile const tileFillValue):
 
 	static constexpr Vector2 center(0, 0);
 
-	for (int q = -radius; q <= radius; ++q) {
-		int r1 = std::max<int>(-radius, -q - radius);
-		int r2 = std::min<int>( radius, -q + radius);
+	for (int q{-radius}; q <= radius; ++q) {
+		int r1{std::max<int>(-radius, -q - radius)};
+		int r2{std::min<int>( radius, -q + radius)};
 
-		for (int r = r1; r <= r2; ++r) {
+		for (int r{r1}; r <= r2; ++r) {
 			Vector2 const key(center + Vector2(q, r));
 			table.insert({key, tileFillValue});
 		}

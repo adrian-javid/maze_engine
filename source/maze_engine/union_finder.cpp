@@ -20,9 +20,9 @@ auto MazeEngine::UnionFinder::find(Identifier const element) -> Identifier {
 }
 
 void MazeEngine::UnionFinder::unionThem(Identifier const element1, Identifier const element2) {
-	Identifier const root1 = find(element1);
-	Identifier const root2 = find(element2);
-	Identifier const negativeSize = forest.at(root1) + forest.at(root2);
+	Identifier const root1{find(element1)};
+	Identifier const root2{find(element2)};
+	Identifier const negativeSize{forest.at(root1) + forest.at(root2)};
 
 	if (forest.at(root1) < forest.at(root2)) {
 		forest.at(root2) = root1;
@@ -34,6 +34,6 @@ void MazeEngine::UnionFinder::unionThem(Identifier const element1, Identifier co
 }
 
 auto MazeEngine::UnionFinder::size(Identifier const element) -> Identifier {
-	Identifier const root = find(element);
+	Identifier const root{find(element)};
 	return -1 * forest.at(root);
 }

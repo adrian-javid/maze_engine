@@ -28,7 +28,7 @@ struct MazeEngine::Vector2 {
 
 	constexpr Vector2 hexagonalRotate(int const indexDegree60) const {
 		std::array<int, 3> vector{};
-		int const signFactor = indexDegree60 % 2 == 0 ? 1 : -1;
+		int const signFactor{indexDegree60 % 2 == 0 ? 1 : -1};
 		vector[rotateIndex<0, vector.size()>(indexDegree60)] = this->value1;
 		vector[rotateIndex<1, vector.size()>(indexDegree60)] = this->value2;
 		vector[rotateIndex<2, vector.size()>(indexDegree60)] = this->thirdAxis();

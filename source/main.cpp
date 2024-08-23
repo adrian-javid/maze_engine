@@ -99,7 +99,7 @@ int main(int const argc, char *argv[]) {
 		SDL_Quit();
 	});
 
-	static constexpr char const *windowTitle = "Maze Engine";
+	static constexpr char const *windowTitle{"Maze Engine"};
 
 	App::Window::window = SDL_CreateWindow(
 		windowTitle,

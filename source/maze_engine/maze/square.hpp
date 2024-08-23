@@ -22,10 +22,10 @@ class MazeEngine::SquareMaze : public MazeEngine::Maze {
 
 	public:
 
-		static constexpr Vector2 northOffset = {-1,  0};
-		static constexpr Vector2 southOffset = {+1,  0};
-		static constexpr Vector2 eastOffset  = { 0, +1};
-		static constexpr Vector2 westOffset  = { 0, -1};
+		static constexpr Vector2 northOffset{-1,  0};
+		static constexpr Vector2 southOffset{+1,  0};
+		static constexpr Vector2 eastOffset { 0, +1};
+		static constexpr Vector2 westOffset { 0, -1};
 
 	private:
 

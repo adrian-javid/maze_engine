@@ -65,8 +65,8 @@ std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) 
 
 	for (Vector2 key(0); key.value1 < rowCount; ++key.value1) {
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
-			Tile const tile = at(key);
-			char const symbol = (tile ? wallSymbol : emptySymbol);
+			Tile const tile{at(key)};
+			char const symbol{(tile ? wallSymbol : emptySymbol)};
 			buffer << ' ' << symbol;
 		}
 		buffer << ' ' << '\n';

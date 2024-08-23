@@ -16,7 +16,7 @@ namespace App {
 		std::optional<Acceptable> const acceptable;
 		static std::unordered_map<std::string, ParamInfo> const &parseArgv(int const argc, char const *const *const argv);
 
-		static constexpr char helpTipString[] = "Run with `help` for information about this program.";
+		static constexpr char const *helpTipString{"Run with `help` for information about this program."};
 
 		template <typename T>
 		static T assertNonnegative(T const value, std::string const &errorMessage=std::string()) {

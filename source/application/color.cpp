@@ -21,9 +21,9 @@ SDL_Color App::makeRgbaColor(
 	assert(0 <= luminance and luminance <= 1);
 	assert(0 <= alpha and alpha <= 1);
 
-	auto const chroma = (1.0 - std::fabs(2.0 * luminance - 1.0)) * saturation;
+	double const chroma{(1.0 - std::fabs(2.0 * luminance - 1.0)) * saturation};
 
-	auto const X = chroma * (1.0 - std::fabs(std::fmod(hue / 60.0, 2.0) - 1.0));
+	double const X{chroma * (1.0 - std::fabs(std::fmod(hue / 60.0, 2.0) - 1.0))};
 
 	struct Rgb { double r, g, b; } color{};
 
@@ -34,7 +34,7 @@ SDL_Color App::makeRgbaColor(
 	else if (240 <= hue and hue < 300) color = Rgb{     X,    0.0, chroma};
 	else if (300 <= hue and hue < 360) color = Rgb{chroma,    0.0,      X};
 
-	auto const m = luminance - chroma / 2.0;
+	double const m{luminance - chroma / 2.0};
 
 	return {
 		static_cast<Uint8>((color.r + m) * 0xFF),

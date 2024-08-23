@@ -8,9 +8,9 @@ EMSCRIPTEN_BINDINGS(Window) {
 #endif
 
 namespace App::Window {
-	SDL_Window *window = nullptr;
-	SDL_Renderer *renderer = nullptr;
-	int windowWidth = 420;
-	int windowHeight = 420;
+	SDL_Window *window{nullptr};
+	SDL_Renderer *renderer{nullptr};
+	int windowWidth{420};
+	int windowHeight{420};
 }
 

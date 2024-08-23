@@ -40,14 +40,14 @@ void App::Window::refresh() {
 	};
 
 	ColorTriplet const
-		pathTileColorTriplet     = getColorTriplet(pathTileColor    ),
-		wallColorTriplet         = getColorTriplet(wallColor        ),
-		markedTileColorTriplet   = getColorTriplet(markedTileColor  ),
-		unmarkedTileColorTriplet = getColorTriplet(unmarkedTileColor),
-		startEndColorTriplet     = getColorTriplet(startEndColor    );
+		pathTileColorTriplet    {getColorTriplet(pathTileColor    )},
+		wallColorTriplet        {getColorTriplet(wallColor        )},
+		markedTileColorTriplet  {getColorTriplet(markedTileColor  )},
+		unmarkedTileColorTriplet{getColorTriplet(unmarkedTileColor)},
+		startEndColorTriplet    {getColorTriplet(startEndColor    )};
 
-	float const windowWidthValue  = static_cast<float>(windowWidth );
-	float const windowHeightValue = static_cast<float>(windowHeight);
+	float const windowWidthValue {static_cast<float>(windowWidth )};
+	float const windowHeightValue{static_cast<float>(windowHeight)};
 
 	auto const mainColorGetter = [
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
@@ -57,12 +57,12 @@ void App::Window::refresh() {
 			return startEndColorTriplet;
 
 		if (
-			auto const &pathTiles = performer->getPathTileSet();
+			auto const &pathTiles{performer->getPathTileSet()};
 			pathTiles.find(key) != pathTiles.end()
 		)
 			return pathTileColorTriplet;
 		else if (
-			auto const &markedTiles = performer->getMarkedTileSet();
+			auto const &markedTiles{performer->getMarkedTileSet()};
 			markedTiles.find(key) != markedTiles.end()
 		)
 			return markedTileColorTriplet;

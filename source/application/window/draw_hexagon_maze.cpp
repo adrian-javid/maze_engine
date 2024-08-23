@@ -7,9 +7,9 @@ namespace App::Window {
 	> getPointyTopHexagonPointList(
 		SDL_FPoint const &center, float const width, float const height
 	) {
-		float const halfWidth = width / 2.0f;
-		float const halfHeight = height / 2.0f;
-		float const quarterHeight = height / 4.0f;
+		float const halfWidth{width / 2.0f};
+		float const halfHeight{height / 2.0f};
+		float const quarterHeight{height / 4.0f};
 
 		SDL_FPoint const northPoint{center.x, center.y - halfHeight};
 		SDL_FPoint const northwestPoint{center.x - halfWidth, center.y - quarterHeight};
@@ -31,7 +31,7 @@ namespace App::Window {
 		SDL_Color  const &northwestColor, SDL_Color  const &northColor, SDL_Color  const &northeastColor,
 		SDL_Color  const &southwestColor, SDL_Color  const &southColor, SDL_Color  const &southeastColor
 	) {
-		static constexpr SDL_FPoint zeroPoint = {0.0f, 0.0f};
+		static constexpr SDL_FPoint zeroPoint{0.0f, 0.0f};
 
 		SDL_Vertex const topVertex{northPoint, northColor, zeroPoint};
 		SDL_Vertex const topLeftVertex{northwestPoint, northwestColor, zeroPoint};
@@ -42,7 +42,7 @@ namespace App::Window {
 		SDL_Vertex const bottomVertex{southPoint, southColor, zeroPoint};
 
 		static constexpr int vertexCount{12};
-		std::array<SDL_Vertex, vertexCount> const vertexList = {
+		std::array<SDL_Vertex, vertexCount> const vertexList{
 			// Top triangle.
 			topVertex, topLeftVertex, topRightVertex,
 
@@ -66,7 +66,7 @@ namespace App::Window {
 		auto const &&[
 			northwestPoint, northPoint, northeastPoint,
 			southwestPoint, southPoint, southeastPoint
-		] = getPointyTopHexagonPointList(center, std::sqrt(3.0f) * size, 2.0f * size);
+		]{getPointyTopHexagonPointList(center, std::sqrt(3.0f) * size, 2.0f * size)};
 		drawHexagon(
 			northwestPoint, northPoint, northeastPoint,
 			southwestPoint, southPoint, southeastPoint,
@@ -84,46 +84,46 @@ void App::Window::drawHexagonMaze(
 	ColorTriplet const &wallColorTriplet
 ) {
 	int const radius{maze.getRadius()};
-	auto const &[wallColor1, wallColor2, wallColor3] = wallColorTriplet;
+	auto const &[wallColor1, wallColor2, wallColor3]{wallColorTriplet};
 
 	// Radius of 0 draws 1 hexagon.
 	assert(radius >= 0);
 
-	int const diameter = radius + 1 + radius;
-	float const diameterValue = static_cast<float>(diameter);
+	int const diameter{radius + 1 + radius};
+	float const diameterValue{static_cast<float>(diameter)};
 
-	float const hexagonWidth = width / diameterValue;
+	float const hexagonWidth{width / diameterValue};
 
 	// For height, first hexagon counts as 1, other hexagons count as 3/4.
-	float const hexagonHeight = height / (1.0f + (3.0f * (diameterValue - 1.0f)) / 4.0f);
+	float const hexagonHeight{height / (1.0f + (3.0f * (diameterValue - 1.0f)) / 4.0f)};
 
-	float const threeQuartersHexagonHeight = (3 * hexagonHeight) / 4;
-	float const halfHexagonWidth = hexagonWidth / 2;
+	float const threeQuartersHexagonHeight{(3 * hexagonHeight) / 4};
+	float const halfHexagonWidth{hexagonWidth / 2};
 
-	for (int verticalIndex = 0; verticalIndex <= radius; ++verticalIndex) {
-		float const verticalIndexValue = static_cast<float>(verticalIndex);
+	for (int verticalIndex{0}; verticalIndex <= radius; ++verticalIndex) {
+		float const verticalIndexValue{static_cast<float>(verticalIndex)};
 
-		float const topHexagonCenterY = center.y - verticalIndexValue * threeQuartersHexagonHeight;
-		float const bottomHexagonCenterY = center.y + verticalIndexValue * threeQuartersHexagonHeight;
+		float const topHexagonCenterY{center.y - verticalIndexValue * threeQuartersHexagonHeight};
+		float const bottomHexagonCenterY{center.y + verticalIndexValue * threeQuartersHexagonHeight};
 
-		float const horizontalOffset = verticalIndexValue * halfHexagonWidth;
+		float const horizontalOffset{verticalIndexValue * halfHexagonWidth};
 
 		int const topAxis2{-verticalIndex};
 		int const bottomAxis2{verticalIndex};
 
-		for (int horizontalIndex = 0; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
-			float const hexagonCenterX = center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset;
+		for (int horizontalIndex{0}; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
+			float const hexagonCenterX{center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset};
 
 			auto const drawTile = [
 				&getMainColorTriplet, &wallColor1, &wallColor2, &wallColor3,
 				hexagonCenterX, hexagonWidth, hexagonHeight,
 				&maze
 			](MazeEngine::Vector2 const &tileKey, float const hexagonCenterY) -> void {
-				auto const &&[mainColor1, mainColor2, mainColor3] = getMainColorTriplet(tileKey);
+				auto const &&[mainColor1, mainColor2, mainColor3]{getMainColorTriplet(tileKey)};
 				auto const &&[
 					outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
 					outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint
-				] = getPointyTopHexagonPointList({hexagonCenterX, hexagonCenterY}, hexagonWidth, hexagonHeight);
+				]{getPointyTopHexagonPointList({hexagonCenterX, hexagonCenterY}, hexagonWidth, hexagonHeight)};
 				drawHexagon(
 					outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
 					outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint,
@@ -134,11 +134,11 @@ void App::Window::drawHexagonMaze(
 				auto const &&[
 					innerNorthwestPoint, innerNorthPoint, innerNortheastPoint,
 					innerSouthwestPoint, innerSouthPoint, innerSoutheastPoint
-				] = getPointyTopHexagonPointList(
+				]{getPointyTopHexagonPointList(
 					{hexagonCenterX, hexagonCenterY},
 					hexagonWidth * (1.0f - wallFramePercent),
 					hexagonHeight * (1.0f - wallFramePercent)
-				);
+				)};
 
 				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::northeast).hasWall) drawQuadrilateral(
 					outerNorthPoint, outerNortheastPoint,
