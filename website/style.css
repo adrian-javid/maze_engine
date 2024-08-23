@@ -62,50 +62,6 @@ button {
 	border-radius: 25px;
 }
 
-#epilepsy_warning {
-	/* color */
-	background-color: #ffcccc;
-	--main-color: #ff0000;
-	border: 0px solid var(--main-color);
-}
-
-#epilepsy_warning > * {
-	margin: 2.35%;
-}
-
-#epilepsy_warning h1 {
-	color: var(--main-color);
-	font-size: clamp(15px, min(6.535vw, 6.535vh), 228%);
-	margin-bottom: 1%;
-}
-
-#epilepsy_warning button {
-	background-color: var(--main-color);
-	transition: background-color 0.3s ease;
-}
-
-#epilepsy_warning button:hover {
-	background-color: #cc0000;
-}
-
-#user_guide {
-	position: absolute;
-	background-color: lightskyblue;
-}
-
-#user_guide > * {
-	margin: 1.55%;
-}
-
-#user_guide button {
-	background-color: darkcyan;
-	transition: background-color 0.64s ease;
-}
-
-#user_guide button:hover {
-	background-color: blue;
-}
-
 .fade_in_animation {
 	animation: fade_in_keyframes ease-in 4s;
 	animation-iteration-count: 1;
