@@ -6,6 +6,7 @@
 #include <optional>
 #include "util.hpp"
 #include <sstream>
+#include "print.hpp"
 
 namespace App {
 	struct ParamInfo {
@@ -20,7 +21,7 @@ namespace App {
 		template <typename T>
 		static T assertNonnegative(T const value, std::string const &errorMessage=std::string()) {
 			static_assert(std::is_signed_v<T>);
-			if (value < T{0}) Util::errOut((std::ostringstream() << errorMessage <<
+			if (value < T{0}) errorExit((std::ostringstream() << errorMessage <<
 				"\n\tValue `" << value << "` should not be negative.").str()
 			);
 			return value;
@@ -29,7 +30,7 @@ namespace App {
 		template <typename T>
 		static T assertPositive(T const value, std::string const &errorMessage=std::string()) {
 			static_assert(std::is_signed_v<T>);
-			if (not (value > T{0})) Util::errOut((std::ostringstream() << errorMessage <<
+			if (not (value > T{0})) errorExit((std::ostringstream() << errorMessage <<
 				"\n\tValue `" << value << "` should be positive.").str()
 			);
 			return value;
@@ -57,7 +58,7 @@ namespace App {
 
 			T value{};
 			std::istringstream stream(arg);
-			if ((stream >> std::boolalpha >> value).fail()) Util::errOut(
+			if ((stream >> std::boolalpha >> value).fail()) errorExit(
 				"Unable to convert `" + arg + "` to `" + getTypeName() + "` value. \n\n" + helpTipString
 			);
 

@@ -99,7 +99,7 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 
 		std::size_t const delimPos(arg.find("="));
 
-		if (delimPos == std::string::npos) Util::errOut(
+		if (delimPos == std::string::npos) errorExit(
 			"Parameter with no value: \"" + arg + "\". Please specify value after `=`.\n" +
 			"Example: `" + arg + "=value" + "`.\n\n" +
 			helpTipString
@@ -108,7 +108,7 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 		std::string const paramName = arg.substr(0u, delimPos);
 
 		auto const paramPtr = config.find(paramName);
-		if (paramPtr == config.end()) Util::errOut(
+		if (paramPtr == config.end()) errorExit(
 			"Invalid parameter: `" + paramName + "` from `" + arg + "`.\n"
 			"Valid parameters:\n" + validParametersStr() + "\n" + helpTipString
 		);
@@ -118,7 +118,7 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 
 		if (not param.acceptable) continue;
 
-		if (param.acceptable.value().find(param.argument) == param.acceptable.value().end()) Util::errOut(
+		if (param.acceptable.value().find(param.argument) == param.acceptable.value().end()) errorExit(
 			"Unacceptable value `" + param.argument + "` for parameter `" + paramName + "`.\n" +
 			"Acceptable values:\n" + acceptableValuesStr(param.acceptable.value()) + "\n" + helpTipString
 		);

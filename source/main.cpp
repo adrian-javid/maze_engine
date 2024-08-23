@@ -58,14 +58,14 @@ int main(int const argc, char *argv[]) {
 	App::Performer::MazeType const mazeType{[gridType]() -> App::Performer::MazeType {
 		/**/ if (gridType == "square") return App::Performer::MazeType::square;
 		else if (gridType == "hexagon") return App::Performer::MazeType::hexagon;
-		else App::Util::errOut("Unable to resolve grid type from string: `", gridType, "`.");
+		else App::errorExit("Unable to resolve grid type from string: `", gridType, "`.");
 	}()};
 	App::Performer::SearchType const searchType{[searchAlgorithmName]() -> App::Performer::SearchType {
 		/**/ if (searchAlgorithmName == "depth") return App::Performer::SearchType::depth;
 		else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") return App::Performer::SearchType::breadth;
 		else if (searchAlgorithmName == "greedy") return App::Performer::SearchType::greedy;
-		else if (searchAlgorithmName == "a_star") App::Util::errOut("A Star is currently unsupported.");
-		else App::Util::errOut("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
+		else if (searchAlgorithmName == "a_star") App::errorExit("A Star is currently unsupported.");
+		else App::errorExit("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
 	}()};
 
 	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, sleepTimeMilliseconds);

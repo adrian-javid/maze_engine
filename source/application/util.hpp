@@ -26,16 +26,6 @@ namespace App::Util {
 		assert(percentage <= 1.0);
 		return start * (1.0 - percentage) + end * percentage;
 	}
-
-	/*
-		Print message with trailing newline character, then exit with failure code.
-	*/
-	template<typename... ParamsT>
-	[[noreturn]] FORCE_INLINE inline
-	void errOut(ParamsT &&...args) {
-		(std::cerr << ... << std::forward<ParamsT>(args)) << '\n';
-		std::exit(EXIT_FAILURE);
-	}
 }
 
 #endif
