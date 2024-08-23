@@ -35,7 +35,7 @@ button {
 	font-size: clamp(8.9px, min(3.75vw, 3.75vh), 102%);
 	cursor: pointer;
 	border-radius: 6px;
-	color: white;
+	color: black;
 }
 
 .container {
