@@ -8,8 +8,6 @@ namespace App { class Timer; }
 class App::Timer {
 	public:
 
-		using UnsignedMilliseconds = Uint64;
-
 		static constexpr UnsignedMilliseconds oneSecond{1'000u};
 
 		UnsignedMilliseconds accumulatedTime, interval;
