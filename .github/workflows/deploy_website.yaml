@@ -47,7 +47,7 @@ jobs:
       - name: build WebAssembly program
         run: |
           source ./emsdk/emsdk_env.sh
-          scons ./website/generated/
+          scons --emscripten-only ./website/generated/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
