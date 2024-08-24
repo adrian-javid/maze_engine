@@ -86,6 +86,10 @@ int main(int const argc, char *argv[]) {
 
 	#endif
 
+	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) != 0) {
+		App::errorExit("SDL Mixer failed to open.");
+	}
+
 	/*
 		Note to self:
 
@@ -94,8 +98,14 @@ int main(int const argc, char *argv[]) {
 	*/
 	// Register exit handler.
 	std::atexit(+[]() -> void {
+		App::SoundTable::freeAllChunks();
+
+		Mix_CloseAudio();
+		Mix_Quit();
+
 		if (App::Window::window) SDL_DestroyWindow(App::Window::window);
 		if (App::Window::renderer) SDL_DestroyRenderer(App::Window::renderer);
+
 		SDL_Quit();
 	});
 
