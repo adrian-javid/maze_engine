@@ -76,7 +76,9 @@ int main(int const argc, char *argv[]) {
 	}
 
 	// Initialize the Simple Directmedia Layer library.
-	SDL_Init(SDL_INIT_VIDEO);
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+		App::errorExit("SDL failed to initialize.");
+	}
 
 	#ifdef __EMSCRIPTEN__
 
