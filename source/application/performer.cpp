@@ -24,15 +24,15 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 
 	emscripten::function("MazeEngine_resetPerformer", +[](
 		App::Performer::MazeType const mazeType, int const mazeSize,
-		App::Performer::Seed const seed, bool const mazeWrap,
+		unsigned int const seed, bool const mazeWrap,
 		App::Performer::SearchType const searchType,
-		App::UnsignedMilliseconds const sleepTimeMilliseconds
+		unsigned int const sleepTimeMilliseconds
 	) -> void {
 		App::performer.emplace(
 			mazeType, mazeSize,
-			seed, mazeWrap,
+			App::Performer::Seed{seed}, mazeWrap,
 			searchType,
-			sleepTimeMilliseconds
+			App::UnsignedMilliseconds{sleepTimeMilliseconds}
 		);
 	});
 
