@@ -20,6 +20,7 @@ namespace App {/*
 #include "application/param_info.hpp"
 #include "application/main_loop.hpp"
 #include "application/print.hpp"
+#include "application/sound_table.hpp"
 
 #include <algorithm>
 #include <cassert>
