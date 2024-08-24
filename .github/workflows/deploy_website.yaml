@@ -33,6 +33,9 @@ jobs:
       - name: Install SCons using PIP
         run: pip3 install scons
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Install Emscripten
         run: |
           sudo apt-get install git --yes
@@ -40,16 +43,11 @@ jobs:
           cd emsdk
           ./emsdk install latest
           ./emsdk activate latest
-          printf 'IMPORT_EMSCRIPTEN_TOOLS=%s\n' "$(realpath emsdk_env.sh)" >> $GITHUB_ENV
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Import Emscripten Tools
-        run: source $IMPORT_EMSCRIPTEN_TOOLS
 
       - name: build WebAssembly program
-        run: scons ./website/generated/
+        run: |
+          source emsdk_env.sh
+          scons ./website/generated/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
