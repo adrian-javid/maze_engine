@@ -48,8 +48,8 @@ def setCompilationDatabasePathFilter(env, buildType: Literal["release", "debug"]
 webLibEnv = C.parse(linuxLibEnv.Clone(), EMSCRIPTEN)
 webMainEnv = C.parse(webLibEnv.Clone(), C.GCC_WARNING)
 setCompilationDatabasePathFilter(webMainEnv, platform='web', buildType="release")
-webMainEnv.Append(CXXFLAGS=['--use-port=sdl2'])
-webMainEnv.Append(LINKFLAGS=['--use-port=sdl2', '-lembind'])
+webMainEnv.Append(CXXFLAGS=['--use-port=sdl2', '--use-port=sdl2_mixer'])
+webMainEnv.Append(LINKFLAGS=['--use-port=sdl2', '--use-port=sdl2_mixer', '-lembind'])
 
 match NATIVE_PLATFORM:
 	case 'Windows':
@@ -64,14 +64,15 @@ match NATIVE_PLATFORM:
 		)
 	case 'Linux':
 		nativeLibEnv = linuxLibEnv
+		LINUX_PKG_CONFIG: str = "pkg-config --cflags --libs sdl2 SDL2_mixer"
 		setCompilationDatabasePathFilter(
 			nativeReleaseMainEnv := C.parse(nativeLibEnv.Clone(), C.GCC_WARNING),
 			buildType="release"
-		).ParseConfig("sdl2-config --cflags --libs")
+		).ParseConfig(LINUX_PKG_CONFIG)
 		setCompilationDatabasePathFilter(
 			nativeDebugMainEnv := C.parse(baseEnv.Clone(), C.GCC_CORE, C.GCC_DEBUG, C.GCC_WARNING),
 			buildType="debug"
-		).ParseConfig("sdl2-config --cflags --libs")
+		).ParseConfig(LINUX_PKG_CONFIG)
 
 def runScript(mainEnv, libEnv, platform: str, buildType: Literal["release", "debug"]):
 	return SConscript(

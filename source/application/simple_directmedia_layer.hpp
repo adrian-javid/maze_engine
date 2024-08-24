@@ -11,7 +11,9 @@
 #pragma GCC diagnostic ignored "-Wextra"
 #pragma GCC diagnostic ignored "-Wpedantic"
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #include "SDL.h"
+#include "SDL_mixer.h"
 #pragma GCC diagnostic pop
 #endif
 
