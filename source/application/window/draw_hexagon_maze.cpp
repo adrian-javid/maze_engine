@@ -124,6 +124,7 @@ void App::Window::drawHexagonMaze(
 					outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
 					outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint
 				]{getPointyTopHexagonPointList({hexagonCenterX, hexagonCenterY}, hexagonWidth, hexagonHeight)};
+
 				drawHexagon(
 					outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
 					outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint,
