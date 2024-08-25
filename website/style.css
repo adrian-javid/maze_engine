@@ -32,14 +32,44 @@ html, body {
 	align-items: center;
 }
 
+/* Landscape mode: Form inputs to the left of the canvas */
+@media (min-aspect-ratio: 16/9) {
+	.main_container {
+		flex-direction: row; /* Align items horizontally */
+		justify-content: flex-start; /* Align items to the start of the row */
+	}
+	
+	canvas {
+		margin: 0 20px 0 0; /* Add space on the right of the canvas */
+	}
+	
+	form {
+		grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
+	}
+}
+
+/* Portrait mode: Form inputs underneath the canvas */
+@media (max-aspect-ratio: 9/16) {
+	.main_container {
+		flex-direction: column; /* Stack items vertically */
+	}
+	
+	canvas {
+		margin-bottom: 20px; /* Add space below the canvas */
+	}
+	
+	form {
+		grid-template-columns: 1fr; /* Full-width inputs below labels */
+	}
+}
 
 canvas {
-	margin-top: 20px;
+	margin-top: 20px; /* Default margin for landscape */
 }
 
 form {
 	display: grid;
-	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
+	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right by default */
 	grid-gap: 10px;
 	background-color: #f0f0f0;
 	padding: 1.5% 2%;
@@ -92,7 +122,7 @@ form button {
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
 	border-radius: 5px;
 	cursor: pointer;
-	grid-column: span 2; /* Makes buttons span across both columns */
+	grid-column: span 2;
 	margin-top: 10px;
 }
 
@@ -100,7 +130,6 @@ form button:hover {
 	background-color: #5bb497;
 }
 
-/* Fullscreen Button */
 #fullscreen_button {
 	background-color: #4682b4;
 	color: white;
