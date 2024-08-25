@@ -25,37 +25,43 @@ html, body {
 	align-items: center;
 }
 
+.main_container {
+	display: flex;
+	flex-direction: column; /* Stacks elements vertically by default */
+	justify-content: center;
+	align-items: center;
+}
+
+
 canvas {
 	margin-top: 20px;
 }
 
-/* Form Styling */
 form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	display: grid;
+	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
+	grid-gap: 10px;
 	background-color: #f0f0f0;
 	padding: 1.5% 2%;
 	border-radius: 15px;
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 	margin-top: 20px;
-	max-width: 400px; /* Limits form width */
+	max-width: 400px;
 	width: 100%;
+	align-items: center; /* Centers the labels and inputs vertically */
 }
 
 form label {
-	display: block;
-	margin: 0.5rem 0 0.2rem 0;
+	margin: 0;
 	font-size: clamp(12px, min(3.75vw, 3.75vh), 110%);
 	color: #333;
-	text-align: left;
+	text-align: right; /* Align labels to the right */
 }
 
 form input[type="number"],
 form select {
 	width: 100%;
 	padding: 0.4rem;
-	margin-bottom: 1rem;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	font-size: clamp(11px, min(3.75vw, 3.75vh), 100%);
@@ -70,7 +76,6 @@ form input[type="checkbox"] {
 form div {
 	display: flex;
 	align-items: center;
-	margin-bottom: 1rem;
 }
 
 form span {
@@ -79,7 +84,6 @@ form span {
 	color: #333;
 }
 
-/* Button Alignment Fix */
 form button {
 	background-color: #66cdaa;
 	color: white;
@@ -88,11 +92,7 @@ form button {
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
 	border-radius: 5px;
 	cursor: pointer;
-	margin: 0.5rem;
-}
-
-form button[type="submit"] {
-	align-self: flex-end; /* Ensures the "Start" button aligns to the right */
+	grid-column: span 2; /* Makes buttons span across both columns */
 	margin-top: 10px;
 }
 
@@ -109,77 +109,8 @@ form button:hover {
 	margin-top: 20px;
 	cursor: pointer;
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
-	align-self: center; /* Centers the Fullscreen button */
 }
 
 #fullscreen_button:hover {
 	background-color: #3c7291;
 }
-
-
-/* p {
-	font-size: clamp(11px, min(4.5vw, 4.5vh), 142%);
-} */
-
-/* button {
-	border: none;
-	padding: 1.26% 3.2%;
-	font-size: clamp(8.9px, min(3.75vw, 3.75vh), 102%);
-	cursor: pointer;
-	border-radius: 6px;
-	color: black;
-} */
-
-/* .container { */
-	/* structure */
-	/* display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	overflow: auto; */
-
-	/* color */
-	/* box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5); */
-
-	/* shape */
-	/* --width: 60;
-	min-width: calc(300px * var(--width) / 100);
-	width: calc(1vw * var(--width));
-	--height: 60;
-	min-height: calc(300px * var(--height) / 100);
-	height: calc(1vh * var(--height));
-	margin: 1.5%;
-	padding: 0.74%;
-	border-radius: 25px;
-} */
-
-/* .fade_in_animation {
-	animation: fade_in_keyframes ease-in 4s;
-	animation-iteration-count: 1;
-	animation-fill-mode: forwards;
-}
-
-@keyframes fade_in_keyframes {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-} */
-
-/* .fade_in_almost_animation {
-	animation: fade_in_almost_keyframes ease-in 4s;
-	animation-iteration-count: 1;
-	animation-fill-mode: forwards;
-}
-
-@keyframes fade_in_almost_keyframes {
-	0% {
-		opacity: 0.00;
-	}
-	100% {
-		opacity: 0.90;
-	}
-} */
