@@ -14,7 +14,14 @@ namespace App {
 
 	using ColorGetter = std::function<ColorTriplet(MazeEngine::Vector2 const &)>;
 
-	inline constexpr SDL_Color black{0x00, 0x00, 0x00, 0xFF};
+	inline constexpr SDL_Color
+		websiteBackgroundColor{
+			/* red   */ 174u,
+			/* green */ 198u,
+			/* blue  */ 207u,
+			/* alpha */ 0xFFu
+		},
+		black{0x00, 0x00, 0x00, 0xFF};
 
 	std::string toString(SDL_Color const &color);
 

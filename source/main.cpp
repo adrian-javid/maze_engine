@@ -142,7 +142,11 @@ int main(int const argc, char *argv[]) {
 	SDL_SetWindowMinimumSize(App::Window::window, 250, 150);
 	#endif
 
-	SDL_SetRenderDrawColor(App::Window::renderer, 0u, 0u, 0u, 1u);
+	#ifdef __EMSCRTIPTEN__
+	App::Window::setRenderDrawColor(App::websiteBackgroundColor);
+	#else
+	App::Window::setRenderDrawColor(App::black);
+	#endif
 
 	#ifdef __EMSCRIPTEN__
 	/*

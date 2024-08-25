@@ -70,6 +70,11 @@ void App::Window::refresh() {
 			return unmarkedTileColorTriplet;
 	});
 
+	#ifdef __EMSCRIPTEN__
+	setRenderDrawColor(websiteBackgroundColor);
+	#else
+	setRenderDrawColor(black);
+	#endif
 	SDL_RenderClear(renderer);
 
 	std::visit(
