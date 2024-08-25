@@ -51,7 +51,7 @@ std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 	}},
 	{"delay", {
 		"Unsigned integer value. Delay to add in milliseconds after accessing a tile in the maze. ",
-		"15",
+		"60",
 		std::nullopt,
 	}},
 };
