@@ -35,7 +35,7 @@ std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 	}},
 	{"size", {
 		"Unsigned integer value. Controls size of maze. For `square`, this is width and height. For `hexagon`, this is radius.",
-		"10",
+		"5",
 		std::nullopt,
 	}},
 	{"wrap", {
