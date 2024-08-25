@@ -14,10 +14,10 @@
 	<link rel="icon" href="https://adrian-javid.github.io/favicon.png" type="image/png">
 	<meta name="author" content="Adrian">
 
-	<!-- Preview Image -->
-	<!-- <meta property="og:image" content="https://adrian-javid.github.io/maze_engine/preview_image.png">
-	<meta property="og:image:type" content="image/png">
-	<meta property="og:image:alt" content="A maze."> -->
+	<!-- Preview Image -->	
+	<meta property="og:video" content="https://adrian-javid.github.io/maze_engine/preview_video.mp4">
+	<meta property="og:video:secure_url" content="https://adrian-javid.github.io/maze_engine/preview_video.mp4">
+	<meta property="og:video:type" content="video/mp4">
 
 	<!-- Description -->
 	<meta name="description" content="An application that generates and solves mazes.">
@@ -41,7 +41,7 @@
 <body>
 	<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
 
-	<form id="maze_form">
+	<form id="maze_form" style="padding: 2.26% 3.2%">
 		<label for="maze_type">Grid</label>
 		<select id="maze_type" name="maze_type" required>
 			<option value="square" selected>Square</option>
