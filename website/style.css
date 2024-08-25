@@ -23,6 +23,7 @@ html, body {
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
+	box-sizing: border-box; /* Ensure padding and border are included in width/height */
 }
 
 .main_container {
@@ -31,6 +32,7 @@ html, body {
 	justify-content: center;
 	align-items: center;
 	padding: 20px; /* Add some padding around the container */
+	box-sizing: border-box; /* Ensure padding is included in width/height */
 }
 
 /* Landscape mode: Form inputs to the left of the canvas */
@@ -47,6 +49,7 @@ html, body {
 	flex-direction: column; /* Stack form and button vertically */
 	align-items: center; /* Center the button horizontally */
 	width: 100%; /* Ensure container takes full width */
+	box-sizing: border-box; /* Ensure padding is included in width/height */
 }
 
 /* Portrait mode: Form inputs underneath the canvas */
@@ -58,15 +61,15 @@ html, body {
 
 #maze_form {
 	display: grid;
-	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right by default */
+	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
 	grid-gap: 10px;
 	background-color: #f0f0f0;
 	padding: 1.5% 2%;
 	border-radius: 15px;
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-	max-width: 400px;
+	max-width: 400px; /* Ensure form doesn’t get too wide */
 	width: 100%;
-	align-items: center; /* Centers the labels and inputs vertically */
+	box-sizing: border-box; /* Include padding and border in width */
 }
 
 #maze_form label {
@@ -79,11 +82,13 @@ html, body {
 #maze_form input[type="number"],
 #maze_form select {
 	width: 100%;
+	max-width: 100%; /* Ensure inputs don't exceed form container */
 	padding: 0.4rem;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	font-size: clamp(11px, min(3.75vw, 3.75vh), 100%);
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	box-sizing: border-box; /* Include padding and border in width */
 }
 
 #maze_form input[type="checkbox"] {
