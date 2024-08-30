@@ -5,14 +5,14 @@
 #include <iostream>
 
 namespace App {
-	template <typename... ParamsT>
+	template <std::ostream *outputStream=&std::cout, typename... ParamsT>
 	inline void print(ParamsT and(...objects)) {
-		(std::cout << ... << std::forward<ParamsT>(objects));
+		(*outputStream << ... << std::forward<ParamsT>(objects));
 	}
 
-	template <typename... ParamsT>
+	template <std::ostream *outputStream=&std::cout, typename... ParamsT>
 	inline void println(ParamsT and(...objects)) {
-		return print(std::forward<ParamsT>(objects)..., '\n');
+		return print<outputStream>(std::forward<ParamsT>(objects)..., '\n');
 	}
 
 	/*
