@@ -56,12 +56,12 @@ int main(int const argc, char *argv[]) {
 		)
 	};
 	bool const mazeWrap{App::ParamInfo::castArg<bool>(config.at("wrap").argument)};
-	App::Performer::MazeType const mazeType{[gridType]() -> App::Performer::MazeType {
+	App::Performer::MazeType const mazeType{<:gridType:>() -> App::Performer::MazeType {
 		/**/ if (gridType == "square") return App::Performer::MazeType::square;
 		else if (gridType == "hexagon") return App::Performer::MazeType::hexagon;
 		else App::errorExit("Unable to resolve grid type from string: `", gridType, "`.");
 	}()};
-	App::Performer::SearchType const searchType{[searchAlgorithmName]() -> App::Performer::SearchType {
+	App::Performer::SearchType const searchType{<:searchAlgorithmName:>() -> App::Performer::SearchType {
 		/**/ if (searchAlgorithmName == "depth") return App::Performer::SearchType::depth;
 		else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") return App::Performer::SearchType::breadth;
 		else if (searchAlgorithmName == "greedy") return App::Performer::SearchType::greedy;
@@ -72,7 +72,7 @@ int main(int const argc, char *argv[]) {
 	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, sleepTimeMilliseconds);
 
 	// Print the parameter values.
-	for (auto const &[name, param] : config) {
+	for (auto const &<:name, param:> : config) {
 		App::println(name, ": ", param.argument);
 	}
 
@@ -98,7 +98,7 @@ int main(int const argc, char *argv[]) {
 		I believe it has something to do with `SDL_Quit`.
 	*/
 	// Register exit handler.
-	std::atexit(+[]() -> void {
+	std::atexit(+<::>() -> void {
 		App::SoundTable::freeAllChunks();
 
 		Mix_CloseAudio();
