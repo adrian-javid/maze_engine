@@ -66,7 +66,9 @@ struct MazeEngine::Vector2 {
 		return (*this = *this - vector);
 	}
 
-	constexpr bool operator==(Vector2 const &vector) const { return value1 == vector.value1 && value2 == vector.value2; }
+	constexpr bool operator==(Vector2 const &vector) const {
+		return value1 == vector.value1 and value2 == vector.value2;
+	}
 
 	constexpr bool operator!=(Vector2 const &vector) const { return not(*this == vector); }
 

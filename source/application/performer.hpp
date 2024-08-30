@@ -80,7 +80,7 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Maze const & getMaze() const {
 			return std::visit(
-				[](auto &&maze) -> MazeEngine::Maze const & {
+				[](auto and(maze)) -> MazeEngine::Maze const & {
 					return maze;
 				},
 				mazeVariant
@@ -104,7 +104,7 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::MazeSearchIterator const & getMazeSearchIterator() const {
 			return std::visit(
-				[](auto &&mazeSearchIterator) -> MazeEngine::MazeSearchIterator const & {
+				[](auto and(mazeSearchIterator)) -> MazeEngine::MazeSearchIterator const & {
 					return mazeSearchIterator;
 				},
 				mazeSearchIteratorVariant

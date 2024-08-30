@@ -6,12 +6,12 @@
 
 namespace App {
 	template <typename... ParamsT>
-	inline void print(ParamsT &&...objects) {
+	inline void print(ParamsT and(...objects)) {
 		(std::cout << ... << std::forward<ParamsT>(objects));
 	}
 
 	template <typename... ParamsT>
-	inline void println(ParamsT &&...objects) {
+	inline void println(ParamsT and(...objects)) {
 		return print(std::forward<ParamsT>(objects)..., '\n');
 	}
 
@@ -23,7 +23,7 @@ namespace App {
 		then no trailing newline character is printed.
 	*/
 	template<typename... ParamsT>
-	[[noreturn]] inline void errorExit(ParamsT &&...args) {
+	[[noreturn]] inline void errorExit(ParamsT and(...args)) {
 		if constexpr (sizeof...(args) >= 1u) {
 			(std::cerr << ... << std::forward<ParamsT>(args)) << '\n';
 		}

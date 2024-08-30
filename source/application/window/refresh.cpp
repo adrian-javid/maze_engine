@@ -81,7 +81,7 @@ void App::Window::refresh() {
 		[
 			windowWidthValue, windowHeightValue,
 			&mainColorGetter, &wallColorTriplet
-		](auto &&maze) -> void {
+		](auto and(maze)) -> void {
 			using MazeT = std::decay_t<decltype(maze)>;
 
 			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) drawSquareMaze(
