@@ -23,7 +23,7 @@ void App::mainLoop() {
 	// Get the change in time.
 	deltaTime = currentTime - previousTime;
 
-	for (static SDL_Event event; SDL_PollEvent(&event);) switch (event.type) {
+	for (SDL_Event event; SDL_PollEvent(&event);) switch (event.type) {
 		case SDL_KEYDOWN: switch (event.key.keysym.sym) {
 			case SDLK_BACKQUOTE:
 				Window::setFullscreen(true);
