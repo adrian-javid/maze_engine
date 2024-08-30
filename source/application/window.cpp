@@ -1,4 +1,4 @@
-#include "application/window.hpp"
+#include "window.hpp"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/bind.h>
