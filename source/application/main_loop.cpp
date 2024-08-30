@@ -33,7 +33,8 @@ void App::mainLoop() {
 				break;
 		} break;
 		case SDL_WINDOWEVENT: switch (event.window.event) {
-			case SDL_WINDOWEVENT_RESIZED:
+			case /* (user initiated resize) */SDL_WINDOWEVENT_RESIZED:
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
 				Window::windowWidth = event.window.data1;
 				Window::windowHeight = event.window.data2;
 				break;
