@@ -115,7 +115,9 @@ if not emscriptenOnly:
 	if NATIVE_PLATFORM == "Windows":
 		for mainProgram, buildType in ((mainReleaseProgram, "release"), (mainDebugProgram, "debug")):
 			windowsSdl2Dll = Command(F"build/Windows/{buildType}/run/SDL2.dll", "library/Windows/lib/SDL2/SDL2.dll", Copy("$TARGET", "$SOURCE"))
+			windowsSdl2MixerDll = Command(F"build/Windows/{buildType}/run/SDL2_mixer.dll", "library/Windows/lib/SDL2/SDL2_mixer.dll", Copy("$TARGET", "$SOURCE"))
 			Depends(mainProgram, windowsSdl2Dll)
+			Depends(mainProgram, windowsSdl2MixerDll)
 
 if not undiscoveredEmscripten:
 	webBuildType: str = "release"

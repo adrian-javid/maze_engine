@@ -111,7 +111,7 @@ This project requires [SDL](https://www.libsdl.org/). The method of downloading 
 
 #### SDL for 64-bit Windows
 
-Run the [`fetch_libraries.py`](./fetch_libraries.py) Python script from the root of the project to fetch the SDL2 library for Windows. This script fetches and unpacks the SDL2 library from the [SDL releases on GitHub](https://github.com/libsdl-org/SDL/releases).
+Run the [`fetch_libraries.py`](./fetch_libraries.py) Python script from the root of the project to fetch the SDL2 library for Windows. This script fetches and unpacks the main SDL2 library from the [SDL releases on GitHub](https://github.com/libsdl-org/SDL/releases) and the SDL2 Mixer library from the [SDL Mixer releases on GitHub](https://github.com/libsdl-org/SDL_mixer/releases).
 
 ```PowerShell
 py fetch_libraries.py

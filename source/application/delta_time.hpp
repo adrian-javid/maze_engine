@@ -3,6 +3,8 @@
 
 #include "simple_directmedia_layer.hpp"
 
+#include <type_traits>
+
 namespace App {
 
 	using UnsignedMilliseconds = decltype(SDL_GetTicks64());

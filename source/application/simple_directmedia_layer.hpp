@@ -4,6 +4,7 @@
 #ifdef _WIN64
 #pragma warning(push, 0)
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_mixer.h"
 #pragma warning(pop)
 #else
 #pragma GCC diagnostic push

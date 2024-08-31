@@ -130,6 +130,6 @@ MSVC_WARNING = make(CXXFLAGS=[
 	"/wd4996", # suppress deprecation warnings so they are not errors
 ])
 
-MSVC_SDL2 = make(LIBS=["SDL2", "SDL2main", "shell32"])
+MSVC_SDL2 = make(LIBS=["SDL2", "SDL2main", "shell32", "SDL2_mixer"])
 
 #endregion
