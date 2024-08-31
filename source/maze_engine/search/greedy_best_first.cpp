@@ -20,5 +20,7 @@ auto MazeEngine::greedyBestFirstSearch(
 
 	std::priority_queue<Vector2, std::vector<Vector2>, decltype(heuristicComparator)> priorityQueue(heuristicComparator);
 
-	return abstractSearch<decltype(priorityQueue)>(maze, start, priorityQueue, processKey);
+	SUPPRESS_DEPRECATION_WARNINGS({
+		return abstractSearch<decltype(priorityQueue)>(maze, start, priorityQueue, processKey);
+	})
 }

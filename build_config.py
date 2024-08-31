@@ -57,7 +57,8 @@ def parse(env, *configList: EnvConfig):
 GCC_CORE = make(CXXFLAGS=["-std=c++17"])
 
 GCC_WARNING = make(CXXFLAGS=[
-	'-Wall', '-Wextra', '-Wpedantic', '-Wdeprecated',
+	'-Wall', '-Wextra', '-Wpedantic',
+	'-Wdeprecated-declarations',
 	'-Wconversion', '-Wunused', '-Wformat=2', '-Wreorder', '-Wuninitialized',
 
 	'-Wold-style-cast', '-Wcast-qual', '-Wcast-function-type',
