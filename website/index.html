@@ -80,7 +80,8 @@
 				<button id="submit_button" type="submit" disabled>Start</button>
 			</form>
 
-			<button id="fullscreen_button" disabled>Fullscreen</button>
+			<!-- Currently not supporting fullscreen. -->
+			<!-- <button id="fullscreen_button" disabled>Fullscreen</button> -->
 		</div>
 
 		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1>
@@ -149,11 +150,13 @@
 
 			const fullscreenButton = document.getElementById("fullscreen_button");
 
-			fullscreenButton.addEventListener("click", function() {
-				Module.Window_setFullscreen(true);
-			});
+			if (fullscreenButton) {
+				fullscreenButton.addEventListener("click", function() {
+					Module.Window_setFullscreen(true);
+				});
 
-			fullscreenButton.disabled = false;
+				fullscreenButton.disabled = false;
+			}
 		}
 	</script>
 
