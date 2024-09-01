@@ -107,7 +107,16 @@
 			})()
 		};
 
+		function resizeCanvas() {
+			const length = Math.min(window.innerWidth, window.innerHeight) * 0.80;
+			Module.Window_setSize(length, length);
+		}
+
 		function onMazeEngineApplicationInitialized() {
+			resizeCanvas();
+
+			window.addEventListener("resize", resizeCanvas);
+
 			document.getElementById("maze_form").addEventListener("submit", function(event) {
 				event.preventDefault();
 
