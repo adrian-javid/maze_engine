@@ -5,7 +5,7 @@
 
 namespace App::AudioData::Synthesizer {
 	using MusicNote = std::array<unsigned char, std::size_t{783406u}>;
-	extern MusicNote a, b, c, d, e, f, g;
+	extern MusicNote const a, b, c, d, e, f, g;
 }
 
 #endif
