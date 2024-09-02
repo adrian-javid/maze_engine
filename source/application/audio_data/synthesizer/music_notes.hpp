@@ -4,8 +4,8 @@
 #include <array>
 
 namespace App::AudioData::Synthesizer {
-	using MusicNoteData = std::array<unsigned char, std::size_t{783406u}>;
-	extern MusicNoteData a, b, c, d, e, f, g;
+	using MusicNote = std::array<unsigned char, std::size_t{783406u}>;
+	extern MusicNote a, b, c, d, e, f, g;
 }
 
 #endif
