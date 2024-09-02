@@ -11,6 +11,7 @@
 #include "maze_engine/search/a_star.hpp"
 #include "simple_directmedia_layer.hpp"
 #include "timer.hpp"
+#include "sound_table.hpp"
 
 namespace App {
 	class Performer;
@@ -48,6 +49,7 @@ class App::Performer {
 			`edge->second` is the parent vertex
 		*/
 		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator edge{};
+		std::int_fast8_t soundIndex{0u};
 		enum struct State : std::uint_least8_t {
 			searching = 1u, backtracking, complete
 		} state{State::searching};
@@ -123,6 +125,19 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::MazeSearchIterator & getMazeSearchIterator() {
 			return const_cast<MazeEngine::MazeSearchIterator &>(std::as_const(*this).getMazeSearchIterator());
+		}
+
+		FORCE_INLINE inline void playSound() {
+			SoundTable::play(soundIndex);
+
+			switch (state) {
+				case State::searching   : ++soundIndex; break;
+				case State::backtracking: --soundIndex; break;
+			}
+
+			if (soundIndex < decltype(soundIndex){0}) soundIndex += SoundTable::size;
+
+			soundIndex %= SoundTable::size;
 		}
 };
 

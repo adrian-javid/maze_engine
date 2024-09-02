@@ -145,6 +145,8 @@ void App::Performer::update() {
 
 			++getMazeSearchIterator();
 
+			playSound();
+
 			return;
 		}
 
@@ -166,6 +168,9 @@ void App::Performer::update() {
 			}
 
 			edge = history.find(edge->/* parent vertex */second);
+
+			playSound();
+
 			return;
 		}
 
