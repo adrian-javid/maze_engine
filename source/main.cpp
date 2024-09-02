@@ -21,6 +21,7 @@ namespace App {/*
 #include "application/main_loop.hpp"
 #include "application/print.hpp"
 #include "application/sound_table.hpp"
+#include "application/audio_data/synthesizer/music_notes.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -109,6 +110,22 @@ int main(int const argc, char *argv[]) {
 
 		SDL_Quit();
 	});
+
+	{
+		using namespace App::AudioData::Synthesizer;
+
+		static constexpr std::size_t byteCount{std::tuple_size_v<MusicNote> * sizeof(MusicNote::value_type)};
+
+		using App::SoundTable::DataView;
+
+		App::SoundTable::put(0u, DataView(c.data(), byteCount));
+		App::SoundTable::put(1u, DataView(d.data(), byteCount));
+		App::SoundTable::put(2u, DataView(e.data(), byteCount));
+		App::SoundTable::put(3u, DataView(f.data(), byteCount));
+		App::SoundTable::put(4u, DataView(g.data(), byteCount));
+		App::SoundTable::put(5u, DataView(a.data(), byteCount));
+		App::SoundTable::put(6u, DataView(b.data(), byteCount));
+	}
 
 	static constexpr char const *windowTitle{"Maze Engine"};
 
