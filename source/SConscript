@@ -2,7 +2,11 @@ Import("mainEnv", "libEnv")
 
 main_cpp = File("main.cpp")
 
-mainSourceList = Glob("maze_engine/*.cpp") + Glob("maze_engine/*/*.cpp") + Glob("application/*.cpp") + Glob("application/*/*.cpp")
+def dive(directory: str, depth: int):
+	if depth <= 0: return []
+	return Glob(F"{directory}{'/*' * depth}.cpp") + dive(directory, depth - 1)
+
+mainSourceList = dive(directory="maze_engine", depth=2) + dive(directory="application", depth=3)
 
 mainProgram = mainEnv.Program(target="run/maze_engine", source=[main_cpp] + mainSourceList)
 
