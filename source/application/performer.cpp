@@ -137,7 +137,7 @@ void App::Performer::update() {
 
 			/* process vertex */ {
 				MazeEngine::Vector2 const &vertex(*getMazeSearchIterator());
-				
+
 				markedTileSet.insert(MazeEngine::Vector2(vertex));
 
 				if (vertex == mazeEnd) goto switchToBacktracking;
