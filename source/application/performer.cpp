@@ -6,6 +6,8 @@
 #include <iostream>
 
 std::optional<App::Performer> App::performer(std::nullopt);
+App::SoundTable App::Performer::piano;
+App::SoundTable App::Performer::synthesizer;
 
 #ifdef __EMSCRIPTEN__
 

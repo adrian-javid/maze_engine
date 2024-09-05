@@ -27,6 +27,10 @@ class App::Performer {
 
 		using Seed = unsigned int;
 
+		static SoundTable piano;
+
+		static SoundTable synthesizer;
+
 	private:
 
 		std::variant<MazeEngine::SquareMaze, MazeEngine::HexagonMaze> mazeVariant;
@@ -53,6 +57,7 @@ class App::Performer {
 		enum struct State : std::uint_least8_t {
 			searching = 1u, backtracking, complete
 		} state{State::searching};
+		SoundTable const *soundInstrument{&piano};
 
 	public:
 
