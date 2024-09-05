@@ -132,18 +132,7 @@ class App::Performer {
 			return const_cast<MazeEngine::MazeSearchIterator &>(std::as_const(*this).getMazeSearchIterator());
 		}
 
-		FORCE_INLINE inline void playSound() {
-			SoundTable::play(soundIndex);
-
-			switch (state) {
-				case State::searching   : ++soundIndex; break;
-				case State::backtracking: --soundIndex; break;
-			}
-
-			if (soundIndex < decltype(soundIndex){0}) soundIndex += SoundTable::size;
-
-			soundIndex %= SoundTable::size;
-		}
+		void playSound(MazeEngine::Vector2 const &vertex);
 };
 
 #endif

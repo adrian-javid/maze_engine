@@ -132,6 +132,10 @@ App::Performer::Performer(
 	assert(not mazeSearchIteratorVariant.valueless_by_exception());
 }
 
+void App::Performer::playSound(MazeEngine::Vector2 const &mainVertex) {
+	static_cast<void>(mainVertex);
+}
+
 void App::Performer::update() {
 	if (timer.update()) switch (state) {
 		case State::searching: {
