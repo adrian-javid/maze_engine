@@ -29,7 +29,7 @@ emscriptenRequirementTools = {
 EMSCRIPTEN = C.make(
 	**{toolType: WhereIs(toolName) for toolType, toolName in emscriptenRequirementTools.items()},
 	CCFLAGS=['-fexceptions'],
-	LINKFLAGS=['-fexceptions'],
+	LINKFLAGS=['-fexceptions', '-sALLOW_MEMORY_GROWTH=1'],
 	PROGSUFFIX='.js',
 )
 
