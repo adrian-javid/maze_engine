@@ -21,7 +21,7 @@ namespace App {/*
 #include "application/main_loop.hpp"
 #include "application/print.hpp"
 #include "application/sound_table.hpp"
-#include "application/audio_data/synthesizer/music_notes.hpp"
+#include "application/audio_data.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -100,7 +100,8 @@ int main(int const argc, char *argv[]) {
 	*/
 	// Register exit handler.
 	std::atexit(+<::>() -> void {
-		App::SoundTable::freeAllChunks();
+		App::Performer::piano.freeAllChunks();
+		App::Performer::synthesizer.freeAllChunks();
 
 		Mix_CloseAudio();
 		Mix_Quit();
@@ -112,19 +113,25 @@ int main(int const argc, char *argv[]) {
 	});
 
 	{
-		using namespace App::AudioData::Synthesizer;
+		using namespace App::AudioData;
 
-		static constexpr std::size_t byteCount{std::tuple_size_v<MusicNote> * sizeof(MusicNote::value_type)};
+		static constexpr std::size_t byteCount{std::tuple_size_v<SimpleSound> * sizeof(SimpleSound::value_type)};
 
-		using App::SoundTable::DataView;
+		using DataView = App::SoundTable::DataView;
 
-		App::SoundTable::put(0u, DataView(c.data(), byteCount));
-		App::SoundTable::put(1u, DataView(d.data(), byteCount));
-		App::SoundTable::put(2u, DataView(e.data(), byteCount));
-		App::SoundTable::put(3u, DataView(f.data(), byteCount));
-		App::SoundTable::put(4u, DataView(g.data(), byteCount));
-		App::SoundTable::put(5u, DataView(a.data(), byteCount));
-		App::SoundTable::put(6u, DataView(b.data(), byteCount));
+		App::Performer::piano      .put(0u, DataView(Piano      ::    first.data(), byteCount));
+		App::Performer::piano      .put(1u, DataView(Piano      ::    third.data(), byteCount));
+		App::Performer::piano      .put(2u, DataView(Piano      ::    fifth.data(), byteCount));
+		App::Performer::piano      .put(3u, DataView(Piano      ::highFirst.data(), byteCount));
+		App::Performer::piano      .put(4u, DataView(Piano      ::highThird.data(), byteCount));
+		App::Performer::piano      .put(5u, DataView(Piano      ::highFifth.data(), byteCount));
+
+		App::Performer::synthesizer.put(0u, DataView(Synthesizer::    first.data(), byteCount));
+		App::Performer::synthesizer.put(1u, DataView(Synthesizer::    third.data(), byteCount));
+		App::Performer::synthesizer.put(2u, DataView(Synthesizer::    fifth.data(), byteCount));
+		App::Performer::synthesizer.put(3u, DataView(Synthesizer::highFirst.data(), byteCount));
+		App::Performer::synthesizer.put(4u, DataView(Synthesizer::highThird.data(), byteCount));
+		App::Performer::synthesizer.put(5u, DataView(Synthesizer::highFifth.data(), byteCount));
 	}
 
 	static constexpr char const *windowTitle{"Maze Engine"};

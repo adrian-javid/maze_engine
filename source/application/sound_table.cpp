@@ -4,10 +4,6 @@
 #include <cassert>
 #include <array>
 
-namespace App::SoundTable {
-	static std::array<Mix_Chunk *, size> table{};
-}
-
 void ::App::SoundTable::freeAllChunks() {
 	for (auto iterator(table.begin()); iterator != table.end(); ++iterator) {
 		if (Mix_Chunk *const chunk{*iterator}; chunk != nullptr) {
@@ -17,14 +13,12 @@ void ::App::SoundTable::freeAllChunks() {
 	}
 }
 
-void ::App::SoundTable::put(std::size_t const identifier, DataView const dataView) {
-	auto const [data, dataSize]{dataView};
-	
+void ::App::SoundTable::put(std::size_t const identifier, DataView const view) {
 	assert(identifier < size);
-	assert(dataSize <= std::numeric_limits<int>::max());
+	assert(view.getSize() <= std::numeric_limits<int>::max());
 
 	// Read & write structure.
-	SDL_RWops *audioSource{SDL_RWFromConstMem(data, static_cast<int>(dataSize))};
+	SDL_RWops *audioSource{SDL_RWFromConstMem(view.getData(), static_cast<int>(view.getSize()))};
 
 	SUPPRESS_WARNINGS({
 		SDL_assert(audioSource != nullptr);
