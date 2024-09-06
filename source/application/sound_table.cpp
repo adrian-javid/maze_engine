@@ -31,7 +31,7 @@ void ::App::SoundTable::put(std::size_t const identifier, DataView const view) {
 	table[identifier] = Mix_LoadWAV_RW(audioSource, SDL_TRUE);
 }
 
-void ::App::SoundTable::play(std::size_t const identifier) {
+void ::App::SoundTable::play(std::size_t const identifier) const {
 	assert(identifier < size);
 
 	SUPPRESS_WARNINGS({

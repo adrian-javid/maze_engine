@@ -46,7 +46,7 @@ class App::SoundTable {
 
 		void freeAllChunks();
 
-		void play(std::size_t const identifier);
+		void play(std::size_t const identifier) const;
 
 };
 
