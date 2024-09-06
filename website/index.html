@@ -71,6 +71,13 @@
 					<option value="greedy">Greedy Best-First Search</option>
 				</select>
 
+				<label for="sound_type">Sound</label>
+				<select id="sound_type" name="sound_type" required>
+					<option value="none">None</option>
+					<option value="piano">Piano</option>
+					<option value="synthesizer" selected>Synthesizer</option>
+				</select>
+
 				<label for="delay">Delay</label>
 				<div style="display: inline-block;">
 					<input type="number" id="delay" name="delay" min="0" max="65535" value="60" step="1" required>
@@ -138,10 +145,18 @@
 					}
 				})();
 
+				const soundType = (() => {
+					switch (formData.get("sound_type")) {
+						case "none"       : return Module.MazeEngine_SoundType.NONE       ;
+						case "piano"      : return Module.MazeEngine_SoundType.PIANO      ;
+						case "synthesizer": return Module.MazeEngine_SoundType.SYNTHESIZER;
+					}
+				})();
+
 				Module.MazeEngine_resetPerformer(
 					mazeType, parseInt(formData.get("maze_size"), 10),
 					parseInt(formData.get("seed"), 10), Boolean(formData.get("maze_wrap")),
-					searchType,
+					searchType, soundType,
 					parseInt(formData.get("delay"), 10)
 				);
 			});
