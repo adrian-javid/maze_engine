@@ -49,6 +49,15 @@ std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 			{"false", "Disable wrapping."}
 		},
 	}},
+	{"sound", {
+		"Sound instrument to use sound effects from.",
+		"synthesizer",
+		Acceptable{
+			{"none", "Do not use sound effects."},
+			{"piano", "Use grand piano for sound effects."},
+			{"synthesizer", "Use square synthesizer for sound effects."},
+		}
+	}},
 	{"delay", {
 		"Unsigned integer value. Delay to add in milliseconds after accessing a tile in the maze. ",
 		"60",

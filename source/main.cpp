@@ -50,6 +50,7 @@ int main(int const argc, char *argv[]) {
 	};
 	unsigned int const seed{App::ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
 	std::string_view const searchAlgorithmName(config.at("search").argument);
+	std::string_view const soundTypeName(config.at("sound").argument);
 	int sleepTimeMilliseconds{
 		App::ParamInfo::assertNonnegative(
 			App::ParamInfo::castArg<int>(config.at("delay").argument),
@@ -69,8 +70,14 @@ int main(int const argc, char *argv[]) {
 		else if (searchAlgorithmName == "a_star") App::errorExit("A Star is currently unsupported.");
 		else App::errorExit("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
 	}()};
+	App::Performer::SoundType const soundType{<:soundTypeName:>() -> App::Performer::SoundType {
+		/**/ if (soundTypeName == "none") return App::Performer::SoundType::none;
+		else if (soundTypeName == "piano") return App::Performer::SoundType::piano;
+		else if (soundTypeName == "synthesizer") return App::Performer::SoundType::synthesizer;
+		else App::errorExit("Unable to resolve sound instrument frmo string: `", soundTypeName, "`.");
+	}()};
 
-	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, sleepTimeMilliseconds);
+	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, soundType, sleepTimeMilliseconds);
 
 	// Print the parameter values.
 	for (auto const &<:name, param:> : config) {

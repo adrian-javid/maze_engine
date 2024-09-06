@@ -25,13 +25,15 @@ class App::Performer {
 
 		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy };
 
+		enum struct SoundType : std::uint_least8_t { none = 0u, piano, synthesizer };
+
 		using Seed = unsigned int;
 
 		static SoundTable piano;
 
 		static SoundTable synthesizer;
 
-	private:
+	private /* member state; initialized by the constructor */:
 
 		std::variant<MazeEngine::SquareMaze, MazeEngine::HexagonMaze> mazeVariant;
 		MazeEngine::Vector2 mazeStart;
@@ -45,6 +47,9 @@ class App::Performer {
 			MazeEngine::GreedyBestFirstSearchIterator
 		> mazeSearchIteratorVariant;
 		Timer timer;
+		SoundTable const *soundInstrument;
+
+	private  /* member state; initialized here */:
 
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
@@ -56,7 +61,6 @@ class App::Performer {
 		enum struct State : std::uint_least8_t {
 			searching = 1u, backtracking, complete
 		} state{State::searching};
-		SoundTable const *soundInstrument{&piano};
 
 	public:
 
@@ -64,6 +68,7 @@ class App::Performer {
 			MazeType const mazeType, int const mazeSizeHint,
 			Seed const seed, bool const mazeWrap,
 			SearchType const searchType,
+			SoundType const soundType,
 			UnsignedMilliseconds const sleepTimeMilliseconds
 		);
 

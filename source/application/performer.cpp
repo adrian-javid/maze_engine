@@ -24,16 +24,22 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 		.value("BREADTH", App::Performer::SearchType::breadth)
 		.value("GREEDY" , App::Performer::SearchType::greedy );
 
+	emscripten::enum_<App::Performer::SoundType>("MazeEngine_SoundType")
+		.value("NONE"       , App::Performer::SoundType::none       )
+		.value("PIANO"      , App::Performer::SoundType::piano      )
+		.value("SYNTHESIZER", App::Performer::SoundType::synthesizer);
+
 	emscripten::function("MazeEngine_resetPerformer", +[](
 		App::Performer::MazeType const mazeType, int const mazeSize,
 		unsigned int const seed, bool const mazeWrap,
 		App::Performer::SearchType const searchType,
+		App::Performer::SoundType const soundType,
 		unsigned int const sleepTimeMilliseconds
 	) -> void {
 		App::performer.emplace(
 			mazeType, mazeSize,
 			App::Performer::Seed{seed}, mazeWrap,
-			searchType,
+			searchType, soundType,
 			App::UnsignedMilliseconds{sleepTimeMilliseconds}
 		);
 	});
@@ -46,6 +52,7 @@ App::Performer::Performer(
 	MazeType const mazeType, int const mazeSizeHint,
 	Seed const seed, bool const mazeWrap,
 	SearchType const searchType,
+	SoundType const soundType,
 	UnsignedMilliseconds const sleepTimeMilliseconds
 ):
 	mazeVariant([mazeType, mazeSizeHint]() -> decltype(Performer::mazeVariant) {
@@ -65,7 +72,7 @@ App::Performer::Performer(
 				int const squareLength{2 * mazeSize - 1};
 				return MazeEngine::SquareMaze(squareLength, squareLength, mazeFillValue);
 			}
-			
+
 			case MazeType::hexagon: {
 				// Doesn't count center hexagon as part of the radius.
 				int const hexagonRadius{mazeSize >= 1 ? mazeSize - 1 : 0};
@@ -126,13 +133,31 @@ App::Performer::Performer(
 				return MazeEngine::GreedyBestFirstSearchIterator(getMaze(), mazeStart, mazeEnd);
 		}
 	}()),
-	timer(sleepTimeMilliseconds)
+	timer(sleepTimeMilliseconds),
+	soundInstrument{<:soundType:>() -> SoundTable const * {
+		switch (soundType) {
+			case SoundType::none:
+				return nullptr;
+
+			case SoundType::piano:
+				return &piano;
+
+			default:
+				std::cerr << "Invalid sound type: " << MazeEngine::Aux::Enum::asInt(soundType) << '.' << '\n';
+				assert(false);
+				[[fallthrough]];
+
+			case SoundType::synthesizer:
+				return &synthesizer;
+		}
+	}()}
 {
 	assert(not mazeVariant.valueless_by_exception());
 	assert(not mazeSearchIteratorVariant.valueless_by_exception());
 }
 
 void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
+	if (soundInstrument == nullptr) return;
 
 	/*
 		Get the hashmap that has the information that is the parent vertex of each
@@ -186,7 +211,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 		// Get the maze type.
 		using MazeT = std::decay_t<decltype(maze)>;
 		
-		// Alias for the maze direction.
+		// Alias for the maze direction enum.
 		using Direction = MazeEngine::Maze::Direction;
 
 		/*
