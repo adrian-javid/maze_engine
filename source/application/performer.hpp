@@ -49,11 +49,10 @@ class App::Performer {
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
 		/*
-			`edge->first` is the child vertex
-			`edge->second` is the parent vertex
+			`trailEdge->first` is the child vertex
+			`trailEdge->second` is the parent vertex
 		*/
-		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator edge{};
-		std::int_fast8_t soundIndex{0u};
+		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge{};
 		enum struct State : std::uint_least8_t {
 			searching = 1u, backtracking, complete
 		} state{State::searching};
