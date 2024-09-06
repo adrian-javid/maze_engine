@@ -122,7 +122,7 @@ Vector2 const &HexagonMaze::getOffset(Direction const direction) const {
 
 		default:
 			throw direction;
-	}   
+	}
 }
 
 bool HexagonMaze::isInBounds(Vector2 const &key) const {
