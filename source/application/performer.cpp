@@ -132,8 +132,87 @@ App::Performer::Performer(
 	assert(not mazeSearchIteratorVariant.valueless_by_exception());
 }
 
-void App::Performer::playSound(MazeEngine::Vector2 const &mainVertex) {
-	static_cast<void>(mainVertex);
+void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
+	auto const &history{getMazeSearchIterator().getHistory()};
+
+	auto const edge(history.find(mainVertex));
+
+	if (edge == history.end()) {
+		assert(false);
+		return;
+	}
+
+	assert(edge->/* child vertex */first == mainVertex);
+
+	MazeEngine::Vector2 const &parentVertex{edge->/* parent vertex */second};
+
+	MazeEngine::Vector2 offsetVector(/* destination */mainVertex - /* origin */parentVertex);
+
+	// MazeEngine::Vector2 const offsetVector(/* destination */mainVertex - /* origin */parentVertex);
+	std::visit(<:this, offsetVector:>(auto and(maze)) -> void {
+		using MazeT = std::decay_t<decltype(maze)>;
+		using Direction = MazeEngine::Maze::Direction;
+
+		bool const isSimpleOffsetVector{<:offsetVector:>() constexpr -> bool {
+			switch (offsetVector.value1) {
+				case -1:
+				case  0:
+				case +1: switch (offsetVector.value2) {
+					case -1:
+					case  0:
+					case +1: return true;
+				}
+			}
+			return false;
+		}()};
+
+		if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
+			Direction const direction{<:offsetVector, isSimpleOffsetVector:>() -> MazeEngine::Maze::Direction {
+				static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
+					/*    */                      /* -1 */         /*  0 */          /* +1 */
+					/* -1 */ std::array{ Direction:: none, Direction::west, Direction:: none, },
+					/*  0 */ std::array{ Direction::north, Direction::none, Direction::south, },
+					/* +1 */ std::array{ Direction:: none, Direction::east, Direction:: none, },
+				};
+
+				if (isSimpleOffsetVector)
+					return directionMatrix[offsetVector.value1 + 1][offsetVector.value2 + 1];
+				else
+					return Direction::none;
+			}()};
+
+			switch (direction) {
+				case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;
+				case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
+				case MazeEngine::Maze::Direction::south: soundInstrument->play(0u); break;
+				case MazeEngine::Maze::Direction::west : soundInstrument->play(2u); break;
+			}
+		} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
+			Direction const direction{<:offsetVector, isSimpleOffsetVector:>() -> MazeEngine::Maze::Direction {
+				static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
+					/*    */                          /* -1 */         /*  0 */              /* +1 */
+					/* -1 */ std::array{ Direction::     none, Direction::west, Direction::southwest, },
+					/*  0 */ std::array{ Direction::northwest, Direction::none, Direction::southeast, },
+					/* +1 */ std::array{ Direction::northeast, Direction::east, Direction::     none, },
+				};
+
+				if (isSimpleOffsetVector)
+					return directionMatrix[offsetVector.value1 + 1][offsetVector.value2 + 1];
+				else
+					return Direction::none;
+			}()};
+
+			switch (direction) {
+				case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u); break;
+				case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u); break;
+				case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u); break;
+				case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u); break;
+				case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u); break;
+				case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u); break;
+			}
+		}
+	}, mazeVariant);
+
 }
 
 void App::Performer::update() {
@@ -142,7 +221,9 @@ void App::Performer::update() {
 			if (getMazeSearchIterator().isEnd()) goto switchToBacktracking;
 
 			/* process vertex */ {
-				MazeEngine::Vector2 const &vertex(*getMazeSearchIterator());
+				MazeEngine::Vector2 const &vertex{*getMazeSearchIterator()};
+
+				playSound(vertex);
 
 				markedTileSet.insert(MazeEngine::Vector2(vertex));
 
@@ -150,8 +231,6 @@ void App::Performer::update() {
 			}
 
 			++getMazeSearchIterator();
-
-			playSound();
 
 			return;
 		}

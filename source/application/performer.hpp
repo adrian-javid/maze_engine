@@ -131,7 +131,7 @@ class App::Performer {
 			return const_cast<MazeEngine::MazeSearchIterator &>(std::as_const(*this).getMazeSearchIterator());
 		}
 
-		void playSound(MazeEngine::Vector2 const &vertex);
+		void playSound(MazeEngine::Vector2 const vertex);
 };
 
 #endif
