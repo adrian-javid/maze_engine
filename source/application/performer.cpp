@@ -133,26 +133,67 @@ App::Performer::Performer(
 }
 
 void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
+
+	/*
+		Get the hashmap that has the information that is the parent vertex of each
+		explored vertex so far.
+	*/
 	auto const &history{getMazeSearchIterator().getHistory()};
 
+	/*
+		Getting the edge that has the main vertex of interest and its parent vertex.
+	*/
 	auto const edge(history.find(mainVertex));
 
+	/*
+		Assert that the main vertex does indeed have a parent vertex.
+	*/
 	if (edge == history.end()) {
 		assert(false);
 		return;
 	}
 
+	/*
+		The edge should contain the main vertex.
+	*/
 	assert(edge->/* child vertex */first == mainVertex);
 
+	/*
+		Get the parent vertex.
+
+		The parent vertex is the vertex that was explored before the main vertex,
+		and it should be adjacent to the main vertex.
+
+		We can use this parent vertex to calculate the direction of the step that had to
+		occur to get from the parent vertex to the main vertex.
+
+		The direction is what we will use to determine what sound effect will be played;
+		each direction is assigned a sound effect.
+	*/
 	MazeEngine::Vector2 const &parentVertex{edge->/* parent vertex */second};
 
-	MazeEngine::Vector2 offsetVector(/* destination */mainVertex - /* origin */parentVertex);
+	/*
+		This offset vector represents the direciton in a vector form.
 
-	// MazeEngine::Vector2 const offsetVector(/* destination */mainVertex - /* origin */parentVertex);
+		We need to calculate the enumerated direction from this.
+	*/
+	MazeEngine::Vector2 const offsetVector(/* destination */mainVertex - /* origin */parentVertex);
+
+	/*
+		We will determine which sound to play based on the offset vector.
+	*/
 	std::visit(<:this, offsetVector:>(auto and(maze)) -> void {
+		// Get the maze type.
 		using MazeT = std::decay_t<decltype(maze)>;
+		
+		// Alias for the maze direction.
 		using Direction = MazeEngine::Maze::Direction;
 
+		/*
+			Figure out whether the offset vector is a vector that we can recognise.
+
+			That is, its values should be integers that either `-1`, `0`, or `+1`.
+		*/
 		bool const isSimpleOffsetVector{<:offsetVector:>() constexpr -> bool {
 			switch (offsetVector.value1) {
 				case -1:
@@ -166,6 +207,10 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 			return false;
 		}()};
 
+		/*
+			The offset vectors that are able to be recognized are determined
+			by which maze grid type is being used.
+		*/
 		if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
 			Direction const direction{<:offsetVector, isSimpleOffsetVector:>() -> MazeEngine::Maze::Direction {
 				static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
