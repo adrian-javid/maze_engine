@@ -192,7 +192,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 		/*
 			Figure out whether the offset vector is a vector that we can recognise.
 
-			That is, its values should be integers that either `-1`, `0`, or `+1`.
+			That is, its values should be integers that are either `-1`, `0`, or `+1`.
 		*/
 		bool const isSimpleOffsetVector{<:offsetVector:>() constexpr -> bool {
 			switch (offsetVector.value1) {
