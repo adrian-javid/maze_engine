@@ -2,8 +2,14 @@ build
 downloaded
 library
 
+# Visual Studio Code settings
+.vscode
+
 # SCons cache
 .sconsign.dblite
 
 # Python cache
 __pycache__
+
+# files generated for website
+website/generated/

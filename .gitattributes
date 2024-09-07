@@ -1,0 +1,4 @@
+* text=auto
+
+# Catch2 library
+source/test/catch2/**/* linguist-vendored

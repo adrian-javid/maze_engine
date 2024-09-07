@@ -1,0 +1,144 @@
+html, body {
+	/* shape */
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	width: 100vw;
+
+	/* structure */
+	overflow: auto;
+
+	/* position */
+	position: relative;
+
+	/* text */
+	font-family: Arial, Helvetica, sans-serif;
+
+	/* color */
+	color: black;
+	background-color: #AEC6CF;
+
+	/* flexbox */
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	box-sizing: border-box; /* Ensure padding and border are included in width/height */
+}
+
+.main_container {
+	display: flex;
+	flex-direction: column; /* Default to vertical layout for portrait mode */
+	justify-content: center;
+	align-items: center;
+	padding: 20px; /* Add some padding around the container */
+	box-sizing: border-box; /* Ensure padding is included in width/height */
+}
+
+/* Landscape mode: Form inputs to the left of the canvas */
+@media (min-aspect-ratio: 16/9) {
+	.main_container {
+		flex-direction: row; /* Align items horizontally */
+		justify-content: flex-start; /* Align items to the start of the row */
+		gap: 20px; /* Space between the form and canvas */
+	}
+}
+
+.user_input_container {
+	display: flex;
+	flex-direction: column; /* Stack form and button vertically */
+	align-items: center; /* Center the button horizontally */
+	width: 100%; /* Ensure container takes full width */
+	box-sizing: border-box; /* Ensure padding is included in width/height */
+}
+
+/* Portrait mode: Form inputs underneath the canvas */
+@media (max-aspect-ratio: 9/16) {
+	.user_input_container {
+		margin-bottom: 20px; /* Space between form and canvas */
+	}
+}
+
+#maze_form {
+	display: grid;
+	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
+	grid-gap: 10px;
+	background-color: #f0f0f0;
+	padding: 1.5% 2%;
+	border-radius: 15px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	max-width: 400px; /* Ensure form doesn’t get too wide */
+	width: 100%;
+	box-sizing: border-box; /* Include padding and border in width */
+}
+
+#maze_form label {
+	margin: 0;
+	font-size: clamp(12px, min(3.75vw, 3.75vh), 110%);
+	color: #333;
+	text-align: right; /* Align labels to the right */
+}
+
+#maze_form input[type="number"],
+#maze_form select {
+	width: 100%;
+	max-width: 100%; /* Ensure inputs don't exceed form container */
+	padding: 0.4rem;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: clamp(11px, min(3.75vw, 3.75vh), 100%);
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	box-sizing: border-box; /* Include padding and border in width */
+}
+
+#maze_form input[type="checkbox"] {
+	width: auto;
+	margin-right: 0.5rem;
+}
+
+#maze_form div {
+	display: flex;
+	align-items: center;
+}
+
+#maze_form span {
+	margin-left: 0.5rem;
+	font-size: clamp(10px, min(3.75vw, 3.75vh), 100%);
+	color: #333;
+}
+
+#maze_form button {
+	background-color: #66cdaa;
+	color: white;
+	border: none;
+	padding: 0.7rem 1.2rem;
+	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
+	border-radius: 5px;
+	cursor: pointer;
+	grid-column: span 2; /* Makes buttons span across both columns */
+	margin-top: 10px;
+}
+
+#maze_form button:hover {
+	background-color: #5bb497;
+}
+
+/* Fullscreen Button */
+#fullscreen_button {
+	background-color: #4682b4;
+	color: white;
+	padding: 0.7rem 1.2rem;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
+	margin-top: 20px; /* Space between the form and the fullscreen button */
+}
+
+/* Hover effect for fullscreen button */
+#fullscreen_button:hover {
+	background-color: #3c7291;
+}
+
+#canvas {
+	margin-top: 20px; /* Default margin for portrait mode */
+}

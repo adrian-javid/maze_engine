@@ -1,5 +1,5 @@
-# Maze Solver
-It is a program that solves mazes.
+# Maze Engine
+It is a program that generates and solves mazes.
 
 It generates a maze based on a seed, then displays a window displaying a specified search algorithm solving the maze in real time.
 
@@ -10,31 +10,71 @@ The executable is in the `build` directory.
 Run with `help` to see the program's parameters.
 
 ```PowerShell
-# Windows
-.\build\Windows\solve_maze.exe help
+# Windows release build
+.\build\Windows\release\run\maze_engine.exe help
+
+# Windows debug build
+.\build\Windows\debug\run\maze_engine.exe help
 ```
 
-```bash
-# Linux
-./build/Linux/solve_maze help
+```Shell
+# Linux release build
+./build/Linux/release/run/maze_engine help
+
+# Linux debug build
+/build/Linux/debug/run/maze_engine help
 ```
 
-<!-- `size=550 seed=7722214 grid=square search=greedy delay=0` -->
+<!--
+	Interesting program arguments for future reference:
+	`size=550 seed=7722214 grid=square search=greedy delay=0`
+-->
 
 ## Building
 
 To build, you need to [install the neccessary dependencies for your platform](#dependencies).
 
-Run `scons` on the command-line in the root of the project to build the executable in the generated `build` directory, regardless of the platform.
+Running `scons` on the command-line will build the default target, which is the release build for your native platform, `build/<platform>/release/run/maze_engine<file_extension>`.
 
-To also generate compile commands to be used for intellisense in an editor such as VSCode, run `scons .`.
-The `compile_commands.json` are put into the `build/<platform>` directory.
+To build all available targets&mdash;including the test suite and the JSON compilation database&mdash;run `scons .` on the command-line.
 
-To clean the build, run `scons -c` or `scons -c .` respectively.
+The test suite executable is put at `build/<platform>/<build_type>/run/test_suite<file_extension>`.
 
-> Note: If you want to move the Windows executable `solve_maze.exe` to a different location,
-> move the `SDL2.dll` along with it to the same directory.
-> The executable needs that dynamic-link library to run.
+The JSON compilation database is put at `build/<platform>/<build_type>/compile_commands.json`. You can configure Visual Studio Code to use this database with the Microsoft C++ extension, for example:
+> `.vscode/c_cpp_properties.json`
+```JSON
+{
+	"configurations": [
+		{
+			"name": "Win32",
+			"compileCommands": "build\\Windows\\debug\\compile_commands.json",
+			"cStandard": "c17", "cppStandard": "c++17"
+		},
+		{
+			"name": "Linux",
+			"compileCommands": "build/Linux/debug/compile_commands.json",
+			"cStandard": "c17", "cppStandard": "c++17"
+		},
+		{
+			"name": "emscripten",
+			"compileCommands": "build/web/release/compile_commands.json",
+			"cStandard": "c17", "cppStandard": "c++17"
+		}
+	],
+	"version": 4
+}
+```
+
+Also, if you would like to build a specific file,
+you can run `scons <file>` where `<file>` is a file you want to build.
+For example, to build only the compilation database for the debug build on Windows,
+you would run `scons .\build\Windows\debug\compile_commands.json`.
+
+To clean the build, run `scons -c` or `scons -c .`, for the default target or all targets, respectively.
+
+> Note: If you want to move the Windows executable `maze_engine.exe` to a different location,
+move `SDL2.dll` along with it to the same directory.
+The executable needs that dynamic-link library to run.
 
 ## Dependencies
 
@@ -71,7 +111,7 @@ This project requires [SDL](https://www.libsdl.org/). The method of downloading 
 
 #### SDL for 64-bit Windows
 
-Run the [`fetch_libraries.py`](./fetch_libraries.py) Python script from the root of the project to fetch the SDL2 library for Windows. This script fetches and unpacks [`SDL2-devel-2.28.5-VC.zip`](https://github.com/libsdl-org/SDL/releases/release-2.28.5/) from GitHub.
+Run the [`fetch_libraries.py`](./fetch_libraries.py) Python script from the root of the project to fetch the SDL2 library for Windows. This script fetches and unpacks the main SDL2 library from the [SDL releases on GitHub](https://github.com/libsdl-org/SDL/releases) and the SDL2 Mixer library from the [SDL Mixer releases on GitHub](https://github.com/libsdl-org/SDL_mixer/releases).
 
 ```PowerShell
 py fetch_libraries.py

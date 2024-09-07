@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Title -->
+	<title>Maze Engine</title>
+	<meta name="title" content="Maze Engine">
+	<meta property="og:title" content="Maze Engine">
+
+	<link rel="icon" href="https://adrian-javid.github.io/favicon.png" type="image/png">
+	<meta name="author" content="Adrian">
+
+	<!-- Preview Image -->
+	<meta property="og:image" content="https://adrian-javid.github.io/maze_engine/preview_image.png">
+	<meta property="og:image:secure_url" content="https://adrian-javid.github.io/maze_engine/preview_image.png">
+	<meta property="og:image:type" content="image/png">
+
+	<!-- Preview Video -->
+	<meta property="og:video" content="https://adrian-javid.github.io/maze_engine/preview_video.mp4">
+	<meta property="og:video:secure_url" content="https://adrian-javid.github.io/maze_engine/preview_video.mp4">
+	<meta property="og:video:type" content="video/mp4">
+	<meta property="og:video:width" content="852">
+	<meta property="og:video:height" content="480">
+
+	<!-- Description -->
+	<meta name="description" content="An application that generates and solves mazes.">
+	<meta property="og:description" content="An application that generates and solves mazes.">
+
+	<meta property="og:url" content="https://adrian-javid.github.io/maze_engine/">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Adrian's Website">
+	<meta property="og:locale" content="en_US">
+
+	<style>
+		.emscripten { padding-right: 0; margin-left: auto; margin-right: auto; }
+		/* "The canvas *must not* have any border or padding, or mouse coords will be wrong." */
+		canvas.emscripten { border: 0px none; background-color: black; }
+	</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<meta name="theme-color" content="#AEC6CF">
+</head>
+
+<body>
+	<div class="main_container">
+		<div class="user_input_container">
+			<form id="maze_form">
+				<label for="maze_type">Grid</label>
+				<select id="maze_type" name="maze_type" required>
+					<option value="square" selected>Square</option>
+					<option value="hexagon">Hexagon</option>
+				</select>
+
+				<label for="maze_size">Size</label>
+				<input type="number" id="maze_size" name="maze_size" min="1" max="50" value="5" step="1" required>
+
+				<label for="seed">Seed</label>
+				<input type="number" id="seed" name="seed" min="0" max="65535" value="0" step="1" required>
+
+				<label for="maze_wrap">Wrap</label>
+				<input type="checkbox" id="maze_wrap" name="maze_wrap">
+
+				<label for="search_type">Algorithm</label>
+				<select id="search_type" name="search_type" required>
+					<option value="depth" selected>Depth-First Search</option>
+					<option value="breadth">Breadth-First Search</option>
+					<option value="greedy">Greedy Best-First Search</option>
+				</select>
+
+				<label for="sound_type">Sound</label>
+				<select id="sound_type" name="sound_type" required>
+					<option value="none">None</option>
+					<option value="piano">Piano</option>
+					<option value="synthesizer" selected>Synthesizer</option>
+				</select>
+
+				<label for="delay">Delay</label>
+				<div style="display: inline-block;">
+					<input type="number" id="delay" name="delay" min="0" max="65535" value="60" step="1" required>
+					<span>milliseconds</span>
+				</div>
+		
+				<button id="submit_button" type="submit" disabled>Start</button>
+			</form>
+
+			<!-- Currently not supporting fullscreen. -->
+			<!-- <button id="fullscreen_button" disabled>Fullscreen</button> -->
+		</div>
+
+		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1>
+			(Your browser does not support the HTML5 canvas tag.)
+		</canvas>
+	</div>
+
+	<script>
+		var Module = {
+			print: (function() {
+				return (...args) => {
+					const text = args.join(' ');
+					console.log(text);
+				};
+			})(),
+			printErr: function(text) {
+				if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+				console.error(text);
+			},
+			canvas: (() => {
+				const canvas = document.getElementById('canvas');
+				canvas.addEventListener("webglcontextlost", (e) => { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+				return canvas;
+			})()
+		};
+
+		function resizeCanvas() {
+			const length = Math.min(window.innerWidth, window.innerHeight) * 0.80;
+			Module.Window_setSize(length, length);
+		}
+
+		function onMazeEngineApplicationInitialized() {
+			resizeCanvas();
+
+			window.addEventListener("resize", resizeCanvas);
+
+			document.getElementById("maze_form").addEventListener("submit", function(event) {
+				event.preventDefault();
+
+				const formData = new FormData(event.target);
+
+				const mazeType = (() => {
+					switch (formData.get("maze_type")) {
+						case "square" : return Module.MazeEngine_MazeType.SQUARE ;
+						case "hexagon": return Module.MazeEngine_MazeType.HEXAGON;
+					}
+				})();
+
+				const searchType = (() => {
+					switch (formData.get("search_type")) {
+						case "depth"  : return Module.MazeEngine_SearchType.DEPTH  ;
+						case "breadth": return Module.MazeEngine_SearchType.BREADTH;
+						case "greedy" : return Module.MazeEngine_SearchType.GREEDY ;
+					}
+				})();
+
+				const soundType = (() => {
+					switch (formData.get("sound_type")) {
+						case "none"       : return Module.MazeEngine_SoundType.NONE       ;
+						case "piano"      : return Module.MazeEngine_SoundType.PIANO      ;
+						case "synthesizer": return Module.MazeEngine_SoundType.SYNTHESIZER;
+					}
+				})();
+
+				Module.MazeEngine_resetPerformer(
+					mazeType, parseInt(formData.get("maze_size"), 10),
+					parseInt(formData.get("seed"), 10), Boolean(formData.get("maze_wrap")),
+					searchType, soundType,
+					parseInt(formData.get("delay"), 10)
+				);
+			});
+
+			document.getElementById("submit_button").disabled = false;
+
+			const fullscreenButton = document.getElementById("fullscreen_button");
+
+			if (fullscreenButton) {
+				fullscreenButton.addEventListener("click", function() {
+					Module.Window_setFullscreen(true);
+				});
+
+				fullscreenButton.disabled = false;
+			}
+		}
+	</script>
+
+	<!-- This should eventually call `onMazeEngineApplicationInitialized`. -->
+	<script async type="text/javascript" src="generated/maze_engine.js"></script>
+
+</body>
+
+</html>
