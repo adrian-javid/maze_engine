@@ -1,4 +1,8 @@
 * text=auto
 
-# Catch2 library
+# Catch2 library is vendored.
 source/test/catch2/**/* linguist-vendored
+
+# SCons build scripts use Python.
+**/SConstruct linguist-language=Python
+**/SConscript linguist-language=Python
