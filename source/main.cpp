@@ -113,8 +113,9 @@ int main(int const argc, char *argv[]) {
 		Mix_CloseAudio();
 		Mix_Quit();
 
-		if (App::Window::window) SDL_DestroyWindow(App::Window::window);
+		// Free the renderer before freeing the associated window.
 		if (App::Window::renderer) SDL_DestroyRenderer(App::Window::renderer);
+		if (App::Window::window) SDL_DestroyWindow(App::Window::window);
 
 		SDL_Quit();
 	});
