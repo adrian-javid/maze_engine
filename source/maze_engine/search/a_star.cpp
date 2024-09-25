@@ -24,7 +24,7 @@ auto MazeEngine::aStarSearch(
 	Vector2::HashMap<int> costMap{{start, 0}};
 
 	while (not frontier.empty()) {
-		MetaVertex const vertex(std::move(frontier.top()));
+		MetaVertex const vertex(frontier.top());
 		frontier.pop();
 
 		if (processKey != nullptr and processKey(vertex.key)) break;
