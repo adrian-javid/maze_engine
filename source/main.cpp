@@ -119,7 +119,7 @@ int main(int const argc, char *argv[]) {
 		SDL_Quit();
 	});
 
-	{
+	/* configure the sound tables with audio data */ {
 		using namespace App::AudioData;
 
 		static constexpr std::size_t byteCount{std::tuple_size_v<SimpleSound> * sizeof(SimpleSound::value_type)};
