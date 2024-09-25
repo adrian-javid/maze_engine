@@ -157,7 +157,44 @@ int main(int const argc, char *argv[]) {
 		The software renderer supports VSync, so can always fallback on software renderer
 		unless not using SDL renderers.
 	*/
-	App::Window::renderer = SDL_CreateRenderer(App::Window::window, -1, SDL_RENDERER_PRESENTVSYNC);
+
+	assert(std::char_traits<char>::length(SDL_GetError()) == std::size_t{0u});
+	SDL_ClearError();
+
+	App::Window::renderer = SDL_CreateRenderer(
+		App::Window::window,
+		/* initialize the first renderer supporting the requested flags */ int{-1},
+		#ifdef __linux__
+			#ifdef __EMSCRIPTEN__
+				#error The Emscripten build does not have to explicitly use a software renderer.
+			#endif
+			/*
+				Ideally, there should be a command-line option
+				to toggle between a software renderer and hardware renderer on program start.
+
+				Prefering software renderer on Linux to avoid this error:
+				"
+				MESA: error: ZINK: failed to choose pdev
+				glx: failed to create drisw screen
+				"
+			*/
+			SDL_RENDERER_SOFTWARE
+		#else
+			SDL_RENDERER_PRESENTVSYNC
+		#endif
+	);
+
+	#ifdef __linux__
+	if (App::Window::renderer != nullptr and std::char_traits<char>::length(SDL_GetError()) > std::size_t{0u}) {
+		#ifdef __EMSCRIPTEN__
+		#error The Emscripten build may not be required to exit in this case.
+		#endif
+		App::errorExit(
+			"There was an error with the renderer: \"", SDL_GetError(),"\"\n"
+			"Consider using a software renderer instead of a hardware renderer."
+		);
+	}
+	#endif
 
 	if (App::Window::renderer == nullptr)
 		App::Window::renderer = SDL_CreateRenderer(App::Window::window, -1, 0u);
