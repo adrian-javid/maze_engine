@@ -256,6 +256,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 				case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
 				case MazeEngine::Maze::Direction::south: soundInstrument->play(0u); break;
 				case MazeEngine::Maze::Direction::west : soundInstrument->play(2u); break;
+				default: break;
 			}
 		} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
 			Direction const direction{<:offsetVector, isSimpleOffsetVector:>() -> MazeEngine::Maze::Direction {
@@ -279,6 +280,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 				case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u); break;
 				case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u); break;
 				case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u); break;
+				default: break;
 			}
 		}
 	}, mazeVariant);
