@@ -202,6 +202,8 @@ int main(int const argc, char *argv[]) {
 	// Assert renderer was successfully created.
 	assert(App::Window::renderer != nullptr);
 
+	if (App::Window::renderer == nullptr) App::errorExit("Failed to create renderer for window: \"", SDL_GetError(), "\"");
+
 	SDL_SetWindowTitle(App::Window::window, windowTitle);
 
 	#ifndef __EMSCRIPTEN__
