@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <optional>
+#include <cstdint>
 
 namespace MazeEngine { struct Maze; }
 
