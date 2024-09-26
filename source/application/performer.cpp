@@ -2,6 +2,7 @@
 
 #include "maze_engine/maze.hpp"
 #include "maze_engine/auxiliary.hpp"
+#include "maze_engine/maze_generation_iterator.hpp"
 
 #include <iostream>
 
@@ -115,7 +116,11 @@ App::Performer::Performer(
 			That is why, here, the maze needs to be generated before the
 			maze search iterator is constructed.
 		*/
-		getMaze().generate(seed, mazeWrap);
+		for (
+			MazeEngine::MazeGenerationIterator iterator(getMaze(), seed, mazeWrap);
+			not iterator.isDone();
+			iterator.advance()
+		);
 
 		switch (searchType) {
 			case SearchType::depth:
