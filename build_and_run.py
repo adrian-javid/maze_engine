@@ -37,7 +37,7 @@ def _main(argList: list[str]) -> None|str:
 		return F"Failed to build executable `{executablePath}`; exit code was `{exitCode}`."
 
 	if (exitCode := subprocess.run([executablePath]).returncode) != os.EX_OK:
-		return F"Executable `{executablePath}` returned with error code `{exitCode}`."
+		return F"Executable `{executablePath}` returned with exit code `{exitCode}`."
 
 	return None
 
