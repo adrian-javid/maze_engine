@@ -20,7 +20,7 @@ class MazeEngine::MazeGenerationIterator final {
 
 		void advance();
 
-		[[nodiscard]] FORCE_INLINE inline bool isDone() { return wallIterator == wallList.cend(); }
+		[[nodiscard]] FORCE_INLINE inline bool isDone() const { return wallIterator == wallList.cend(); }
 
 	private:
 		Vector2::HashMap<UnionFinder::Identifier> identity;
