@@ -171,7 +171,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 	auto const &history{getMazeSearchIterator().getHistory()};
 
 	/*
-		Getting the edge that has the main vertex of interest and its parent vertex.
+		Get the edge that has the main vertex of interest and its parent vertex.
 	*/
 	auto const edge(history.find(mainVertex));
 
@@ -203,7 +203,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 	MazeEngine::Vector2 const &parentVertex{edge->/* parent vertex */second};
 
 	/*
-		This offset vector represents the direciton in a vector form.
+		This offset vector represents the direction in a vector form.
 
 		We need to calculate the enumerated direction from this.
 	*/
