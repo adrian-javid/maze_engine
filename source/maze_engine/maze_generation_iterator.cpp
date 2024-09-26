@@ -32,4 +32,6 @@ void MazeEngine::MazeGenerationIterator::advance() {
 		maze.at(wall.tileKey) ^= wall.type; // flip the wall bit to zero
 		cyclePrevention.unionThem(thisId, adjId);
 	}
+
+	++wallIterator;
 }
