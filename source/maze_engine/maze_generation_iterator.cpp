@@ -1,6 +1,6 @@
 #include "maze_generation_iterator.hpp"
 
-[[nodiscard]] explicit MazeEngine::MazeGenerationIterator::MazeGenerationIterator(Maze &paramMaze, unsigned int const seed, bool const wrap):
+MazeEngine::MazeGenerationIterator::MazeGenerationIterator(Maze &paramMaze, unsigned int const seed, bool const wrap):
 	cyclePrevention(paramMaze.getTileCount()), maze{paramMaze}
 {
 	UnionFinder::Identifier indentifierCount{0};
@@ -19,7 +19,7 @@
 	wallIterator = wallList.cbegin();
 }
 
-inline void MazeEngine::MazeGenerationIterator::advance() {
+void MazeEngine::MazeGenerationIterator::advance() {
 	assert(not isDone());
 	if (isDone()) return;
 
