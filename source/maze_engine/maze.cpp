@@ -23,7 +23,7 @@ void MazeEngine::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Ve
 }
 
 auto MazeEngine::Maze::generate(unsigned int const seed, bool const wrap) -> void {
-	UnionFinder::Identifier indentifierCount{0};
+	UnionFinder::Identifier identifierCount{0};
 	Vector2::HashMap<UnionFinder::Identifier> identity;
 
 	struct Wall {
@@ -33,8 +33,8 @@ auto MazeEngine::Maze::generate(unsigned int const seed, bool const wrap) -> voi
 
 	std::vector<Wall> wallList;
 
-	forEachKey([this, wrap, &wallList, &identity, &indentifierCount](Vector2 const &key) {
-		identity.insert({key, indentifierCount++});
+	forEachKey([this, wrap, &wallList, &identity, &identifierCount](Vector2 const &key) {
+		identity.insert({key, identifierCount++});
 		forEachPrincipalDirection([this, wrap, &wallList, &key](Direction const direction) {
 			if (not wrap and not isInBounds(key + getOffset(direction))) return;
 			if (checkAdjacent(key, direction).hasWall) wallList.push_back({key, direction});
