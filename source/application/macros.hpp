@@ -9,7 +9,7 @@
 	#elif defined(_MSC_VER)
 		#define FORCE_INLINE [[msvc::forceinline]]
 	#else
-		#define FORCE_INLINE [[]]
+		#define FORCE_INLINE /* unimplemented for this compiler */
 	#endif
 #else
 	#error Macro `FORCE_INLINE` is already defined.
@@ -27,7 +27,9 @@
 		section \
 		_Pragma("GCC diagnostic pop")
 	#else
-		#define SUPPRESS_WARNINGS(section) section
+		#define SUPPRESS_WARNINGS(section) \
+		/* unimplemented for this compiler */ \
+		section
 	#endif
 #else
 	#error Macro `SUPPRESS_WARNINGS` is already defined.
@@ -41,7 +43,9 @@
 		section \
 		_Pragma("GCC diagnostic pop")
 	#else
-		#define SUPPRESS_DEPRECATION_WARNINGS(section) section
+		#define SUPPRESS_DEPRECATION_WARNINGS(section) \
+		/* unimplemented for this compiler */ \
+		section
 	#endif
 #else
 	#error Macro `SUPPRESS_DEPRECATION_WARNINGS` is already defined.
