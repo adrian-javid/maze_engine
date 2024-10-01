@@ -16,7 +16,7 @@ void MazeEngine::Maze::forEachValidDirection(std::function<void(Direction const)
 }
 
 void MazeEngine::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &forThisNeighbor) const {
-	forEachValidDirection([this, &key, &forThisNeighbor](Direction const direction) {
+	forEachValidDirection([this, &key, &forThisNeighbor](Direction const direction) -> void {
 		auto const &&[neighbor, wallFlag]{checkAdjacent(key, direction)};
 		if (not wallFlag) forThisNeighbor(neighbor);
 	});
