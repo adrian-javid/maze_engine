@@ -50,7 +50,7 @@ class App::Performer {
 		SoundTable const *soundInstrument;
 		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge;
 
-	private  /* member state; initialized here */:
+	private /* member state; initialized here */:
 
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
@@ -103,6 +103,7 @@ class App::Performer {
 			return markedTileSet;
 		}
 
+		[[nodiscard]] FORCE_INLINE
 		decltype(pathTileSet) const & getPathTileSet() const {
 			return pathTileSet;
 		}
