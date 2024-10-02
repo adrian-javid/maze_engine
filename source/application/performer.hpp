@@ -12,6 +12,7 @@
 #include "simple_directmedia_layer.hpp"
 #include "timer.hpp"
 #include "sound_table.hpp"
+#include "maze_engine/maze_generation_iterator.hpp"
 
 namespace App {
 	class Performer;
@@ -39,6 +40,10 @@ class App::Performer {
 		MazeEngine::Vector2 mazeStart;
 		MazeEngine::Vector2 mazeEnd;
 		/*
+			Careful, as the maze generation iterator holds a reference to the maze.
+		*/
+		MazeEngine::MazeGenerationIterator mazeGenerationIterator;
+		/*
 			Careful, as the maze search iterator holds a pointer to the maze.
 		*/
 		std::variant<
@@ -59,8 +64,8 @@ class App::Performer {
 			`trailEdge->second` is the parent vertex
 		*/
 		enum struct State : std::uint_least8_t {
-			searching = 1u, backtracking, complete
-		} state{State::searching};
+			generating = 1u, searching, backtracking, complete
+		} state{State::generating};
 
 	public:
 

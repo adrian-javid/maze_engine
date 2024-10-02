@@ -104,6 +104,7 @@ App::Performer::Performer(
 				return {0, maze.getRadius()};
 		}
 	}, mazeVariant)),
+	mazeGenerationIterator(getMaze(), seed, mazeWrap),
 	mazeSearchIteratorVariant([this, searchType, seed, mazeWrap]() -> decltype(Performer::mazeSearchIteratorVariant) {
 		/*
 			The maze starts out fully walled.
@@ -116,11 +117,13 @@ App::Performer::Performer(
 			That is why, here, the maze needs to be generated before the
 			maze search iterator is constructed.
 		*/
+		#if false
 		for (
 			MazeEngine::MazeGenerationIterator iterator(getMaze(), seed, mazeWrap);
 			not iterator.isDone();
 			iterator.advance()
 		);
+		#endif
 
 		switch (searchType) {
 			case SearchType::depth:
@@ -295,6 +298,22 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 
 void App::Performer::update() {
 	if (timer.update()) switch (state) {
+		case State::generating: {
+			if (mazeGenerationIterator.isDone()) goto switchToSearching;
+
+			mazeGenerationIterator.advance();
+
+			return;
+		}
+
+		switchToSearching: {
+			std::cout << "Finished generating the maze.\n";
+
+			state = State::searching;
+
+			[[fallthrough]];
+		}
+
 		case State::searching: {
 			if (getMazeSearchIterator().isEnd()) goto switchToBacktracking;
 
