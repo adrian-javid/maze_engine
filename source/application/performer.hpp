@@ -48,6 +48,7 @@ class App::Performer {
 		> mazeSearchIteratorVariant;
 		Timer timer;
 		SoundTable const *soundInstrument;
+		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge;
 
 	private  /* member state; initialized here */:
 
@@ -57,7 +58,6 @@ class App::Performer {
 			`trailEdge->first` is the child vertex
 			`trailEdge->second` is the parent vertex
 		*/
-		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge{};
 		enum struct State : std::uint_least8_t {
 			searching = 1u, backtracking, complete
 		} state{State::searching};

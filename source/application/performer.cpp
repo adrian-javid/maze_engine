@@ -155,7 +155,8 @@ App::Performer::Performer(
 			case SoundType::synthesizer:
 				return &synthesizer;
 		}
-	}()}
+	}()},
+	trailEdge(getMazeSearchIterator().getHistory().cend())
 {
 	assert(not mazeVariant.valueless_by_exception());
 	assert(not mazeSearchIteratorVariant.valueless_by_exception());
@@ -322,6 +323,8 @@ void App::Performer::update() {
 
 		case State::backtracking: {
 			MazeEngine::Vector2::HashMap<MazeEngine::Vector2> const &history{getMazeSearchIterator().getHistory()};
+
+			if (trailEdge == history.cend()) return;
 
 			if (trailEdge->/* child vertex */first == mazeStart) goto switchToComplete;
 
