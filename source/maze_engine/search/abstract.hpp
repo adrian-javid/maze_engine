@@ -77,11 +77,7 @@ template <typename StorageT>
 class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 	private:
 		Maze const *maze;
-
-	public:
 		Vector2 key;
-
-	private:
 		StorageT storage;
 		Vector2::HashMap<Vector2> history;
 
@@ -95,6 +91,14 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 		}
 
 	public:
+
+		/*
+			The way this constructor is implemented,
+			the first vertex will be processed twice.
+
+			That's okay for the purposes of this program,
+			even though that is not how I prefer for it to work.
+		*/
 		explicit AbstractSearchIterator(
 			Maze const &mazeReference,
 			Vector2 start,
@@ -103,7 +107,7 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 			maze(&mazeReference), key(std::move(start)), storage(std::move(storageValue)), history()
 		{
 			history.insert({key, key});
-			gatherNeighbors();
+			storage.push(key);
 		}
 
 		static Vector2 popFrom(StorageT &storage) {
@@ -121,6 +125,7 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 
 		void advance() override {
 			assert(not storage.empty());
+			if (storage.empty()) return;
 
 			key = popFrom(storage);
 			gatherNeighbors();
