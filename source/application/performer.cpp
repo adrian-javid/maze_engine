@@ -315,10 +315,10 @@ void App::Performer::update() {
 		}
 
 		case State::searching: {
-			if (getMazeSearchIterator().isEnd()) goto switchToBacktracking;
+			if (getMazeSearchIterator().isDone()) goto switchToBacktracking;
 
 			/* process vertex */ {
-				MazeEngine::Vector2 const &vertex{*getMazeSearchIterator()};
+				MazeEngine::Vector2 const &vertex{getMazeSearchIterator().getVector()};
 
 				playSound(vertex);
 
@@ -327,7 +327,7 @@ void App::Performer::update() {
 				if (vertex == mazeEnd) goto switchToBacktracking;
 			}
 
-			++getMazeSearchIterator();
+			getMazeSearchIterator().advance();
 
 			return;
 		}

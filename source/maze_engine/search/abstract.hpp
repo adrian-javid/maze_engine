@@ -64,9 +64,9 @@ auto MazeEngine::abstractSearch(
 
 class MazeEngine::MazeSearchIterator {
 	public:
-		virtual MazeSearchIterator &operator++() = 0;
-		[[nodiscard]] virtual Vector2 const &operator*() const = 0;
-		[[nodiscard]] virtual bool isEnd() const = 0;
+		virtual void advance() = 0;
+		virtual Vector2 const &getVector() const = 0;
+		[[nodiscard]] virtual bool isDone() const = 0;
 		[[nodiscard]] virtual Vector2::HashMap<Vector2> const &getHistory() const = 0;
 		[[nodiscard]] explicit MazeSearchIterator() = default;
 		[[nodiscard]] explicit MazeSearchIterator(MazeSearchIterator const &) = default;
@@ -119,22 +119,20 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 			return key;
 		}
 
-		AbstractSearchIterator &operator++() override {
+		void advance() override {
 			assert(not storage.empty());
 
 			key = popFrom(storage);
 			gatherNeighbors();
-
-			return *this;
 		}
 
-		[[nodiscard]] Vector2 const &operator*() const override { return key; }
+		[[nodiscard]] Vector2 const &getVector() const override { return key; }
 
 		[[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const override { return history; }
 
 		[[nodiscard]] StorageT const &getStorage() const { return storage; }
 
-		[[nodiscard]] bool isEnd() const override { return storage.empty(); };
+		[[nodiscard]] bool isDone() const override { return storage.empty(); };
 };
 
 #endif
