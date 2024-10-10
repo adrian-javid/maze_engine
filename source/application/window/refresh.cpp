@@ -49,7 +49,7 @@ void App::Window::refresh() {
 	float const windowWidthValue {static_cast<float>(windowWidth )};
 	float const windowHeightValue{static_cast<float>(windowHeight)};
 
-	auto const mainColorGetter([
+	auto const tileColorTripletGetter([
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
 		&startEndColorTriplet
 	](MazeEngine::Vector2 const &key) -> ColorTriplet {
@@ -80,7 +80,7 @@ void App::Window::refresh() {
 	std::visit(
 		[
 			windowWidthValue, windowHeightValue,
-			&mainColorGetter, &wallColorTriplet
+			&tileColorTripletGetter, &wallColorTriplet
 		](auto and(maze)) -> void {
 			using MazeT = std::decay_t<decltype(maze)>;
 
@@ -88,12 +88,12 @@ void App::Window::refresh() {
 				std::forward<decltype(maze)>(maze),
 				{0.0f, 0.0f},
 				windowWidthValue, windowHeightValue,
-				mainColorGetter, wallColorTriplet
+				tileColorTripletGetter, wallColorTriplet
 			); else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) drawHexagonMaze(
 				std::forward<decltype(maze)>(maze),
 				{windowWidthValue / 2.0f, windowHeightValue / 2.0f},
 				windowWidthValue, windowHeightValue,
-				mainColorGetter, wallColorTriplet
+				tileColorTripletGetter, wallColorTriplet
 			);
 		},
 		performer->getUnderlyingMaze()
