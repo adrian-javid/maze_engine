@@ -16,7 +16,7 @@ void App::Window::drawSquareMaze(
 	MazeEngine::SquareMaze const &maze,
 	SDL_FPoint const &position,
 	float const width, float const height,
-	ColorGetter const getMainColorTriplet,
+	ColorTripletGetter const tileColorTripletGetter,
 	ColorTriplet const &wallColorTriplet
 ) {
 	int const columnCount{maze.getColumnCount()};
@@ -30,7 +30,7 @@ void App::Window::drawSquareMaze(
 
 	for (MazeEngine::Vector2 key(0); key.value1 < rowCount; ++key.value1) {
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
-			auto const &&[mainColor1, mainColor2, mainColor3]{getMainColorTriplet(key)};
+			auto const &&[mainColor1, mainColor2, mainColor3]{tileColorTripletGetter(key)};
 
 			auto const &&[
 				outerNorthwestPoint, outerNortheastPoint,

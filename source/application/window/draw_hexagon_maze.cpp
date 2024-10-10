@@ -80,7 +80,7 @@ void App::Window::drawHexagonMaze(
 	MazeEngine::HexagonMaze const &maze,
 	SDL_FPoint const &center,
 	float const width, float const height,
-	ColorGetter const getMainColorTriplet,
+	ColorTripletGetter const tileColorTripletGetter,
 	ColorTriplet const &wallColorTriplet
 ) {
 	int const radius{maze.getRadius()};
@@ -115,11 +115,11 @@ void App::Window::drawHexagonMaze(
 			float const hexagonCenterX{center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset};
 
 			auto const drawTile([
-				&getMainColorTriplet, &wallColor1, &wallColor2, &wallColor3,
+				&tileColorTripletGetter, &wallColor1, &wallColor2, &wallColor3,
 				hexagonCenterX, hexagonWidth, hexagonHeight,
 				&maze
 			](MazeEngine::Vector2 const &tileKey, float const hexagonCenterY) -> void {
-				auto const &&[mainColor1, mainColor2, mainColor3]{getMainColorTriplet(tileKey)};
+				auto const &&[mainColor1, mainColor2, mainColor3]{tileColorTripletGetter(tileKey)};
 				auto const &&[
 					outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
 					outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint
