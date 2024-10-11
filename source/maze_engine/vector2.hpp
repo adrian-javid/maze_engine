@@ -105,7 +105,7 @@ struct MazeEngine::Vector2 {
 		);
 	}};
 
-	/// @brief An unorderd set of `Vector2`.
+	/// @brief An unordered set of `Vector2`.
 	using HashSet = std::unordered_set<Vector2, Hash>;
 
 	/**
