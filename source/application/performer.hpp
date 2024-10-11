@@ -34,6 +34,10 @@ class App::Performer {
 
 		static SoundTable synthesizer;
 
+		enum struct State : std::uint_least8_t {
+			generating = 1u, searching, backtracking, complete
+		};
+
 	private /* member state; initialized by the constructor */:
 
 		std::variant<MazeEngine::SquareMaze, MazeEngine::HexagonMaze> mazeVariant;
@@ -63,9 +67,7 @@ class App::Performer {
 			`trailEdge->first` is the child vertex
 			`trailEdge->second` is the parent vertex
 		*/
-		enum struct State : std::uint_least8_t {
-			generating = 1u, searching, backtracking, complete
-		} state{State::generating};
+		State state{State::generating};
 
 	public:
 
@@ -82,6 +84,8 @@ class App::Performer {
 		Performer & operator=(Performer const &) = delete;
 		Performer(Performer &&) = delete;
 		Performer & operator=(Performer &&) = delete;
+
+		[[nodiscard]] FORCE_INLINE constexpr State getState() const { return state; }
 
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Vector2 const & getMazeStart() const {
