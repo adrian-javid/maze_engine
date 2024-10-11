@@ -12,6 +12,7 @@ namespace App {
 }
 
 void App::Window::refresh() {
+	assert(performer.has_value());
 
 	static constexpr HslaColor
 		startEndColor    ( 91.0, 1.0, 0.49),
