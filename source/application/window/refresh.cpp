@@ -76,7 +76,14 @@ void App::Window::refresh() {
 	](MazeEngine::MazeGenerationIterator::Wall const &wall) -> ColorTriplet {
 		switch (performer->getState()) {
 			case Performer::State::generating: {
-				return {};
+				if (
+					auto const &markedWalls{performer->getMarkedWallSet()};
+					markedWalls.find(wall) != markedWalls.cend()
+				) {
+					return wallColorTriplet;
+				} else {
+					return {};
+				}
 			}
 
 			default: return wallColorTriplet;
