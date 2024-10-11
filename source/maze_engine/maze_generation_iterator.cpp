@@ -23,7 +23,7 @@ void MazeEngine::MazeGenerationIterator::advance() {
 	assert(not isDone());
 	if (isDone()) return;
 
-	Wall const &wall(*wallIterator);
+	Wall const &wall{*wallIterator};
 
 	UnionFinder::Identifier const thisId{identity.at(wall.tileKey)};
 	UnionFinder::Identifier const adjId{identity.at(maze.checkAdjacent(wall.tileKey, wall.type).key)};
