@@ -57,16 +57,17 @@ class App::Performer {
 		> mazeSearchIteratorVariant;
 		Timer timer;
 		SoundTable const *soundInstrument;
+		/*
+			`trailEdge->first` is the child vertex
+			`trailEdge->second` is the parent vertex
+		*/
 		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge;
 
 	private /* member state; initialized here */:
 
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
-		/*
-			`trailEdge->first` is the child vertex
-			`trailEdge->second` is the parent vertex
-		*/
+
 		State state{State::generating};
 
 	public:
