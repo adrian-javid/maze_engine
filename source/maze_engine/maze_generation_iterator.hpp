@@ -42,6 +42,13 @@ class MazeEngine::MazeGenerationIterator final {
 
 		[[nodiscard]] FORCE_INLINE inline bool isDone() const { return wallIterator == wallList.cend(); }
 
+		[[nodiscard]] inline Wall const * getWall() const {
+			if (isDone())
+				return nullptr;
+			else
+				return &*wallIterator;
+		}
+
 	private:
 		Vector2::HashMap<UnionFinder::Identifier> identity;
 		std::vector<Wall> wallList;
