@@ -82,9 +82,9 @@ std::ostream &MazeEngine::operator<<(std::ostream &outputStream, SquareMaze cons
 Vector2 const &SquareMaze::getOffset(Direction const direction) const {
 	switch (direction) {
 		case Direction::north: return northOffset;
-		case Direction::east : return eastOffset;
+		case Direction::east : return  eastOffset;
 		case Direction::south: return southOffset;
-		case Direction::west : return westOffset;
+		case Direction::west : return  westOffset;
 
 		default:
 			throw std::logic_error(errorMessageForInvalidDirection);
