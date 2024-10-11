@@ -14,8 +14,9 @@ namespace MazeEngine { struct Vector2; }
  * @brief Ordered pair of `int`. Can represent the identifier of a tile in a grid.
  */
 struct MazeEngine::Vector2 {
-	int value1;
-	int value2;
+	using Value = int;
+	Value value1;
+	Value value2;
 
 	constexpr int thirdAxis() const { return -value1 - value2; }
 
@@ -93,7 +94,16 @@ struct MazeEngine::Vector2 {
 		return Vector2(Aux::wrap(value1, rowCount), Aux::wrap(value2, columnCount));
 	}
 
-	struct Hash { std::size_t operator()(Vector2 const &vector) const noexcept; };
+	struct [[nodiscard]] Hash {[[nodiscard]] std::size_t operator()(Vector2 const &vector) const noexcept {
+		static_assert(
+			std::is_same_v<decltype(vector.value1), Value> and
+			std::is_same_v<decltype(vector.value2), Value>
+		);
+		return Aux::combineHashValues(
+			std::hash<Value>{}(vector.value1),
+			std::hash<Value>{}(vector.value2)
+		);
+	}};
 
 	/// @brief An unorderd set of `Vector2`.
 	using HashSet = std::unordered_set<Vector2, Hash>;
