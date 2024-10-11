@@ -66,6 +66,7 @@ class App::Performer {
 	private /* member state; initialized here */:
 
 		MazeEngine::Vector2::HashSet markedTileSet;
+		MazeEngine::MazeGenerationIterator::Wall::HashSet markedWallSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
 
 		State state{State::generating};
@@ -111,6 +112,11 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		decltype(markedTileSet) const & getMarkedTileSet() const {
 			return markedTileSet;
+		}
+
+		[[nodiscard]] FORCE_INLINE
+		decltype(markedWallSet) const & getMarkedWallSet() const {
+			return markedWallSet;
 		}
 
 		[[nodiscard]] FORCE_INLINE
