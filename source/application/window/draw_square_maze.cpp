@@ -16,8 +16,8 @@ void App::Window::drawSquareMaze(
 	MazeEngine::SquareMaze const &maze,
 	SDL_FPoint const &position,
 	float const width, float const height,
-	ColorTripletGetter const tileColorTripletGetter,
-	ColorTriplet const &wallColorTriplet
+	TileColorTripletGetter const tileColorTripletGetter,
+	WallColorTripletGetter const wallColorTripletGetter
 ) {
 	int const columnCount{maze.getColumnCount()};
 	int const rowCount{maze.getRowCount()};
@@ -64,7 +64,7 @@ void App::Window::drawSquareMaze(
 				rectangleWidth * (1.0f - wallFramePercent), rectangleHeight * (1.0f - wallFramePercent)
 			)};
 
-			auto const &[wallColor1, wallColor2, wallColor3]{wallColorTriplet};
+			auto const &[wallColor1, wallColor2, wallColor3]{wallColorTripletGetter({})};
 
 			if (maze.checkAdjacent(key, MazeEngine::SquareMaze::Direction::north).hasWall) drawQuadrilateral(
 				outerNorthwestPoint, outerNortheastPoint,

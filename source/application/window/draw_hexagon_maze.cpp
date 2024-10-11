@@ -80,11 +80,11 @@ void App::Window::drawHexagonMaze(
 	MazeEngine::HexagonMaze const &maze,
 	SDL_FPoint const &center,
 	float const width, float const height,
-	ColorTripletGetter const tileColorTripletGetter,
-	ColorTriplet const &wallColorTriplet
+	TileColorTripletGetter const tileColorTripletGetter,
+	WallColorTripletGetter const wallColorTripletGetter
 ) {
 	int const radius{maze.getRadius()};
-	auto const &[wallColor1, wallColor2, wallColor3]{wallColorTriplet};
+	auto const &[wallColor1, wallColor2, wallColor3]{wallColorTripletGetter({})};
 
 	// Radius of 0 draws 1 hexagon.
 	assert(radius >= 0);

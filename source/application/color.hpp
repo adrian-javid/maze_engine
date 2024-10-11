@@ -4,6 +4,7 @@
 #include "simple_directmedia_layer.hpp"
 #include "linear_interpolation.hpp"
 #include "maze_engine/vector2.hpp"
+#include "maze_engine/maze_generation_iterator.hpp"
 
 #include <tuple>
 #include <string>
@@ -12,7 +13,8 @@
 namespace App {
 	using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
 
-	using ColorTripletGetter = std::function<ColorTriplet(MazeEngine::Vector2 const &)>;
+	using TileColorTripletGetter = std::function<ColorTriplet(MazeEngine::Vector2 const &)>;
+	using WallColorTripletGetter = std::function<ColorTriplet(MazeEngine::MazeGenerationIterator::Wall const &)>;
 
 	inline constexpr SDL_Color
 		websiteBackgroundColor{

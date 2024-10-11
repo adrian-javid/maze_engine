@@ -70,6 +70,18 @@ void App::Window::refresh() {
 			return unmarkedTileColorTriplet;
 	});
 
+	auto const wallColorTripletGetter([
+		&wallColorTriplet
+	](MazeEngine::MazeGenerationIterator::Wall const &wall) -> ColorTriplet {
+		switch (performer->getState()) {
+			case Performer::State::generating: {
+				return {};
+			}
+
+			default: return wallColorTriplet;
+		}
+	});
+
 	#ifdef __EMSCRIPTEN__
 	setRenderDrawColor(websiteBackgroundColor);
 	#else
@@ -80,7 +92,7 @@ void App::Window::refresh() {
 	std::visit(
 		[
 			windowWidthValue, windowHeightValue,
-			&tileColorTripletGetter, &wallColorTriplet
+			&tileColorTripletGetter, &wallColorTripletGetter
 		](auto and(maze)) -> void {
 			using MazeT = std::decay_t<decltype(maze)>;
 
@@ -88,12 +100,12 @@ void App::Window::refresh() {
 				std::forward<decltype(maze)>(maze),
 				{0.0f, 0.0f},
 				windowWidthValue, windowHeightValue,
-				tileColorTripletGetter, wallColorTriplet
+				tileColorTripletGetter, wallColorTripletGetter
 			); else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) drawHexagonMaze(
 				std::forward<decltype(maze)>(maze),
 				{windowWidthValue / 2.0f, windowHeightValue / 2.0f},
 				windowWidthValue, windowHeightValue,
-				tileColorTripletGetter, wallColorTriplet
+				tileColorTripletGetter, wallColorTripletGetter
 			);
 		},
 		performer->getUnderlyingMaze()

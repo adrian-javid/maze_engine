@@ -12,10 +12,9 @@
 namespace MazeEngine { class MazeGenerationIterator; }
 
 class MazeEngine::MazeGenerationIterator final {
-	private:
+	public:
 		struct Wall { Vector2 tileKey; Maze::Direction type; };
 
-	public:
 		[[nodiscard]] explicit MazeGenerationIterator(Maze &paramMaze, unsigned int const seed, bool const wrap=true);
 
 		void advance();
