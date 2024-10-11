@@ -39,6 +39,24 @@ namespace MazeEngine::Aux {
 		return value;
 	}
 
+	template <typename... ParamsT>
+	constexpr std::enable_if_t<(std::is_same_v<ParamsT, std::size_t> and ...), std::size_t>
+	combineHashValues(
+		std::size_t const firstValue,
+		std::size_t const secondValue,
+		ParamsT const... values
+	) noexcept {
+		std::size_t const combinedHashValue{
+			firstValue ^ (secondValue + 0x9e3779b9 + (firstValue << 6) + (firstValue >> 2))
+		};
+
+		if constexpr (sizeof...(values) == 0u) {
+			return combinedHashValue;
+		} else {
+			return combineHashValues(combinedHashValue, values...);
+		}
+	}
+
 	namespace Enum {
 		template <typename EnumT>
 		struct Trait {
