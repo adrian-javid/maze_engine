@@ -282,6 +282,19 @@ void App::Performer::update() {
 		case State::generating: {
 			if (mazeGenerationIterator.isDone()) goto switchToSearching;
 
+			/* process wall */ {
+				MazeEngine::MazeGenerationIterator::Wall const *wall{mazeGenerationIterator.getWall()};
+				assert(wall != nullptr); if (wall == nullptr) {
+					assert(mazeGenerationIterator.isDone());
+					goto switchToSearching;
+
+					/* (play sound) */;
+
+					markedWallSet.insert(*wall);
+				}
+
+			}
+
 			mazeGenerationIterator.advance();
 
 			return;
