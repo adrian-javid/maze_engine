@@ -36,7 +36,7 @@ struct MazeEngine::Maze {
 		/**/
 		/**/          case northwest: return southeast;              case northeast: return southwest;
 		/**/
-		/**/  case west: return east;              default: throw direction;             case east: return west;
+		/**/  case west: return east;        default: assert(false); return none;        case east: return west;
 		/**/
 		/**/          case southwest: return northeast;              case southeast: return northwest;
 		/**/
@@ -59,10 +59,10 @@ struct MazeEngine::Maze {
 		Vector2 key;
 		bool hasWall;
 		// This function is to address narrowing conversion to `bool`.
-		template <typename ConvertableToBool_T>
-		constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, ConvertableToBool_T const wallFlag):
+		template <typename ConvertableToBoolT>
+		constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, ConvertableToBoolT const wallFlag):
 			key(tileKey), hasWall{static_cast<bool>(wallFlag)}
-		{ static_assert(std::is_convertible_v<ConvertableToBool_T, bool>); }
+		{ static_assert(std::is_convertible_v<ConvertableToBoolT, bool>); }
 	};
 	virtual TileAdjacency checkAdjacent(Vector2, Direction const) const = 0;
 
