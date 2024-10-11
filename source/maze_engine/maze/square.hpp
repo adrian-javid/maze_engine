@@ -27,6 +27,8 @@ class MazeEngine::SquareMaze : public MazeEngine::Maze {
 		static constexpr Vector2 eastOffset { 0, +1};
 		static constexpr Vector2 westOffset { 0, -1};
 
+		static constexpr char const *errorMessageForInvalidDirection{"Invalid direction for square maze."};
+
 	private:
 
 		std::vector<Tile> table;

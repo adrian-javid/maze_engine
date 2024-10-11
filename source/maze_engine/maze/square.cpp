@@ -56,7 +56,7 @@ auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> 
 			return {key, table.at(getFlatIndex(key)) & east};
 
 		default:
-			throw direction;
+			throw std::logic_error(errorMessageForInvalidDirection);
 	}
 }
 
@@ -87,7 +87,7 @@ Vector2 const &SquareMaze::getOffset(Direction const direction) const {
 		case Direction::west : return westOffset;
 
 		default:
-			throw direction;
+			throw std::logic_error(errorMessageForInvalidDirection);
 	}
 }
 

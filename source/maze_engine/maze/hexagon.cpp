@@ -1,5 +1,7 @@
 #include "hexagon.hpp"
 
+#include <stdexcept>
+
 using namespace MazeEngine;
 
 static Vector2 calculateMirrorCenter(int const index, int const radius) {
@@ -107,7 +109,7 @@ auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const ->
 			return {key, table.at(key) & southeast};
 
 		default:
-			throw direction;
+			throw std::logic_error(errorMessageForInvalidDirection);
 	}
 }
 
@@ -121,7 +123,7 @@ Vector2 const &HexagonMaze::getOffset(Direction const direction) const {
 		case northwest: return northwestOffset;
 
 		default:
-			throw direction;
+			throw std::logic_error(errorMessageForInvalidDirection);
 	}
 }
 
