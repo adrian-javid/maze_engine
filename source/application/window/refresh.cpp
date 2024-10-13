@@ -75,13 +75,33 @@ void App::Window::refresh() {
 		&wallColorTriplet
 	](MazeEngine::MazeGenerationIterator::Wall const &wall) -> ColorTriplet {
 		switch (performer->getState()) {
-			case Performer::State::generating: if (
-				auto const &markedWalls{performer->getMarkedWallSet()};
-				markedWalls.find(wall) != markedWalls.cend()
-			) {
-				return wallColorTriplet;
-			} else {
-				return {};
+			case Performer::State::generating: {
+				using Wall = MazeEngine::MazeGenerationIterator::Wall;
+
+				Wall const principalWall([wall]() -> Wall {
+					switch (wall.type) {
+						// "principal" directions
+						case MazeEngine::Maze::north    :
+						case MazeEngine::Maze::northeast:
+						case MazeEngine::Maze::east     :
+						case MazeEngine::Maze::southeast:
+							return wall;
+
+						default: return {
+							std::as_const(performer)->getMaze().checkAdjacent(wall.tileKey, wall.type).key,
+							std::as_const(performer)->getMaze().reverseDirection(wall.type)
+						};
+					}
+				}());
+
+				if (
+					auto const &markedWalls{performer->getMarkedWallSet()};
+					markedWalls.find(principalWall) != markedWalls.cend()
+				) {
+					return wallColorTriplet;
+				} else {
+					return {};
+				}
 			}
 
 			default: return wallColorTriplet;
