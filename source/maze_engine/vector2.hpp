@@ -15,8 +15,8 @@ namespace MazeEngine { struct Vector2; }
  */
 struct MazeEngine::Vector2 {
 	using Value = int;
-	Value value1;
-	Value value2;
+	Value value1{0};
+	Value value2{0};
 
 	constexpr int thirdAxis() const { return -value1 - value2; }
 
@@ -37,11 +37,16 @@ struct MazeEngine::Vector2 {
 	}
 
 	/**
+	 * @brief Create a vector with zero-initialized values.
+	 */
+	constexpr Vector2(): value1{0}, value2{0} {}
+
+	/**
 	 * @brief Create a vector with specified values.
-	 * @param row assign `row`
-	 * @param column assign `col`
+	 * @param paramValue1 assign `value1`
+	 * @param paramValue2 assign `value2`
 	*/
-	constexpr Vector2(int row=0, int column=0): value1{row}, value2{column} {}
+	constexpr Vector2(int paramValue1, int paramValue2): value1{paramValue1}, value2{paramValue2} {}
 
 	constexpr int manhattanLength() const {
 		return Aux::abs(value1) + Aux::abs(value2);
