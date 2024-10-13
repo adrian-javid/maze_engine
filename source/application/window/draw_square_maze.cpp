@@ -65,7 +65,9 @@ void App::Window::drawSquareMaze(
 			)};
 
 			if (maze.checkAdjacent(key, MazeEngine::SquareMaze::Direction::north).hasWall) {
-				auto const [wallColor1, wallColor2, wallColor3]{wallColorTripletGetter({})};
+				auto const [wallColor1, wallColor2, wallColor3]{
+					wallColorTripletGetter({key, MazeEngine::SquareMaze::Direction::north})
+				};
 				drawQuadrilateral(
 					outerNorthwestPoint, outerNortheastPoint,
 					innerNorthwestPoint, innerNortheastPoint,
@@ -75,7 +77,9 @@ void App::Window::drawSquareMaze(
 			}
 
 			if (maze.checkAdjacent(key, MazeEngine::SquareMaze::Direction::east).hasWall) {
-				auto const [wallColor1, wallColor2, wallColor3]{wallColorTripletGetter({})};
+				auto const [wallColor1, wallColor2, wallColor3]{
+					wallColorTripletGetter({key, MazeEngine::SquareMaze::Direction::east})
+				};
 				drawQuadrilateral(
 					innerNortheastPoint, outerNortheastPoint,
 					innerSoutheastPoint, outerSoutheastPoint,
@@ -85,7 +89,9 @@ void App::Window::drawSquareMaze(
 			}
 
 			if (maze.checkAdjacent(key, MazeEngine::SquareMaze::Direction::south).hasWall) {
-				auto const [wallColor1, wallColor2, wallColor3]{wallColorTripletGetter({})};
+				auto const [wallColor1, wallColor2, wallColor3]{
+					wallColorTripletGetter({key, MazeEngine::SquareMaze::Direction::south})
+				};
 				drawQuadrilateral(
 					innerSouthwestPoint, innerSoutheastPoint,
 					outerSouthwestPoint, outerSoutheastPoint,
@@ -95,7 +101,9 @@ void App::Window::drawSquareMaze(
 			}
 
 			if (maze.checkAdjacent(key, MazeEngine::SquareMaze::Direction::west).hasWall) {
-				auto const [wallColor1, wallColor2, wallColor3]{wallColorTripletGetter({})};
+				auto const [wallColor1, wallColor2, wallColor3]{
+					wallColorTripletGetter({key, MazeEngine::SquareMaze::Direction::west})
+				};
 				drawQuadrilateral(
 					outerNorthwestPoint, innerNorthwestPoint,
 					outerSouthwestPoint, innerSouthwestPoint,
