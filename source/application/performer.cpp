@@ -287,12 +287,11 @@ void App::Performer::update() {
 				assert(wall != nullptr); if (wall == nullptr) {
 					assert(mazeGenerationIterator.isDone());
 					goto switchToSearching;
-
-					/* (play sound) */;
-
-					markedWallSet.insert(*wall);
 				}
 
+				/* (play sound) */;
+
+				markedWallSet.insert(*wall);
 			}
 
 			mazeGenerationIterator.advance();
