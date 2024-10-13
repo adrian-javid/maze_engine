@@ -64,7 +64,19 @@ struct MazeEngine::Maze {
 			key(tileKey), hasWall{static_cast<bool>(wallFlag)}
 		{ static_assert(std::is_convertible_v<ConvertableToBoolT, bool>); }
 	};
-	virtual TileAdjacency checkAdjacent(Vector2, Direction const) const = 0;
+
+	/*
+		Query information about a tile that is adjacent from the direction
+		with respect to the tile at the position
+		indicated by the tile key.
+
+		The object returned has the position of the adjacent tile,
+		and a boolean value representing whether the adjacent tile has a wall.
+
+		If the adjacent tile would be out-of-bounds for the maze,
+		the tile that is considered adjacent is from applying "wrap-around".
+	*/
+	virtual TileAdjacency checkAdjacent(Vector2 const tileKey, Direction const direction) const = 0;
 
 	virtual Vector2 const &getOffset(Direction const direction) const = 0;
 	virtual bool isInBounds(Vector2 const &key) const = 0;
