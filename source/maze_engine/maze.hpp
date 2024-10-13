@@ -70,8 +70,9 @@ struct MazeEngine::Maze {
 		with respect to the tile at the position
 		indicated by the tile key.
 
-		The object returned has the position of the adjacent tile,
-		and a boolean value representing whether the adjacent tile has a wall.
+		The object returned has the position of the adjacent tile
+		and a boolean value representing whether there is a wall
+		dividing the two adjacent tiles.
 
 		If the adjacent tile would be out-of-bounds for the maze,
 		the tile that is considered adjacent is from applying "wrap-around".
