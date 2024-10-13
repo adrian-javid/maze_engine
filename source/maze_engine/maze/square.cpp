@@ -31,7 +31,7 @@ auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
 }
 
 void SquareMaze::forEachKey(std::function<void(Vector2 const &)> const &forThisKey) const {
-	for (Vector2 key(0); key.value1 < rowCount; ++key.value1)
+	for (Vector2 key(0, 0); key.value1 < rowCount; ++key.value1)
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2)
 			forThisKey(key);
 }
@@ -63,7 +63,7 @@ auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> 
 std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) const {
 	std::stringstream buffer;
 
-	for (Vector2 key(0); key.value1 < rowCount; ++key.value1) {
+	for (Vector2 key(0, 0); key.value1 < rowCount; ++key.value1) {
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
 			Tile const tile{at(key)};
 			char const symbol{(tile ? wallSymbol : emptySymbol)};

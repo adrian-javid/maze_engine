@@ -28,7 +28,7 @@ void App::Window::drawSquareMaze(
 	float const rectangleWidthHalf{rectangleWidth / 2.0f};
 	float const rectangleHeightHalf{rectangleHeight / 2.0f};
 
-	for (MazeEngine::Vector2 key(0); key.value1 < rowCount; ++key.value1) {
+	for (MazeEngine::Vector2 key(0, 0); key.value1 < rowCount; ++key.value1) {
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
 			auto const &&[mainColor1, mainColor2, mainColor3]{tileColorTripletGetter(key)};
 
