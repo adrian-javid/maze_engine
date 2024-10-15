@@ -18,14 +18,17 @@ class MazeEngine::UnionFinder {
 
 	public:
 
+		[[nodiscard]]
 		UnionFinder(std::size_t const count=0u);
 
 		void addElements(std::size_t const count);
 
 		void unionThem(Identifier const element1, Identifier const element2);
 
+		[[nodiscard]]
 		Identifier find(Identifier const element);
 
+		[[nodiscard]]
 		Identifier getSize(Identifier const element);
 
 };
