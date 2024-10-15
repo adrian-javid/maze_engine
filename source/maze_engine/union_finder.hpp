@@ -12,6 +12,23 @@ class MazeEngine::UnionFinder {
 		static_assert(std::is_signed_v<Identifier>);
 		static_assert(std::is_integral_v<Identifier>);
 
+		class View {
+			public:
+				[[nodiscard]] constexpr explicit View(UnionFinder &paramUnionFinder):
+					unionFinder{&paramUnionFinder} {};
+
+				[[nodiscard]] inline Identifier find(Identifier const element) const {
+					return unionFinder->find(element);
+				}
+
+				[[nodiscard]] inline Identifier getSize(Identifier const element) const {
+					return unionFinder->getSize(element);
+				}
+
+			private:
+				UnionFinder *unionFinder;
+		};
+
 	private:
 
 		std::vector<Identifier> forest;
