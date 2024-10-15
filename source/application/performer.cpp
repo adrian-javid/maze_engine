@@ -147,6 +147,7 @@ App::Performer::Performer(
 }
 
 void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
+	assert(soundInstrument != nullptr);
 	if (soundInstrument == nullptr) return;
 
 	/*
