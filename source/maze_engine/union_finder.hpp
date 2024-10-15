@@ -26,7 +26,7 @@ class MazeEngine::UnionFinder {
 
 		Identifier find(Identifier const element);
 
-		Identifier size(Identifier const element);
+		Identifier getSize(Identifier const element);
 
 };
 

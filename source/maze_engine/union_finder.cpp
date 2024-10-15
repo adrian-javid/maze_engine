@@ -33,7 +33,7 @@ void MazeEngine::UnionFinder::unionThem(Identifier const element1, Identifier co
 	}
 }
 
-auto MazeEngine::UnionFinder::size(Identifier const element) -> Identifier {
+auto MazeEngine::UnionFinder::getSize(Identifier const element) -> Identifier {
 	Identifier const root{find(element)};
 	return -1 * forest.at(root);
 }
