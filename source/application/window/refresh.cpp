@@ -56,23 +56,23 @@ void App::Window::refresh() {
 	auto const tileColorTripletGetter([
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
 		&startEndColorTriplet
-	](MazeEngine::Vector2 const &key) -> ColorTriplet {
+	](MazeEngine::Vector2 const &tileKey) -> ColorTriplet {
 		switch (performer->getState()) {
 			case Performer::State::generating: {
-				return {};
+				return getColorTriplet(getTileHue(tileKey));
 			}
 			default: {
-				if (key == performer->getMazeStart() or key == performer->getMazeEnd())
+				if (tileKey == performer->getMazeStart() or tileKey == performer->getMazeEnd())
 					return startEndColorTriplet;
 
 				if (
 					auto const &pathTiles{performer->getPathTileSet()};
-					pathTiles.find(key) != pathTiles.end()
+					pathTiles.find(tileKey) != pathTiles.end()
 				)
 					return pathTileColorTriplet;
 				else if (
 					auto const &markedTiles{performer->getMarkedTileSet()};
-					markedTiles.find(key) != markedTiles.end()
+					markedTiles.find(tileKey) != markedTiles.end()
 				)
 					return markedTileColorTriplet;
 				else
