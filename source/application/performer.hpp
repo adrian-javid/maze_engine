@@ -146,6 +146,11 @@ class App::Performer {
 			return mazeGenerationIterator;
 		}
 
+		[[nodiscard]] FORCE_INLINE
+		MazeEngine::UnionFinder::View getUnionFinderView() {
+			return mazeGenerationIterator.getUnionFinderView();
+		}
+
 	private:
 
 		[[nodiscard]] FORCE_INLINE
