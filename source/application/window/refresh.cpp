@@ -53,6 +53,22 @@ void App::Window::refresh() {
 	float const windowWidthValue {static_cast<float>(windowWidth )};
 	float const windowHeightValue{static_cast<float>(windowHeight)};
 
+	static constexpr auto getTileHue([](
+		MazeEngine::Vector2 const tileKey
+	) -> decltype(HslaColor::hue) {
+		assert(performer.has_value());
+		if (not performer.has_value()) return {};
+
+		auto const &identities{performer->getMazeGenerationIterator().getTileKeyIdentities()};
+		
+		auto const identityPair(identities.find(tileKey));
+		if (identityPair == identities.cend()) return {};
+
+		MazeEngine::UnionFinder::Identifier const tileKeyIdentifier{identityPair->second};
+
+		return HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 7);
+	});
+
 	auto const tileColorTripletGetter([
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
 		&startEndColorTriplet
@@ -104,13 +120,17 @@ void App::Window::refresh() {
 					}
 				}());
 
+				static_assert(wallColor.hue >= unmarkedTileColor.hue);
+				double const wallTileColorOffset{wallColor.hue - unmarkedTileColor.hue};
+				double const wallHue{HslaColor::hueWrap(getTileHue(wall.tileKey) + wallTileColorOffset)};
+
 				if (
 					auto const &markedWalls{performer->getMarkedWallSet()};
 					markedWalls.find(principalWall) != markedWalls.cend()
 				) {
-					return wallColorTriplet;
+					return getColorTriplet(wallHue);
 				} else {
-					return getColorTriplet(wallColor, /* luminance */double{0.10});
+					return getColorTriplet(wallHue, /* luminance */double{0.10});
 				}
 			}
 
