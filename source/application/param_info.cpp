@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 
 std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 	{"search", {
@@ -106,6 +107,8 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 		}
 	}
 
+	std::unordered_set<std::string> duplicateDetection;
+
 	for (int argIndex{1}; argIndex < argc; ++argIndex) {
 		std::string const arg(argv[argIndex]);
 
@@ -118,6 +121,15 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 		);
 
 		std::string const paramName(arg.substr(0u, delimPos));
+
+		if (
+			auto const notFound(duplicateDetection.cend());
+			duplicateDetection.find(paramName) != notFound
+		) errorExit(
+			"Repeated parameter \"" + paramName + "\" detected. Repeated parameters are not allowed."
+		);
+
+		duplicateDetection.insert(paramName);
 
 		auto const paramPtr(config.find(paramName));
 		if (paramPtr == config.end()) errorExit(
