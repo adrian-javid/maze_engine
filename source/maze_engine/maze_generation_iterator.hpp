@@ -49,6 +49,11 @@ class MazeEngine::MazeGenerationIterator final {
 				return &*wallIterator;
 		}
 
+
+		[[nodiscard]] inline UnionFinder::View getUnionFinderView() {
+			return UnionFinder::View(cyclePrevention);
+		}
+
 	private:
 		Vector2::HashMap<UnionFinder::Identifier> identity;
 		std::vector<Wall> wallList;
