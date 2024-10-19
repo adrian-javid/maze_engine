@@ -49,6 +49,9 @@ class MazeEngine::MazeGenerationIterator final {
 				return &*wallIterator;
 		}
 
+		[[nodiscard]] inline Vector2::HashMap<UnionFinder::Identifier> const & getTileKeyIdentities() const {
+			return identity;
+		}
 
 		[[nodiscard]] inline UnionFinder::View getUnionFinderView() {
 			return UnionFinder::View(cyclePrevention);
