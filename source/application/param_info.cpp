@@ -128,7 +128,7 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 		ParamInfo &param{paramPtr->second};
 		param.argument = arg.substr(delimPos + 1);
 
-		if (not param.acceptable) continue;
+		if (not param.acceptable.has_value()) continue;
 
 		if (param.acceptable.value().find(param.argument) == param.acceptable.value().end()) errorExit(
 			"Unacceptable value `" + param.argument + "` for parameter `" + paramName + "`.\n" +
