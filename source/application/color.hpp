@@ -66,6 +66,7 @@ struct App::HslaColor {
 
 	static double hueWrap(double const value);
 
+	[[deprecated]]
 	ColorTriplet getColorTriplet(double const percentage, double const colorDepth) const;
 
 	SDL_Color toRgbaColor() const;
