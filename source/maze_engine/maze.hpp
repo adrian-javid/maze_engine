@@ -30,6 +30,24 @@ struct MazeEngine::Maze {
 		/**/                       south = 1u << 4u,
 	};
 
+	static constexpr std::string_view getName(Direction const direction) {
+		switch (direction) {
+			using namespace std::string_view_literals;
+
+			/**/                                       case north: return "north"sv;
+			/**/
+			/**/          case northwest: return "northwest"sv;              case northeast: return "northeast"sv;
+			/**/
+			/**/  case west: return "west"sv;           case none: return "none"sv;           case east: return "east"sv;
+			/**/
+			/**/          case southwest: return "southwest"sv;              case southeast: return "southeast"sv;
+			/**/
+			/**/                                       case south: return "south"sv;
+
+			default: return "unknown"sv;
+		}
+	}
+
 	static constexpr Direction reverseDirection(Direction const direction) {
 		switch (direction) {
 			/**/                                       case north: return south;
