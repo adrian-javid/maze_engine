@@ -32,15 +32,15 @@ struct MazeEngine::Maze {
 
 	static constexpr Direction reverseDirection(Direction const direction) {
 		switch (direction) {
-		/**/                                       case north: return south;
-		/**/
-		/**/          case northwest: return southeast;              case northeast: return southwest;
-		/**/
-		/**/  case west: return east;        default: assert(false); return none;        case east: return west;
-		/**/
-		/**/          case southwest: return northeast;              case southeast: return northwest;
-		/**/
-		/**/                                       case south: return north;
+			/**/                                       case north: return south;
+			/**/
+			/**/          case northwest: return southeast;              case northeast: return southwest;
+			/**/
+			/**/  case west: return east;        default: assert(false); return none;        case east: return west;
+			/**/
+			/**/          case southwest: return northeast;              case southeast: return northwest;
+			/**/
+			/**/                                       case south: return north;
 		}
 	}
 
