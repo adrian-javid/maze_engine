@@ -19,15 +19,15 @@ struct MazeEngine::Maze {
 	 * @note Purposely unscoped `enum` for bitwise operations and implicit conversion to `bool`.
 	 */
 	enum Direction : Tile {
-	/**/                       north = 1u << 0u,
-	/**/
-	/**/         northwest = 1u << 7u,       northeast = 1u << 1u,
-	/**/
-	/**/  west = 1u << 6u,     none =        0u,          east = 1u << 2u,
-	/**/
-	/**/         southwest = 1u << 5u,       southeast = 1u << 3u,
-	/**/
-	/**/                       south = 1u << 4u,
+		/**/                       north = 1u << 0u,
+		/**/
+		/**/         northwest = 1u << 7u,       northeast = 1u << 1u,
+		/**/
+		/**/  west = 1u << 6u,     none =        0u,          east = 1u << 2u,
+		/**/
+		/**/         southwest = 1u << 5u,       southeast = 1u << 3u,
+		/**/
+		/**/                       south = 1u << 4u,
 	};
 
 	static constexpr Direction reverseDirection(Direction const direction) {
