@@ -141,7 +141,7 @@ class App::Performer {
 
 		void update();
 
-		[[nodiscard]]
+		[[nodiscard]] FORCE_INLINE
 		MazeEngine::MazeGenerationIterator const & getMazeGenerationIterator() const {
 			return mazeGenerationIterator;
 		}
