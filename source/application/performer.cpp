@@ -206,7 +206,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 		using Direction = MazeEngine::Maze::Direction;
 
 		/*
-			Figure out whether the offset vector is a vector that we can recognise.
+			Figure out whether the offset vector is a vector that we can recognize.
 
 			That is, its values should be integers that are either `-1`, `0`, or `+1`.
 		*/
