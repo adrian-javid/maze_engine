@@ -20,6 +20,24 @@ struct MazeEngine::Vector2 {
 
 	constexpr int thirdAxis() const { return -value1 - value2; }
 
+	/*
+		Returns `true` if the vector's values are integers that are either `-1`, `0`, or `+1`,
+		otherwise returns `false`.
+	*/
+	[[nodiscard]] constexpr
+	bool isSimple() const {
+		switch (value1) {
+			case -1:
+			case  0:
+			case +1: switch (value2) {
+				case -1:
+				case  0:
+				case +1: return true;
+			}
+		}
+		return false;
+	}
+
 	template<int index, int upperBound>
 	static constexpr std::size_t rotateIndex(int const indexOffsetter) {
 		static_assert(index >= 0);
