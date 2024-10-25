@@ -20,10 +20,10 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 
 		static Vector2 constexpr northwestOffset{ 0, -1};
 		static Vector2 constexpr northeastOffset{+1, -1};
-		static Vector2 constexpr eastOffset     {+1,  0};
+		static Vector2 constexpr      eastOffset{+1,  0};
 		static Vector2 constexpr southeastOffset{ 0, +1};
 		static Vector2 constexpr southwestOffset{-1, +1};
-		static Vector2 constexpr westOffset     {-1,  0};
+		static Vector2 constexpr      westOffset{-1,  0};
 
 		static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
 			/*    */                          /* -1 */         /*  0 */              /* +1 */
