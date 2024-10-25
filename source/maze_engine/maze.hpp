@@ -7,7 +7,11 @@
 #include <optional>
 #include <cstdint>
 
-namespace MazeEngine { struct Maze; }
+namespace MazeEngine {
+	struct Maze;
+	class SquareMaze;	
+	class HexagonMaze;
+}
 
 struct MazeEngine::Maze {
 
