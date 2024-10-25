@@ -198,29 +198,34 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 	/*
 		We will determine which sound to play based on the offset vector.
 	*/
-	std::visit(<:this, offsetVector:>(auto and(maze)) -> void {
+	std::visit(<:this, parentVertex, mainVertex, offsetVector:>(auto const &maze) -> void {
 		// Get the maze type.
 		using MazeT = std::decay_t<decltype(maze)>;
-		
+
 		// Alias for the maze direction enum.
 		using Direction = MazeEngine::Maze::Direction;
 
-		/*
-			Figure out whether the offset vector is a vector that we can recognize.
+		Direction const direction{[&maze, parentVertex, mainVertex, offsetVector]() constexpr -> Direction {
+			Direction direction{MazeEngine::Maze::getSimpleDirection<MazeT>(offsetVector)};
 
-			That is, its values should be integers that are either `-1`, `0`, or `+1`.
-		*/
-		bool const isSimpleOffsetVector{<:offsetVector:>() constexpr -> bool {
-			switch (offsetVector.value1) {
-				case -1:
-				case  0:
-				case +1: switch (offsetVector.value2) {
-					case -1:
-					case  0:
-					case +1: return true;
+			switch (direction) case Direction::none: maze.forEachValidDirection(
+				[&maze, &direction, parentVertex, mainVertex](Direction const validDirection) constexpr -> void {
+					auto const [neighborVertex, wallFlag]{
+						maze.checkAdjacent(parentVertex, validDirection)
+					};
+
+					// The main vertex cannot be a neighbor from this direction if there is a wall.
+					assert(not (wallFlag == true and mainVertex == neighborVertex));
+
+					if (not wallFlag and mainVertex == neighborVertex) {
+						assert(direction == Direction::none);
+						direction = validDirection;
+					}
+					
 				}
-			}
-			return false;
+			);
+
+			return direction;
 		}()};
 
 		/*
@@ -228,20 +233,6 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 			by which maze grid type is being used.
 		*/
 		if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
-			Direction const direction{<:offsetVector, isSimpleOffsetVector:>() -> MazeEngine::Maze::Direction {
-				static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
-					/*    */                      /* -1 */         /*  0 */          /* +1 */
-					/* -1 */ std::array{ Direction:: none, Direction::west, Direction:: none, },
-					/*  0 */ std::array{ Direction::north, Direction::none, Direction::south, },
-					/* +1 */ std::array{ Direction:: none, Direction::east, Direction:: none, },
-				};
-
-				if (isSimpleOffsetVector)
-					return directionMatrix[offsetVector.value1 + 1][offsetVector.value2 + 1];
-				else
-					return Direction::none;
-			}()};
-
 			switch (direction) {
 				case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;
 				case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
@@ -250,20 +241,6 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 				default: break;
 			}
 		} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
-			Direction const direction{<:offsetVector, isSimpleOffsetVector:>() -> MazeEngine::Maze::Direction {
-				static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
-					/*    */                          /* -1 */         /*  0 */              /* +1 */
-					/* -1 */ std::array{ Direction::     none, Direction::west, Direction::southwest, },
-					/*  0 */ std::array{ Direction::northwest, Direction::none, Direction::southeast, },
-					/* +1 */ std::array{ Direction::northeast, Direction::east, Direction::     none, },
-				};
-
-				if (isSimpleOffsetVector)
-					return directionMatrix[offsetVector.value1 + 1][offsetVector.value2 + 1];
-				else
-					return Direction::none;
-			}()};
-
 			switch (direction) {
 				case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u); break;
 				case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u); break;
@@ -275,7 +252,6 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 			}
 		}
 	}, mazeVariant);
-
 }
 
 void App::Performer::update() {
