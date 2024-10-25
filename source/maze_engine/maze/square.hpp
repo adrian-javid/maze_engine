@@ -30,9 +30,9 @@ class MazeEngine::SquareMaze : public MazeEngine::Maze {
 
 		static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
 			/*    */                      /* -1 */         /*  0 */          /* +1 */
-			/* -1 */ std::array{ Direction:: none, Direction::west, Direction:: none, },
-			/*  0 */ std::array{ Direction::north, Direction::none, Direction::south, },
-			/* +1 */ std::array{ Direction:: none, Direction::east, Direction:: none, },
+			/* -1 */ std::array{ Direction:: none, Direction::north, Direction:: none, },
+			/*  0 */ std::array{ Direction:: west, Direction:: none, Direction:: east, },
+			/* +1 */ std::array{ Direction:: none, Direction::south, Direction:: none, },
 		};
 
 		static constexpr char const *errorMessageForInvalidDirection{"Invalid direction for square maze."};
