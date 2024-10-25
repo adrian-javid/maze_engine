@@ -189,7 +189,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 	MazeEngine::Vector2 const &parentVertex{edge->/* parent vertex */second};
 
 	/*
-		This offset vector represents the direction in a vector form.
+		If there was no wraparound, this offset vector represents the direction in a vector form.
 
 		We need to calculate the enumerated direction from this.
 	*/
