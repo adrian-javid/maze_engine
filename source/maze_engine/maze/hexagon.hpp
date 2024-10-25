@@ -32,6 +32,15 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 			/* +1 */ std::array{ Direction::northeast, Direction::east, Direction::     none, },
 		};
 
+		static_assert(
+			Maze::getSimpleDirection<HexagonMaze>(northwestOffset) == Direction::northwest and
+			Maze::getSimpleDirection<HexagonMaze>(northeastOffset) == Direction::northeast and
+			Maze::getSimpleDirection<HexagonMaze>(     eastOffset) == Direction::     east and
+			Maze::getSimpleDirection<HexagonMaze>(southeastOffset) == Direction::southeast and
+			Maze::getSimpleDirection<HexagonMaze>(southwestOffset) == Direction::southwest and
+			Maze::getSimpleDirection<HexagonMaze>(     westOffset) == Direction::     west
+		);
+
 		static constexpr char const *errorMessageForInvalidDirection{"Invalid direction for hexagon maze."};
 
 		explicit HexagonMaze(int const radiusValue=0, Tile const tileFillValue=emptyTile);

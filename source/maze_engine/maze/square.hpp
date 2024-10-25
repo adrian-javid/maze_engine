@@ -35,6 +35,13 @@ class MazeEngine::SquareMaze : public MazeEngine::Maze {
 			/* +1 */ std::array{ Direction:: none, Direction::south, Direction:: none, },
 		};
 
+		static_assert(
+			Maze::getSimpleDirection<SquareMaze>(northOffset) == Direction::north and
+			Maze::getSimpleDirection<SquareMaze>(southOffset) == Direction::south and
+			Maze::getSimpleDirection<SquareMaze>( eastOffset) == Direction::east  and
+			Maze::getSimpleDirection<SquareMaze>( westOffset) == Direction::west
+		);
+
 		static constexpr char const *errorMessageForInvalidDirection{"Invalid direction for square maze."};
 
 	private:
