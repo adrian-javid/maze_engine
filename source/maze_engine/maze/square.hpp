@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "maze_engine/vector2.hpp"
+#include <array>
 
 namespace MazeEngine {
 	class SquareMaze;
@@ -26,6 +27,13 @@ class MazeEngine::SquareMaze : public MazeEngine::Maze {
 		static constexpr Vector2 southOffset{+1,  0};
 		static constexpr Vector2 eastOffset { 0, +1};
 		static constexpr Vector2 westOffset { 0, -1};
+
+		static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
+			/*    */                      /* -1 */         /*  0 */          /* +1 */
+			/* -1 */ std::array{ Direction:: none, Direction::west, Direction:: none, },
+			/*  0 */ std::array{ Direction::north, Direction::none, Direction::south, },
+			/* +1 */ std::array{ Direction:: none, Direction::east, Direction:: none, },
+		};
 
 		static constexpr char const *errorMessageForInvalidDirection{"Invalid direction for square maze."};
 

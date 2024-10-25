@@ -25,6 +25,13 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 		static Vector2 constexpr southwestOffset{-1, +1};
 		static Vector2 constexpr westOffset     {-1,  0};
 
+		static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
+			/*    */                          /* -1 */         /*  0 */              /* +1 */
+			/* -1 */ std::array{ Direction::     none, Direction::west, Direction::southwest, },
+			/*  0 */ std::array{ Direction::northwest, Direction::none, Direction::southeast, },
+			/* +1 */ std::array{ Direction::northeast, Direction::east, Direction::     none, },
+		};
+
 		static constexpr char const *errorMessageForInvalidDirection{"Invalid direction for hexagon maze."};
 
 		explicit HexagonMaze(int const radiusValue=0, Tile const tileFillValue=emptyTile);
