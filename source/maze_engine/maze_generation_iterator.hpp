@@ -42,7 +42,10 @@ class MazeEngine::MazeGenerationIterator final {
 
 		Result advance();
 
-		inline void advanceUntilUnionOrDone() {
+		template <typename WallAccessListenerT>
+		inline void advanceUntilUnionOrDone(WallAccessListenerT &&(wallAccessListener)) {
+			static_assert(std::is_invocable_v<decltype(wallAccessListener), Wall const>);
+
 			assert(not isDone());
 			if (isDone()) return;
 
@@ -50,8 +53,14 @@ class MazeEngine::MazeGenerationIterator final {
 				Result result(Result::none);
 				result == Result::none and not isDone();
 				result = advance()
-			);
+			) {
+				Wall const *wall{getWall()};
+				assert(wall != nullptr);
+				std::forward<WallAccessListenerT>(wallAccessListener)(*wall);
+			}
 		}
+
+		inline void advanceUntilUnionOrDone() { advanceUntilUnionOrDone([](Wall const) constexpr -> void {}); }
 
 		[[nodiscard]] FORCE_INLINE inline bool isDone() const { return wallIterator == wallList.cend(); }
 
