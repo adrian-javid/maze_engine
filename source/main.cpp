@@ -97,7 +97,7 @@ int main(int const argc, char *argv[]) {
 	}
 
 	#ifdef __EMSCRIPTEN__
-	static constexpr char const *emscriptenBindingElement{""};
+	static constexpr char const *emscriptenBindingElement{"null"};
 	if (SDL_SetHintWithPriority(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, emscriptenBindingElement, SDL_HINT_OVERRIDE) == SDL_FALSE) {
 		std::cerr << "Binding element for keyboard inputs was not set correctly.\n";
 	}
