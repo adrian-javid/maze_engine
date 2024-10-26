@@ -36,9 +36,12 @@ class MazeEngine::MazeGenerationIterator final {
 			constexpr bool operator!=(Wall const &other) const { return not(*this == other); }
 		};
 
+		enum struct Result : std::uint_least8_t { none = 0u, didUnion = 1u, };
+
 		[[nodiscard]] explicit MazeGenerationIterator(Maze &paramMaze, unsigned int const seed, bool const wrap=true);
 
-		void advance();
+		Result advance();
+
 
 		[[nodiscard]] FORCE_INLINE inline bool isDone() const { return wallIterator == wallList.cend(); }
 

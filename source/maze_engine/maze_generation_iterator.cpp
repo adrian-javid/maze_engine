@@ -19,11 +19,12 @@ MazeEngine::MazeGenerationIterator::MazeGenerationIterator(Maze &paramMaze, unsi
 	wallIterator = wallList.cbegin();
 }
 
-void MazeEngine::MazeGenerationIterator::advance() {
+auto MazeEngine::MazeGenerationIterator::advance() -> Result {
 	assert(not isDone());
-	if (isDone()) return;
+	if (isDone()) return Result::none;
 
 	Wall const &wall{*wallIterator};
+	++wallIterator;
 
 	UnionFinder::Identifier const thisId{identity.at(wall.tileKey)};
 	UnionFinder::Identifier const adjId{identity.at(maze.checkAdjacent(wall.tileKey, wall.type).key)};
@@ -31,7 +32,8 @@ void MazeEngine::MazeGenerationIterator::advance() {
 	if (cyclePrevention.find(thisId) != cyclePrevention.find(adjId)) {
 		maze.at(wall.tileKey) ^= wall.type; // flip the wall bit to zero
 		cyclePrevention.unionThem(thisId, adjId);
+		return Result::didUnion;
+	} else {
+		return Result::none;
 	}
-
-	++wallIterator;
 }
