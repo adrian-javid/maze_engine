@@ -57,6 +57,7 @@ class App::Performer {
 		> mazeSearchIteratorVariant;
 		Timer timer;
 		SoundTable const *soundInstrument;
+		decltype(SoundTable::makeRandomSoundPicker({})) randomSoundPicker;
 		/*
 			`trailEdge->first` is the child vertex
 			`trailEdge->second` is the parent vertex

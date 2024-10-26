@@ -143,6 +143,7 @@ App::Performer::Performer(
 				return &synthesizer;
 		}
 	}()},
+	randomSoundPicker(SoundTable::makeRandomSoundPicker(seed)),
 	trailEdge(getMazeSearchIterator().getHistory().cend())
 {
 	assert(not mazeVariant.valueless_by_exception());
@@ -255,6 +256,7 @@ void App::Performer::update() {
 				}
 
 				// play sound
+				soundInstrument->play(randomSoundPicker.getInt());
 
 				markedWallSet.insert(*wall);
 			}
