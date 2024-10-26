@@ -5,6 +5,7 @@
 #include <array>
 #include <limits>
 #include "simple_directmedia_layer.hpp"
+#include "uniform_int_distribution.hpp"
 
 namespace App { class SoundTable; }
 
@@ -52,6 +53,12 @@ class App::SoundTable {
 
 		[[nodiscard]]
 		constexpr Data const & getData() const { return table; }
+
+		[[nodiscard]]
+		static UniformIntDistribution<Data::size_type> makeRandomSoundPicker(unsigned int const seed) {
+			static_assert(std::tuple_size_v<Data> > 0u, "Assert can subtract 1 from size.");
+			return UniformIntDistribution<Data::size_type>(seed, {0u, std::tuple_size_v<Data> - 1u});
+		}
 
 };
 
