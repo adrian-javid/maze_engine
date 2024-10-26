@@ -34,8 +34,6 @@ namespace App {/*
 #endif
 #endif
 
-
-
 int main(int const argc, char *argv[]) {
 	// Parse arguments into key-value pairs.
 	auto const &config(App::ParamInfo::parseArgv(argc, argv));
@@ -74,7 +72,7 @@ int main(int const argc, char *argv[]) {
 		/**/ if (soundTypeName == "none") return App::Performer::SoundType::none;
 		else if (soundTypeName == "piano") return App::Performer::SoundType::piano;
 		else if (soundTypeName == "synthesizer") return App::Performer::SoundType::synthesizer;
-		else App::errorExit("Unable to resolve sound instrument frmo string: `", soundTypeName, "`.");
+		else App::errorExit("Unable to resolve sound instrument from string: `", soundTypeName, "`.");
 	}()};
 	bool const shouldShowMazeGeneration{App::ParamInfo::castArg<bool>(config.at("show_maze_generation").argument)};
 
