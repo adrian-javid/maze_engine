@@ -174,6 +174,9 @@ class App::Performer {
 			std::is_same_v<MazeT, MazeEngine:: SquareMaze> or
 			std::is_same_v<MazeT, MazeEngine::HexagonMaze>,
 		void> playSound(MazeEngine::Maze::Direction const direction) const {
+			assert(soundInstrument != nullptr);
+			if (soundInstrument == nullptr) return;
+
 			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
 				switch (direction) {
 					case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;

@@ -156,7 +156,6 @@ App::Performer::Performer(
 }
 
 void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) const {
-	assert(soundInstrument != nullptr);
 	if (soundInstrument == nullptr) return;
 
 	/*
@@ -256,7 +255,7 @@ void App::Performer::update() {
 				}
 
 				// play sound
-				soundInstrument->play(randomSoundPicker.getInt());
+				if (soundInstrument != nullptr) soundInstrument->play(randomSoundPicker.getInt());
 
 				markedWallSet.insert(*wall);
 			}
