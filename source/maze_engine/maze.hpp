@@ -53,14 +53,16 @@ struct MazeEngine::Maze {
 	}
 
 	template <typename MazeT>
-	static constexpr
-	[[nodiscard]]
+	[[nodiscard]] static constexpr
 	std::enable_if_t<std::is_same_v<MazeT, SquareMaze> or std::is_same_v<MazeT, HexagonMaze>, Direction>
 	getSimpleDirection(Vector2 const vector) {
-		if (vector.isSimple())
-			return MazeT::directionMatrix[vector.value1 + 1][vector.value2 + 1];
-		else
+		if (vector.isSimple()) {
+			std::size_t const row   {static_cast<std::size_t>(vector.value1 + 1)};
+			std::size_t const column{static_cast<std::size_t>(vector.value2 + 1)};
+			return MazeT::directionMatrix[row][column];
+		} else {
 			return Direction::none;
+		}
 	}
 
 	static constexpr Direction reverseDirection(Direction const direction) {
