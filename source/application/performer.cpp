@@ -106,7 +106,7 @@ App::Performer::Performer(
 		}
 	}, mazeVariant)),
 	mazeGenerationIterator(getMaze(), seed, mazeWrap),
-	mazeSearchIteratorVariant([this, searchType, seed, mazeWrap]() -> decltype(Performer::mazeSearchIteratorVariant) {
+	mazeSearchIteratorVariant([this, searchType]() -> decltype(Performer::mazeSearchIteratorVariant) {
 		switch (searchType) {
 			case SearchType::depth:
 				return MazeEngine::DepthFirstSearchIterator(getMaze(), mazeStart);
