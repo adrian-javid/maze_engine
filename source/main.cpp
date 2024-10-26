@@ -103,9 +103,9 @@ int main(int const argc, char *argv[]) {
 		Usually, I would want this to be `#canvas`,
 		but the canvas doesn't use inputs for anything in this program.
 
-		So, To avoid the canvas eating inputs, I set this to the empty string.
+		So, To avoid the canvas eating inputs, I set this to the "null".
 	*/
-	static constexpr char const *emscriptenBindingElement{""};
+	static constexpr char const *emscriptenBindingElement{"null"};
 	if (SDL_SetHintWithPriority(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, emscriptenBindingElement, SDL_HINT_OVERRIDE) == SDL_FALSE) {
 		std::cerr << "Binding element for keyboard inputs was not set correctly.\n";
 	}
