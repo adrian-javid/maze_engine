@@ -10,11 +10,13 @@ namespace App { class SoundTable; }
 
 class App::SoundTable {
 
-	private:
+	public:
+		using Data = std::array<Mix_Chunk *, 6u>;
+		static_assert(std::tuple_size_v<Data> <= std::numeric_limits<int>::max());
 
-		static constexpr std::size_t size{6u};
-		static_assert(size <= std::numeric_limits<int>::max());
-		std::array<Mix_Chunk *, size> table{};
+
+	private:
+		Data table{};
 
 	public:
 
@@ -25,16 +27,16 @@ class App::SoundTable {
 		[[nodiscard]] constexpr SoundTable(SoundTable &&) = delete;
 		[[nodiscard]] constexpr SoundTable & operator=(SoundTable &&) = delete;
 
-		class DataView {
+		class AudioDataView {
 			private:
 				void const *data;
 				std::size_t size;
 
 			public:
-				[[nodiscard]] explicit constexpr DataView(
-					decltype(data) const data_, decltype(size) const size_
+				[[nodiscard]] explicit constexpr AudioDataView(
+					decltype(data) const paramData, decltype(size) const paramSize
 				):
-					data{data_}, size{size_}
+					data{paramData}, size{paramSize}
 				{}
 
 				[[nodiscard]] constexpr void const * getData() const { return data; }
@@ -42,11 +44,14 @@ class App::SoundTable {
 				[[nodiscard]] constexpr std::size_t getSize() const { return size; }
 		};
 
-		void put(std::size_t const identifier, DataView const dataView);
+		void put(std::size_t const identifier, AudioDataView const dataView);
 
 		void freeAllChunks();
 
 		void play(std::size_t const identifier) const;
+
+		[[nodiscard]]
+		constexpr Data const & getData() const { return table; }
 
 };
 

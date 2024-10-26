@@ -13,8 +13,8 @@ void ::App::SoundTable::freeAllChunks() {
 	}
 }
 
-void ::App::SoundTable::put(std::size_t const identifier, DataView const view) {
-	assert(identifier < size);
+void ::App::SoundTable::put(std::size_t const identifier, AudioDataView const view) {
+	assert(identifier < std::tuple_size_v<Data>);
 	assert(view.getSize() <= std::numeric_limits<int>::max());
 
 	// Read & write structure.
@@ -32,7 +32,7 @@ void ::App::SoundTable::put(std::size_t const identifier, DataView const view) {
 }
 
 void ::App::SoundTable::play(std::size_t const identifier) const {
-	assert(identifier < size);
+	assert(identifier < std::tuple_size_v<Data>);
 
 	SUPPRESS_WARNINGS({
 		SDL_assert(table[identifier] != nullptr);
