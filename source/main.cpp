@@ -51,7 +51,7 @@ int main(int const argc, char *argv[]) {
 	unsigned int const seed{App::ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
 	std::string_view const searchAlgorithmName(config.at("search").argument);
 	std::string_view const soundTypeName(config.at("sound").argument);
-	int sleepTimeMilliseconds{
+	int const sleepTimeMilliseconds{
 		App::ParamInfo::assertNonnegative(
 			App::ParamInfo::castArg<int>(config.at("delay").argument),
 			(std::ostringstream() << "Bad value for `delay`." ).str()
