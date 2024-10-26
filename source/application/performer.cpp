@@ -260,7 +260,7 @@ void App::Performer::update() {
 				markedWallSet.insert(*wall);
 			}
 
-			mazeGenerationIterator.advance();
+			mazeGenerationIterator.advanceUntilUnionOrDone();
 
 			return;
 		}
