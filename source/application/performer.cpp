@@ -154,7 +154,7 @@ App::Performer::Performer(
 	}
 }
 
-void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
+void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) const {
 	assert(soundInstrument != nullptr);
 	if (soundInstrument == nullptr) return;
 
@@ -236,29 +236,8 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 			return direction;
 		}()};
 
-		/*
-			The offset vectors that are able to be recognized are determined
-			by which maze grid type is being used.
-		*/
-		if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
-			switch (direction) {
-				case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;
-				case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
-				case MazeEngine::Maze::Direction::south: soundInstrument->play(0u); break;
-				case MazeEngine::Maze::Direction::west : soundInstrument->play(2u); break;
-				default: break;
-			}
-		} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
-			switch (direction) {
-				case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u); break;
-				case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u); break;
-				case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u); break;
-				case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u); break;
-				case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u); break;
-				case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u); break;
-				default: break;
-			}
-		}
+		playSound<MazeT>(direction);
+
 	}, mazeVariant);
 }
 

@@ -166,7 +166,33 @@ class App::Performer {
 			return const_cast<MazeEngine::MazeSearchIterator &>(std::as_const(*this).getMazeSearchIterator());
 		}
 
-		void playSound(MazeEngine::Vector2 const vertex);
+		void playSound(MazeEngine::Vector2 const vertex) const;
+
+		template<typename MazeT>
+		constexpr std::enable_if_t<
+			std::is_same_v<MazeT, MazeEngine:: SquareMaze> or
+			std::is_same_v<MazeT, MazeEngine::HexagonMaze>,
+		void> playSound(MazeEngine::Maze::Direction const direction) const {
+			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
+				switch (direction) {
+					case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;
+					case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
+					case MazeEngine::Maze::Direction::south: soundInstrument->play(0u); break;
+					case MazeEngine::Maze::Direction::west : soundInstrument->play(2u); break;
+					default: break;
+				}
+			} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
+				switch (direction) {
+					case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u); break;
+					case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u); break;
+					case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u); break;
+					case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u); break;
+					case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u); break;
+					case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u); break;
+					default: break;
+				}
+			}
+		}
 };
 
 #endif
