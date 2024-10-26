@@ -73,6 +73,8 @@ class App::Performer {
 
 	public:
 
+		constexpr void pause() { state = State::complete; }
+
 		[[nodiscard]] explicit Performer(
 			MazeType const mazeType, int const mazeSizeHint,
 			Seed const seed, bool const mazeWrap,

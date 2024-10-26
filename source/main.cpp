@@ -78,6 +78,14 @@ int main(int const argc, char *argv[]) {
 
 	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, soundType, sleepTimeMilliseconds, shouldShowMazeGeneration);
 
+	#ifdef __EMSCRIPTEN__
+	/*
+		For the website, the performer should not start performing until the user initiates it.
+		So, the performer will be paused to begin with.
+	*/
+	App::performer->pause();
+	#endif
+
 	// Print the parameter values.
 	for (auto const &<:name, param:> : config) {
 		App::println(name, ": ", param.argument);
