@@ -103,7 +103,7 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Maze const & getMaze() const {
 			return std::visit(
-				[](auto and(maze)) -> MazeEngine::Maze const & {
+				[](auto const &maze) -> MazeEngine::Maze const & {
 					return maze;
 				},
 				mazeVariant
