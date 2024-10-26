@@ -42,6 +42,16 @@ class MazeEngine::MazeGenerationIterator final {
 
 		Result advance();
 
+		inline void advanceUntilUnionOrDone() {
+			assert(not isDone());
+			if (isDone()) return;
+
+			for (
+				Result result(Result::none);
+				result == Result::none and not isDone();
+				result = advance()
+			);
+		}
 
 		[[nodiscard]] FORCE_INLINE inline bool isDone() const { return wallIterator == wallList.cend(); }
 
