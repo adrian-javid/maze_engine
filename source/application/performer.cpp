@@ -35,13 +35,15 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 		unsigned int const seed, bool const mazeWrap,
 		App::Performer::SearchType const searchType,
 		App::Performer::SoundType const soundType,
-		unsigned int const sleepTimeMilliseconds
+		unsigned int const sleepTimeMilliseconds,
+		bool const shouldShowMazeGeneration
 	) -> void {
 		App::performer.emplace(
 			mazeType, mazeSize,
 			App::Performer::Seed{seed}, mazeWrap,
 			searchType, soundType,
-			App::UnsignedMilliseconds{sleepTimeMilliseconds}
+			App::UnsignedMilliseconds{sleepTimeMilliseconds},
+			shouldShowMazeGeneration
 		);
 	});
 

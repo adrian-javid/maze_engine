@@ -64,6 +64,9 @@
 				<label for="maze_wrap">Wrap</label>
 				<input type="checkbox" id="maze_wrap" name="maze_wrap">
 
+				<label for="show_maze_generation">Show Maze Generation</label>
+				<input type="checkbox" id="show_maze_generation" name="show_maze_generation" checked>
+
 				<label for="search_type">Algorithm</label>
 				<select id="search_type" name="search_type" required>
 					<option value="depth" selected>Depth-First Search</option>
@@ -157,7 +160,8 @@
 					mazeType, parseInt(formData.get("maze_size"), 10),
 					parseInt(formData.get("seed"), 10), Boolean(formData.get("maze_wrap")),
 					searchType, soundType,
-					parseInt(formData.get("delay"), 10)
+					parseInt(formData.get("delay"), 10),
+					Boolean(formData.get("show_maze_generation"))
 				);
 			});
 
