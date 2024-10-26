@@ -262,7 +262,13 @@ void App::Performer::update() {
 				markedWallSet.insert(*wall);
 			}
 
-			mazeGenerationIterator.advanceUntilUnionOrDone();
+			if constexpr (true) {
+				mazeGenerationIterator.advanceUntilUnionOrDone([this](Wall const wall) -> void {
+					this->markedWallSet.insert(wall);
+				});
+			} else {
+				mazeGenerationIterator.advance();
+			}
 
 			return;
 		}
