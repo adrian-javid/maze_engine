@@ -78,7 +78,8 @@ class App::Performer {
 			Seed const seed, bool const mazeWrap,
 			SearchType const searchType,
 			SoundType const soundType,
-			UnsignedMilliseconds const sleepTimeMilliseconds
+			UnsignedMilliseconds const sleepTimeMilliseconds,
+			bool const showMazeGeneration
 		);
 
 		Performer() = delete;

@@ -76,8 +76,9 @@ int main(int const argc, char *argv[]) {
 		else if (soundTypeName == "synthesizer") return App::Performer::SoundType::synthesizer;
 		else App::errorExit("Unable to resolve sound instrument frmo string: `", soundTypeName, "`.");
 	}()};
+	bool const shouldShowMazeGeneration{App::ParamInfo::castArg<bool>(config.at("show_maze_generation").argument)};
 
-	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, soundType, sleepTimeMilliseconds);
+	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, soundType, sleepTimeMilliseconds, shouldShowMazeGeneration);
 
 	// Print the parameter values.
 	for (auto const &<:name, param:> : config) {

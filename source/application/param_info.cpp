@@ -67,6 +67,14 @@ std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 		"60",
 		std::nullopt,
 	}},
+	{"show_maze_generation", {
+		"If `true`, the program will first spend time showing the incremental process of generating the maze.",
+		"true",
+		Acceptable{
+			{"true", "Enable maze generation showcase."},
+			{"false", "Skip maze generation showcase."}
+		},
+	}},
 };
 
 std::string App::ParamInfo::validParametersStr(bool const verbose) {

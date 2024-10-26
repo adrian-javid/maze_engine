@@ -54,7 +54,8 @@ App::Performer::Performer(
 	Seed const seed, bool const mazeWrap,
 	SearchType const searchType,
 	SoundType const soundType,
-	UnsignedMilliseconds const sleepTimeMilliseconds
+	UnsignedMilliseconds const sleepTimeMilliseconds,
+	bool const showMazeGeneration
 ):
 	mazeVariant([mazeType, mazeSizeHint]() -> decltype(Performer::mazeVariant) {
 		static constexpr MazeEngine::Maze::Tile mazeFillValue{0xFFu};
@@ -144,6 +145,11 @@ App::Performer::Performer(
 {
 	assert(not mazeVariant.valueless_by_exception());
 	assert(not mazeSearchIteratorVariant.valueless_by_exception());
+
+	if (showMazeGeneration == false) {
+		for (; not mazeGenerationIterator.isDone(); mazeGenerationIterator.advance());
+		state = State::searching;
+	}
 }
 
 void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
