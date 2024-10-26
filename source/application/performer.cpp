@@ -244,10 +244,12 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) const {
 void App::Performer::update() {
 	if (timer.update()) switch (state) {
 		case State::generating: {
+			using Wall = MazeEngine::MazeGenerationIterator::Wall;
+
 			if (mazeGenerationIterator.isDone()) goto switchToSearching;
 
 			/* process wall */ {
-				MazeEngine::MazeGenerationIterator::Wall const *wall{mazeGenerationIterator.getWall()};
+				Wall const *wall{mazeGenerationIterator.getWall()};
 				assert(wall != nullptr); if (wall == nullptr) {
 					// (Fallback behavior if the wall is null. The wall should never be null here.)
 					assert(mazeGenerationIterator.isDone());
