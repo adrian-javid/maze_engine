@@ -89,8 +89,9 @@ int main(int const argc, char *argv[]) {
 	}
 
 	#ifdef __EMSCRIPTEN__
-	if (SDL_SetHintWithPriority(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, "#canvas", SDL_HINT_OVERRIDE) == SDL_FALSE) {
-		std::cerr << "Binding element for keyboard inputs was not set to canvas." << '\n';
+	static constexpr char const *emscriptenBindingElement{""};
+	if (SDL_SetHintWithPriority(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, emscriptenBindingElement, SDL_HINT_OVERRIDE) == SDL_FALSE) {
+		std::cerr << "Binding element for keyboard inputs was not set correctly." << '\n';
 	}
 	#endif
 
