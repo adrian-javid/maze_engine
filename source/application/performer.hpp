@@ -56,6 +56,9 @@ class App::Performer {
 			MazeEngine::GreedyBestFirstSearchIterator
 		> mazeSearchIteratorVariant;
 		Timer timer;
+		/*
+			Careful, this can be `nullptr`.
+		*/
 		SoundTable const *soundInstrument;
 		decltype(SoundTable::makeRandomSoundPicker({})) randomSoundPicker;
 		/*
