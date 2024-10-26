@@ -97,15 +97,7 @@ int main(int const argc, char *argv[]) {
 	}
 
 	#ifdef __EMSCRIPTEN__
-	/*
-		The element of which inputs are binded to.
-
-		Usually, I would want this to be `#canvas`,
-		but the canvas doesn't use inputs for anything in this program.
-
-		So, To avoid the canvas eating inputs, I set this to the "null".
-	*/
-	static constexpr char const *emscriptenBindingElement{"null"};
+	static constexpr char const *emscriptenBindingElement{"#canvas"};
 	if (SDL_SetHintWithPriority(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, emscriptenBindingElement, SDL_HINT_OVERRIDE) == SDL_FALSE) {
 		std::cerr << "Binding element for keyboard inputs was not set correctly.\n";
 	}
