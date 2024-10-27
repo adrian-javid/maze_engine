@@ -15,8 +15,8 @@ void App::Window::refresh() {
 	assert(performer.has_value());
 
 	static constexpr HslaColor
-		startEndColor    (015.0),
-		pathTileColor    (100.0),
+		startEndColor    (020.0),
+		pathTileColor    (090.0),
 		wallColor        (225.0),
 		markedTileColor  (300.0),
 		unmarkedTileColor(155.0);
