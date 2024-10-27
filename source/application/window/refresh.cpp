@@ -21,9 +21,16 @@ namespace App::Window {
 	static inline ColorTriplet getColorTriplet(
 		HslaColor tileColor, std::optional<double> const luminanceOpt=std::nullopt
 	) {
-		static constexpr auto getCyclicHue([](double const hue, double const percentageAddend) -> double {
+		static constexpr auto getCyclicHue([](
+			double const hue,
+			double const percentageAddend
+		) -> double {
 			static constexpr double hueDepth{55.0};
-			return HslaColor::getCyclicHue(hue, MazeEngine::Aux::percentageWrap(cyclicPercentage + percentageAddend), hueDepth);
+			return HslaColor::getCyclicHue(
+				hue,
+				MazeEngine::Aux::percentageWrap(cyclicPercentage + percentageAddend),
+				hueDepth
+			);
 		});
 		double const luminance{luminanceOpt.value_or(tileColor.getLuminance())};
 		return std::make_tuple(
