@@ -5,8 +5,8 @@
 #include "application/performer.hpp"
 
 namespace App::Window {
-	static constexpr double zeroPercent{0.0};
-	static double cyclicPercentage{zeroPercent};
+	static double cyclicPercentage{/* start at zero percent */ 0.0};
+
 	/*
 		Color triplet getter based on the cyclic percentage.
 	*/
