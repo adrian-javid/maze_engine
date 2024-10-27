@@ -18,9 +18,9 @@ namespace App {
 
 	inline constexpr SDL_Color
 		websiteBackgroundColor{
-			/* red   */ 174u,
-			/* green */ 198u,
-			/* blue  */ 207u,
+			/* red   */  174u,
+			/* green */  198u,
+			/* blue  */  207u,
 			/* alpha */ 0xFFu
 		},
 		black{0x00, 0x00, 0x00, 0xFF};
