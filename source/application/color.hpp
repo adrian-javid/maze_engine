@@ -90,7 +90,7 @@ struct App::HslaColor {
 
 	[[nodiscard]]
 	SDL_Color toRgbaColor() const;
-	
+
 	[[nodiscard]]
 	SDL_Color toRgbaColor(double const overrideHue) const;
 
