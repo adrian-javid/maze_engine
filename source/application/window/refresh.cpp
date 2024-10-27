@@ -41,7 +41,7 @@ namespace App::Window {
 	}
 
 	/*
-		Get tile based on the tile identities from the maze generation iterator.
+		Get tile hue based on the tile identities from the maze generation iterator.
 	*/
 	[[nodiscard]]
 	static inline decltype(HslaColor({}).getHue()) getTileHue(MazeEngine::Vector2 const tileKey) {
