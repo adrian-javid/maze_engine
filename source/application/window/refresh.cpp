@@ -70,7 +70,7 @@ void App::Window::refresh() {
 	assert(cyclicPercentage < 1.0);
 
 	/*
-		Color triplets from the color getter.
+		Construct color triplets.
 	*/
 	ColorTriplet const
 		pathTileColorTriplet    {getColorTriplet(pathTileColor    )},
