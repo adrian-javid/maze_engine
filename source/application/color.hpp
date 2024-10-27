@@ -9,6 +9,8 @@
 #include <tuple>
 #include <string>
 #include <cassert>
+#include <iostream>
+#include <sstream>
 
 namespace App {
 	using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
