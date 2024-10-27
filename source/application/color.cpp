@@ -1,14 +1,9 @@
 #include "color.hpp"
 
-#include <sstream>
 #include <cassert>
 #include "maze_engine/auxiliary.hpp"
 
-std::string App::toString(SDL_Color const &color) {
-	std::stringstream buffer;
-	buffer << "(R=" << +color.r << ", G=" << +color.g << ", B=" << +color.b << ", A=" << +color.a << ")";
-	return buffer.str();
-}
+
 
 SDL_Color App::makeRgbaColor(
 	double const hue,
@@ -89,10 +84,5 @@ SDL_Color App::HslaColor::toRgbaColor(double const overrideHue) const {
 
 void App::HslaColor::addHue(double const hueSupplement) {
 	hue = hueWrap(hue + hueSupplement);
-}
-
-std::string App::HslaColor::toString() const {
-	std::stringstream buffer;
-	buffer << "(H=" << hue << ", S=" << saturation << ", L=" << luminance << ", A=" << alpha << ")";
-	return buffer.str();
+	assert(0.0 <= hue and hue < 360.0);
 }
