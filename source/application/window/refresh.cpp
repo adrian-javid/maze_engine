@@ -7,13 +7,19 @@
 namespace App::Window {
 	static double cyclicPercentage{/* start at zero percent */ 0.0};
 
+	static constexpr HslaColor
+		startEndColor    (020.0),
+		pathTileColor    (090.0),
+		wallColor        (225.0),
+		markedTileColor  (300.0),
+		unmarkedTileColor(155.0);
+
 	/*
-		Color triplet getter based on the cyclic percentage.
+		Get color triplet based on the cyclic percentage.
 	*/
 	[[nodiscard]]
-	static ColorTriplet getColorTriplet(
-		HslaColor tileColor,
-		std::optional<double> const luminanceOpt=std::nullopt
+	static inline ColorTriplet getColorTriplet(
+		HslaColor tileColor, std::optional<double> const luminanceOpt=std::nullopt
 	) {
 		static constexpr auto getCyclicHue([](double const hue, double const percentageAddend) -> double {
 			static constexpr double hueDepth{55.0};
@@ -27,17 +33,28 @@ namespace App::Window {
 		);
 	}
 
+	/*
+		Get tile based on the tile identities from the maze generation iterator.
+	*/
+	[[nodiscard]]
+	static inline decltype(HslaColor({}).getHue()) getTileHue(MazeEngine::Vector2 const tileKey) {
+		assert(performer.has_value());
+		if (not performer.has_value()) return {};
+
+		auto const &identities{performer->getMazeGenerationIterator().getTileKeyIdentities()};
+		
+		auto const identityPair(identities.find(tileKey));
+		if (identityPair == identities.cend()) return {};
+
+		MazeEngine::UnionFinder::Identifier const tileKeyIdentifier{identityPair->second};
+
+		return HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 7);
+	}
+
 }
 
 void App::Window::refresh() {
 	assert(performer.has_value());
-
-	static constexpr HslaColor
-		startEndColor    (020.0),
-		pathTileColor    (090.0),
-		wallColor        (225.0),
-		markedTileColor  (300.0),
-		unmarkedTileColor(155.0);
 
 	double const deltaPercentage{static_cast<double>(App::getDeltaTime()) * 0.00011};
 
@@ -54,25 +71,6 @@ void App::Window::refresh() {
 		markedTileColorTriplet  {getColorTriplet(markedTileColor  )},
 		unmarkedTileColorTriplet{getColorTriplet(unmarkedTileColor)},
 		startEndColorTriplet    {getColorTriplet(startEndColor    )};
-
-	/*
-		Tile hue getter 
-	*/
-	static constexpr auto getTileHue([](
-		MazeEngine::Vector2 const tileKey
-	) -> decltype(HslaColor({}).getHue()) {
-		assert(performer.has_value());
-		if (not performer.has_value()) return {};
-
-		auto const &identities{performer->getMazeGenerationIterator().getTileKeyIdentities()};
-		
-		auto const identityPair(identities.find(tileKey));
-		if (identityPair == identities.cend()) return {};
-
-		MazeEngine::UnionFinder::Identifier const tileKeyIdentifier{identityPair->second};
-
-		return HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 7);
-	});
 
 	auto const tileColorTripletGetter([
 		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
