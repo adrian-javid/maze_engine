@@ -96,11 +96,17 @@ struct App::HslaColor {
 
 	void addHue(double const hueSupplement);
 
-	[[nodiscard]]
-	std::string toString() const;
+	friend std::ostream & operator<<(std::ostream &outputStream, HslaColor const &color) {
+		outputStream << "("
+			"H=" << color.hue        << ", "
+			"S=" << color.saturation << ", "
+			"L=" << color.luminance  << ", "
+			"A=" << color.alpha      <<
+		')';
+		return outputStream;
+	}
 
-	private:
-		double hue={}, saturation=defaultSaturation, luminance=defaultLuminance, alpha=defaultAlpha;
+	private: double hue={}, saturation=defaultSaturation, luminance=defaultLuminance, alpha=defaultAlpha;
 };
 
 #endif
