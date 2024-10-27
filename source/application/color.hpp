@@ -74,10 +74,10 @@ struct App::HslaColor {
 	[[nodiscard]] constexpr double getLuminance () const { return luminance ; }
 	[[nodiscard]] constexpr double getAlpha     () const { return alpha     ; }
 
-	constexpr HslaColor & setHue       (double const paramHue       ) { hue        = paramHue       ; return *this; }
-	constexpr HslaColor & setSaturation(double const paramSaturation) { saturation = paramSaturation; return *this; }
-	constexpr HslaColor & setLuminance (double const paramLuminance ) { luminance  = paramLuminance ; return *this; }
-	constexpr HslaColor & setAlpha     (double const paramAlpha     ) { alpha      = paramAlpha     ; return *this; }
+	constexpr HslaColor & setHue       (double const paramHue       ) { hue        = paramHue       ; assert(0.0 <= hue        and hue        <  360.0); return *this; }
+	constexpr HslaColor & setSaturation(double const paramSaturation) { saturation = paramSaturation; assert(0.0 <= saturation and saturation <=   1.0); return *this; }
+	constexpr HslaColor & setLuminance (double const paramLuminance ) { luminance  = paramLuminance ; assert(0.0 <= luminance  and luminance  <=   1.0); return *this; }
+	constexpr HslaColor & setAlpha     (double const paramAlpha     ) { alpha      = paramAlpha     ; assert(0.0 <= alpha      and alpha      <=   1.0); return *this; }
 
 	[[nodiscard]]
 	static double getCyclicHue(double const hue, double const percentage, double const depth);
