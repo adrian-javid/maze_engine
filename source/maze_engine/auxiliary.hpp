@@ -39,6 +39,8 @@ namespace MazeEngine::Aux {
 		return value;
 	}
 
+	inline double percentageWrap(double const value) { return wrap(value, 1.00); }
+
 	template <typename... ParamsT>
 	constexpr std::enable_if_t<(std::is_same_v<ParamsT, std::size_t> and ...), std::size_t>
 	combineHashValues(
