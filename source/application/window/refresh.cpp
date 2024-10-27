@@ -4,11 +4,10 @@
 #include "application/linear_interpolation.hpp"
 #include "application/performer.hpp"
 
-namespace App {
-	FORCE_INLINE static inline
-	double percentageWrap(double const value) {
-		return MazeEngine::Aux::wrap(value, 1.00);
-	}
+namespace App::Window {
+	static constexpr double zeroPercent{0.0};
+	static double cyclicPercentage{zeroPercent};
+
 }
 
 void App::Window::refresh() {
@@ -21,20 +20,22 @@ void App::Window::refresh() {
 		markedTileColor  (300.0),
 		unmarkedTileColor(155.0);
 
-	static constexpr double zeroPercent{0.0};
-	static double percentage{zeroPercent};
 	double const deltaPercentage{static_cast<double>(App::getDeltaTime()) * 0.00011};
 
-	percentage = App::percentageWrap(percentage + deltaPercentage);
-	assert(percentage >= 0.0); assert(percentage < 1.0);
+	cyclicPercentage = MazeEngine::Aux::percentageWrap(cyclicPercentage + deltaPercentage);
+	assert(cyclicPercentage >= 0.0);
+	assert(cyclicPercentage < 1.0);
 
-	static constexpr double hueDepth{55.0};
-	static constexpr auto colorTripletGetter([](
+	/*
+		Color triplet getter based on the cyclic percentage.
+	*/
+	static constexpr auto getColorTriplet([](
 		HslaColor tileColor,
 		std::optional<double> const luminanceOpt=std::nullopt
 	) -> ColorTriplet {
 		static constexpr auto getCyclicHue([](double const hue, double const percentageAddend) -> double {
-			return HslaColor::getCyclicHue(hue, App::percentageWrap(percentage + percentageAddend), hueDepth);
+			static constexpr double hueDepth{55.0};
+			return HslaColor::getCyclicHue(hue, MazeEngine::Aux::percentageWrap(cyclicPercentage + percentageAddend), hueDepth);
 		});
 		double const luminance{luminanceOpt.value_or(tileColor.getLuminance())};
 		return std::make_tuple(
@@ -44,17 +45,20 @@ void App::Window::refresh() {
 		);
 	});
 
+	/*
+		Color triplets from the color getter.
+	*/
 	ColorTriplet const
-		pathTileColorTriplet    {colorTripletGetter(pathTileColor    )},
-		wallColorTriplet        {colorTripletGetter(wallColor        )},
-		markedTileColorTriplet  {colorTripletGetter(markedTileColor  )},
-		unmarkedTileColorTriplet{colorTripletGetter(unmarkedTileColor)},
-		startEndColorTriplet    {colorTripletGetter(startEndColor    )};
+		pathTileColorTriplet    {getColorTriplet(pathTileColor    )},
+		wallColorTriplet        {getColorTriplet(wallColor        )},
+		markedTileColorTriplet  {getColorTriplet(markedTileColor  )},
+		unmarkedTileColorTriplet{getColorTriplet(unmarkedTileColor)},
+		startEndColorTriplet    {getColorTriplet(startEndColor    )};
 
-	float const windowWidthValue {static_cast<float>(windowWidth )};
-	float const windowHeightValue{static_cast<float>(windowHeight)};
-
-	static constexpr auto getTileHue([](
+	/*
+		Tile hue getter 
+	*/
+	static constexpr auto tileHueGetter([](
 		MazeEngine::Vector2 const tileKey
 	) -> decltype(HslaColor({}).getHue()) {
 		assert(performer.has_value());
@@ -76,7 +80,7 @@ void App::Window::refresh() {
 	](MazeEngine::Vector2 const &tileKey) -> ColorTriplet {
 		switch (performer->getState()) {
 			case Performer::State::generating: {
-				return colorTripletGetter(getTileHue(tileKey));
+				return getColorTriplet(tileHueGetter(tileKey));
 			}
 			default: {
 				if (tileKey == performer->getMazeStart() or tileKey == performer->getMazeEnd())
@@ -123,15 +127,15 @@ void App::Window::refresh() {
 
 				static_assert(wallColor.getHue() >= unmarkedTileColor.getHue());
 				double const wallTileColorOffset{wallColor.getHue() - unmarkedTileColor.getHue()};
-				double const wallHue{HslaColor::hueWrap(getTileHue(wall.tileKey) + wallTileColorOffset)};
+				double const wallHue{HslaColor::hueWrap(tileHueGetter(wall.tileKey) + wallTileColorOffset)};
 
 				if (
 					auto const &markedWalls{performer->getMarkedWallSet()};
 					markedWalls.find(principalWall) != markedWalls.cend()
 				) {
-					return colorTripletGetter(wallHue);
+					return getColorTriplet(wallHue);
 				} else {
-					return colorTripletGetter(wallHue, /* luminance */double{0.10});
+					return getColorTriplet(wallHue, /* luminance */double{0.10});
 				}
 			}
 
@@ -146,9 +150,12 @@ void App::Window::refresh() {
 	#endif
 	SDL_RenderClear(renderer);
 
+	float const windowWidthFloat {static_cast<float>(windowWidth )};
+	float const windowHeightFloat{static_cast<float>(windowHeight)};
+
 	std::visit(
 		[
-			windowWidthValue, windowHeightValue,
+			windowWidthFloat, windowHeightFloat,
 			&tileColorTripletGetter, &wallColorTripletGetter
 		](auto const &maze) -> void {
 			using MazeT = std::decay_t<decltype(maze)>;
@@ -156,12 +163,12 @@ void App::Window::refresh() {
 			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) drawSquareMaze(
 				std::forward<decltype(maze)>(maze),
 				{0.0f, 0.0f},
-				windowWidthValue, windowHeightValue,
+				windowWidthFloat, windowHeightFloat,
 				tileColorTripletGetter, wallColorTripletGetter
 			); else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) drawHexagonMaze(
 				std::forward<decltype(maze)>(maze),
-				{windowWidthValue / 2.0f, windowHeightValue / 2.0f},
-				windowWidthValue, windowHeightValue,
+				{windowWidthFloat / 2.0f, windowHeightFloat / 2.0f},
+				windowWidthFloat, windowHeightFloat,
 				tileColorTripletGetter, wallColorTripletGetter
 			);
 		},
