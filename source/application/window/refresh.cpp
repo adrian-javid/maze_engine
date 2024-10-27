@@ -58,7 +58,7 @@ void App::Window::refresh() {
 	/*
 		Tile hue getter 
 	*/
-	static constexpr auto tileHueGetter([](
+	static constexpr auto getTileHue([](
 		MazeEngine::Vector2 const tileKey
 	) -> decltype(HslaColor({}).getHue()) {
 		assert(performer.has_value());
@@ -80,7 +80,7 @@ void App::Window::refresh() {
 	](MazeEngine::Vector2 const &tileKey) -> ColorTriplet {
 		switch (performer->getState()) {
 			case Performer::State::generating: {
-				return getColorTriplet(tileHueGetter(tileKey));
+				return getColorTriplet(getTileHue(tileKey));
 			}
 			default: {
 				if (tileKey == performer->getMazeStart() or tileKey == performer->getMazeEnd())
@@ -127,7 +127,7 @@ void App::Window::refresh() {
 
 				static_assert(wallColor.getHue() >= unmarkedTileColor.getHue());
 				double const wallTileColorOffset{wallColor.getHue() - unmarkedTileColor.getHue()};
-				double const wallHue{HslaColor::hueWrap(tileHueGetter(wall.tileKey) + wallTileColorOffset)};
+				double const wallHue{HslaColor::hueWrap(getTileHue(wall.tileKey) + wallTileColorOffset)};
 
 				if (
 					auto const &markedWalls{performer->getMarkedWallSet()};
