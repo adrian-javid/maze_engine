@@ -31,11 +31,12 @@ void App::Window::refresh() {
 	static constexpr double hueDepth{45.0 + 5.0 + 5.0};
 	static constexpr auto getColorTriplet([](
 		HslaColor tileColor,
-		double const luminance=HslaColor::defaultLuminance
+		std::optional<double> const luminanceOpt=std::nullopt
 	) -> ColorTriplet {
 		static constexpr auto getCyclicHue([](double const hue, double const percentageAddend) -> double {
 			return HslaColor::getCyclicHue(hue, App::percentageWrap(percentage + percentageAddend), hueDepth);
 		});
+		double const luminance{luminanceOpt.value_or(tileColor.getLuminance())};
 		return std::make_tuple(
 			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.00)),
 			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.10)),
