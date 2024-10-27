@@ -46,10 +46,10 @@ namespace App {
 }
 
 struct App::HslaColor {
+	double static constexpr defaultSaturation=1.0, defaultLuminance=0.5, defaultAlpha=1.0;
+
 	[[nodiscard]]
 	constexpr HslaColor() = delete;
-
-	double static constexpr defaultSaturation=1.0, defaultLuminance=0.5, defaultAlpha=1.0;
 
 	[[nodiscard]]
 	constexpr HslaColor(
