@@ -29,7 +29,7 @@ void App::Window::refresh() {
 	assert(percentage >= 0.0); assert(percentage < 1.0);
 
 	static constexpr double hueDepth{55.0};
-	static constexpr auto getColorTriplet([](
+	static constexpr auto colorTripletGetter([](
 		HslaColor tileColor,
 		std::optional<double> const luminanceOpt=std::nullopt
 	) -> ColorTriplet {
@@ -45,11 +45,11 @@ void App::Window::refresh() {
 	});
 
 	ColorTriplet const
-		pathTileColorTriplet    {getColorTriplet(pathTileColor    )},
-		wallColorTriplet        {getColorTriplet(wallColor        )},
-		markedTileColorTriplet  {getColorTriplet(markedTileColor  )},
-		unmarkedTileColorTriplet{getColorTriplet(unmarkedTileColor)},
-		startEndColorTriplet    {getColorTriplet(startEndColor    )};
+		pathTileColorTriplet    {colorTripletGetter(pathTileColor    )},
+		wallColorTriplet        {colorTripletGetter(wallColor        )},
+		markedTileColorTriplet  {colorTripletGetter(markedTileColor  )},
+		unmarkedTileColorTriplet{colorTripletGetter(unmarkedTileColor)},
+		startEndColorTriplet    {colorTripletGetter(startEndColor    )};
 
 	float const windowWidthValue {static_cast<float>(windowWidth )};
 	float const windowHeightValue{static_cast<float>(windowHeight)};
@@ -76,7 +76,7 @@ void App::Window::refresh() {
 	](MazeEngine::Vector2 const &tileKey) -> ColorTriplet {
 		switch (performer->getState()) {
 			case Performer::State::generating: {
-				return getColorTriplet(getTileHue(tileKey));
+				return colorTripletGetter(getTileHue(tileKey));
 			}
 			default: {
 				if (tileKey == performer->getMazeStart() or tileKey == performer->getMazeEnd())
@@ -129,9 +129,9 @@ void App::Window::refresh() {
 					auto const &markedWalls{performer->getMarkedWallSet()};
 					markedWalls.find(principalWall) != markedWalls.cend()
 				) {
-					return getColorTriplet(wallHue);
+					return colorTripletGetter(wallHue);
 				} else {
-					return getColorTriplet(wallHue, /* luminance */double{0.10});
+					return colorTripletGetter(wallHue, /* luminance */double{0.10});
 				}
 			}
 
