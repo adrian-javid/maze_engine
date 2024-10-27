@@ -28,7 +28,7 @@ void App::Window::refresh() {
 	percentage = App::percentageWrap(percentage + deltaPercentage);
 	assert(percentage >= 0.0); assert(percentage < 1.0);
 
-	static constexpr double hueDepth{45.0 + 5.0 + 5.0};
+	static constexpr double hueDepth{55.0};
 	static constexpr auto getColorTriplet([](
 		HslaColor tileColor,
 		std::optional<double> const luminanceOpt=std::nullopt
