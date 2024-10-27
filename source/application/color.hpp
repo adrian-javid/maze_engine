@@ -25,8 +25,10 @@ namespace App {
 		},
 		black{0x00, 0x00, 0x00, 0xFF};
 
+	[[nodiscard]]
 	std::string toString(SDL_Color const &color);
 
+	[[nodiscard]]
 	SDL_Color makeRgbaColor(
 		double const hue,
 		double const saturation=1.0,
@@ -39,40 +41,61 @@ namespace App {
 
 struct App::HslaColor {
 
-	double hue, saturation, luminance, alpha;
+	[[nodiscard]]
+	constexpr HslaColor() = delete;
 
+	double static constexpr defaultSaturation=1.0, defaultLuminance=0.5, defaultAlpha=1.0;
+
+	[[nodiscard]]
 	constexpr HslaColor(
-		double const hueValue,
-		double const saturationValue=1.0,
-		double const luminanceValue=0.5,
-		double const alphaValue=1.0
+		double const paramHue                         ,
+		double const paramSaturation=defaultSaturation,
+		double const paramLuminance =defaultLuminance ,
+		double const paramAlpha     =defaultAlpha
 	):
-		hue{hueValue},
-		saturation{saturationValue},
-		luminance{luminanceValue},
-		alpha{alphaValue}
-	{}
+		hue       {paramHue       },
+		saturation{paramSaturation},
+		luminance {paramLuminance },
+		alpha     {paramAlpha     }
+	{
+		assert(0.0 <= hue        and hue        <  360.0);
+		assert(0.0 <= saturation and saturation <=   1.0);
+		assert(0.0 <= luminance  and luminance  <=   1.0);
+		assert(0.0 <= alpha      and alpha      <=   1.0);
+	}
+
+	[[nodiscard]] constexpr double getHue       () const { return hue       ; }
+	[[nodiscard]] constexpr double getSaturation() const { return saturation; }
+	[[nodiscard]] constexpr double getLuminance () const { return luminance ; }
+	[[nodiscard]] constexpr double getAlpha     () const { return alpha     ; }
 
 	constexpr HslaColor & setHue       (double const paramHue       ) { hue        = paramHue       ; return *this; }
 	constexpr HslaColor & setSaturation(double const paramSaturation) { saturation = paramSaturation; return *this; }
 	constexpr HslaColor & setLuminance (double const paramLuminance ) { luminance  = paramLuminance ; return *this; }
 	constexpr HslaColor & setAlpha     (double const paramAlpha     ) { alpha      = paramAlpha     ; return *this; }
 
-	static double getCyclicHue(
-		double const hue,
-		double const percentage,
-		double const depth
-	);
+	[[nodiscard]]
+	static double getCyclicHue(double const hue, double const percentage, double const depth);
 
+	[[nodiscard]]
 	static double hueWrap(double const value);
 
-	[[deprecated]]
+	[[deprecated, nodiscard]]
 	ColorTriplet getColorTriplet(double const percentage, double const colorDepth) const;
 
+	[[nodiscard]]
 	SDL_Color toRgbaColor() const;
+	
+	[[nodiscard]]
 	SDL_Color toRgbaColor(double const overrideHue) const;
+
 	void addHue(double const hueSupplement);
+
+	[[nodiscard]]
 	std::string toString() const;
+
+	private:
+		double hue={}, saturation=defaultSaturation, luminance=defaultLuminance, alpha=defaultAlpha;
 };
 
 #endif

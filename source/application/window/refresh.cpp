@@ -31,15 +31,15 @@ void App::Window::refresh() {
 	static constexpr double hueDepth{45.0 + 5.0 + 5.0};
 	static constexpr auto getColorTriplet([](
 		HslaColor tileColor,
-		double const luminance=HslaColor(double{}).luminance
+		double const luminance=HslaColor::defaultLuminance
 	) -> ColorTriplet {
 		static constexpr auto getCyclicHue([](double const hue, double const percentageAddend) -> double {
 			return HslaColor::getCyclicHue(hue, App::percentageWrap(percentage + percentageAddend), hueDepth);
 		});
 		return std::make_tuple(
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.hue, -.00)),
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.hue, -.10)),
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.hue, -.20))
+			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.00)),
+			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.10)),
+			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.20))
 		);
 	});
 
@@ -55,7 +55,7 @@ void App::Window::refresh() {
 
 	static constexpr auto getTileHue([](
 		MazeEngine::Vector2 const tileKey
-	) -> decltype(HslaColor::hue) {
+	) -> decltype(HslaColor({}).getHue()) {
 		assert(performer.has_value());
 		if (not performer.has_value()) return {};
 
@@ -120,8 +120,8 @@ void App::Window::refresh() {
 					}
 				}());
 
-				static_assert(wallColor.hue >= unmarkedTileColor.hue);
-				double const wallTileColorOffset{wallColor.hue - unmarkedTileColor.hue};
+				static_assert(wallColor.getHue() >= unmarkedTileColor.getHue());
+				double const wallTileColorOffset{wallColor.getHue() - unmarkedTileColor.getHue()};
 				double const wallHue{HslaColor::hueWrap(getTileHue(wall.tileKey) + wallTileColorOffset)};
 
 				if (
