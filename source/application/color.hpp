@@ -27,8 +27,12 @@ namespace App {
 		},
 		black{0x00, 0x00, 0x00, 0xFF};
 
-	[[nodiscard]]
-	std::string toString(SDL_Color const &color);
+	[[deprecated, nodiscard]] inline
+	std::string toString(SDL_Color const &color) {
+		std::stringstream buffer;
+		buffer << "(R=" << +color.r << ", G=" << +color.g << ", B=" << +color.b << ", A=" << +color.a << ")";
+		return buffer.str();
+	}
 
 	[[nodiscard]]
 	SDL_Color makeRgbaColor(
