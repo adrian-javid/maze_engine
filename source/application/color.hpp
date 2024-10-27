@@ -46,7 +46,6 @@ namespace App {
 }
 
 struct App::HslaColor {
-
 	[[nodiscard]]
 	constexpr HslaColor() = delete;
 
