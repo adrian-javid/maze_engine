@@ -7,6 +7,25 @@
 namespace App::Window {
 	static constexpr double zeroPercent{0.0};
 	static double cyclicPercentage{zeroPercent};
+	/*
+		Color triplet getter based on the cyclic percentage.
+	*/
+	[[nodiscard]]
+	static ColorTriplet getColorTriplet(
+		HslaColor tileColor,
+		std::optional<double> const luminanceOpt=std::nullopt
+	) {
+		static constexpr auto getCyclicHue([](double const hue, double const percentageAddend) -> double {
+			static constexpr double hueDepth{55.0};
+			return HslaColor::getCyclicHue(hue, MazeEngine::Aux::percentageWrap(cyclicPercentage + percentageAddend), hueDepth);
+		});
+		double const luminance{luminanceOpt.value_or(tileColor.getLuminance())};
+		return std::make_tuple(
+			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.00)),
+			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.10)),
+			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.20))
+		);
+	}
 
 }
 
@@ -25,25 +44,6 @@ void App::Window::refresh() {
 	cyclicPercentage = MazeEngine::Aux::percentageWrap(cyclicPercentage + deltaPercentage);
 	assert(cyclicPercentage >= 0.0);
 	assert(cyclicPercentage < 1.0);
-
-	/*
-		Color triplet getter based on the cyclic percentage.
-	*/
-	static constexpr auto getColorTriplet([](
-		HslaColor tileColor,
-		std::optional<double> const luminanceOpt=std::nullopt
-	) -> ColorTriplet {
-		static constexpr auto getCyclicHue([](double const hue, double const percentageAddend) -> double {
-			static constexpr double hueDepth{55.0};
-			return HslaColor::getCyclicHue(hue, MazeEngine::Aux::percentageWrap(cyclicPercentage + percentageAddend), hueDepth);
-		});
-		double const luminance{luminanceOpt.value_or(tileColor.getLuminance())};
-		return std::make_tuple(
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.00)),
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.10)),
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.20))
-		);
-	});
 
 	/*
 		Color triplets from the color getter.
