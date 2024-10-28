@@ -14,7 +14,7 @@ namespace App::Window {
 			unmarkedTile(HslaColor(155.0).getHue()),
 			  markedTile(HslaColor(300.0).getHue()),
 			    startEnd(HslaColor(020.0).getHue()),
-			    pathTile(HslaColor(090.0).getHue()),
+			    pathTile(HslaColor(093.5).getHue()),
 			        wall(HslaColor(225.0).getHue());
 
 		static constexpr HueFloat
