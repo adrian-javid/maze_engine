@@ -38,30 +38,7 @@ namespace App::Window {
 			Make a color scheme based on the tile identities from the maze generation iterator.
 		*/
 		[[nodiscard]]
-		static ColorScheme make(MazeEngine::Vector2 const tileKey) {
-			if (not performer.has_value()) {
-				assert(false);
-				return ColorScheme(BaseHue::unmarkedTile);
-			}
-
-			auto const &identities{
-				performer->getMazeGenerationIterator().getTileKeyIdentities()
-			};
-
-			auto const identityPair(identities.find(tileKey));
-			if (identityPair == identities.cend()) {
-				assert(false);
-				return ColorScheme(BaseHue::unmarkedTile);
-			}
-
-			MazeEngine::UnionFinder::Identifier const tileKeyIdentifier{identityPair->second};
-
-			HueFloat const baseHue{
-				HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 15)
-			};
-
-			return ColorScheme(baseHue);
-		}
+		static ColorScheme make(MazeEngine::Vector2 const tileKey);
 
 		public: HueFloat
 			unmarkedTileHue{},
@@ -70,6 +47,37 @@ namespace App::Window {
 			    pathTileHue{},
 			        wallHue{};
 	};
+
+	/*
+		Color scheme with the legacy colors.
+	*/
+	static ColorScheme const legacyColorScheme(BaseHue::unmarkedTile);
+
+	[[nodiscard]]
+	ColorScheme ColorScheme::make(MazeEngine::Vector2 const tileKey) {
+		if (not performer.has_value()) {
+			assert(false);
+			return legacyColorScheme;
+		}
+
+		auto const &identities{
+			performer->getMazeGenerationIterator().getTileKeyIdentities()
+		};
+
+		auto const identityPair(identities.find(tileKey));
+		if (identityPair == identities.cend()) {
+			assert(false);
+			return legacyColorScheme;
+		}
+
+		MazeEngine::UnionFinder::Identifier const tileKeyIdentifier{identityPair->second};
+
+		HueFloat const baseHue{
+			HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 15)
+		};
+
+		return ColorScheme(baseHue);
+	}
 
 	/*
 		Get color triplet based on the cyclic percentage.
