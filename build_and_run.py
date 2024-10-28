@@ -32,7 +32,7 @@ def _main(argList: list[str]) -> None|str:
 			case _:
 				return F"Received unrecognized flag \"{arg}\"."
 
-	if buildType is None: buildType = "--release"
+	if buildType is None: buildType = "--debug"
 
 	assert platformName != ""
 
