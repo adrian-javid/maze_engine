@@ -16,12 +16,12 @@ namespace App::Window {
 			    pathTile(HslaColor(090.0).getHue()),
 			        wall(HslaColor(225.0).getHue()),
 			  markedTile(HslaColor(300.0).getHue());
-	
+
 		static constexpr HueFloat
-			    startEndOffset(    startEnd - unmarkedTile),
-			    pathTileOffset(    pathTile - unmarkedTile),
-			        wallOffset(        wall - unmarkedTile),
-			  markedTileOffset(  markedTile - unmarkedTile);
+			  startEndOffset(  startEnd - unmarkedTile),
+			  pathTileOffset(  pathTile - unmarkedTile),
+			      wallOffset(      wall - unmarkedTile),
+			markedTileOffset(markedTile - unmarkedTile);
 	}
 
 	struct ColorScheme {
