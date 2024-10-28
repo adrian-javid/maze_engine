@@ -150,9 +150,7 @@ App::Performer::Performer(
 	assert(not mazeSearchIteratorVariant.valueless_by_exception());
 
 	if (showMazeGeneration == false) {
-		for (; not mazeGenerationIterator.isDone(); mazeGenerationIterator.advance()) {
-			markedWallSet.insert(*mazeGenerationIterator.getWall());
-		}
+		for (; not mazeGenerationIterator.isDone(); mazeGenerationIterator.advance());
 		state = State::searching;
 	}
 }
