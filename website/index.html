@@ -47,6 +47,7 @@
 
 <body>
 	<div class="main_container">
+		<h1 id="loading_message">LOADING...</h1>
 		<div class="user_input_container">
 			<form id="maze_form" autocomplete="off">
 				<label for="maze_type">Grid</label>
@@ -94,7 +95,6 @@
 			<!-- <button id="fullscreen_button" disabled>Fullscreen</button> -->
 		</div>
 
-		<h1 id="loading_message">LOADING...</h1>
 		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" width="0" height="0" tabindex=-1>
 			(Your browser does not support the HTML5 canvas tag.)
 		</canvas>
@@ -125,7 +125,9 @@
 		}
 
 		function onMazeEngineApplicationInitialized() {
-			document.getElementById("loading_message").style.display = "none";
+			const loadingMessage = document.getElementById("loading_message")
+			if (loadingMessage) loadingMessage.style.display = "none";
+
 
 			resizeCanvas();
 
