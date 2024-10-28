@@ -49,7 +49,7 @@
 	<div class="main_container">
 		<h1 id="loading_message">LOADING...</h1>
 		<div class="user_input_container">
-			<form id="maze_form" autocomplete="off">
+			<form id="maze_form" autocomplete="off" style="display: none;">
 				<label for="maze_type">Grid</label>
 				<select id="maze_type" name="maze_type" required>
 					<option value="square" selected>Square</option>
@@ -128,6 +128,7 @@
 			const loadingMessage = document.getElementById("loading_message")
 			if (loadingMessage) loadingMessage.style.display = "none";
 
+			document.getElementById("maze_form").style.display = "";
 
 			resizeCanvas();
 
