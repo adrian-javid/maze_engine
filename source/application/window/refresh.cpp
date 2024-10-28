@@ -47,7 +47,7 @@ namespace App::Window {
 			auto const &identities{
 				performer->getMazeGenerationIterator().getTileKeyIdentities()
 			};
-			
+
 			auto const identityPair(identities.find(tileKey));
 			if (identityPair == identities.cend()) {
 				assert(false);
