@@ -161,14 +161,21 @@ void App::Window::refresh() {
 
 		static_assert(BaseHue::wall >= BaseHue::unmarkedTile);
 
-		if (
-			auto const &markedWalls{performer->getMarkedWallSet()};
-			markedWalls.find(principalWall) != markedWalls.cend()
-		) {
-			return getColorTriplet(colorScheme.wallHue);
-		} else {
-			return getColorTriplet(colorScheme.wallHue, /* luminance */double{0.10});
+		assert(performer.has_value());
+		switch (performer->getState()) {
+			case Performer::State::generating: {
+				if (
+					auto const &markedWalls{performer->getMarkedWallSet()};
+					markedWalls.find(principalWall) != markedWalls.cend()
+				) {
+					return getColorTriplet(colorScheme.wallHue);
+				} else {
+					return getColorTriplet(colorScheme.wallHue, /* luminance */double{0.10});
+				}
+			}
+			default: return getColorTriplet(colorScheme.wallHue);
 		}
+
 	});
 
 	#ifdef __EMSCRIPTEN__
