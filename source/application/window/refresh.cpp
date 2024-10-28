@@ -7,19 +7,76 @@
 namespace App::Window {
 	static double cyclicPercentage{/* start at zero percent */ 0.0};
 
-	static constexpr HslaColor
-		startEndColor    (020.0),
-		pathTileColor    (090.0),
-		wallColor        (225.0),
-		markedTileColor  (300.0),
-		unmarkedTileColor(155.0);
+	using HueFloat = decltype(std::declval<HslaColor>().getHue());
+
+	namespace BaseHue {
+		static constexpr HueFloat
+			unmarkedTile(HslaColor(155.0).getHue()),
+			    startEnd(HslaColor(020.0).getHue()),
+			    pathTile(HslaColor(090.0).getHue()),
+			        wall(HslaColor(225.0).getHue()),
+			  markedTile(HslaColor(300.0).getHue());
+	
+		static constexpr HueFloat
+			    startEndOffset(    startEnd - unmarkedTile),
+			    pathTileOffset(    pathTile - unmarkedTile),
+			        wallOffset(        wall - unmarkedTile),
+			  markedTileOffset(  markedTile - unmarkedTile);
+	}
+
+	struct ColorScheme {
+		[[nodiscard]]
+		explicit ColorScheme(double const baseHue):
+			unmarkedTileHue{baseHue},
+			startEndHue  {HslaColor::hueWrap(baseHue + BaseHue::  startEndOffset)},
+			pathTileHue  {HslaColor::hueWrap(baseHue + BaseHue::  pathTileOffset)},
+			wallHue      {HslaColor::hueWrap(baseHue + BaseHue::      wallOffset)},
+			markedTileHue{HslaColor::hueWrap(baseHue + BaseHue::markedTileOffset)}
+		{}
+
+		/*
+			Make a color scheme based on the tile identities from the maze generation iterator.
+		*/
+		[[nodiscard]]
+		static ColorScheme make(MazeEngine::Vector2 const tileKey) {
+			if (not performer.has_value()) {
+				assert(false);
+				return ColorScheme(BaseHue::unmarkedTile);
+			}
+
+			auto const &identities{
+				performer->getMazeGenerationIterator().getTileKeyIdentities()
+			};
+			
+			auto const identityPair(identities.find(tileKey));
+			if (identityPair == identities.cend()) {
+				assert(false);
+				return ColorScheme(BaseHue::unmarkedTile);
+			}
+
+			MazeEngine::UnionFinder::Identifier const tileKeyIdentifier{identityPair->second};
+
+			HueFloat const baseHue{
+				HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 15)
+			};
+
+			return ColorScheme(baseHue);
+		}
+
+		public: HueFloat
+			unmarkedTileHue{},
+			    startEndHue{},
+			    pathTileHue{},
+			        wallHue{},
+			  markedTileHue{};
+	};
 
 	/*
 		Get color triplet based on the cyclic percentage.
 	*/
 	[[nodiscard]]
 	static inline ColorTriplet getColorTriplet(
-		HslaColor tileColor, std::optional<double> const luminanceOpt=std::nullopt
+		HueFloat const tileHue, double const luminance=HslaColor::defaultLuminance
 	) {
 		static constexpr auto getCyclicHue([](
 			double const hue,
@@ -32,30 +89,11 @@ namespace App::Window {
 				hueDepth
 			);
 		});
-		double const luminance{luminanceOpt.value_or(tileColor.getLuminance())};
 		return std::make_tuple(
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.00)),
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.10)),
-			tileColor.setLuminance(luminance).toRgbaColor(getCyclicHue(tileColor.getHue(), -.20))
+			HslaColor(tileHue).setLuminance(luminance).toRgbaColor(getCyclicHue(tileHue, -.00)),
+			HslaColor(tileHue).setLuminance(luminance).toRgbaColor(getCyclicHue(tileHue, -.10)),
+			HslaColor(tileHue).setLuminance(luminance).toRgbaColor(getCyclicHue(tileHue, -.20))
 		);
-	}
-
-	/*
-		Get tile hue based on the tile identities from the maze generation iterator.
-	*/
-	[[nodiscard]]
-	static inline decltype(HslaColor({}).getHue()) getTileHue(MazeEngine::Vector2 const tileKey) {
-		assert(performer.has_value());
-		if (not performer.has_value()) return {};
-
-		auto const &identities{performer->getMazeGenerationIterator().getTileKeyIdentities()};
-		
-		auto const identityPair(identities.find(tileKey));
-		if (identityPair == identities.cend()) return {};
-
-		MazeEngine::UnionFinder::Identifier const tileKeyIdentifier{identityPair->second};
-
-		return HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 7);
 	}
 
 }
@@ -69,82 +107,60 @@ void App::Window::refresh() {
 	assert(cyclicPercentage >= 0.0);
 	assert(cyclicPercentage < 1.0);
 
-	/*
-		Construct color triplets.
-	*/
-	ColorTriplet const
-		pathTileColorTriplet    {getColorTriplet(pathTileColor    )},
-		wallColorTriplet        {getColorTriplet(wallColor        )},
-		markedTileColorTriplet  {getColorTriplet(markedTileColor  )},
-		unmarkedTileColorTriplet{getColorTriplet(unmarkedTileColor)},
-		startEndColorTriplet    {getColorTriplet(startEndColor    )};
+	auto const tileColorTripletGetter([](
+		MazeEngine::Vector2 const &tileKey
+	) -> ColorTriplet {
+		ColorScheme const colorScheme(ColorScheme::make(tileKey));
 
-	auto const tileColorTripletGetter([
-		&markedTileColorTriplet, &unmarkedTileColorTriplet, &pathTileColorTriplet,
-		&startEndColorTriplet
-	](MazeEngine::Vector2 const &tileKey) -> ColorTriplet {
-		switch (performer->getState()) {
-			case Performer::State::generating: {
-				return getColorTriplet(getTileHue(tileKey));
-			}
-			default: {
-				if (tileKey == performer->getMazeStart() or tileKey == performer->getMazeEnd())
-					return startEndColorTriplet;
+			if (tileKey == performer->getMazeStart() or tileKey == performer->getMazeEnd())
+				return getColorTriplet(colorScheme.startEndHue);
 
-				if (
-					auto const &pathTiles{performer->getPathTileSet()};
-					pathTiles.find(tileKey) != pathTiles.end()
-				)
-					return pathTileColorTriplet;
-				else if (
-					auto const &markedTiles{performer->getMarkedTileSet()};
-					markedTiles.find(tileKey) != markedTiles.end()
-				)
-					return markedTileColorTriplet;
-				else
-					return unmarkedTileColorTriplet;
-			}
-		}
+			if (
+				auto const &pathTiles{performer->getPathTileSet()};
+				pathTiles.find(tileKey) != pathTiles.end()
+			)
+				return getColorTriplet(colorScheme.pathTileHue);
+			else if (
+				auto const &markedTiles{performer->getMarkedTileSet()};
+				markedTiles.find(tileKey) != markedTiles.end()
+			)
+				return getColorTriplet(colorScheme.markedTileHue);
+			else
+				return getColorTriplet(colorScheme.unmarkedTileHue);
 	});
 
-	auto const wallColorTripletGetter([
-		&wallColorTriplet
-	](MazeEngine::MazeGenerationIterator::Wall const &wall) -> ColorTriplet {
-		switch (performer->getState()) {
-			case Performer::State::generating: {
-				using Wall = MazeEngine::MazeGenerationIterator::Wall;
+	auto const wallColorTripletGetter([](
+		MazeEngine::MazeGenerationIterator::Wall const &wall
+	) -> ColorTriplet {
+		using Wall = MazeEngine::MazeGenerationIterator::Wall;
 
-				Wall const principalWall([wall]() -> Wall {
-					switch (wall.type) {
-						// "principal" directions
-						case MazeEngine::Maze::north    :
-						case MazeEngine::Maze::northeast:
-						case MazeEngine::Maze::east     :
-						case MazeEngine::Maze::southeast:
-							return wall;
+		Wall const principalWall([wall]() -> Wall {
+			switch (wall.type) {
+				// "principal" directions
+				case MazeEngine::Maze::north    :
+				case MazeEngine::Maze::northeast:
+				case MazeEngine::Maze::east     :
+				case MazeEngine::Maze::southeast:
+					return wall;
 
-						default: return {
-							std::as_const(performer)->getMaze().checkAdjacent(wall.tileKey, wall.type).key,
-							std::as_const(performer)->getMaze().reverseDirection(wall.type)
-						};
-					}
-				}());
-
-				static_assert(wallColor.getHue() >= unmarkedTileColor.getHue());
-				double const wallTileColorOffset{wallColor.getHue() - unmarkedTileColor.getHue()};
-				double const wallHue{HslaColor::hueWrap(getTileHue(wall.tileKey) + wallTileColorOffset)};
-
-				if (
-					auto const &markedWalls{performer->getMarkedWallSet()};
-					markedWalls.find(principalWall) != markedWalls.cend()
-				) {
-					return getColorTriplet(wallHue);
-				} else {
-					return getColorTriplet(wallHue, /* luminance */double{0.10});
-				}
+				default: return {
+					std::as_const(performer)->getMaze().checkAdjacent(wall.tileKey, wall.type).key,
+					std::as_const(performer)->getMaze().reverseDirection(wall.type)
+				};
 			}
+		}());
 
-			default: return wallColorTriplet;
+		ColorScheme const colorScheme(ColorScheme::make(wall.tileKey));
+
+		static_assert(BaseHue::wall >= BaseHue::unmarkedTile);
+
+		if (
+			auto const &markedWalls{performer->getMarkedWallSet()};
+			markedWalls.find(principalWall) != markedWalls.cend()
+		) {
+			return getColorTriplet(colorScheme.wallHue);
+		} else {
+			return getColorTriplet(colorScheme.wallHue, /* luminance */double{0.10});
 		}
 	});
 
