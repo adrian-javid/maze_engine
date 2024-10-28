@@ -53,7 +53,6 @@ namespace App::Window {
 	*/
 	static ColorScheme const legacyColorScheme(BaseHue::unmarkedTile);
 
-	[[nodiscard]]
 	ColorScheme ColorScheme::make(MazeEngine::Vector2 const tileKey) {
 		if (not performer.has_value()) {
 			assert(false);
