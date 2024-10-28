@@ -112,7 +112,7 @@ void App::Window::refresh() {
 
 	cyclicPercentage = MazeEngine::Aux::percentageWrap(cyclicPercentage + deltaPercentage);
 	assert(cyclicPercentage >= 0.0);
-	assert(cyclicPercentage < 1.0);
+	assert(cyclicPercentage <  1.0);
 
 	auto const tileColorTripletGetter([](
 		MazeEngine::Vector2 const &tileKey
