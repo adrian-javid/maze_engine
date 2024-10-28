@@ -117,7 +117,8 @@
 				canvas.addEventListener(
 					"webglcontextlost",
 					(event) => {
-						alert('WebGL context lost. You will need to reload the page.'); event.preventDefault();
+						alert('WebGL context lost. You will need to reload the page.');
+						event.preventDefault();
 					},
 					false
 				);
