@@ -89,7 +89,7 @@ namespace App::Window {
 			double const hue,
 			double const percentageAddend
 		) -> double {
-			static constexpr double hueDepth{55.0};
+			static constexpr double hueDepth{49.5};
 			return HslaColor::getCyclicHue(
 				hue,
 				MazeEngine::Aux::percentageWrap(cyclicPercentage + percentageAddend),
