@@ -94,6 +94,7 @@
 			<!-- <button id="fullscreen_button" disabled>Fullscreen</button> -->
 		</div>
 
+		<h1 id="loading_message">LOADING...</h1>
 		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" width="0" height="0" tabindex=-1>
 			(Your browser does not support the HTML5 canvas tag.)
 		</canvas>
@@ -124,6 +125,8 @@
 		}
 
 		function onMazeEngineApplicationInitialized() {
+			document.getElementById("loading_message").style.display = "none";
+
 			resizeCanvas();
 
 			window.addEventListener("resize", resizeCanvas);
