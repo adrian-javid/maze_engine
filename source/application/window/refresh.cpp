@@ -28,10 +28,10 @@ namespace App::Window {
 		[[nodiscard]]
 		explicit ColorScheme(double const baseHue):
 			unmarkedTileHue{baseHue},
+			markedTileHue{HslaColor::hueWrap(baseHue + BaseHue::markedTileOffset)},
 			startEndHue  {HslaColor::hueWrap(baseHue + BaseHue::  startEndOffset)},
 			pathTileHue  {HslaColor::hueWrap(baseHue + BaseHue::  pathTileOffset)},
-			wallHue      {HslaColor::hueWrap(baseHue + BaseHue::      wallOffset)},
-			markedTileHue{HslaColor::hueWrap(baseHue + BaseHue::markedTileOffset)}
+			wallHue      {HslaColor::hueWrap(baseHue + BaseHue::      wallOffset)}
 		{}
 
 		/*
