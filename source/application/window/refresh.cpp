@@ -12,16 +12,16 @@ namespace App::Window {
 	namespace BaseHue {
 		static constexpr HueFloat
 			unmarkedTile(HslaColor(155.0).getHue()),
+			  markedTile(HslaColor(300.0).getHue()),
 			    startEnd(HslaColor(020.0).getHue()),
 			    pathTile(HslaColor(090.0).getHue()),
-			        wall(HslaColor(225.0).getHue()),
-			  markedTile(HslaColor(300.0).getHue());
+			        wall(HslaColor(225.0).getHue());
 
 		static constexpr HueFloat
+			markedTileOffset(markedTile - unmarkedTile),
 			  startEndOffset(  startEnd - unmarkedTile),
 			  pathTileOffset(  pathTile - unmarkedTile),
-			      wallOffset(      wall - unmarkedTile),
-			markedTileOffset(markedTile - unmarkedTile);
+			      wallOffset(      wall - unmarkedTile);
 	}
 
 	struct ColorScheme {
@@ -65,10 +65,10 @@ namespace App::Window {
 
 		public: HueFloat
 			unmarkedTileHue{},
+			  markedTileHue{},
 			    startEndHue{},
 			    pathTileHue{},
-			        wallHue{},
-			  markedTileHue{};
+			        wallHue{};
 	};
 
 	/*
