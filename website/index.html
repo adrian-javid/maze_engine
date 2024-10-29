@@ -162,7 +162,7 @@
 					submitButton.style.display = "none";
 
 					const label = document.querySelector(`label[for="${field.id}"]`);
-					const firstSentence = label ? `Error for "${label?.textContent}":` : `Error.`;
+					const firstSentence = label ? `Error for "${label?.textContent}".` : `Error.`;
 
 					errorMessage.textContent = `${firstSentence} ${field?.validationMessage}`;
 					errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
