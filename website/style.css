@@ -119,6 +119,11 @@ html, body {
 	margin-top: 10px;
 }
 
+#maze_form p {
+	text-align: center;
+	grid-column: span 2;
+}
+
 #maze_form button:hover {
 	background-color: #5bb497;
 }
