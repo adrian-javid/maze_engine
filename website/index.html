@@ -150,22 +150,51 @@
 
 			if (!mazeForm) console.error("The maze form doesn't exist.");
 
+			const errorMessage = document.getElementById("error_message");
+			const submitButton = document.getElementById("submit_button");
+
+			const inputFieldList = [
+				document.getElementById("maze_size"),
+				document.getElementById("seed"     ),
+				document.getElementById("delay"    ),
+			];
+
+			const reportFieldValidationError = (label, field) => {
+				submitButton.style.display = "none";
+
+				field.style.color = "red";
+				field.style.outline = "2px solid red";
+				label.style.color = "red";
+
+				const firstSentence = label ? `Error for "${label?.textContent}".` : `Error.`;
+
+				errorMessage.textContent = `${firstSentence} ${field?.validationMessage}`;
+				errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
+			}
+
 			mazeForm?.addEventListener("input", function(event) {
 				const field = event.target;
-				const errorMessage = document.getElementById("error_message");
-				const submitButton = document.getElementById("submit_button");
+				if (field.type !== "number") return;
+
+				const label = document.querySelector(`label[for="${field.id}"]`);
 
 				if (field?.checkValidity()) {
 					errorMessage.style.display = "none";
+					field.style.color = "";
+					field.style.outline = "";
+					label.style.color = "";
 					submitButton.style.display = "";
 				} else {
-					submitButton.style.display = "none";
+					reportFieldValidationError(label, field);
+					return;
+				}
 
-					const label = document.querySelector(`label[for="${field.id}"]`);
-					const firstSentence = label ? `Error for "${label?.textContent}".` : `Error.`;
-
-					errorMessage.textContent = `${firstSentence} ${field?.validationMessage}`;
-					errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
+				for (const inputField of inputFieldList) {
+					if (!(inputField.checkValidity())) {
+						const label = document.querySelector(`label[for="${inputField.id}"]`);
+						reportFieldValidationError(label, inputField);
+						return;
+					}
 				}
 			});
 
