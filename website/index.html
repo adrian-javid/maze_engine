@@ -148,7 +148,7 @@
 
 				const mazeType = (() => {
 					switch (formData.get("maze_type")) {
-						default:
+						default: console.error("The maze type from the form data was invalid.");
 						case "square" : return Module.MazeEngine_MazeType.SQUARE ;
 						case "hexagon": return Module.MazeEngine_MazeType.HEXAGON;
 					}
@@ -156,7 +156,7 @@
 
 				const searchType = (() => {
 					switch (formData.get("search_type")) {
-						default:
+						default: console.error("The search type from the form data was invalid.");
 						case "depth"  : return Module.MazeEngine_SearchType.DEPTH  ;
 						case "breadth": return Module.MazeEngine_SearchType.BREADTH;
 						case "greedy" : return Module.MazeEngine_SearchType.GREEDY ;
@@ -165,7 +165,7 @@
 
 				const soundType = (() => {
 					switch (formData.get("sound_type")) {
-						default:
+						default: console.error("The sound type from the form data was invalid.");
 						case "none"       : return Module.MazeEngine_SoundType.NONE       ;
 						case "piano"      : return Module.MazeEngine_SoundType.PIANO      ;
 						case "synthesizer": return Module.MazeEngine_SoundType.SYNTHESIZER;
