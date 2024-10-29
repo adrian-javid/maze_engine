@@ -146,7 +146,31 @@
 
 			window.addEventListener("resize", resizeCanvas);
 
-			document.getElementById("maze_form").addEventListener("submit", function(event) {
+			const mazeForm = document.getElementById("maze_form");
+
+			if (!mazeForm) console.error("The maze form doesn't exist.");
+
+			mazeForm?.addEventListener("input", function(event) {
+				const field = event.target;
+				const errorMessage = document.getElementById("error_message");
+				const submitButton = document.getElementById("submit_button");
+
+				if (field?.checkValidity()) {
+					errorMessage.style.display = "none";
+					submitButton.style.display = "";
+				} else {
+					submitButton.style.display = "none";
+
+					const label = document.querySelector(`label[for="${field.id}"]`);
+					const firstSentence = label ? `Error for "${label?.textContent}":` : `Error.`;
+
+					errorMessage.textContent = `${firstSentence} ${field?.validationMessage}`;
+					errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
+				}
+			});
+
+			mazeForm?.addEventListener("submit", function(event) {
+				// Stop the page from reloading.
 				event.preventDefault();
 
 				const formData = new FormData(event.target);
