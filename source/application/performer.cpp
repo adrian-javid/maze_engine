@@ -23,7 +23,8 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 	emscripten::enum_<App::Performer::SearchType>("MazeEngine_SearchType")
 		.value("DEPTH"  , App::Performer::SearchType::depth  )
 		.value("BREADTH", App::Performer::SearchType::breadth)
-		.value("GREEDY" , App::Performer::SearchType::greedy );
+		.value("GREEDY" , App::Performer::SearchType::greedy )
+		.value("A_STAR" , App::Performer::SearchType::aStar  );
 
 	emscripten::enum_<App::Performer::SoundType>("MazeEngine_SoundType")
 		.value("NONE"       , App::Performer::SoundType::none       )
@@ -123,6 +124,9 @@ App::Performer::Performer(
 
 			case SearchType::greedy:
 				return MazeEngine::GreedyBestFirstSearchIterator(getMaze(), mazeStart, mazeEnd);
+
+			case SearchType::aStar:
+				return MazeEngine::AStarSearchIterator(getMaze(), mazeStart, mazeEnd);
 		}
 	}()),
 	timer(sleepTimeMilliseconds),

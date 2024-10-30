@@ -73,6 +73,7 @@
 					<option value="depth" selected>Depth-First Search</option>
 					<option value="breadth">Breadth-First Search</option>
 					<option value="greedy">Greedy Best-First Search</option>
+					<option value="a_star">A* Search</option>
 				</select>
 
 				<label for="sound_type">Sound</label>
@@ -218,6 +219,7 @@
 						case "depth"  : return Module.MazeEngine_SearchType.DEPTH  ;
 						case "breadth": return Module.MazeEngine_SearchType.BREADTH;
 						case "greedy" : return Module.MazeEngine_SearchType.GREEDY ;
+						case "a_star" : return Module.MazeEngine_SearchType.A_STAR ;
 					}
 				})();
 

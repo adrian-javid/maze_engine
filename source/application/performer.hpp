@@ -24,7 +24,7 @@ class App::Performer {
 
 		enum struct MazeType : std::uint_least8_t { hexagon = 1u, square };
 
-		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy };
+		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy, aStar };
 
 		enum struct SoundType : std::uint_least8_t { none = 0u, piano, synthesizer };
 

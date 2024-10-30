@@ -65,7 +65,7 @@ int main(int const argc, char *argv[]) {
 		/**/ if (searchAlgorithmName == "depth") return App::Performer::SearchType::depth;
 		else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") return App::Performer::SearchType::breadth;
 		else if (searchAlgorithmName == "greedy") return App::Performer::SearchType::greedy;
-		else if (searchAlgorithmName == "a_star") App::errorExit("A Star is currently unsupported.");
+		else if (searchAlgorithmName == "a_star") return App::Performer::SearchType::aStar;
 		else App::errorExit("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
 	}()};
 	App::Performer::SoundType const soundType{<:soundTypeName:>() -> App::Performer::SoundType {
