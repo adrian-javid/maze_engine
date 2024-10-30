@@ -27,7 +27,7 @@ auto MazeEngine::aStarSearch(
 
 			if (costMap.find(neighbor) == costMap.end() or derivedCost < costMap.at(neighbor)) {
 				costMap.insert({neighbor, derivedCost});
-				int priority{derivedCost + /* heuristic */maze.length(neighbor - end)};
+				int const priority{derivedCost + /* heuristic */maze.length(neighbor - end)};
 				frontier.push({neighbor, priority});
 				upTree.insert({neighbor, tileKey.vector});
 			}
