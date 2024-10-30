@@ -38,7 +38,7 @@ namespace MazeEngine {
 				frontier.push(MetaVertex{start, 0});
 			}
 
-			void advance() override {
+			inline void advance() override {
 				assert(not frontier.empty());
 				if (frontier.empty()) return;
 
@@ -58,8 +58,8 @@ namespace MazeEngine {
 			}
 
 			[[nodiscard]] Vector2 const &getVector() const override { return currentTileKey; }
-			[[nodiscard]] virtual bool isDone() const override { return frontier.empty(); }
-			[[nodiscard]] virtual Vector2::HashMap<Vector2> const &getHistory() const override { return upTree; }
+			[[nodiscard]] bool isDone() const override { return frontier.empty(); }
+			[[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const override { return upTree; }
 
 		private:
 			Maze const *maze{};
