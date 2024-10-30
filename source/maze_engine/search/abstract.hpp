@@ -99,6 +99,7 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 			That's okay for the purposes of this program,
 			even though that is not how I prefer for it to work.
 		*/
+		[[nodiscard]]
 		explicit AbstractSearchIterator(
 			Maze const &mazeReference,
 			Vector2 start,
@@ -110,6 +111,7 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 			storage.push(key);
 		}
 
+		[[nodiscard]]
 		static Vector2 popFrom(StorageT &storage) {
 			Vector2 const key([&storage]() constexpr -> Vector2 {
 				if constexpr (std::is_same_v<StorageT, std::stack<Vector2>>)
