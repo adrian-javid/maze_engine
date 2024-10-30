@@ -28,7 +28,7 @@ class App::Performer {
 
 		enum struct SoundType : std::uint_least8_t { none = 0u, piano, synthesizer };
 
-		using Seed = unsigned int;
+		using SeedInt = unsigned int;
 
 		static SoundTable piano;
 
@@ -82,7 +82,7 @@ class App::Performer {
 
 		[[nodiscard]] explicit Performer(
 			MazeType const mazeType, int const mazeSizeHint,
-			Seed const seed, bool const mazeWrap,
+			SeedInt const seed, bool const mazeWrap,
 			SearchType const searchType,
 			SoundType const soundType,
 			UnsignedMilliseconds const sleepTimeMilliseconds,

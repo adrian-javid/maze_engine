@@ -41,7 +41,7 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 	) -> void {
 		App::performer.emplace(
 			mazeType, mazeSize,
-			App::Performer::Seed{seed}, mazeWrap,
+			App::Performer::SeedInt{seed}, mazeWrap,
 			searchType, soundType,
 			App::UnsignedMilliseconds{sleepTimeMilliseconds},
 			shouldShowMazeGeneration
@@ -54,7 +54,7 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 
 App::Performer::Performer(
 	MazeType const mazeType, int const mazeSizeHint,
-	Seed const seed, bool const mazeWrap,
+	SeedInt const seed, bool const mazeWrap,
 	SearchType const searchType,
 	SoundType const soundType,
 	UnsignedMilliseconds const sleepTimeMilliseconds,
