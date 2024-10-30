@@ -65,7 +65,7 @@ auto MazeEngine::abstractSearch(
 class MazeEngine::MazeSearchIterator {
 	public:
 		virtual void advance() = 0;
-		virtual Vector2 const &getVector() const = 0;
+		[[nodiscard]] virtual Vector2 const & getVector() const = 0;
 		[[nodiscard]] virtual bool isDone() const = 0;
 		[[nodiscard]] virtual Vector2::HashMap<Vector2> const & getHistory() const = 0;
 		[[nodiscard]] explicit MazeSearchIterator() = default;
