@@ -8,14 +8,7 @@ auto MazeEngine::aStarSearch(
 	Vector2 const &start, Vector2 const &end,
 	std::function<bool(Vector2 const &)> const processKey
 ) -> Vector2::HashMap<Vector2> {
-	struct MetaVertex {
-		Vector2 key;
-		// Smaller priority is better.
-		int priority;
-		inline bool operator>(MetaVertex const &vertex) const {
-			return priority > vertex.priority;
-		}
-	};
+	using MetaVertex = AStarSearchIterator::MetaVertex;
 
 	std::priority_queue<MetaVertex, std::vector<MetaVertex>, std::greater<MetaVertex>> frontier;
 	frontier.push({start, 0});
