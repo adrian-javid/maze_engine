@@ -3,6 +3,7 @@
 
 #include "maze_engine/vector2.hpp"
 #include "maze_engine/maze.hpp"
+#include "maze_engine/search/abstract.hpp"
 
 namespace MazeEngine {
 	[[deprecated]]
