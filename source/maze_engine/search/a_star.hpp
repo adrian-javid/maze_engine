@@ -42,17 +42,17 @@ namespace MazeEngine {
 				assert(not frontier.empty());
 				if (frontier.empty()) return;
 
-				MetaVertex const tileKey(frontier.top());
+				currentTileKey = frontier.top().vector;
 				frontier.pop();
 
-				maze->forEachNeighbor(tileKey.vector, [this, tileKey](Vector2 const &neighbor) {
+				maze->forEachNeighbor(currentTileKey, [this](Vector2 const &neighbor) {
 					int const derivedCost{costMap.at(currentTileKey) + /* cost to move adjacent */1};
 
 					if (costMap.find(neighbor) == costMap.end() or derivedCost < costMap.at(neighbor)) {
 						costMap.insert({neighbor, derivedCost});
 						int const priority{derivedCost + /* heuristic */maze->length(neighbor - endTileKey)};
 						frontier.push({neighbor, priority});
-						upTree.insert({neighbor, tileKey.vector});
+						upTree.insert({neighbor, currentTileKey});
 					}
 				});
 			}
