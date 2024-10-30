@@ -53,7 +53,8 @@ class App::Performer {
 		std::variant<
 			MazeEngine::DepthFirstSearchIterator,
 			MazeEngine::BreadthFirstSearchIterator,
-			MazeEngine::GreedyBestFirstSearchIterator
+			MazeEngine::GreedyBestFirstSearchIterator,
+			MazeEngine::AStarSearchIterator
 		> mazeSearchIteratorVariant;
 		Timer timer;
 		/*
