@@ -105,9 +105,8 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 			Vector2 start,
 			StorageT storageValue
 		):
-			maze(&mazeReference), key(std::move(start)), storage(std::move(storageValue)), history()
+			maze(&mazeReference), key(std::move(start)), storage(std::move(storageValue)), history{{start, start}}
 		{
-			history.insert({key, key});
 			storage.push(key);
 		}
 
