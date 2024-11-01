@@ -238,7 +238,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) const {
 							assert(possiblySimpleDirection == Direction::none);
 							possiblySimpleDirection = validDirection;
 						}
-						
+
 					});
 					break;
 				}
