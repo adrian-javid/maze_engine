@@ -27,6 +27,7 @@ class App::Performer {
 		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy, aStar };
 
 		enum struct SoundType : std::uint_least8_t { none = 0u, piano, synthesizer };
+		static_assert(SoundType{} == SoundType::none);
 
 		using SeedInt = unsigned int;
 

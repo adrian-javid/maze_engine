@@ -37,6 +37,7 @@ class MazeEngine::MazeGenerationIterator final {
 		};
 
 		enum struct Result : std::uint_least8_t { none = 0u, didUnion = 1u, };
+		static_assert(Result{} == Result::none);
 
 		[[nodiscard]] explicit MazeGenerationIterator(Maze &paramMaze, unsigned int const seed, bool const wrap=true);
 
