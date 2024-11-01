@@ -261,7 +261,7 @@ void App::Performer::update() {
 			if (mazeGenerationIterator.isDone()) goto switchToSearching;
 
 			/* process wall */ {
-				Wall const *wall{mazeGenerationIterator.getWall()};
+				Wall const *const wall{mazeGenerationIterator.getWall()};
 				assert(wall != nullptr); if (wall == nullptr) {
 					// (Fallback behavior if the wall is null. The wall should never be null here.)
 					assert(mazeGenerationIterator.isDone());
