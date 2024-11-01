@@ -218,26 +218,34 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) const {
 		using Direction = MazeEngine::Maze::Direction;
 
 		Direction const direction{[&maze, parentVertex, mainVertex, offsetVector]() constexpr -> Direction {
-			Direction direction{MazeEngine::Maze::getSimpleDirection<MazeT>(offsetVector)};
+			Direction possiblySimpleDirection{MazeEngine::Maze::getSimpleDirection<MazeT>(offsetVector)};
 
-			switch (direction) case Direction::none: maze.forEachValidDirection(
-				[&maze, &direction, parentVertex, mainVertex](Direction const validDirection) constexpr -> void {
-					auto const [neighborVertex, wallFlag]{
-						maze.checkAdjacent(parentVertex, validDirection)
-					};
+			switch (possiblySimpleDirection) {
+				case Direction::none: {
+					maze.forEachValidDirection([
+						&maze, &possiblySimpleDirection, parentVertex, mainVertex
+					](
+						Direction const validDirection
+					) constexpr -> void {
+						auto const [neighborVertex, wallFlag]{
+							maze.checkAdjacent(parentVertex, validDirection)
+						};
 
-					// The main vertex cannot be a neighbor from this direction if there is a wall.
-					assert(not (wallFlag == true and mainVertex == neighborVertex));
+						// The main vertex cannot be a neighbor from this direction if there is a wall.
+						assert(not (wallFlag == true and mainVertex == neighborVertex));
 
-					if (not wallFlag and mainVertex == neighborVertex) {
-						assert(direction == Direction::none);
-						direction = validDirection;
-					}
-					
+						if (not wallFlag and mainVertex == neighborVertex) {
+							assert(possiblySimpleDirection == Direction::none);
+							possiblySimpleDirection = validDirection;
+						}
+						
+					});
+					break;
 				}
-			);
+				default: break;
+			}
 
-			return direction;
+			return possiblySimpleDirection;
 		}()};
 
 		playSound<MazeT>(direction);
