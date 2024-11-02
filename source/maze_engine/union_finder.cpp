@@ -30,6 +30,16 @@ void MazeEngine::UnionFinder::unionThem(Identifier const element1, Identifier co
 	Identifier const root1{find(element1)};
 	Identifier const root2{find(element2)};
 
+	/*
+		If the roots are the same, then the elements are already part of the same set.
+		Then, we don't want to add their sizes together because since they are not
+		disjoint sets; that would double count elements. That would not only be incorrect;
+		it could cause signed integer overflow.
+
+		Hence, the early return here.
+	*/
+	if (root1 == root2) return;
+
 	Identifier const negativeSize{forest.at(root1) + forest.at(root2)};
 
 	if (forest.at(root1) < forest.at(root2)) {
