@@ -34,6 +34,7 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 	emscripten::function("MazeEngine_resetPerformer", +[](
 		App::Performer::MazeType const mazeType, int const mazeSize,
 		unsigned int const seed, bool const mazeWrap,
+		unsigned int const excessWallPruneCountDown,
 		App::Performer::SearchType const searchType,
 		App::Performer::SoundType const soundType,
 		unsigned int const sleepTimeMilliseconds,
@@ -42,6 +43,7 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 		App::performer.emplace(
 			mazeType, mazeSize,
 			App::Performer::SeedInt{seed}, mazeWrap,
+			std::size_t{excessWallPruneCountdown},
 			searchType, soundType,
 			App::UnsignedMilliseconds{sleepTimeMilliseconds},
 			shouldShowMazeGeneration
@@ -55,6 +57,7 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 App::Performer::Performer(
 	MazeType const mazeType, int const mazeSizeHint,
 	SeedInt const seed, bool const mazeWrap,
+	std::size_t const excessWallPruneCountdown,
 	SearchType const searchType,
 	SoundType const soundType,
 	UnsignedMilliseconds const sleepTimeMilliseconds,
@@ -108,7 +111,7 @@ App::Performer::Performer(
 				return {0, maze.getRadius()};
 		}
 	}, mazeVariant)),
-	mazeGenerationIterator(getMaze(), seed, mazeWrap),
+	mazeGenerationIterator(getMaze(), seed, mazeWrap, excessWallPruneCountdown),
 	mazeSearchIteratorVariant([this, searchType]() -> decltype(Performer::mazeSearchIteratorVariant) {
 		switch (searchType) {
 			case SearchType::depth:

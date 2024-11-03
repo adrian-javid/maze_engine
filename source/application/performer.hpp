@@ -84,6 +84,7 @@ class App::Performer {
 		[[nodiscard]] explicit Performer(
 			MazeType const mazeType, int const mazeSizeHint,
 			SeedInt const seed, bool const mazeWrap,
+			std::size_t const excessWallPruneCountdown,
 			SearchType const searchType,
 			SoundType const soundType,
 			UnsignedMilliseconds const sleepTimeMilliseconds,

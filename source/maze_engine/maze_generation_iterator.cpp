@@ -1,7 +1,13 @@
 #include "maze_generation_iterator.hpp"
 
-MazeEngine::MazeGenerationIterator::MazeGenerationIterator(Maze &paramMaze, unsigned int const seed, bool const wrap):
-	cyclePrevention(paramMaze.getTileCount()), maze{paramMaze}
+#if true
+#include "application/print.hpp"
+#endif
+
+MazeEngine::MazeGenerationIterator::MazeGenerationIterator(
+	Maze &paramMaze, unsigned int const seed, bool const wrap, std::size_t const paramExcessWallPruneCountdown
+):
+	cyclePrevention(paramMaze.getTileCount()), maze{paramMaze}, excessWallPruneCountdown{paramExcessWallPruneCountdown}
 {
 	UnionFinder::Identifier indentifierCount{0};
 
@@ -17,6 +23,8 @@ MazeEngine::MazeGenerationIterator::MazeGenerationIterator(Maze &paramMaze, unsi
 	std::shuffle(wallList.begin(), wallList.end(), randomNumberGenerator);
 
 	wallIterator = wallList.cbegin();
+
+	App::println("wall count: ", wallList.size());
 }
 
 auto MazeEngine::MazeGenerationIterator::advance() -> Result {
