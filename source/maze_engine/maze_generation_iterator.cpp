@@ -61,13 +61,19 @@ auto MazeEngine::MazeGenerationIterator::advance() -> Result {
 		mainTileIdentifier{identity.at(wall.tileKey)},
 		neighborTileIdentifier{identity.at(maze.checkAdjacent(wall.tileKey, wall.type).key)};
 
+	MazeEngine::Maze::Tile &tile{maze.at(wall.tileKey)};
+	assert((tile & wall.type) == wall.type);
 
 	// Check if both tiles are not already members of the same set.
-	if (cyclePrevention.find(thisId) != cyclePrevention.find(adjId)) {
-		maze.at(wall.tileKey) ^= wall.type; // flip the wall bit to zero
-		cyclePrevention.unionThem(thisId, adjId);
+	if (cyclePrevention.find(mainTileIdentifier) != cyclePrevention.find(neighborTileIdentifier)) {
+		tile ^= wall.type; // flip the wall bit to zero
+		cyclePrevention.unionThem(mainTileIdentifier, neighborTileIdentifier);
 		return Result::didUnion;
 	} else {
+		if (excessWallPruneCountdown > 0) {
+			--excessWallPruneCountdown;
+			tile ^= wall.type; // flip the wall bit to zero
+		}
 		return Result::none;
 	}
 }
