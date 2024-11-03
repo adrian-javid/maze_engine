@@ -34,7 +34,7 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 	emscripten::function("MazeEngine_resetPerformer", +[](
 		App::Performer::MazeType const mazeType, int const mazeSize,
 		unsigned int const seed, bool const mazeWrap,
-		unsigned int const excessWallPruneCountDown,
+		unsigned int const excessWallPruneCountdown,
 		App::Performer::SearchType const searchType,
 		App::Performer::SoundType const soundType,
 		unsigned int const sleepTimeMilliseconds,
