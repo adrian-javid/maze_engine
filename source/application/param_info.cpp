@@ -53,6 +53,11 @@ std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 			{"false", "Disable wrapping."}
 		},
 	}},
+	{"wall_prune", {
+		"Unsigned integer value. Excess walls will be removed up to a maximum count of this value.",
+		"0",
+		std::nullopt
+	}},
 	{"sound", {
 		"Sound instrument to use sound effects from.",
 		"synthesizer",

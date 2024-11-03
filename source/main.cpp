@@ -61,6 +61,7 @@ int main(int const argc, char *argv[]) {
 		else if (gridType == "hexagon") return App::Performer::MazeType::hexagon;
 		else App::errorExit("Unable to resolve grid type from string: `", gridType, "`.");
 	}()};
+	std::size_t const excessWallPruneCountdown{App::ParamInfo::castArg<unsigned int>(config.at("wall_prune").argument)};
 	App::Performer::SearchType const searchType{<:searchAlgorithmName:>() -> App::Performer::SearchType {
 		/**/ if (searchAlgorithmName == "depth") return App::Performer::SearchType::depth;
 		else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") return App::Performer::SearchType::breadth;
@@ -76,7 +77,12 @@ int main(int const argc, char *argv[]) {
 	}()};
 	bool const shouldShowMazeGeneration{App::ParamInfo::castArg<bool>(config.at("show_maze_generation").argument)};
 
-	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, soundType, sleepTimeMilliseconds, shouldShowMazeGeneration);
+	App::performer.emplace(
+		mazeType, mazeSize, seed,
+		mazeWrap, excessWallPruneCountdown,
+		searchType, soundType,
+		sleepTimeMilliseconds, shouldShowMazeGeneration
+	);
 
 	#ifdef __EMSCRIPTEN__
 	/*
