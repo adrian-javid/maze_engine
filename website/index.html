@@ -239,6 +239,7 @@
 				Module.MazeEngine_resetPerformer(
 					mazeType, parseInt(formData.get("maze_size"), 10),
 					parseInt(formData.get("seed"), 10), Boolean(formData.get("maze_wrap")),
+					parseInt(formData.get("wall_prune_countdown"), 10),
 					searchType, soundType,
 					parseInt(formData.get("delay"), 10),
 					Boolean(formData.get("show_maze_generation"))
