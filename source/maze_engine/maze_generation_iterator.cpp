@@ -57,8 +57,10 @@ auto MazeEngine::MazeGenerationIterator::advance() -> Result {
 	Wall const &wall{*wallIterator};
 	++wallIterator;
 
-	UnionFinder::Identifier const thisId{identity.at(wall.tileKey)};
-	UnionFinder::Identifier const adjId{identity.at(maze.checkAdjacent(wall.tileKey, wall.type).key)};
+	UnionFinder::Identifier const
+		mainTileIdentifier{identity.at(wall.tileKey)},
+		neighborTileIdentifier{identity.at(maze.checkAdjacent(wall.tileKey, wall.type).key)};
+
 
 	// Check if both tiles are not already members of the same set.
 	if (cyclePrevention.find(thisId) != cyclePrevention.find(adjId)) {
