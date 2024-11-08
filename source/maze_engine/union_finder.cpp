@@ -1,5 +1,7 @@
 #include "maze_engine/union_finder.hpp"
 
+#include <cassert>
+
 MazeEngine::UnionFinder::UnionFinder(std::size_t const count): forest(count, -1) {}
 
 void MazeEngine::UnionFinder::addElements(std::size_t const count) {
@@ -7,21 +9,37 @@ void MazeEngine::UnionFinder::addElements(std::size_t const count) {
 }
 
 auto MazeEngine::UnionFinder::find(Identifier const element) -> Identifier {
+	assert(element >= 0);
+
 	// base case
-	if (forest.at(element) < 0) return element;
+	if (forest.at(static_cast<std::size_t>(element)) < 0) return element;
 
 	// recursion
-	Identifier const root{find(forest.at(element))};
+	Identifier const root{find(forest.at(static_cast<std::size_t>(element)))};
 
 	// path compression
-	forest.at(element) = root;
+	forest.at(static_cast<std::size_t>(element)) = root;
 
 	return root;
 }
 
 void MazeEngine::UnionFinder::unionThem(Identifier const element1, Identifier const element2) {
+	assert(element1 >= 0);
+	assert(element2 >= 0);
+
 	Identifier const root1{find(element1)};
 	Identifier const root2{find(element2)};
+
+	/*
+		If the roots are the same, then the elements are already part of the same set.
+		Then, we don't want to add their sizes together because since they are not
+		disjoint sets; that would double count elements. That would not only be incorrect;
+		it could cause signed integer overflow.
+
+		Hence, the early return here.
+	*/
+	if (root1 == root2) return;
+
 	Identifier const negativeSize{forest.at(root1) + forest.at(root2)};
 
 	if (forest.at(root1) < forest.at(root2)) {
@@ -33,7 +51,7 @@ void MazeEngine::UnionFinder::unionThem(Identifier const element1, Identifier co
 	}
 }
 
-auto MazeEngine::UnionFinder::size(Identifier const element) -> Identifier {
+auto MazeEngine::UnionFinder::getSize(Identifier const element) -> Identifier {
 	Identifier const root{find(element)};
 	return -1 * forest.at(root);
 }

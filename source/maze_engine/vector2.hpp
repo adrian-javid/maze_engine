@@ -14,10 +14,29 @@ namespace MazeEngine { struct Vector2; }
  * @brief Ordered pair of `int`. Can represent the identifier of a tile in a grid.
  */
 struct MazeEngine::Vector2 {
-	int value1;
-	int value2;
+	using Value = int;
+	Value value1{0};
+	Value value2{0};
 
 	constexpr int thirdAxis() const { return -value1 - value2; }
+
+	/*
+		Returns `true` if the vector's values are integers that are either `-1`, `0`, or `+1`,
+		otherwise returns `false`.
+	*/
+	[[nodiscard]] constexpr
+	bool isSimple() const {
+		switch (value1) {
+			case -1:
+			case  0:
+			case +1: switch (value2) {
+				case -1:
+				case  0:
+				case +1: return true;
+			}
+		}
+		return false;
+	}
 
 	template<int index, int upperBound>
 	static constexpr std::size_t rotateIndex(int const indexOffsetter) {
@@ -36,11 +55,16 @@ struct MazeEngine::Vector2 {
 	}
 
 	/**
+	 * @brief Create a vector with zero-initialized values.
+	 */
+	constexpr Vector2(): value1{0}, value2{0} {}
+
+	/**
 	 * @brief Create a vector with specified values.
-	 * @param row assign `row`
-	 * @param column assign `col`
+	 * @param paramValue1 assign `value1`
+	 * @param paramValue2 assign `value2`
 	*/
-	constexpr Vector2(int row=0, int column=0): value1{row}, value2{column} {}
+	constexpr Vector2(int paramValue1, int paramValue2): value1{paramValue1}, value2{paramValue2} {}
 
 	constexpr int manhattanLength() const {
 		return Aux::abs(value1) + Aux::abs(value2);
@@ -93,9 +117,18 @@ struct MazeEngine::Vector2 {
 		return Vector2(Aux::wrap(value1, rowCount), Aux::wrap(value2, columnCount));
 	}
 
-	struct Hash { std::size_t operator()(Vector2 const &vector) const noexcept; };
+	struct [[nodiscard]] Hash {[[nodiscard]] std::size_t operator()(Vector2 const &vector) const noexcept {
+		static_assert(
+			std::is_same_v<decltype(vector.value1), Value> and
+			std::is_same_v<decltype(vector.value2), Value>
+		);
+		return Aux::combineHashValues(
+			std::hash<Value>{}(vector.value1),
+			std::hash<Value>{}(vector.value2)
+		);
+	}};
 
-	/// @brief An unorderd set of `Vector2`.
+	/// @brief An unordered set of `Vector2`.
 	using HashSet = std::unordered_set<Vector2, Hash>;
 
 	/**

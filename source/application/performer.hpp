@@ -12,6 +12,7 @@
 #include "simple_directmedia_layer.hpp"
 #include "timer.hpp"
 #include "sound_table.hpp"
+#include "maze_engine/maze_generation_iterator.hpp"
 
 namespace App {
 	class Performer;
@@ -23,15 +24,20 @@ class App::Performer {
 
 		enum struct MazeType : std::uint_least8_t { hexagon = 1u, square };
 
-		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy };
+		enum struct SearchType : std::uint_least8_t { depth = 1u, breadth, greedy, aStar };
 
 		enum struct SoundType : std::uint_least8_t { none = 0u, piano, synthesizer };
+		static_assert(SoundType{} == SoundType::none);
 
-		using Seed = unsigned int;
+		using SeedInt = unsigned int;
 
 		static SoundTable piano;
 
 		static SoundTable synthesizer;
+
+		enum struct State : std::uint_least8_t {
+			generating = 1u, searching, backtracking, complete,
+		};
 
 	private /* member state; initialized by the constructor */:
 
@@ -39,37 +45,50 @@ class App::Performer {
 		MazeEngine::Vector2 mazeStart;
 		MazeEngine::Vector2 mazeEnd;
 		/*
+			Careful, as the maze generation iterator holds a reference to the maze.
+		*/
+		MazeEngine::MazeGenerationIterator mazeGenerationIterator;
+		/*
 			Careful, as the maze search iterator holds a pointer to the maze.
 		*/
 		std::variant<
 			MazeEngine::DepthFirstSearchIterator,
 			MazeEngine::BreadthFirstSearchIterator,
-			MazeEngine::GreedyBestFirstSearchIterator
+			MazeEngine::GreedyBestFirstSearchIterator,
+			MazeEngine::AStarSearchIterator
 		> mazeSearchIteratorVariant;
 		Timer timer;
+		/*
+			Careful, this can be `nullptr`.
+		*/
 		SoundTable const *soundInstrument;
-
-	private  /* member state; initialized here */:
-
-		MazeEngine::Vector2::HashSet markedTileSet;
-		MazeEngine::Vector2::HashSet pathTileSet;
+		decltype(SoundTable::makeRandomSoundPicker({})) randomSoundPicker;
 		/*
 			`trailEdge->first` is the child vertex
 			`trailEdge->second` is the parent vertex
 		*/
-		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge{};
-		enum struct State : std::uint_least8_t {
-			searching = 1u, backtracking, complete
-		} state{State::searching};
+		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge;
+
+	private /* member state; initialized here */:
+
+		MazeEngine::Vector2::HashSet markedTileSet;
+		MazeEngine::MazeGenerationIterator::Wall::HashSet markedWallSet;
+		MazeEngine::Vector2::HashSet pathTileSet;
+
+		State state{State::generating};
 
 	public:
 
+		constexpr void pause() { state = State::complete; }
+
 		[[nodiscard]] explicit Performer(
 			MazeType const mazeType, int const mazeSizeHint,
-			Seed const seed, bool const mazeWrap,
+			SeedInt const seed, bool const mazeWrap,
+			std::size_t const excessWallPruneCountdown,
 			SearchType const searchType,
 			SoundType const soundType,
-			UnsignedMilliseconds const sleepTimeMilliseconds
+			UnsignedMilliseconds const sleepTimeMilliseconds,
+			bool const showMazeGeneration
 		);
 
 		Performer() = delete;
@@ -77,6 +96,8 @@ class App::Performer {
 		Performer & operator=(Performer const &) = delete;
 		Performer(Performer &&) = delete;
 		Performer & operator=(Performer &&) = delete;
+
+		[[nodiscard]] FORCE_INLINE constexpr State getState() const { return state; }
 
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Vector2 const & getMazeStart() const {
@@ -91,7 +112,7 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Maze const & getMaze() const {
 			return std::visit(
-				[](auto and(maze)) -> MazeEngine::Maze const & {
+				[](auto const &maze) -> MazeEngine::Maze const & {
 					return maze;
 				},
 				mazeVariant
@@ -103,6 +124,12 @@ class App::Performer {
 			return markedTileSet;
 		}
 
+		[[nodiscard]] FORCE_INLINE
+		decltype(markedWallSet) const & getMarkedWallSet() const {
+			return markedWallSet;
+		}
+
+		[[nodiscard]] FORCE_INLINE
 		decltype(pathTileSet) const & getPathTileSet() const {
 			return pathTileSet;
 		}
@@ -124,6 +151,16 @@ class App::Performer {
 
 		void update();
 
+		[[nodiscard]] FORCE_INLINE
+		MazeEngine::MazeGenerationIterator const & getMazeGenerationIterator() const {
+			return mazeGenerationIterator;
+		}
+
+		[[nodiscard]] FORCE_INLINE
+		MazeEngine::UnionFinder::View getUnionFinderView() {
+			return mazeGenerationIterator.getUnionFinderView();
+		}
+
 	private:
 
 		[[nodiscard]] FORCE_INLINE
@@ -136,7 +173,36 @@ class App::Performer {
 			return const_cast<MazeEngine::MazeSearchIterator &>(std::as_const(*this).getMazeSearchIterator());
 		}
 
-		void playSound(MazeEngine::Vector2 const vertex);
+		void playSound(MazeEngine::Vector2 const vertex) const;
+
+		template<typename MazeT>
+		constexpr std::enable_if_t<
+			std::is_same_v<MazeT, MazeEngine:: SquareMaze> or
+			std::is_same_v<MazeT, MazeEngine::HexagonMaze>,
+		void> playSound(MazeEngine::Maze::Direction const direction) const {
+			assert(soundInstrument != nullptr);
+			if (soundInstrument == nullptr) return;
+
+			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
+				switch (direction) {
+					case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;
+					case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
+					case MazeEngine::Maze::Direction::south: soundInstrument->play(0u); break;
+					case MazeEngine::Maze::Direction::west : soundInstrument->play(2u); break;
+					default: break;
+				}
+			} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
+				switch (direction) {
+					case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u); break;
+					case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u); break;
+					case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u); break;
+					case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u); break;
+					case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u); break;
+					case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u); break;
+					default: break;
+				}
+			}
+		}
 };
 
 #endif

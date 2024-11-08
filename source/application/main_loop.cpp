@@ -14,6 +14,8 @@ namespace App {
 }
 
 void App::mainLoop() {
+	assert(performer.has_value());
+
 	// Time of the previous iteration.
 	static UnsignedMilliseconds previousTime{0u};
 

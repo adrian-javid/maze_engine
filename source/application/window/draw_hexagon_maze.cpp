@@ -80,11 +80,10 @@ void App::Window::drawHexagonMaze(
 	MazeEngine::HexagonMaze const &maze,
 	SDL_FPoint const &center,
 	float const width, float const height,
-	ColorGetter const getMainColorTriplet,
-	ColorTriplet const &wallColorTriplet
+	TileColorTripletGetter const tileColorTripletGetter,
+	WallColorTripletGetter const wallColorTripletGetter
 ) {
 	int const radius{maze.getRadius()};
-	auto const &[wallColor1, wallColor2, wallColor3]{wallColorTriplet};
 
 	// Radius of 0 draws 1 hexagon.
 	assert(radius >= 0);
@@ -115,11 +114,11 @@ void App::Window::drawHexagonMaze(
 			float const hexagonCenterX{center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset};
 
 			auto const drawTile([
-				&getMainColorTriplet, &wallColor1, &wallColor2, &wallColor3,
+				&tileColorTripletGetter, &wallColorTripletGetter,
 				hexagonCenterX, hexagonWidth, hexagonHeight,
 				&maze
 			](MazeEngine::Vector2 const &tileKey, float const hexagonCenterY) -> void {
-				auto const &&[mainColor1, mainColor2, mainColor3]{getMainColorTriplet(tileKey)};
+				auto const [tileColor1, tileColor2, tileColor3]{tileColorTripletGetter(tileKey)};
 				auto const &&[
 					outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
 					outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint
@@ -128,8 +127,8 @@ void App::Window::drawHexagonMaze(
 				drawHexagon(
 					outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,
 					outerSouthwestPoint, outerSouthPoint, outerSoutheastPoint,
-					mainColor1, mainColor1, mainColor2,
-					mainColor2, mainColor3, mainColor3
+					tileColor1, tileColor1, tileColor2,
+					tileColor2, tileColor3, tileColor3
 				);
 
 				auto const &&[
@@ -141,47 +140,77 @@ void App::Window::drawHexagonMaze(
 					hexagonHeight * (1.0f - wallFramePercent)
 				)};
 
-				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::northeast).hasWall) drawQuadrilateral(
-					outerNorthPoint, outerNortheastPoint,
-					innerNorthPoint, innerNortheastPoint,
-					wallColor1, wallColor2,
-					wallColor1, wallColor2
-				);
+				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::northeast).hasWall) {
+					auto const [wallColor1, wallColor2, wallColor3]{
+						wallColorTripletGetter({tileKey, MazeEngine::HexagonMaze::Direction::northeast})
+					};
+					drawQuadrilateral(
+						outerNorthPoint, outerNortheastPoint,
+						innerNorthPoint, innerNortheastPoint,
+						wallColor1, wallColor2,
+						wallColor1, wallColor2
+					);
+				}
 
-				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::east).hasWall) drawQuadrilateral(
-					innerNortheastPoint, outerNortheastPoint,
-					innerSoutheastPoint, outerSoutheastPoint,
-					wallColor2, wallColor2,
-					wallColor3, wallColor3
-				);
+				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::east).hasWall) {
+					auto const [wallColor1, wallColor2, wallColor3]{
+						wallColorTripletGetter({tileKey, MazeEngine::HexagonMaze::Direction::east})
+					};
+					drawQuadrilateral(
+						innerNortheastPoint, outerNortheastPoint,
+						innerSoutheastPoint, outerSoutheastPoint,
+						wallColor2, wallColor2,
+						wallColor3, wallColor3
+					);
+				}
 
-				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::southeast).hasWall) drawQuadrilateral(
-					innerSouthPoint, innerSoutheastPoint,
-					outerSouthPoint, outerSoutheastPoint,
-					wallColor1, wallColor3,
-					wallColor1, wallColor3
-				);
+				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::southeast).hasWall) {
+					auto const [wallColor1, wallColor2, wallColor3]{
+						wallColorTripletGetter({tileKey, MazeEngine::HexagonMaze::Direction::southeast})
+					};
+					drawQuadrilateral(
+						innerSouthPoint, innerSoutheastPoint,
+						outerSouthPoint, outerSoutheastPoint,
+						wallColor1, wallColor3,
+						wallColor1, wallColor3
+					);
+				}
 
-				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::southwest).hasWall) drawQuadrilateral(
-					outerSouthwestPoint, innerSouthwestPoint,
-					outerSouthPoint, innerSouthPoint,
-					wallColor2, wallColor2,
-					wallColor1, wallColor1
-				);
+				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::southwest).hasWall) {
+					auto const [wallColor1, wallColor2, wallColor3]{
+						wallColorTripletGetter({tileKey, MazeEngine::HexagonMaze::Direction::southwest})
+					};
+					drawQuadrilateral(
+						outerSouthwestPoint, innerSouthwestPoint,
+						outerSouthPoint, innerSouthPoint,
+						wallColor2, wallColor2,
+						wallColor1, wallColor1
+					);
+				}
 
-				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::west).hasWall) drawQuadrilateral(
-					outerNorthwestPoint, innerNorthwestPoint,
-					outerSouthwestPoint, innerSouthwestPoint,
-					wallColor3, wallColor3,
-					wallColor2, wallColor2
-				);
+				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::west).hasWall) {
+					auto const [wallColor1, wallColor2, wallColor3]{
+						wallColorTripletGetter({tileKey, MazeEngine::HexagonMaze::Direction::west})
+					};
+					drawQuadrilateral(
+						outerNorthwestPoint, innerNorthwestPoint,
+						outerSouthwestPoint, innerSouthwestPoint,
+						wallColor3, wallColor3,
+						wallColor2, wallColor2
+					);
+				}
 
-				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::northwest).hasWall) drawQuadrilateral(
-					outerNorthwestPoint, outerNorthPoint,
-					innerNorthwestPoint, innerNorthPoint,
-					wallColor3, wallColor1,
-					wallColor3, wallColor1
-				);
+				if (maze.checkAdjacent(tileKey, MazeEngine::HexagonMaze::Direction::northwest).hasWall) {
+					auto const [wallColor1, wallColor2, wallColor3]{
+						wallColorTripletGetter({tileKey, MazeEngine::HexagonMaze::Direction::northwest})
+					};
+					drawQuadrilateral(
+						outerNorthwestPoint, outerNorthPoint,
+						innerNorthwestPoint, innerNorthPoint,
+						wallColor3, wallColor1,
+						wallColor3, wallColor1
+					);
+				}
 			});
 
 			/* top hexagon */

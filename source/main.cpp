@@ -34,8 +34,6 @@ namespace App {/*
 #endif
 #endif
 
-
-
 int main(int const argc, char *argv[]) {
 	// Parse arguments into key-value pairs.
 	auto const &config(App::ParamInfo::parseArgv(argc, argv));
@@ -51,7 +49,7 @@ int main(int const argc, char *argv[]) {
 	unsigned int const seed{App::ParamInfo::castArg<unsigned int>(config.at("seed").argument)};
 	std::string_view const searchAlgorithmName(config.at("search").argument);
 	std::string_view const soundTypeName(config.at("sound").argument);
-	int sleepTimeMilliseconds{
+	int const sleepTimeMilliseconds{
 		App::ParamInfo::assertNonnegative(
 			App::ParamInfo::castArg<int>(config.at("delay").argument),
 			(std::ostringstream() << "Bad value for `delay`." ).str()
@@ -63,21 +61,36 @@ int main(int const argc, char *argv[]) {
 		else if (gridType == "hexagon") return App::Performer::MazeType::hexagon;
 		else App::errorExit("Unable to resolve grid type from string: `", gridType, "`.");
 	}()};
+	std::size_t const excessWallPruneCountdown{App::ParamInfo::castArg<unsigned int>(config.at("wall_prune").argument)};
 	App::Performer::SearchType const searchType{<:searchAlgorithmName:>() -> App::Performer::SearchType {
 		/**/ if (searchAlgorithmName == "depth") return App::Performer::SearchType::depth;
 		else if (searchAlgorithmName == "breadth" or searchAlgorithmName == "dijkstra") return App::Performer::SearchType::breadth;
 		else if (searchAlgorithmName == "greedy") return App::Performer::SearchType::greedy;
-		else if (searchAlgorithmName == "a_star") App::errorExit("A Star is currently unsupported.");
+		else if (searchAlgorithmName == "a_star") return App::Performer::SearchType::aStar;
 		else App::errorExit("Unable to resolve graph search algorithm from string: `", searchAlgorithmName, "`.");
 	}()};
 	App::Performer::SoundType const soundType{<:soundTypeName:>() -> App::Performer::SoundType {
 		/**/ if (soundTypeName == "none") return App::Performer::SoundType::none;
 		else if (soundTypeName == "piano") return App::Performer::SoundType::piano;
 		else if (soundTypeName == "synthesizer") return App::Performer::SoundType::synthesizer;
-		else App::errorExit("Unable to resolve sound instrument frmo string: `", soundTypeName, "`.");
+		else App::errorExit("Unable to resolve sound instrument from string: `", soundTypeName, "`.");
 	}()};
+	bool const shouldShowMazeGeneration{App::ParamInfo::castArg<bool>(config.at("show_maze_generation").argument)};
 
-	App::performer.emplace(mazeType, mazeSize, seed, mazeWrap, searchType, soundType, sleepTimeMilliseconds);
+	App::performer.emplace(
+		mazeType, mazeSize, seed,
+		mazeWrap, excessWallPruneCountdown,
+		searchType, soundType,
+		sleepTimeMilliseconds, shouldShowMazeGeneration
+	);
+
+	#ifdef __EMSCRIPTEN__
+	/*
+		For the website, the performer should not start performing until the user initiates it.
+		So, the performer will be paused to begin with.
+	*/
+	App::performer->pause();
+	#endif
 
 	// Print the parameter values.
 	for (auto const &<:name, param:> : config) {
@@ -90,8 +103,11 @@ int main(int const argc, char *argv[]) {
 	}
 
 	#ifdef __EMSCRIPTEN__
-	if (SDL_SetHintWithPriority(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, "#canvas", SDL_HINT_OVERRIDE) == SDL_FALSE) {
-		std::cerr << "Binding element for keyboard inputs was not set to canvas." << '\n';
+	if (
+		static constexpr char const *emscriptenBindingElement{"#canvas"};
+		SDL_SetHintWithPriority(SDL_HINT_EMSCRIPTEN_KEYBOARD_ELEMENT, emscriptenBindingElement, SDL_HINT_OVERRIDE) == SDL_FALSE
+	) {
+		std::cerr << "Binding element for keyboard inputs was not set correctly.\n";
 	}
 	#endif
 
@@ -125,21 +141,21 @@ int main(int const argc, char *argv[]) {
 
 		static constexpr std::size_t byteCount{std::tuple_size_v<SimpleSound> * sizeof(SimpleSound::value_type)};
 
-		using DataView = App::SoundTable::DataView;
+		using AudioDataView = App::SoundTable::AudioDataView;
 
-		App::Performer::piano      .put(0u, DataView(Piano      ::    first.data(), byteCount));
-		App::Performer::piano      .put(1u, DataView(Piano      ::    third.data(), byteCount));
-		App::Performer::piano      .put(2u, DataView(Piano      ::    fifth.data(), byteCount));
-		App::Performer::piano      .put(3u, DataView(Piano      ::highFirst.data(), byteCount));
-		App::Performer::piano      .put(4u, DataView(Piano      ::highThird.data(), byteCount));
-		App::Performer::piano      .put(5u, DataView(Piano      ::highFifth.data(), byteCount));
+		App::Performer::piano      .put(0u, AudioDataView(Piano      ::    first.data(), byteCount));
+		App::Performer::piano      .put(1u, AudioDataView(Piano      ::    third.data(), byteCount));
+		App::Performer::piano      .put(2u, AudioDataView(Piano      ::    fifth.data(), byteCount));
+		App::Performer::piano      .put(3u, AudioDataView(Piano      ::highFirst.data(), byteCount));
+		App::Performer::piano      .put(4u, AudioDataView(Piano      ::highThird.data(), byteCount));
+		App::Performer::piano      .put(5u, AudioDataView(Piano      ::highFifth.data(), byteCount));
 
-		App::Performer::synthesizer.put(0u, DataView(Synthesizer::    first.data(), byteCount));
-		App::Performer::synthesizer.put(1u, DataView(Synthesizer::    third.data(), byteCount));
-		App::Performer::synthesizer.put(2u, DataView(Synthesizer::    fifth.data(), byteCount));
-		App::Performer::synthesizer.put(3u, DataView(Synthesizer::highFirst.data(), byteCount));
-		App::Performer::synthesizer.put(4u, DataView(Synthesizer::highThird.data(), byteCount));
-		App::Performer::synthesizer.put(5u, DataView(Synthesizer::highFifth.data(), byteCount));
+		App::Performer::synthesizer.put(0u, AudioDataView(Synthesizer::    first.data(), byteCount));
+		App::Performer::synthesizer.put(1u, AudioDataView(Synthesizer::    third.data(), byteCount));
+		App::Performer::synthesizer.put(2u, AudioDataView(Synthesizer::    fifth.data(), byteCount));
+		App::Performer::synthesizer.put(3u, AudioDataView(Synthesizer::highFirst.data(), byteCount));
+		App::Performer::synthesizer.put(4u, AudioDataView(Synthesizer::highThird.data(), byteCount));
+		App::Performer::synthesizer.put(5u, AudioDataView(Synthesizer::highFifth.data(), byteCount));
 	}
 
 	static constexpr char const *windowTitle{"Maze Engine"};

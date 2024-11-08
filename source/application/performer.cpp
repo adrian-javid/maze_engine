@@ -2,6 +2,7 @@
 
 #include "maze_engine/maze.hpp"
 #include "maze_engine/auxiliary.hpp"
+#include "maze_engine/maze_generation_iterator.hpp"
 
 #include <iostream>
 
@@ -22,7 +23,8 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 	emscripten::enum_<App::Performer::SearchType>("MazeEngine_SearchType")
 		.value("DEPTH"  , App::Performer::SearchType::depth  )
 		.value("BREADTH", App::Performer::SearchType::breadth)
-		.value("GREEDY" , App::Performer::SearchType::greedy );
+		.value("GREEDY" , App::Performer::SearchType::greedy )
+		.value("A_STAR" , App::Performer::SearchType::aStar  );
 
 	emscripten::enum_<App::Performer::SoundType>("MazeEngine_SoundType")
 		.value("NONE"       , App::Performer::SoundType::none       )
@@ -32,15 +34,19 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 	emscripten::function("MazeEngine_resetPerformer", +[](
 		App::Performer::MazeType const mazeType, int const mazeSize,
 		unsigned int const seed, bool const mazeWrap,
+		unsigned int const excessWallPruneCountdown,
 		App::Performer::SearchType const searchType,
 		App::Performer::SoundType const soundType,
-		unsigned int const sleepTimeMilliseconds
+		unsigned int const sleepTimeMilliseconds,
+		bool const shouldShowMazeGeneration
 	) -> void {
 		App::performer.emplace(
 			mazeType, mazeSize,
-			App::Performer::Seed{seed}, mazeWrap,
+			App::Performer::SeedInt{seed}, mazeWrap,
+			std::size_t{excessWallPruneCountdown},
 			searchType, soundType,
-			App::UnsignedMilliseconds{sleepTimeMilliseconds}
+			App::UnsignedMilliseconds{sleepTimeMilliseconds},
+			shouldShowMazeGeneration
 		);
 	});
 
@@ -50,15 +56,17 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 
 App::Performer::Performer(
 	MazeType const mazeType, int const mazeSizeHint,
-	Seed const seed, bool const mazeWrap,
+	SeedInt const seed, bool const mazeWrap,
+	std::size_t const excessWallPruneCountdown,
 	SearchType const searchType,
 	SoundType const soundType,
-	UnsignedMilliseconds const sleepTimeMilliseconds
+	UnsignedMilliseconds const sleepTimeMilliseconds,
+	bool const showMazeGeneration
 ):
 	mazeVariant([mazeType, mazeSizeHint]() -> decltype(Performer::mazeVariant) {
 		static constexpr MazeEngine::Maze::Tile mazeFillValue{0xFFu};
 		static constexpr int mazeSizeMin{1}, mazeSizeMax{1 << 6};
-		
+
 		assert(mazeSizeHint >= mazeSizeMin);
 		assert(mazeSizeHint <= mazeSizeMax);
 
@@ -103,20 +111,8 @@ App::Performer::Performer(
 				return {0, maze.getRadius()};
 		}
 	}, mazeVariant)),
-	mazeSearchIteratorVariant([this, searchType, seed, mazeWrap]() -> decltype(Performer::mazeSearchIteratorVariant) {
-		/*
-			The maze starts out fully walled.
-
-			If the maze search iterator is constructed with a maze
-			that is fully walled, then it will get zero neighbors when it attempts
-			to get neighbors of the maze start vertex on construction.
-			So, it will be an ended iterator to begin with, which is not ideal.
-
-			That is why, here, the maze needs to be generated before the
-			maze search iterator is constructed.
-		*/
-		getMaze().generate(seed, mazeWrap);
-
+	mazeGenerationIterator(getMaze(), seed, mazeWrap, excessWallPruneCountdown),
+	mazeSearchIteratorVariant([this, searchType]() -> decltype(Performer::mazeSearchIteratorVariant) {
 		switch (searchType) {
 			case SearchType::depth:
 				return MazeEngine::DepthFirstSearchIterator(getMaze(), mazeStart);
@@ -131,6 +127,9 @@ App::Performer::Performer(
 
 			case SearchType::greedy:
 				return MazeEngine::GreedyBestFirstSearchIterator(getMaze(), mazeStart, mazeEnd);
+
+			case SearchType::aStar:
+				return MazeEngine::AStarSearchIterator(getMaze(), mazeStart, mazeEnd);
 		}
 	}()),
 	timer(sleepTimeMilliseconds),
@@ -150,13 +149,20 @@ App::Performer::Performer(
 			case SoundType::synthesizer:
 				return &synthesizer;
 		}
-	}()}
+	}()},
+	randomSoundPicker(SoundTable::makeRandomSoundPicker(seed)),
+	trailEdge(getMazeSearchIterator().getHistory().cend())
 {
 	assert(not mazeVariant.valueless_by_exception());
 	assert(not mazeSearchIteratorVariant.valueless_by_exception());
+
+	if (showMazeGeneration == false) {
+		for (; not mazeGenerationIterator.isDone(); mazeGenerationIterator.advance());
+		state = State::searching;
+	}
 }
 
-void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
+void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) const {
 	if (soundInstrument == nullptr) return;
 
 	/*
@@ -166,7 +172,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 	auto const &history{getMazeSearchIterator().getHistory()};
 
 	/*
-		Getting the edge that has the main vertex of interest and its parent vertex.
+		Get the edge that has the main vertex of interest and its parent vertex.
 	*/
 	auto const edge(history.find(mainVertex));
 
@@ -198,7 +204,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 	MazeEngine::Vector2 const &parentVertex{edge->/* parent vertex */second};
 
 	/*
-		This offset vector represents the direciton in a vector form.
+		If there was no wraparound, this offset vector represents the direction in a vector form.
 
 		We need to calculate the enumerated direction from this.
 	*/
@@ -207,93 +213,94 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) {
 	/*
 		We will determine which sound to play based on the offset vector.
 	*/
-	std::visit(<:this, offsetVector:>(auto and(maze)) -> void {
+	std::visit(<:this, parentVertex, mainVertex, offsetVector:>(auto const &maze) -> void {
 		// Get the maze type.
 		using MazeT = std::decay_t<decltype(maze)>;
-		
+
 		// Alias for the maze direction enum.
 		using Direction = MazeEngine::Maze::Direction;
 
-		/*
-			Figure out whether the offset vector is a vector that we can recognise.
+		Direction const direction{[&maze, parentVertex, mainVertex, offsetVector]() constexpr -> Direction {
+			Direction possiblySimpleDirection{MazeEngine::Maze::getSimpleDirection<MazeT>(offsetVector)};
 
-			That is, its values should be integers that are either `-1`, `0`, or `+1`.
-		*/
-		bool const isSimpleOffsetVector{<:offsetVector:>() constexpr -> bool {
-			switch (offsetVector.value1) {
-				case -1:
-				case  0:
-				case +1: switch (offsetVector.value2) {
-					case -1:
-					case  0:
-					case +1: return true;
+			switch (possiblySimpleDirection) {
+				case Direction::none: {
+					maze.forEachValidDirection([
+						&maze, &possiblySimpleDirection, parentVertex, mainVertex
+					](
+						Direction const validDirection
+					) constexpr -> void {
+						auto const [neighborVertex, wallFlag]{
+							maze.checkAdjacent(parentVertex, validDirection)
+						};
+
+						// The main vertex cannot be a neighbor from this direction if there is a wall.
+						assert(not (wallFlag == true and mainVertex == neighborVertex));
+
+						if (not wallFlag and mainVertex == neighborVertex) {
+							assert(possiblySimpleDirection == Direction::none);
+							possiblySimpleDirection = validDirection;
+						}
+
+					});
+					break;
 				}
+				default: break;
 			}
-			return false;
+
+			return possiblySimpleDirection;
 		}()};
 
-		/*
-			The offset vectors that are able to be recognized are determined
-			by which maze grid type is being used.
-		*/
-		if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
-			Direction const direction{<:offsetVector, isSimpleOffsetVector:>() -> MazeEngine::Maze::Direction {
-				static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
-					/*    */                      /* -1 */         /*  0 */          /* +1 */
-					/* -1 */ std::array{ Direction:: none, Direction::west, Direction:: none, },
-					/*  0 */ std::array{ Direction::north, Direction::none, Direction::south, },
-					/* +1 */ std::array{ Direction:: none, Direction::east, Direction:: none, },
-				};
+		playSound<MazeT>(direction);
 
-				if (isSimpleOffsetVector)
-					return directionMatrix[offsetVector.value1 + 1][offsetVector.value2 + 1];
-				else
-					return Direction::none;
-			}()};
-
-			switch (direction) {
-				case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;
-				case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
-				case MazeEngine::Maze::Direction::south: soundInstrument->play(0u); break;
-				case MazeEngine::Maze::Direction::west : soundInstrument->play(2u); break;
-				default: break;
-			}
-		} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
-			Direction const direction{<:offsetVector, isSimpleOffsetVector:>() -> MazeEngine::Maze::Direction {
-				static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
-					/*    */                          /* -1 */         /*  0 */              /* +1 */
-					/* -1 */ std::array{ Direction::     none, Direction::west, Direction::southwest, },
-					/*  0 */ std::array{ Direction::northwest, Direction::none, Direction::southeast, },
-					/* +1 */ std::array{ Direction::northeast, Direction::east, Direction::     none, },
-				};
-
-				if (isSimpleOffsetVector)
-					return directionMatrix[offsetVector.value1 + 1][offsetVector.value2 + 1];
-				else
-					return Direction::none;
-			}()};
-
-			switch (direction) {
-				case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u); break;
-				case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u); break;
-				case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u); break;
-				case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u); break;
-				case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u); break;
-				case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u); break;
-				default: break;
-			}
-		}
 	}, mazeVariant);
-
 }
 
 void App::Performer::update() {
 	if (timer.update()) switch (state) {
+		case State::generating: {
+			using Wall = MazeEngine::MazeGenerationIterator::Wall;
+
+			if (mazeGenerationIterator.isDone()) goto switchToSearching;
+
+			/* process wall */ {
+				Wall const *const wall{mazeGenerationIterator.getWall()};
+				assert(wall != nullptr); if (wall == nullptr) {
+					// (Fallback behavior if the wall is null. The wall should never be null here.)
+					assert(mazeGenerationIterator.isDone());
+					goto switchToSearching;
+				}
+
+				// play sound
+				if (soundInstrument != nullptr) soundInstrument->play(randomSoundPicker.getInt());
+
+				markedWallSet.insert(*wall);
+			}
+
+			if constexpr (true) {
+				mazeGenerationIterator.advanceUntilUnionOrDone([this](Wall const wall) -> void {
+					this->markedWallSet.insert(wall);
+				});
+			} else {
+				mazeGenerationIterator.advance();
+			}
+
+			return;
+		}
+
+		switchToSearching: {
+			std::cout << "Finished generating the maze.\n";
+
+			state = State::searching;
+
+			[[fallthrough]];
+		}
+
 		case State::searching: {
-			if (getMazeSearchIterator().isEnd()) goto switchToBacktracking;
+			if (getMazeSearchIterator().isDone()) goto switchToBacktracking;
 
 			/* process vertex */ {
-				MazeEngine::Vector2 const &vertex{*getMazeSearchIterator()};
+				MazeEngine::Vector2 const &vertex{getMazeSearchIterator().getVector()};
 
 				playSound(vertex);
 
@@ -302,7 +309,7 @@ void App::Performer::update() {
 				if (vertex == mazeEnd) goto switchToBacktracking;
 			}
 
-			++getMazeSearchIterator();
+			getMazeSearchIterator().advance();
 
 			return;
 		}
@@ -317,6 +324,8 @@ void App::Performer::update() {
 
 		case State::backtracking: {
 			MazeEngine::Vector2::HashMap<MazeEngine::Vector2> const &history{getMazeSearchIterator().getHistory()};
+
+			if (trailEdge == history.cend()) return;
 
 			if (trailEdge->/* child vertex */first == mazeStart) goto switchToComplete;
 

@@ -3,54 +3,88 @@
 
 #include "maze.hpp"
 #include "union_finder.hpp"
+#include "application/macros.hpp"
 
 #include <algorithm>
 #include <random>
 #include <cassert>
+#include "maze_engine/auxiliary.hpp"
 
 namespace MazeEngine { class MazeGenerationIterator; }
 
 class MazeEngine::MazeGenerationIterator final {
-	private:
-		struct Wall { Vector2 tileKey; Maze::Direction type; };
-
 	public:
-		[[nodiscard]] explicit MazeGenerationIterator(Maze &paramMaze, unsigned int const seed, bool const wrap):
-			cyclePrevention(paramMaze.getTileCount()), maze{paramMaze}
-		{
-			UnionFinder::Identifier indentifierCount{0};
+		struct [[nodiscard]] Wall {
+			Vector2 tileKey;
+			Maze::Direction type;
+			struct [[nodiscard]] Hash {[[nodiscard]] std::size_t operator()(Wall const &wall) const noexcept {
+				return Aux::combineHashValues(
+					Vector2::Hash{}(wall.tileKey),
+					std::hash<Aux::Enum::Int<Maze::Direction>>{}(Aux::Enum::asInt(wall.type))
+				);
+			}};
 
-			maze.forEachKey([this, wrap, &indentifierCount](Vector2 const &key) {
-				identity.insert({key, indentifierCount++});
-				maze.forEachPrincipalDirection([this, wrap, &key](Maze::Direction const direction) {
-					if (not wrap and not maze.isInBounds(key + maze.getOffset(direction))) return;
-					if (maze.checkAdjacent(key, direction).hasWall) wallList.push_back({key, direction});
-				});
-			});
+			/// @brief An unordered set of `Vector2`.
+			using HashSet = std::unordered_set<Wall, Hash>;
 
-			std::mt19937 randomNumberGenerator(seed);
-			std::shuffle(wallList.begin(), wallList.end(), randomNumberGenerator);
+			[[nodiscard]]
+			constexpr bool operator==(Wall const &other) const {
+				return this->tileKey == other.tileKey and this->type == other.type;
+			}
 
-			wallIterator = wallList.cbegin();
-		}
+			[[nodiscard]]
+			constexpr bool operator!=(Wall const &other) const { return not(*this == other); }
+		};
 
-		inline void advance() {
+		enum struct Result : std::uint_least8_t { none = 0u, didUnion = 1u, };
+		static_assert(Result{} == Result::none);
+
+		[[nodiscard]]
+		explicit MazeGenerationIterator(
+			Maze &paramMaze,
+			unsigned int const seed,
+			bool const wrap=true,
+			std::size_t const paramExcessWallPruneCountdown=std::size_t{0u}
+		);
+
+		Result advance();
+
+		template <typename WallAccessListenerT>
+		inline void advanceUntilUnionOrDone(WallAccessListenerT &&(wallAccessListener)) {
+			static_assert(std::is_invocable_v<decltype(wallAccessListener), Wall const>);
+
 			assert(not isDone());
 			if (isDone()) return;
 
-			Wall const &wall(*wallIterator);
-
-			UnionFinder::Identifier const thisId{identity.at(wall.tileKey)};
-			UnionFinder::Identifier const adjId{identity.at(maze.checkAdjacent(wall.tileKey, wall.type).key)};
-
-			if (cyclePrevention.find(thisId) != cyclePrevention.find(adjId)) {
-				maze.at(wall.tileKey) ^= wall.type; // flip the wall bit to zero
-				cyclePrevention.unionThem(thisId, adjId);
+			for (
+				Result result(Result::none);
+				result == Result::none and not isDone();
+				result = advance()
+			) {
+				Wall const *wall{getWall()};
+				assert(wall != nullptr);
+				std::forward<WallAccessListenerT>(wallAccessListener)(*wall);
 			}
 		}
 
-		[[nodiscard]]
-		inline bool isDone() { return wallIterator == wallList.cend(); }
+		inline void advanceUntilUnionOrDone() { advanceUntilUnionOrDone([](Wall const) constexpr -> void {}); }
+
+		[[nodiscard]] FORCE_INLINE inline bool isDone() const { return wallIterator == wallList.cend(); }
+
+		[[nodiscard]] inline Wall const * getWall() const {
+			if (isDone())
+				return nullptr;
+			else
+				return &*wallIterator;
+		}
+
+		[[nodiscard]] inline Vector2::HashMap<UnionFinder::Identifier> const & getTileKeyIdentities() const {
+			return identity;
+		}
+
+		[[nodiscard]] inline UnionFinder::View getUnionFinderView() {
+			return UnionFinder::View(cyclePrevention);
+		}
 
 	private:
 		Vector2::HashMap<UnionFinder::Identifier> identity;
@@ -58,6 +92,7 @@ class MazeEngine::MazeGenerationIterator final {
 		UnionFinder cyclePrevention;
 		Maze &maze;
 		decltype(MazeGenerationIterator::wallList.cbegin()) wallIterator;
+		std::size_t excessWallPruneCountdown{0};
 };
 
 #endif

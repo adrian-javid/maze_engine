@@ -46,8 +46,8 @@ namespace App::Window {
 		MazeEngine::SquareMaze const &maze,
 		SDL_FPoint const &position,
 		float const width, float const height,
-		ColorGetter const getMainColorTriplet,
-		ColorTriplet const &wallColor
+		TileColorTripletGetter const tileColorTripletGetter,
+		WallColorTripletGetter const wallColorTripletGetter
 	);
 
 	/**
@@ -63,8 +63,8 @@ namespace App::Window {
 		MazeEngine::HexagonMaze const &maze,
 		SDL_FPoint const &center,
 		float const width, float const height,
-		ColorGetter const getMainColorTriplet,
-		ColorTriplet const &wallColor
+		TileColorTripletGetter const tileColorTripletGetter,
+		WallColorTripletGetter const wallColorTripletGetter
 	);
 
 	void refresh();

@@ -16,14 +16,14 @@ void MazeEngine::Maze::forEachValidDirection(std::function<void(Direction const)
 }
 
 void MazeEngine::Maze::forEachNeighbor(Vector2 const &key, std::function<void(Vector2 const &)> const &forThisNeighbor) const {
-	forEachValidDirection([this, &key, &forThisNeighbor](Direction const direction) {
+	forEachValidDirection([this, &key, &forThisNeighbor](Direction const direction) -> void {
 		auto const &&[neighbor, wallFlag]{checkAdjacent(key, direction)};
 		if (not wallFlag) forThisNeighbor(neighbor);
 	});
 }
 
 auto MazeEngine::Maze::generate(unsigned int const seed, bool const wrap) -> void {
-	UnionFinder::Identifier indentifierCount{0};
+	UnionFinder::Identifier identifierCount{0};
 	Vector2::HashMap<UnionFinder::Identifier> identity;
 
 	struct Wall {
@@ -33,8 +33,8 @@ auto MazeEngine::Maze::generate(unsigned int const seed, bool const wrap) -> voi
 
 	std::vector<Wall> wallList;
 
-	forEachKey([this, wrap, &wallList, &identity, &indentifierCount](Vector2 const &key) {
-		identity.insert({key, indentifierCount++});
+	forEachKey([this, wrap, &wallList, &identity, &identifierCount](Vector2 const &key) {
+		identity.insert({key, identifierCount++});
 		forEachPrincipalDirection([this, wrap, &wallList, &key](Direction const direction) {
 			if (not wrap and not isInBounds(key + getOffset(direction))) return;
 			if (checkAdjacent(key, direction).hasWall) wallList.push_back({key, direction});

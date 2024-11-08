@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 
 std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 	{"search", {
@@ -34,7 +35,10 @@ std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 		}
 	}},
 	{"size", {
-		"Unsigned integer value. Controls size of maze. For `square`, this is width and height. For `hexagon`, this is radius.",
+		"Unsigned integer value. Sets the size of the maze."
+			"\n\t\tThe size of the maze is determined by counting from the center outwards"
+			"\n\t\tan equal amount of tiles to the `size` parameter."
+			"\n\t\tThe center tile is included in the count.",
 		"5",
 		std::nullopt,
 	}},
@@ -49,6 +53,11 @@ std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 			{"false", "Disable wrapping."}
 		},
 	}},
+	{"wall_prune", {
+		"Unsigned integer value. Excess walls will be removed up to a maximum count of this value.",
+		"0",
+		std::nullopt
+	}},
 	{"sound", {
 		"Sound instrument to use sound effects from.",
 		"synthesizer",
@@ -62,6 +71,14 @@ std::unordered_map<std::string, App::ParamInfo> App::ParamInfo::config{
 		"Unsigned integer value. Delay to add in milliseconds after accessing a tile in the maze. ",
 		"60",
 		std::nullopt,
+	}},
+	{"show_maze_generation", {
+		"If `true`, the program will first spend time showing the incremental process of generating the maze.",
+		"true",
+		Acceptable{
+			{"true", "Enable maze generation showcase."},
+			{"false", "Skip maze generation showcase."}
+		},
 	}},
 };
 
@@ -103,6 +120,8 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 		}
 	}
 
+	std::unordered_set<std::string> duplicateDetection;
+
 	for (int argIndex{1}; argIndex < argc; ++argIndex) {
 		std::string const arg(argv[argIndex]);
 
@@ -116,6 +135,15 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 
 		std::string const paramName(arg.substr(0u, delimPos));
 
+		if (
+			auto const notFound(duplicateDetection.cend());
+			duplicateDetection.find(paramName) != notFound
+		) errorExit(
+			"Repeated parameter \"" + paramName + "\" detected. Repeated parameters are not allowed."
+		);
+
+		duplicateDetection.insert(paramName);
+
 		auto const paramPtr(config.find(paramName));
 		if (paramPtr == config.end()) errorExit(
 			"Invalid parameter: `" + paramName + "` from `" + arg + "`.\n"
@@ -125,7 +153,7 @@ auto App::ParamInfo::parseArgv(int const argc, char const *const *const argv) ->
 		ParamInfo &param{paramPtr->second};
 		param.argument = arg.substr(delimPos + 1);
 
-		if (not param.acceptable) continue;
+		if (not param.acceptable.has_value()) continue;
 
 		if (param.acceptable.value().find(param.argument) == param.acceptable.value().end()) errorExit(
 			"Unacceptable value `" + param.argument + "` for parameter `" + paramName + "`.\n" +

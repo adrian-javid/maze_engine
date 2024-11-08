@@ -4,27 +4,37 @@
 #include "simple_directmedia_layer.hpp"
 #include "linear_interpolation.hpp"
 #include "maze_engine/vector2.hpp"
+#include "maze_engine/maze_generation_iterator.hpp"
 
 #include <tuple>
 #include <string>
 #include <cassert>
+#include <iostream>
+#include <sstream>
 
 namespace App {
 	using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
 
-	using ColorGetter = std::function<ColorTriplet(MazeEngine::Vector2 const &)>;
+	using TileColorTripletGetter = std::function<ColorTriplet(MazeEngine::Vector2 const &)>;
+	using WallColorTripletGetter = std::function<ColorTriplet(MazeEngine::MazeGenerationIterator::Wall const &)>;
 
 	inline constexpr SDL_Color
 		websiteBackgroundColor{
-			/* red   */ 174u,
-			/* green */ 198u,
-			/* blue  */ 207u,
+			/* red   */  174u,
+			/* green */  198u,
+			/* blue  */  207u,
 			/* alpha */ 0xFFu
 		},
 		black{0x00, 0x00, 0x00, 0xFF};
 
-	std::string toString(SDL_Color const &color);
+	[[deprecated, nodiscard]] inline
+	std::string toString(SDL_Color const &color) {
+		std::stringstream buffer;
+		buffer << "(R=" << +color.r << ", G=" << +color.g << ", B=" << +color.b << ", A=" << +color.a << ")";
+		return buffer.str();
+	}
 
+	[[nodiscard]]
 	SDL_Color makeRgbaColor(
 		double const hue,
 		double const saturation=1.0,
@@ -36,35 +46,67 @@ namespace App {
 }
 
 struct App::HslaColor {
+	double static constexpr defaultSaturation=1.0, defaultLuminance=0.5, defaultAlpha=1.0;
 
-	double hue, saturation, luminance, alpha;
+	[[nodiscard]]
+	constexpr HslaColor() = delete;
 
+	[[nodiscard]]
 	constexpr HslaColor(
-		double const hueValue,
-		double const saturationValue=1.0,
-		double const luminanceValue=0.5,
-		double const alphaValue=1.0
+		double const paramHue                         ,
+		double const paramSaturation=defaultSaturation,
+		double const paramLuminance =defaultLuminance ,
+		double const paramAlpha     =defaultAlpha
 	):
-		hue{hueValue},
-		saturation{saturationValue},
-		luminance{luminanceValue},
-		alpha{alphaValue}
-	{}
+		hue       {paramHue       },
+		saturation{paramSaturation},
+		luminance {paramLuminance },
+		alpha     {paramAlpha     }
+	{
+		assert(0.0 <= hue        and hue        <  360.0);
+		assert(0.0 <= saturation and saturation <=   1.0);
+		assert(0.0 <= luminance  and luminance  <=   1.0);
+		assert(0.0 <= alpha      and alpha      <=   1.0);
+	}
 
-	static double getCyclicHue(
-		double const hue,
-		double const percentage,
-		double const depth
-	);
+	[[nodiscard]] constexpr double getHue       () const { return hue       ; }
+	[[nodiscard]] constexpr double getSaturation() const { return saturation; }
+	[[nodiscard]] constexpr double getLuminance () const { return luminance ; }
+	[[nodiscard]] constexpr double getAlpha     () const { return alpha     ; }
 
+	constexpr HslaColor & setHue       (double const paramHue       ) { hue        = paramHue       ; assert(0.0 <= hue        and hue        <  360.0); return *this; }
+	constexpr HslaColor & setSaturation(double const paramSaturation) { saturation = paramSaturation; assert(0.0 <= saturation and saturation <=   1.0); return *this; }
+	constexpr HslaColor & setLuminance (double const paramLuminance ) { luminance  = paramLuminance ; assert(0.0 <= luminance  and luminance  <=   1.0); return *this; }
+	constexpr HslaColor & setAlpha     (double const paramAlpha     ) { alpha      = paramAlpha     ; assert(0.0 <= alpha      and alpha      <=   1.0); return *this; }
+
+	[[nodiscard]]
+	static double getCyclicHue(double const hue, double const percentage, double const depth);
+
+	[[nodiscard]]
 	static double hueWrap(double const value);
 
+	[[deprecated, nodiscard]]
 	ColorTriplet getColorTriplet(double const percentage, double const colorDepth) const;
 
+	[[nodiscard]]
 	SDL_Color toRgbaColor() const;
+
+	[[nodiscard]]
 	SDL_Color toRgbaColor(double const overrideHue) const;
+
 	void addHue(double const hueSupplement);
-	std::string toString() const;
+
+	friend std::ostream & operator<<(std::ostream &outputStream, HslaColor const &color) {
+		outputStream << "("
+			"H=" << color.hue        << ", "
+			"S=" << color.saturation << ", "
+			"L=" << color.luminance  << ", "
+			"A=" << color.alpha      <<
+		')';
+		return outputStream;
+	}
+
+	private: double hue={}, saturation=defaultSaturation, luminance=defaultLuminance, alpha=defaultAlpha;
 };
 
 #endif

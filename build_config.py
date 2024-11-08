@@ -121,6 +121,7 @@ MSVC_DEBUG = make(
 	CXXFLAGS=[
 		"/Od", # disable optimization for faster compilation
 		"/WX", # treat warnings as errors
+		"/wd4996", # suppress deprecation warnings so they are not errors
 		"/RTC1", # runtime checks
 	],
 )
@@ -128,7 +129,6 @@ MSVC_DEBUG = make(
 MSVC_WARNING = make(CXXFLAGS=[
 	"/W4",
 	"/w45262", # warn on implicit fall-through in switch statement after `case` label
-	"/wd4996", # suppress deprecation warnings so they are not errors
 ])
 
 MSVC_SDL2 = make(LIBS=["SDL2", "SDL2main", "shell32", "SDL2_mixer"])

@@ -64,10 +64,10 @@ auto MazeEngine::abstractSearch(
 
 class MazeEngine::MazeSearchIterator {
 	public:
-		virtual MazeSearchIterator &operator++() = 0;
-		[[nodiscard]] virtual Vector2 const &operator*() const = 0;
-		[[nodiscard]] virtual bool isEnd() const = 0;
-		[[nodiscard]] virtual Vector2::HashMap<Vector2> const &getHistory() const = 0;
+		virtual void advance() = 0;
+		[[nodiscard]] virtual Vector2 const & getVector() const = 0;
+		[[nodiscard]] virtual bool isDone() const = 0;
+		[[nodiscard]] virtual Vector2::HashMap<Vector2> const & getHistory() const = 0;
 		[[nodiscard]] explicit MazeSearchIterator() = default;
 		[[nodiscard]] explicit MazeSearchIterator(MazeSearchIterator const &) = default;
 		virtual ~MazeSearchIterator() = default;
@@ -77,11 +77,7 @@ template <typename StorageT>
 class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 	private:
 		Maze const *maze;
-
-	public:
 		Vector2 key;
-
-	private:
 		StorageT storage;
 		Vector2::HashMap<Vector2> history;
 
@@ -95,17 +91,26 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 		}
 
 	public:
+
+		/*
+			The way this constructor is implemented,
+			the first vertex will be processed twice.
+
+			That's okay for the purposes of this program,
+			even though that is not how I prefer for it to work.
+		*/
+		[[nodiscard]]
 		explicit AbstractSearchIterator(
 			Maze const &mazeReference,
 			Vector2 start,
 			StorageT storageValue
 		):
-			maze(&mazeReference), key(std::move(start)), storage(std::move(storageValue)), history()
+			maze(&mazeReference), key(std::move(start)), storage(std::move(storageValue)), history{{start, start}}
 		{
-			history.insert({key, key});
-			gatherNeighbors();
+			storage.push(key);
 		}
 
+		[[nodiscard]]
 		static Vector2 popFrom(StorageT &storage) {
 			Vector2 const key([&storage]() constexpr -> Vector2 {
 				if constexpr (std::is_same_v<StorageT, std::stack<Vector2>>)
@@ -119,22 +124,21 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 			return key;
 		}
 
-		AbstractSearchIterator &operator++() override {
+		void advance() override {
 			assert(not storage.empty());
+			if (storage.empty()) return;
 
 			key = popFrom(storage);
 			gatherNeighbors();
-
-			return *this;
 		}
 
-		[[nodiscard]] Vector2 const &operator*() const override { return key; }
+		[[nodiscard]] Vector2 const &getVector() const override { return key; }
 
 		[[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const override { return history; }
 
 		[[nodiscard]] StorageT const &getStorage() const { return storage; }
 
-		[[nodiscard]] bool isEnd() const override { return storage.empty(); };
+		[[nodiscard]] bool isDone() const override { return storage.empty(); };
 };
 
 #endif

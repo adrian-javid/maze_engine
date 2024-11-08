@@ -52,8 +52,6 @@ namespace App {
 					return "unsigned int";
 				else if constexpr (std::is_same_v<T, bool>)
 					return "bool";
-				else
-					return "";
 			});
 
 			T value{};

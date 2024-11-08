@@ -38,7 +38,7 @@
 	<style>
 		.emscripten { padding-right: 0; margin-left: auto; margin-right: auto; }
 		/* "The canvas *must not* have any border or padding, or mouse coords will be wrong." */
-		canvas.emscripten { border: 0px none; background-color: black; }
+		canvas.emscripten { border: 0px none; background-color: #AEC6CF; pointer-events: none; }
 	</style>
 	<link rel="stylesheet" type="text/css" href="style.css">
 
@@ -47,8 +47,9 @@
 
 <body>
 	<div class="main_container">
+		<h1 id="loading_message">LOADING...</h1>
 		<div class="user_input_container">
-			<form id="maze_form">
+			<form id="maze_form" autocomplete="off" style="display: none;">
 				<label for="maze_type">Grid</label>
 				<select id="maze_type" name="maze_type" required>
 					<option value="square" selected>Square</option>
@@ -56,19 +57,26 @@
 				</select>
 
 				<label for="maze_size">Size</label>
-				<input type="number" id="maze_size" name="maze_size" min="1" max="50" value="5" step="1" required>
+				<input type="number" id="maze_size" name="maze_size" min="1" max="32" value="5" step="1" required>
 
 				<label for="seed">Seed</label>
 				<input type="number" id="seed" name="seed" min="0" max="65535" value="0" step="1" required>
 
+				<label for="wall_prune_countdown">Prune Extra Walls</label>
+				<input type="number" id="wall_prune_countdown" name="wall_prune_countdown" min="0" max="16384" value="0" step=1 required>
+
 				<label for="maze_wrap">Wrap</label>
 				<input type="checkbox" id="maze_wrap" name="maze_wrap">
+
+				<label for="show_maze_generation">Show Generation</label>
+				<input type="checkbox" id="show_maze_generation" name="show_maze_generation" checked>
 
 				<label for="search_type">Algorithm</label>
 				<select id="search_type" name="search_type" required>
 					<option value="depth" selected>Depth-First Search</option>
 					<option value="breadth">Breadth-First Search</option>
 					<option value="greedy">Greedy Best-First Search</option>
+					<option value="a_star">A* Search</option>
 				</select>
 
 				<label for="sound_type">Sound</label>
@@ -80,10 +88,12 @@
 
 				<label for="delay">Delay</label>
 				<div style="display: inline-block;">
-					<input type="number" id="delay" name="delay" min="0" max="65535" value="60" step="1" required>
+					<input type="number" id="delay" name="delay" min="0" max="5000" value="60" step="1" required>
 					<span>milliseconds</span>
 				</div>
-		
+
+				<p id="error_message" data-default-display="flex" style="display: none; color: red"></p>
+
 				<button id="submit_button" type="submit" disabled>Start</button>
 			</form>
 
@@ -91,7 +101,7 @@
 			<!-- <button id="fullscreen_button" disabled>Fullscreen</button> -->
 		</div>
 
-		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1>
+		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" width="0" height="0" tabindex=-1>
 			(Your browser does not support the HTML5 canvas tag.)
 		</canvas>
 	</div>
@@ -110,9 +120,16 @@
 			},
 			canvas: (() => {
 				const canvas = document.getElementById('canvas');
-				canvas.addEventListener("webglcontextlost", (e) => { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+				canvas.addEventListener(
+					"webglcontextlost",
+					(event) => {
+						alert('WebGL context lost. You will need to reload the page.');
+						event.preventDefault();
+					},
+					false
+				);
 				return canvas;
-			})()
+			})(),
 		};
 
 		function resizeCanvas() {
@@ -121,17 +138,80 @@
 		}
 
 		function onMazeEngineApplicationInitialized() {
+			const loadingMessage = document.getElementById("loading_message");
+
+			// Hide the loading message.
+			if (loadingMessage) loadingMessage.style.display = "none";
+
+			// Reset the maze form's display to default.
+			document.getElementById("maze_form").style.display = "";
+
 			resizeCanvas();
 
 			window.addEventListener("resize", resizeCanvas);
 
-			document.getElementById("maze_form").addEventListener("submit", function(event) {
+			const mazeForm = document.getElementById("maze_form");
+
+			if (!mazeForm) console.error("The maze form doesn't exist.");
+
+			const errorMessage = document.getElementById("error_message");
+			const submitButton = document.getElementById("submit_button");
+
+			const inputFieldList = [
+				document.getElementById("maze_size"           ),
+				document.getElementById("seed"                ),
+				document.getElementById("wall_prune_countdown"),
+				document.getElementById("delay"               ),
+			];
+
+			const reportFieldValidationError = (label, field) => {
+				submitButton.style.display = "none";
+
+				field.style.color = "red";
+				field.style.outline = "2px solid red";
+				label.style.color = "red";
+
+				const firstSentence = label ? `Error for "${label?.textContent}".` : `Error.`;
+
+				errorMessage.textContent = `${firstSentence} ${field?.validationMessage}`;
+				errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
+			}
+
+			mazeForm?.addEventListener("input", function(event) {
+				const field = event.target;
+				if (field.type !== "number") return;
+
+				const label = document.querySelector(`label[for="${field.id}"]`);
+
+				if (field?.checkValidity()) {
+					errorMessage.style.display = "none";
+					field.style.color = "";
+					field.style.outline = "";
+					label.style.color = "";
+					submitButton.style.display = "";
+				} else {
+					reportFieldValidationError(label, field);
+					return;
+				}
+
+				for (const inputField of inputFieldList) {
+					if (!(inputField.checkValidity())) {
+						const label = document.querySelector(`label[for="${inputField.id}"]`);
+						reportFieldValidationError(label, inputField);
+						return;
+					}
+				}
+			});
+
+			mazeForm?.addEventListener("submit", function(event) {
+				// Stop the page from reloading.
 				event.preventDefault();
 
 				const formData = new FormData(event.target);
 
 				const mazeType = (() => {
 					switch (formData.get("maze_type")) {
+						default: console.error("The maze type from the form data was invalid.");
 						case "square" : return Module.MazeEngine_MazeType.SQUARE ;
 						case "hexagon": return Module.MazeEngine_MazeType.HEXAGON;
 					}
@@ -139,14 +219,17 @@
 
 				const searchType = (() => {
 					switch (formData.get("search_type")) {
+						default: console.error("The search type from the form data was invalid.");
 						case "depth"  : return Module.MazeEngine_SearchType.DEPTH  ;
 						case "breadth": return Module.MazeEngine_SearchType.BREADTH;
 						case "greedy" : return Module.MazeEngine_SearchType.GREEDY ;
+						case "a_star" : return Module.MazeEngine_SearchType.A_STAR ;
 					}
 				})();
 
 				const soundType = (() => {
 					switch (formData.get("sound_type")) {
+						default: console.error("The sound type from the form data was invalid.");
 						case "none"       : return Module.MazeEngine_SoundType.NONE       ;
 						case "piano"      : return Module.MazeEngine_SoundType.PIANO      ;
 						case "synthesizer": return Module.MazeEngine_SoundType.SYNTHESIZER;
@@ -156,8 +239,10 @@
 				Module.MazeEngine_resetPerformer(
 					mazeType, parseInt(formData.get("maze_size"), 10),
 					parseInt(formData.get("seed"), 10), Boolean(formData.get("maze_wrap")),
+					parseInt(formData.get("wall_prune_countdown"), 10),
 					searchType, soundType,
-					parseInt(formData.get("delay"), 10)
+					parseInt(formData.get("delay"), 10),
+					Boolean(formData.get("show_maze_generation"))
 				);
 			});
 

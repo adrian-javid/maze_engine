@@ -31,7 +31,7 @@ auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
 }
 
 void SquareMaze::forEachKey(std::function<void(Vector2 const &)> const &forThisKey) const {
-	for (Vector2 key(0); key.value1 < rowCount; ++key.value1)
+	for (Vector2 key(0, 0); key.value1 < rowCount; ++key.value1)
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2)
 			forThisKey(key);
 }
@@ -56,14 +56,14 @@ auto SquareMaze::checkAdjacent(Vector2 key, Direction const direction) const -> 
 			return {key, table.at(getFlatIndex(key)) & east};
 
 		default:
-			throw direction;
+			throw std::logic_error(errorMessageForInvalidDirection);
 	}
 }
 
 std::string SquareMaze::toString(char const wallSymbol, char const emptySymbol) const {
 	std::stringstream buffer;
 
-	for (Vector2 key(0); key.value1 < rowCount; ++key.value1) {
+	for (Vector2 key(0, 0); key.value1 < rowCount; ++key.value1) {
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2) {
 			Tile const tile{at(key)};
 			char const symbol{(tile ? wallSymbol : emptySymbol)};
@@ -82,12 +82,12 @@ std::ostream &MazeEngine::operator<<(std::ostream &outputStream, SquareMaze cons
 Vector2 const &SquareMaze::getOffset(Direction const direction) const {
 	switch (direction) {
 		case Direction::north: return northOffset;
-		case Direction::east : return eastOffset;
+		case Direction::east : return  eastOffset;
 		case Direction::south: return southOffset;
-		case Direction::west : return westOffset;
+		case Direction::west : return  westOffset;
 
 		default:
-			throw direction;
+			throw std::logic_error(errorMessageForInvalidDirection);
 	}
 }
 

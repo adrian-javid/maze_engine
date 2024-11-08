@@ -7,6 +7,7 @@
 namespace App {
 	template <std::ostream *outputStream=&std::cout, typename... ParamsT>
 	inline void print(ParamsT and(...objects)) {
+		static_assert(sizeof...(objects) > 0u, "This function must take at least one argument.");
 		(*outputStream << ... << std::forward<ParamsT>(objects));
 	}
 

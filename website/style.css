@@ -59,6 +59,15 @@ html, body {
 	}
 }
 
+input {
+	color: black;
+}
+
+input:focus {
+	outline: 2px solid blue;
+
+}
+
 #maze_form {
 	display: grid;
 	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
@@ -117,6 +126,11 @@ html, body {
 	cursor: pointer;
 	grid-column: span 2; /* Makes buttons span across both columns */
 	margin-top: 10px;
+}
+
+#maze_form p {
+	text-align: center;
+	grid-column: span 2;
 }
 
 #maze_form button:hover {

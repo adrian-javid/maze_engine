@@ -8,14 +8,7 @@ auto MazeEngine::aStarSearch(
 	Vector2 const &start, Vector2 const &end,
 	std::function<bool(Vector2 const &)> const processKey
 ) -> Vector2::HashMap<Vector2> {
-	struct MetaVertex {
-		Vector2 key;
-		// Smaller priority is better.
-		int priority;
-		inline bool operator>(MetaVertex const &vertex) const {
-			return priority > vertex.priority;
-		}
-	};
+	using MetaVertex = AStarSearchIterator::MetaVertex;
 
 	std::priority_queue<MetaVertex, std::vector<MetaVertex>, std::greater<MetaVertex>> frontier;
 	frontier.push({start, 0});
@@ -24,19 +17,19 @@ auto MazeEngine::aStarSearch(
 	Vector2::HashMap<int> costMap{{start, 0}};
 
 	while (not frontier.empty()) {
-		MetaVertex const vertex(frontier.top());
+		MetaVertex const tileKey(frontier.top());
 		frontier.pop();
 
-		if (processKey != nullptr and processKey(vertex.key)) break;
+		if (processKey != nullptr and processKey(tileKey.vector)) break;
 
-		maze.forEachNeighbor(vertex.key, [&vertex, &costMap, &frontier, &upTree, &maze, &end](Vector2 const &neighbor) {
-			int const derivedCost{costMap.at(vertex.key) + /* cost to move adjacent */1};
+		maze.forEachNeighbor(tileKey.vector, [&tileKey, &costMap, &frontier, &upTree, &maze, &end](Vector2 const &neighbor) {
+			int const derivedCost{costMap.at(tileKey.vector) + /* cost to move adjacent */1};
 
 			if (costMap.find(neighbor) == costMap.end() or derivedCost < costMap.at(neighbor)) {
 				costMap.insert({neighbor, derivedCost});
-				int priority{derivedCost + /* heuristic */maze.length(neighbor - end)};
+				int const priority{derivedCost + /* heuristic */maze.length(neighbor - end)};
 				frontier.push({neighbor, priority});
-				upTree.insert({neighbor, vertex.key});
+				upTree.insert({neighbor, tileKey.vector});
 			}
 		});
 	}
