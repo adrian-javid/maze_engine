@@ -35,6 +35,9 @@
 	<meta property="og:site_name" content="Adrian's Website">
 	<meta property="og:locale" content="en_US">
 
+	<!-- Theme Color -->
+	<meta name="theme-color" content="#AEC6CF">
+
 	<style>
 		.emscripten { padding-right: 0; margin-left: auto; margin-right: auto; }
 		/* "The canvas *must not* have any border or padding, or mouse coords will be wrong." */
@@ -42,12 +45,15 @@
 	</style>
 	<link rel="stylesheet" type="text/css" href="style.css">
 
-	<meta name="theme-color" content="#AEC6CF">
+	<!-- This should eventually call `onMazeEngineApplicationInitialized`. -->
+	<script defer type="text/javascript" src="generated/maze_engine.js"></script>
+
 </head>
 
 <body>
 	<div class="main_container">
 		<h1 id="loading_message">LOADING...</h1>
+
 		<div class="user_input_container">
 			<form id="maze_form" autocomplete="off" style="display: none;">
 				<label for="maze_type">Grid</label>
@@ -97,11 +103,16 @@
 				<button id="submit_button" type="submit" disabled>Start</button>
 			</form>
 
-			<!-- Currently not supporting fullscreen. -->
-			<!-- <button id="fullscreen_button" disabled>Fullscreen</button> -->
+			<!--
+				Currently not supporting fullscreen.
+
+				Here is the unsupported fullscreen button:
+				`<button id="fullscreen_button" disabled>Fullscreen</button>`
+			-->
 		</div>
 
 		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" width="0" height="0" tabindex=-1>
+			<!-- This message exists if the browser does not support the HTML5 canvas tag. -->
 			(Your browser does not support the HTML5 canvas tag.)
 		</canvas>
 	</div>
@@ -259,9 +270,6 @@
 			}
 		}
 	</script>
-
-	<!-- This should eventually call `onMazeEngineApplicationInitialized`. -->
-	<script async type="text/javascript" src="generated/maze_engine.js"></script>
 
 </body>
 
