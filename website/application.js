@@ -64,7 +64,7 @@ function onMazeEngineApplicationInitialized() {
 		field.style.outline = "2px solid red";
 		label.style.color = "red";
 
-		const firstSentence = label ? `Error for "${label?.textContent}".` : `Error.`;
+		const firstSentence = label ? `Error for "${label?.textContent}".` : "Error.";
 
 		errorMessage.textContent = `${firstSentence} ${field?.validationMessage}`;
 		errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
