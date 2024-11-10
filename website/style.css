@@ -65,7 +65,6 @@ input {
 
 input:focus {
 	outline: 2px solid blue;
-
 }
 
 #maze_form {
