@@ -147,23 +147,7 @@ App::Performer::Performer(
 		}
 	}()),
 	timer(sleepTimeMilliseconds),
-	soundInstrument{<:soundType:>() -> SoundTable const * {
-		switch (soundType) {
-			case SoundType::none:
-				return nullptr;
-
-			case SoundType::piano:
-				return &piano;
-
-			default:
-				std::cerr << "Invalid sound type: " << MazeEngine::Aux::Enum::asInt(soundType) << '.' << '\n';
-				assert(false);
-				[[fallthrough]];
-
-			case SoundType::synthesizer:
-				return &synthesizer;
-		}
-	}()},
+	soundInstrument{dispatchSoundInstrument(soundType)},
 	randomSoundPicker(SoundTable::makeRandomSoundPicker(seed)),
 	baseHueOffset{paramBaseHueOffset},
 	trailEdge(getMazeSearchIterator().getHistory().cend())
