@@ -163,7 +163,7 @@ function onMazeEngineApplicationInitialized() {
 		fullscreenButton.disabled = false;
 	}
 
-	document.getElementById("sound_type")?.addEventListener("change", (event) => {
+	document.getElementById("sound_type")?.addEventListener("input", (event) => {
 		const field = event.target;
 		console.assert(field !== null);
 
