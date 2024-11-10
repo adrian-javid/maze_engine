@@ -119,6 +119,18 @@ class App::Performer {
 			bool const showMazeGeneration
 		);
 
+		constexpr void setSoundInstrument(SoundType const soundType) {
+			soundInstrument = dispatchSoundInstrument(soundType);
+		}
+
+		constexpr void setBaseHueOffset(HueFloat const paramBaseHueOffset) {
+			baseHueOffset = paramBaseHueOffset;
+		}
+
+		constexpr void setTimeUpdateInterval(UnsignedMilliseconds const interval) {
+			timer.interval = interval;
+		}
+
 		Performer() = delete;
 		Performer(Performer const &) = delete;
 		Performer & operator=(Performer const &) = delete;
