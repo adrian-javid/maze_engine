@@ -55,7 +55,6 @@ function onMazeEngineApplicationInitialized() {
 		document.getElementById("seed"                ),
 		document.getElementById("wall_prune_countdown"),
 		document.getElementById("delay"               ),
-		document.getElementById("base_hue_offset"     ),
 	];
 
 	const reportFieldValidationError = (label, field) => {
