@@ -94,6 +94,11 @@
 					<option value="synthesizer" selected>Synthesizer</option>
 				</select>
 
+				<!--
+					It seems something about Emscripten
+					causes this `input` element of type "range" to by glitchy on
+					Firefox desktop?
+				-->
 				<label for="base_hue_offset">Base Hue</label>
 				<input type="range" id="base_hue_offset" name="base_hue_offset" min="0" max="360" step="1" value="0" required>
 
