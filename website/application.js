@@ -107,6 +107,15 @@ function onMazeEngineApplicationInitialized() {
 		}
 	});
 
+	function dispatchSoundType(soundType) {
+		switch (soundType) {
+			default: console.error("The sound type from the form data was invalid.");
+			case "none"       : return Module.MazeEngine_SoundType.NONE       ;
+			case "piano"      : return Module.MazeEngine_SoundType.PIANO      ;
+			case "synthesizer": return Module.MazeEngine_SoundType.SYNTHESIZER;
+		}
+	}
+
 	mazeForm?.addEventListener("submit", function(event) {
 		// Stop the page from reloading.
 		event.preventDefault();
@@ -131,14 +140,7 @@ function onMazeEngineApplicationInitialized() {
 			}
 		})();
 
-		const soundType = (() => {
-			switch (formData.get("sound_type")) {
-				default: console.error("The sound type from the form data was invalid.");
-				case "none"       : return Module.MazeEngine_SoundType.NONE       ;
-				case "piano"      : return Module.MazeEngine_SoundType.PIANO      ;
-				case "synthesizer": return Module.MazeEngine_SoundType.SYNTHESIZER;
-			}
-		})();
+		const soundType = dispatchSoundType(formData.get("sound_type"));
 
 		Module.MazeEngine_resetPerformer(
 			mazeType, parseInt(formData.get("maze_size"), 10),
