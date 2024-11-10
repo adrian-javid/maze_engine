@@ -80,30 +80,34 @@ function onMazeEngineApplicationInitialized() {
 		errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
 	}
 
-	mazeForm?.addEventListener("input", function(event) {
-		const field = event.target;
-		if (field.type !== "number") return;
+	inputFieldList.forEach(inputField => {
+		console.assert(inputField.type === "number");
 
-		const label = document.querySelector(`label[for="${field.id}"]`);
-
-		if (field?.checkValidity()) {
-			errorMessage.style.display = "none";
-			field.style.color = "";
-			field.style.outline = "";
-			label.style.color = "";
-			submitButton.style.display = "";
-		} else {
-			reportFieldValidationError(label, field);
-			return;
-		}
-
-		for (const inputField of inputFieldList) {
-			if (!(inputField.checkValidity())) {
-				const label = document.querySelector(`label[for="${inputField.id}"]`);
-				reportFieldValidationError(label, inputField);
+		inputField.addEventListener("input", function(event) {
+			const field = event.target;
+			if (field.type !== "number") return;
+		
+			const label = document.querySelector(`label[for="${field.id}"]`);
+		
+			if (field?.checkValidity()) {
+				errorMessage.style.display = "none";
+				field.style.color = "";
+				field.style.outline = "";
+				label.style.color = "";
+				submitButton.style.display = "";
+			} else {
+				reportFieldValidationError(label, field);
 				return;
 			}
-		}
+		
+			for (const inputField of inputFieldList) {
+				if (!(inputField.checkValidity())) {
+					const label = document.querySelector(`label[for="${inputField.id}"]`);
+					reportFieldValidationError(label, inputField);
+					return;
+				}
+			}
+		});
 	});
 
 	function dispatchSoundType(soundType) {
