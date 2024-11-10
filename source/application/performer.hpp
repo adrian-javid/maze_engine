@@ -39,8 +39,7 @@ class App::Performer {
 		static_assert(std::is_same_v<HueFloat, double>);
 		static_assert(std::is_fundamental_v<HueFloat>);
 
-		static SoundTable piano;
-
+		static SoundTable piano      ;
 		static SoundTable synthesizer;
 
 		[[nodiscard]] static constexpr
