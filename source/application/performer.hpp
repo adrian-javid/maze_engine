@@ -2,6 +2,7 @@
 #define Application_Performer_hpp
 
 #include <variant>
+#include <type_traits>
 
 #include "maze_engine/maze/square.hpp"
 #include "maze_engine/maze/hexagon.hpp"
@@ -12,6 +13,7 @@
 #include "simple_directmedia_layer.hpp"
 #include "timer.hpp"
 #include "sound_table.hpp"
+#include "color.hpp"
 #include "maze_engine/maze_generation_iterator.hpp"
 
 namespace App {
@@ -30,6 +32,12 @@ class App::Performer {
 		static_assert(SoundType{} == SoundType::none);
 
 		using SeedInt = unsigned int;
+		static_assert(std::is_integral_v<SeedInt>);
+
+		using HueFloat = decltype(HslaColor({}).getHue());
+		static_assert(std::is_floating_point_v<HueFloat>);
+		static_assert(std::is_same_v<HueFloat, double>);
+		static_assert(std::is_fundamental_v<HueFloat>);
 
 		static SoundTable piano;
 
@@ -63,6 +71,7 @@ class App::Performer {
 		*/
 		SoundTable const *soundInstrument;
 		decltype(SoundTable::makeRandomSoundPicker({})) randomSoundPicker;
+		HueFloat baseHueOffset{0.0};
 		/*
 			`trailEdge->first` is the child vertex
 			`trailEdge->second` is the parent vertex
@@ -87,6 +96,7 @@ class App::Performer {
 			std::size_t const excessWallPruneCountdown,
 			SearchType const searchType,
 			SoundType const soundType,
+			HueFloat const paramBaseHueOffset,
 			UnsignedMilliseconds const sleepTimeMilliseconds,
 			bool const showMazeGeneration
 		);
@@ -98,6 +108,9 @@ class App::Performer {
 		Performer & operator=(Performer &&) = delete;
 
 		[[nodiscard]] FORCE_INLINE constexpr State getState() const { return state; }
+
+		[[nodiscard]] FORCE_INLINE constexpr
+		HueFloat getBaseHueOffset() const { return baseHueOffset; }
 
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Vector2 const & getMazeStart() const {

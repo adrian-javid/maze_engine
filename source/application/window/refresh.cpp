@@ -72,7 +72,7 @@ namespace App::Window {
 		MazeEngine::UnionFinder::Identifier const tileKeyIdentifier{identityPair->second};
 
 		HueFloat const baseHue{
-			HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 15)
+			HslaColor::hueWrap(performer->getUnionFinderView().find(tileKeyIdentifier) * 15 + performer->getBaseHueOffset())
 		};
 
 		return ColorScheme(baseHue);

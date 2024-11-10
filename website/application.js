@@ -55,6 +55,7 @@ function onMazeEngineApplicationInitialized() {
 		document.getElementById("seed"                ),
 		document.getElementById("wall_prune_countdown"),
 		document.getElementById("delay"               ),
+		document.getElementById("base_hue_offset"     ),
 	];
 
 	const reportFieldValidationError = (label, field) => {
@@ -133,7 +134,7 @@ function onMazeEngineApplicationInitialized() {
 			mazeType, parseInt(formData.get("maze_size"), 10),
 			parseInt(formData.get("seed"), 10), Boolean(formData.get("maze_wrap")),
 			parseInt(formData.get("wall_prune_countdown"), 10),
-			searchType, soundType,
+			searchType, soundType, parseInt(formData.get("base_hue_offset"), 10),
 			parseInt(formData.get("delay"), 10),
 			Boolean(formData.get("show_maze_generation"))
 		);

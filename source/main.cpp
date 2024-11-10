@@ -75,12 +75,13 @@ int main(int const argc, char *argv[]) {
 		else if (soundTypeName == "synthesizer") return App::Performer::SoundType::synthesizer;
 		else App::errorExit("Unable to resolve sound instrument from string: `", soundTypeName, "`.");
 	}()};
+	App::Performer::HueFloat const baseHueOffset{0.0};
 	bool const shouldShowMazeGeneration{App::ParamInfo::castArg<bool>(config.at("show_maze_generation").argument)};
 
 	App::performer.emplace(
 		mazeType, mazeSize, seed,
 		mazeWrap, excessWallPruneCountdown,
-		searchType, soundType,
+		searchType, soundType, baseHueOffset,
 		sleepTimeMilliseconds, shouldShowMazeGeneration
 	);
 
