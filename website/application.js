@@ -173,7 +173,7 @@ function onMazeEngineApplicationInitialized() {
 		Module.MazeEngine_setSoundInstrument(soundType);
 	});
 
-	document.getElementById("base_hue_offset")?.addEventListener("change", (event) => {
+	document.getElementById("base_hue_offset")?.addEventListener("input", (event) => {
 		const field = event.target;
 		console.assert(field !== null);
 
