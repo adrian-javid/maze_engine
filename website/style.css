@@ -29,14 +29,24 @@ html, body {
 .main_container {
 	display: flex;
 	flex-direction: column; /* Default to vertical layout for portrait mode */
-	justify-content: center;
+	justify-content: space-between; /* Ensure spacing is distributed between items */
 	align-items: center;
+	height: 100vh; /* Ensure the container takes the full height of the viewport */
 	padding: 20px; /* Add some padding around the container */
 	box-sizing: border-box; /* Ensure padding is included in width/height */
+	overflow-y: auto; /* Allow scrolling if content exceeds the screen height */
+}
+
+#loading_message {
+	margin-top: 45vh;
 }
 
 /* Landscape mode: Form inputs to the left of the canvas */
 @media (min-aspect-ratio: 16/9) {
+	#loading_message {
+		margin-top: 0vh;
+	}
+
 	.main_container {
 		flex-direction: row; /* Align items horizontally */
 		justify-content: flex-start; /* Align items to the start of the row */
@@ -50,12 +60,22 @@ html, body {
 	align-items: center; /* Center the button horizontally */
 	width: 100%; /* Ensure container takes full width */
 	box-sizing: border-box; /* Ensure padding is included in width/height */
+	flex-grow: 0; /* Allow container to grow and fill available space */
+	overflow-y: auto;
+	gap: 10px;
 }
+
+.user_input_container p {
+	margin: 0;
+}
+
+
 
 /* Portrait mode: Form inputs underneath the canvas */
 @media (max-aspect-ratio: 9/16) {
+
 	.user_input_container {
-		margin-bottom: 20px; /* Space between form and canvas */
+		margin-bottom: 15px; /* Space between form and canvas */
 	}
 }
 
@@ -80,6 +100,16 @@ input:focus {
 	box-sizing: border-box; /* Include padding and border in width */
 }
 
+@media (max-width: 480px) {
+	#maze_form {
+		width: 100%; /* Ensure form takes full width on small screens */
+	}
+	#maze_form input[type="number"],
+	#maze_form select {
+		font-size: 14px; /* Adjust font size for smaller screens */
+	}
+}
+
 #maze_form label {
 	margin: 0;
 	font-size: clamp(12px, min(3.75vw, 3.75vh), 110%);
@@ -87,11 +117,14 @@ input:focus {
 	text-align: right; /* Align labels to the right */
 }
 
+#maze_form > * {
+	padding: 0.09rem;
+}
+
 #maze_form input[type="number"],
 #maze_form select {
 	width: 100%;
 	max-width: 100%; /* Ensure inputs don't exceed form container */
-	padding: 0.4rem;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	font-size: clamp(11px, min(3.75vw, 3.75vh), 100%);
@@ -134,7 +167,7 @@ input:focus {
 	background-color: #66cdaa;
 	color: white;
 	border: none;
-	padding: 0.7rem 1.2rem;
+	padding: 0.6rem 1.2rem;
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
 	border-radius: 5px;
 	cursor: pointer;
@@ -155,7 +188,7 @@ input:focus {
 #fullscreen_button {
 	background-color: #4682b4;
 	color: white;
-	padding: 0.7rem 1.2rem;
+	padding: 0.6rem 1.2rem;
 	border-radius: 5px;
 	cursor: pointer;
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
@@ -168,5 +201,5 @@ input:focus {
 }
 
 #canvas {
-	margin-top: 20px; /* Default margin for portrait mode */
+	margin-top: 15px; /* Default margin for portrait mode */
 }
