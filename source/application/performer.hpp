@@ -155,7 +155,7 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::MazeSearchIterator const & getMazeSearchIterator() const {
 			return std::visit(
-				[](auto and(mazeSearchIterator)) -> MazeEngine::MazeSearchIterator const & {
+				[](MazeEngine::MazeSearchIterator const &mazeSearchIterator) -> MazeEngine::MazeSearchIterator const & {
 					return mazeSearchIterator;
 				},
 				mazeSearchIteratorVariant
