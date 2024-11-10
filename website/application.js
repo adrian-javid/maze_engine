@@ -163,4 +163,32 @@ function onMazeEngineApplicationInitialized() {
 
 		fullscreenButton.disabled = false;
 	}
+
+	document.getElementById("sound_type")?.addEventListener("change", (event) => {
+		const field = event.target;
+		console.assert(field !== null);
+
+		if (field === null || field.checkValidity() === false) return;
+
+		const soundType = dispatchSoundType(field.value);
+		Module.MazeEngine_setSoundInstrument(soundType);
+	});
+
+	document.getElementById("base_hue_offset")?.addEventListener("change", (event) => {
+		const field = event.target;
+		console.assert(field !== null);
+
+		if (field === null || field.checkValidity() === false) return;
+
+		Module.MazeEngine_setBaseHueOffset(parseInt(field.value, 10));
+	});
+
+	document.getElementById("delay")?.addEventListener("change", (event) => {
+		const field = event.target;
+		console.assert(field !== null);
+
+		if (field === null || field.checkValidity() === false) return;
+
+		Module.MazeEngine_setTimeUpdateIntervalMilliseconds(parseInt(field.value, 10));
+	});
 }
