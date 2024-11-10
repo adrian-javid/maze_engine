@@ -59,6 +59,16 @@ function onMazeEngineApplicationInitialized() {
 	];
 
 	const reportFieldValidationError = (label, field) => {
+		if (label === null) {
+			console.error("Cannot report field validation error because `label` is null.");
+			return;
+		}
+
+		if (field === null) {
+			console.error("Cannot report field validation error because `field` is null.");
+			return;
+		}
+
 		submitButton.style.display = "none";
 
 		field.style.color = "red";
