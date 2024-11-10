@@ -43,6 +43,25 @@ class App::Performer {
 
 		static SoundTable synthesizer;
 
+		[[nodiscard]] static constexpr
+		SoundTable const * dispatchSoundInstrument(SoundType const soundType) {
+			switch (soundType) {
+				case SoundType::none:
+					return nullptr;
+
+				case SoundType::piano:
+					return &piano;
+
+				default:
+					std::cerr << "Invalid sound type: " << MazeEngine::Aux::Enum::asInt(soundType) << '.' << '\n';
+					assert(false);
+					[[fallthrough]];
+
+				case SoundType::synthesizer:
+					return &synthesizer;
+			}
+		}
+
 		enum struct State : std::uint_least8_t {
 			generating = 1u, searching, backtracking, complete,
 		};
