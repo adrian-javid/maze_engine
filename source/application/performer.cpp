@@ -51,6 +51,18 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 		);
 	});
 
+	emscripten::function("MazeEngine_setSoundInstrument", +[](App::Performer::SoundType const soundType) -> void {
+		App::performer->setSoundInstrument(soundType);
+	});
+
+	emscripten::function("MazeEngine_setBaseHueOffset", +[](App::Performer::HueFloat const baseHueOffset) -> void {
+		App::performer->setBaseHueOffset(baseHueOffset);
+	});
+
+	emscripten::function("MazeEngine_setTimeUpdateIntervalMilliseconds", +[](unsigned int const intervalMilliseconds) -> void {
+		App::performer->setTimeUpdateInterval(intervalMilliseconds);
+	});
+
 }
 
 #endif
