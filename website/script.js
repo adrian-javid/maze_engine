@@ -101,9 +101,9 @@ function onMazeEngineApplicationInitialized() {
 		inputField.addEventListener("input", function(event) {
 			const field = event.target;
 			if (field.type !== "number") return;
-		
+
 			const label = document.querySelector(`label[for="${field.id}"]`);
-		
+
 			if (field?.checkValidity()) {
 				errorMessage.style.display = "none";
 				field.style.color = "";
@@ -114,7 +114,7 @@ function onMazeEngineApplicationInitialized() {
 				reportFieldValidationError(label, field);
 				return;
 			}
-		
+
 			for (const inputField of inputFieldList) {
 				if (!(inputField.checkValidity())) {
 					const label = document.querySelector(`label[for="${inputField.id}"]`);
