@@ -93,6 +93,9 @@ function onMazeEngineApplicationInitialized() {
 	}
 
 	inputFieldList.forEach(inputField => {
+		console.assert(inputField !== null);
+		if (inputField === null) return;
+
 		console.assert(inputField.type === "number" || inputField.type === "range");
 
 		inputField.addEventListener("input", function(event) {
