@@ -30,6 +30,12 @@ function resizeCanvas() {
 	Module.Window_setSize(length, length);
 }
 
+function userAgentIsGenuineGecko() {
+	const userAgent = window.navigator.userAgent;
+	return userAgent.includes("Gecko") && !(userAgent.includes("like Gecko"));
+}
+
+
 function onMazeEngineApplicationInitialized() {
 	const loadingMessage = document.getElementById("loading_message");
 
