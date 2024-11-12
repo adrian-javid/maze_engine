@@ -40,8 +40,22 @@ function userAgentIsHandheld() {
 	return /Mobile|Tablet|Android|iPhone|iPad|iPod|Windows Phone|BlackBerry|BB10|Kindle|Silk/i.test(userAgent);
 }
 
+function fallbackForGecko() {
+	/*
+		It seems something about Emscripten
+		causes this `input` element of type "range" to by glitchy on
+		Firefox desktop?
+
+		That is why we are changing the type to "number" here for Gecko browsers.
+	*/
+	document.getElementById("base_hue_offset").type = "number";
+}
 
 function onMazeEngineApplicationInitialized() {
+	if (userAgentIsGenuineGecko() && !(userAgentIsHandheld())) {
+		fallbackForGecko();
+	}
+
 	const loadingMessage = document.getElementById("loading_message");
 
 	// Hide the loading message.
