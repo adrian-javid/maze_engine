@@ -35,6 +35,11 @@ function userAgentIsGenuineGecko() {
 	return userAgent.includes("Gecko") && !(userAgent.includes("like Gecko"));
 }
 
+function userAgentIsHandheld() {
+	const userAgent = window.navigator.userAgent;
+	return /Mobile|Tablet|Android|iPhone|iPad|iPod|Windows Phone|BlackBerry|BB10|Kindle|Silk/i.test(userAgent);
+}
+
 
 function onMazeEngineApplicationInitialized() {
 	const loadingMessage = document.getElementById("loading_message");
