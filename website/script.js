@@ -66,6 +66,7 @@ function onMazeEngineApplicationInitialized() {
 		document.getElementById("seed"                ),
 		document.getElementById("wall_prune_countdown"),
 		document.getElementById("delay"               ),
+		document.getElementById("base_hue_offset"     ),
 	];
 
 	const reportFieldValidationError = (label, field) => {
@@ -92,7 +93,7 @@ function onMazeEngineApplicationInitialized() {
 	}
 
 	inputFieldList.forEach(inputField => {
-		console.assert(inputField.type === "number");
+		console.assert(inputField.type === "number" || inputField.type === "range");
 
 		inputField.addEventListener("input", function(event) {
 			const field = event.target;
