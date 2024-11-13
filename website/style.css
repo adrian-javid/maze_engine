@@ -54,7 +54,7 @@ html, body {
 		display: grid;
 		grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
 
-		gap: 12px;
+		gap: 8px;
 
 		padding: 1.5% 2%;
 		width: 100%;
