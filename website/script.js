@@ -59,8 +59,10 @@ function fallbackForGecko() {
 }
 
 function onMazeEngineApplicationInitialized() {
-	if (userAgentIsGenuineGecko() && !(userAgentIsHandheld())) {
+	if (userAgentIsGenuineGecko() && !(userAgentIsHandheld())) try {
 		fallbackForGecko();
+	} catch(error) {
+		console.error("Failed to use fallback for Gecko: ", error);
 	}
 
 	const loadingMessage = document.getElementById("loading_message");
