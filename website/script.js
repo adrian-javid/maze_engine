@@ -41,6 +41,9 @@ function userAgentIsHandheld() {
 }
 
 function fallbackForGecko() {
+	const inputElement = document.getElementById("base_hue_offset");
+	assert(inputElement !== null);
+
 	/*
 		It seems something about Emscripten
 		causes this `input` element of type "range" to by glitchy on
