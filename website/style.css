@@ -39,7 +39,7 @@ html, body {
 	--gap-value: 8;
 
 	gap: min(calc(var(--gap-value) * 1vw), calc(var(--gap-value) * 1vh));
-	
+
 
 	/* Landscape mode. */
 	@media (min-aspect-ratio: 16/9) {
@@ -50,7 +50,12 @@ html, body {
 		display: grid;
 		grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
 
-		gap: 8px;
+		gap: 6px;
+
+		/* Landscape mode. */
+		@media (min-aspect-ratio: 16/9) {
+			gap: 2vh;
+		}
 
 		padding: 1.5% 2%;
 		width: 100%;
