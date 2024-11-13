@@ -105,7 +105,7 @@ function onMazeEngineApplicationInitialized() {
 		const firstSentence = label ? `Error for "${label?.textContent}".` : "Error.";
 
 		errorMessage.textContent = `${firstSentence} ${field?.validationMessage}`;
-		errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
+		errorMessage.style.display = errorMessage.dataset?.defaultDisplay ?? "flex";
 	}
 
 	inputFieldList.forEach(inputField => {
