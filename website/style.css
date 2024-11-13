@@ -54,29 +54,9 @@ html, body {
 	}
 }
 
-.user_input_container {
-	display: flex;
-	flex-direction: column; /* Stack form and button vertically */
-	align-items: center; /* Center the button horizontally */
-	width: 100%; /* Ensure container takes full width */
-	box-sizing: border-box; /* Ensure padding is included in width/height */
-	flex-grow: 0; /* Allow container to grow and fill available space */
-	overflow-y: auto;
-	gap: 10px;
-}
-
-.user_input_container p {
-	margin: 0;
-}
-
-
-
 /* Portrait mode: Form inputs underneath the canvas */
 @media (max-aspect-ratio: 9/16) {
 
-	.user_input_container {
-		margin-bottom: 15px; /* Space between form and canvas */
-	}
 }
 
 input {

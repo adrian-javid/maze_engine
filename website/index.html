@@ -49,67 +49,68 @@
 	<div class="main_container">
 		<h1 id="loading_message">LOADING...</h1>
 
-		<div class="user_input_container">
-			<form id="maze_form" autocomplete="off" style="display: none;">
-				<label for="maze_type">Grid</label>
-				<select id="maze_type" name="maze_type" required>
-					<option value="square" selected>Square</option>
-					<option value="hexagon">Hexagon</option>
-				</select>
+		<form id="maze_form" autocomplete="off" style="display: none;">
+			<label for="maze_type">Grid</label>
+			<select id="maze_type" name="maze_type" required>
+				<option value="square" selected>Square</option>
+				<option value="hexagon">Hexagon</option>
+			</select>
 
-				<label for="maze_size">Size</label>
-				<input type="number" id="maze_size" name="maze_size" min="1" max="32" step="1" value="5" required>
+			<label for="maze_size">Size</label>
+			<input type="number" id="maze_size" name="maze_size" min="1" max="32" step="1" value="5" required>
 
-				<label for="seed">Seed</label>
-				<input type="number" id="seed" name="seed" min="0" max="65535" step="1" value="0" required>
+			<label for="seed">Seed</label>
+			<input type="number" id="seed" name="seed" min="0" max="65535" step="1" value="0" required>
 
-				<label for="wall_prune_countdown">Prune Extra Walls</label>
-				<input type="number" id="wall_prune_countdown" name="wall_prune_countdown" min="0" max="16384" step=1 value="0" required>
+			<label for="wall_prune_countdown">Prune Extra Walls</label>
+			<input type="number" id="wall_prune_countdown" name="wall_prune_countdown" min="0" max="16384" step=1 value="0" required>
 
-				<label for="maze_wrap">Wrap Edges</label>
-				<input type="checkbox" id="maze_wrap" name="maze_wrap">
+			<label for="maze_wrap">Wrap Edges</label>
+			<input type="checkbox" id="maze_wrap" name="maze_wrap">
 
-				<label for="show_maze_generation">Show Generation</label>
-				<input type="checkbox" id="show_maze_generation" name="show_maze_generation" checked>
+			<label for="show_maze_generation">Show Generation</label>
+			<input type="checkbox" id="show_maze_generation" name="show_maze_generation" checked>
 
-				<label for="search_type">Algorithm</label>
-				<select id="search_type" name="search_type" required>
-					<option value="depth" selected>Depth-First Search</option>
-					<option value="breadth">Breadth-First Search</option>
-					<option value="greedy">Greedy Best-First Search</option>
-					<option value="a_star">A* Search</option>
-				</select>
+			<label for="search_type">Algorithm</label>
+			<select id="search_type" name="search_type" required>
+				<option value="depth" selected>Depth-First Search</option>
+				<option value="breadth">Breadth-First Search</option>
+				<option value="greedy">Greedy Best-First Search</option>
+				<option value="a_star">A* Search</option>
+			</select>
 
-				<label for="sound_type">Sound</label>
-				<select id="sound_type" name="sound_type" required>
-					<option value="none">None</option>
-					<option value="piano">Piano</option>
-					<option value="synthesizer" selected>Synthesizer</option>
-				</select>
+			<label for="sound_type">Sound</label>
+			<select id="sound_type" name="sound_type" required>
+				<option value="none">None</option>
+				<option value="piano">Piano</option>
+				<option value="synthesizer" selected>Synthesizer</option>
+			</select>
 
-				<label for="base_hue_offset">Base Hue</label>
-				<div class="input_with_units">
-					<input type="range" id="base_hue_offset" name="base_hue_offset" min="0" max="360" step="1" value="0" required>
-					<span id="base_hue_offset_units" style="display: none;">degrees</span>
-				</div>
+			<label for="base_hue_offset">Base Hue</label>
+			<div class="input_with_units">
+				<input type="range" id="base_hue_offset" name="base_hue_offset" min="0" max="360" step="1" value="0" required>
+				<span id="base_hue_offset_units" style="display: none;">degrees</span>
+			</div>
 
 
-				<label for="delay">Delay</label>
-				<div class="input_with_units">
-					<input type="number" id="delay" name="delay" min="0" max="5000" step="1" value="60" required>
-					<span>milliseconds</span>
-				</div>
+			<label for="delay">Delay</label>
+			<div class="input_with_units">
+				<input type="number" id="delay" name="delay" min="0" max="5000" step="1" value="60" required>
+				<span>milliseconds</span>
+			</div>
 
-				<p id="error_message" data-default-display="flex" style="display: none; color: red;"></p>
+			<p id="error_message" data-default-display="flex" style="display: none; color: red;"></p>
 
-				<button id="submit_button" type="submit" disabled>Start</button>
-			</form>
+			<button id="submit_button" type="submit" disabled>Start</button>
 
-			<!--
-				Currently not supporting fullscreen; here is the unsupported fullscreen button:
-				`<button id="fullscreen_button" disabled>Fullscreen</button>`
-			-->
-		</div>
+			<p id="explored_count">[EXAMPLE TEXT]</p>
+			<p id="path_length">[EXAMPLE TEXT]</p>
+		</form>
+
+		<!--
+			Currently not supporting fullscreen; here is the unsupported fullscreen button:
+			`<button id="fullscreen_button" disabled>Fullscreen</button>`
+		-->
 
 		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" width="0" height="0" tabindex=-1>
 			(Your browser does not support the HTML5 canvas tag.)
