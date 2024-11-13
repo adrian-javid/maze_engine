@@ -1,15 +1,16 @@
+/* Reset. */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box; /* Ensure padding and border are included in width/height */
+}
+
 html, body {
 	/* shape */
 	margin: 0;
 	padding: 0;
-	height: 100vh;
-	width: 100vw;
-
-	/* structure */
-	overflow: auto;
-
-	/* position */
-	position: relative;
+	min-height: 100vh;
+	width: 100%;
 
 	/* text */
 	font-family: Arial, Helvetica, sans-serif;
@@ -23,7 +24,28 @@ html, body {
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	box-sizing: border-box; /* Ensure padding and border are included in width/height */
+}
+
+input {
+	color: black;
+	&:focus {
+		outline: 2px solid blue;
+		transition: 0.15s ease;
+	}
+}
+
+button {
+	border: none;
+	border-radius: 5px;
+	padding: 0.6rem 1.2rem;
+	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
+	color: white;
+	cursor: pointer;
+}
+
+#loading_message {
+	/* Put the loading message near the center of the scre */
+	margin-top: 45vh;
 }
 
 .main_container {
@@ -31,14 +53,10 @@ html, body {
 	flex-direction: column; /* Default to vertical layout for portrait mode */
 	justify-content: space-between; /* Ensure spacing is distributed between items */
 	align-items: center;
-	height: 100vh; /* Ensure the container takes the full height of the viewport */
+	min-height: 100vh; /* Ensure the container takes the full height of the viewport */
 	padding: 20px; /* Add some padding around the container */
 	box-sizing: border-box; /* Ensure padding is included in width/height */
 	overflow-y: auto; /* Allow scrolling if content exceeds the screen height */
-}
-
-#loading_message {
-	margin-top: 45vh;
 }
 
 /* Landscape mode: Form inputs to the left of the canvas */
@@ -50,45 +68,23 @@ html, body {
 	.main_container {
 		flex-direction: row; /* Align items horizontally */
 		justify-content: flex-start; /* Align items to the start of the row */
-		gap: 20px; /* Space between the form and canvas */
 	}
 }
 
 /* Portrait mode: Form inputs underneath the canvas */
-@media (max-aspect-ratio: 9/16) {
-
-}
-
-input {
-	color: black;
-}
-
-input:focus {
-	outline: 2px solid blue;
-}
+@media (max-aspect-ratio: 9/16) {}
 
 #maze_engine_form {
 	display: grid;
 	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
-	grid-gap: 10px;
+	grid-gap: 5px;
 	background-color: #f0f0f0;
 	padding: 1.5% 2%;
 	border-radius: 15px;
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-	max-width: 400px; /* Ensure form doesn’t get too wide */
+	max-width: 400px; /* Ensure form doesn't get too wide */
 	width: 100%;
-	box-sizing: border-box; /* Include padding and border in width */
 	overflow: auto;
-}
-
-@media (max-width: 480px) {
-	#maze_engine_form {
-		width: 100%; /* Ensure form takes full width on small screens */
-	}
-	#maze_engine_form input[type="number"],
-	#maze_engine_form select {
-		font-size: 14px; /* Adjust font size for smaller screens */
-	}
 }
 
 #maze_engine_form label {
@@ -98,19 +94,14 @@ input:focus {
 	text-align: right; /* Align labels to the right */
 }
 
-#maze_engine_form > * {
-	padding: 0.09rem;
-}
-
 #maze_engine_form input[type="number"],
 #maze_engine_form select {
 	width: 100%;
 	max-width: 100%; /* Ensure inputs don't exceed form container */
 	border: 1px solid #ccc;
 	border-radius: 5px;
-	font-size: clamp(11px, min(3.75vw, 3.75vh), 100%);
+	font-size: clamp(14px, min(3.75vw, 3.75vh), 100%);
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-	box-sizing: border-box; /* Include padding and border in width */
 }
 
 #maze_engine_form input[type="checkbox"] {
@@ -126,16 +117,16 @@ input:focus {
 .input_with_units {
 	display: flex;
 	width: 100%;
-}
 
-.input_with_units > * {
-	flex: 1;
-}
+	& > * {
+		flex: 1;
+	}
 
-.input_with_units span {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	& span {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 }
 
 #maze_engine_form span {
@@ -146,14 +137,12 @@ input:focus {
 
 #maze_engine_form button {
 	background-color: #66cdaa;
-	color: white;
-	border: none;
-	padding: 0.6rem 1.2rem;
-	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
-	border-radius: 5px;
-	cursor: pointer;
 	grid-column: span 2; /* Makes buttons span across both columns */
 	margin-top: 10px;
+}
+
+#maze_engine_form button:hover {
+	background-color: #5bb497;
 }
 
 #maze_engine_form p {
@@ -161,26 +150,12 @@ input:focus {
 	grid-column: span 2;
 }
 
-#maze_engine_form button:hover {
-	background-color: #5bb497;
-}
-
 /* Fullscreen Button */
 #fullscreen_button {
 	background-color: #4682b4;
-	color: white;
-	padding: 0.6rem 1.2rem;
-	border-radius: 5px;
-	cursor: pointer;
-	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
-	margin-top: 20px; /* Space between the form and the fullscreen button */
-}
 
-/* Hover effect for fullscreen button */
-#fullscreen_button:hover {
-	background-color: #3c7291;
-}
-
-#canvas {
-	margin-top: 15px; /* Default margin for portrait mode */
+	/* Hover effect for fullscreen button */
+	&:hover {
+		background-color: #3c7291;
+	}
 }
