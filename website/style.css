@@ -26,23 +26,6 @@ html, body {
 	align-items: center;
 }
 
-input {
-	color: black;
-	&:focus {
-		outline: 2px solid blue;
-		transition: 0.15s ease;
-	}
-}
-
-button {
-	border: none;
-	border-radius: 5px;
-	padding: 0.6rem 1.2rem;
-	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
-	color: white;
-	cursor: pointer;
-}
-
 #loading_message {
 	/* Put the loading message near the center of the screen. */
 	margin-top: 45vh;
@@ -88,6 +71,20 @@ button {
 			text-align: right; /* Align labels to the right */
 		}
 
+		input {
+			color: black;
+
+			&:focus {
+				outline: 2px solid blue;
+				transition: 0.15s ease;
+			}
+
+			&[type="checkbox"] {
+				width: auto;
+				margin-right: 0.5rem;
+			}
+		}
+
 		input[type="number"], select {
 			width: 100%;
 			max-width: 100%; /* Ensure inputs don't exceed form container */
@@ -97,23 +94,14 @@ button {
 			box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 		}
 
-		input[type="checkbox"] {
-			width: auto;
-			margin-right: 0.5rem;
-		}
-
-		div {
-			display: flex;
-			align-items: center;
-		}
-
-		span {
-			margin-left: 0.5rem;
-			font-size: clamp(10px, min(3.75vw, 3.75vh), 100%);
-			color: #333;
-		}
-
 		button {
+			border: none;
+			border-radius: 5px;
+			padding: 0.6rem 1.2rem;
+			font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
+			color: white;
+			cursor: pointer;
+
 			background-color: #66cdaa;
 			grid-column: span 2; /* Makes buttons span across both columns */
 			margin-top: 10px;
@@ -139,18 +127,11 @@ button {
 	}
 
 	& span {
+		margin-left: 0.5rem;
+		font-size: clamp(10px, min(3.75vw, 3.75vh), 100%);
+		color: #333;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
-}
-
-/* Fullscreen Button */
-#fullscreen_button {
-	background-color: #4682b4;
-
-	/* Hover effect for fullscreen button */
-	&:hover {
-		background-color: #3c7291;
 	}
 }
