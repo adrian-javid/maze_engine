@@ -51,7 +51,9 @@ function fallbackForGecko() {
 
 		That is why we are changing the type to "number" here for Gecko browsers.
 	*/
-	document.getElementById("base_hue_offset").type = "number";
+	inputElement.type = "number";
+
+	inputElement.required = true;
 
 	document.getElementById("base_hue_offset_units").style.display = "";
 }
