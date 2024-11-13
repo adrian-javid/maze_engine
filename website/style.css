@@ -31,9 +31,7 @@ html, body {
 	min-height: 100vh;
 	padding: 20px;
 
-	--gap-value: 8;
-
-	gap: min(calc(var(--gap-value) * 1vw), calc(var(--gap-value) * 1vh));
+	gap: calc(8 * min(1vw, 1vh));
 
 
 	/* Landscape mode. */
