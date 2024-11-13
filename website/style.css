@@ -67,7 +67,7 @@ input:focus {
 	outline: 2px solid blue;
 }
 
-#maze_form {
+#maze_engine_form {
 	display: grid;
 	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
 	grid-gap: 10px;
@@ -82,28 +82,28 @@ input:focus {
 }
 
 @media (max-width: 480px) {
-	#maze_form {
+	#maze_engine_form {
 		width: 100%; /* Ensure form takes full width on small screens */
 	}
-	#maze_form input[type="number"],
-	#maze_form select {
+	#maze_engine_form input[type="number"],
+	#maze_engine_form select {
 		font-size: 14px; /* Adjust font size for smaller screens */
 	}
 }
 
-#maze_form label {
+#maze_engine_form label {
 	margin: 0;
 	font-size: clamp(12px, min(3.75vw, 3.75vh), 110%);
 	color: #333;
 	text-align: right; /* Align labels to the right */
 }
 
-#maze_form > * {
+#maze_engine_form > * {
 	padding: 0.09rem;
 }
 
-#maze_form input[type="number"],
-#maze_form select {
+#maze_engine_form input[type="number"],
+#maze_engine_form select {
 	width: 100%;
 	max-width: 100%; /* Ensure inputs don't exceed form container */
 	border: 1px solid #ccc;
@@ -113,12 +113,12 @@ input:focus {
 	box-sizing: border-box; /* Include padding and border in width */
 }
 
-#maze_form input[type="checkbox"] {
+#maze_engine_form input[type="checkbox"] {
 	width: auto;
 	margin-right: 0.5rem;
 }
 
-#maze_form div {
+#maze_engine_form div {
 	display: flex;
 	align-items: center;
 }
@@ -138,13 +138,13 @@ input:focus {
 	justify-content: center;
 }
 
-#maze_form span {
+#maze_engine_form span {
 	margin-left: 0.5rem;
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 100%);
 	color: #333;
 }
 
-#maze_form button {
+#maze_engine_form button {
 	background-color: #66cdaa;
 	color: white;
 	border: none;
@@ -156,12 +156,12 @@ input:focus {
 	margin-top: 10px;
 }
 
-#maze_form p {
+#maze_engine_form p {
 	text-align: center;
 	grid-column: span 2;
 }
 
-#maze_form button:hover {
+#maze_engine_form button:hover {
 	background-color: #5bb497;
 }
 

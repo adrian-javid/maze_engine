@@ -64,13 +64,13 @@ function onMazeEngineApplicationInitialized() {
 	if (loadingMessage) loadingMessage.style.display = "none";
 
 	// Reset the maze form's display to default.
-	document.getElementById("maze_form").style.display = "";
+	document.getElementById("maze_engine_form").style.display = "";
 
 	resizeCanvas();
 
 	window.addEventListener("resize", resizeCanvas);
 
-	const mazeForm = document.getElementById("maze_form");
+	const mazeForm = document.getElementById("maze_engine_form");
 
 	if (!mazeForm) console.error("The maze form doesn't exist.");
 
