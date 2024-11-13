@@ -46,8 +46,7 @@ function fallbackForGecko() {
 
 	/*
 		It seems something about Emscripten
-		causes this `input` element of type "range" to by glitchy on
-		Firefox desktop?
+		causes this `input` element of type "range" to be glitchy on Firefox desktop?
 
 		That is why we are changing the type to "number" here for Gecko browsers.
 	*/
