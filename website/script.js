@@ -26,7 +26,7 @@ var Module = {
 };
 
 function resizeCanvas() {
-	const length = Math.min(window.innerWidth, window.innerHeight) * 0.80;
+	const length = Math.min(window.visualViewport.width, window.visualViewport.height) * 0.80;
 	Module.Window_setSize(length, length);
 }
 
@@ -72,11 +72,18 @@ function onMazeEngineApplicationInitialized() {
 	// Reset the maze form's display to default.
 	document.getElementById("maze_engine_form").style.display = "";
 
-	resizeCanvas();
+	try {
+		resizeCanvas();
+	} catch (error) {
+		console.error("Error when resizing canvas for the first time. ", error);
+	}
 
-	window.addEventListener("resize", resizeCanvas);
+	try {
+		window.visualViewport.addEventListener("resize", resizeCanvas);
+	} catch (error) {
+		console.error("Error when adding \"resize canvas\" event listener for \"resize\" event of visual viewport.");
+	}
 
-	const mazeForm = document.getElementById("maze_engine_form");
 
 	if (!mazeForm) console.error("The maze form doesn't exist.");
 
