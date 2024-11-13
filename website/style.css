@@ -117,12 +117,12 @@ button {
 			background-color: #66cdaa;
 			grid-column: span 2; /* Makes buttons span across both columns */
 			margin-top: 10px;
+
+			&:hover {
+				background-color: #5bb497;
+			}
 		}
-	
-		button:hover {
-			background-color: #5bb497;
-		}
-	
+
 		p {
 			text-align: center;
 			grid-column: span 2;
