@@ -98,6 +98,7 @@ input:focus {
 	max-width: 400px; /* Ensure form doesn’t get too wide */
 	width: 100%;
 	box-sizing: border-box; /* Include padding and border in width */
+	overflow: auto;
 }
 
 @media (max-width: 480px) {
