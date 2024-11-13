@@ -11,19 +11,21 @@ namespace App {
 	UnsignedMilliseconds getDeltaTime() {
 		return deltaTime;
 	}
+
+	namespace MainLoop {
+		// Time of the previous iteration.
+		static UnsignedMilliseconds previousTime{0u};
+	}
 }
 
 void App::mainLoop() {
 	assert(performer.has_value());
 
-	// Time of the previous iteration.
-	static UnsignedMilliseconds previousTime{0u};
-
 	// Get the time of this iteration.
 	UnsignedMilliseconds const currentTime{SDL_GetTicks64()};
 
 	// Get the change in time.
-	deltaTime = currentTime - previousTime;
+	deltaTime = currentTime - MainLoop::previousTime;
 
 	for (SDL_Event event; SDL_PollEvent(&event);) switch (event.type) {
 		case SDL_KEYDOWN: switch (event.key.keysym.sym) {
@@ -52,7 +54,7 @@ void App::mainLoop() {
 	Window::refresh();
 
 	// As this iteration ends, update the previous time.
-	previousTime = currentTime;
+	MainLoop::previousTime = currentTime;
 
 	#ifndef __EMSCRIPTEN__
 	// Give the CPU a break.

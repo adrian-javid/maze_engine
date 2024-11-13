@@ -7,6 +7,6 @@ indent_size = 4
 [**.hpp]
 indent_size = 3
 
-[**{.yaml,.yml}]
+[**.{yaml,yml}]
 indent_style = space
 indent_size = 2

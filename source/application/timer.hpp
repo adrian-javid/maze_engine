@@ -3,14 +3,12 @@
 
 #include "delta_time.hpp"
 
-namespace App { class Timer; }
+namespace App { struct Timer; }
 
-class App::Timer {
-	public:
+struct App::Timer {
+	static constexpr UnsignedMilliseconds oneSecond{1'000u};
 
-		static constexpr UnsignedMilliseconds oneSecond{1'000u};
-
-		UnsignedMilliseconds accumulatedTime, interval;
+	UnsignedMilliseconds accumulatedTime, interval;
 
 	[[nodiscard]] explicit Timer(UnsignedMilliseconds const initInterval):
 		accumulatedTime{0u}, interval{initInterval}

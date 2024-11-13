@@ -37,6 +37,7 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 		unsigned int const excessWallPruneCountdown,
 		App::Performer::SearchType const searchType,
 		App::Performer::SoundType const soundType,
+		double const baseHueOffset,
 		unsigned int const sleepTimeMilliseconds,
 		bool const shouldShowMazeGeneration
 	) -> void {
@@ -44,10 +45,22 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 			mazeType, mazeSize,
 			App::Performer::SeedInt{seed}, mazeWrap,
 			std::size_t{excessWallPruneCountdown},
-			searchType, soundType,
+			searchType, soundType, App::Performer::HueFloat{baseHueOffset},
 			App::UnsignedMilliseconds{sleepTimeMilliseconds},
 			shouldShowMazeGeneration
 		);
+	});
+
+	emscripten::function("MazeEngine_setSoundInstrument", +[](App::Performer::SoundType const soundType) -> void {
+		App::performer->setSoundInstrument(soundType);
+	});
+
+	emscripten::function("MazeEngine_setBaseHueOffset", +[](App::Performer::HueFloat const baseHueOffset) -> void {
+		App::performer->setBaseHueOffset(baseHueOffset);
+	});
+
+	emscripten::function("MazeEngine_setTimeUpdateIntervalMilliseconds", +[](unsigned int const intervalMilliseconds) -> void {
+		App::performer->setTimeUpdateInterval(intervalMilliseconds);
 	});
 
 }
@@ -60,6 +73,7 @@ App::Performer::Performer(
 	std::size_t const excessWallPruneCountdown,
 	SearchType const searchType,
 	SoundType const soundType,
+	HueFloat const paramBaseHueOffset,
 	UnsignedMilliseconds const sleepTimeMilliseconds,
 	bool const showMazeGeneration
 ):
@@ -133,24 +147,9 @@ App::Performer::Performer(
 		}
 	}()),
 	timer(sleepTimeMilliseconds),
-	soundInstrument{<:soundType:>() -> SoundTable const * {
-		switch (soundType) {
-			case SoundType::none:
-				return nullptr;
-
-			case SoundType::piano:
-				return &piano;
-
-			default:
-				std::cerr << "Invalid sound type: " << MazeEngine::Aux::Enum::asInt(soundType) << '.' << '\n';
-				assert(false);
-				[[fallthrough]];
-
-			case SoundType::synthesizer:
-				return &synthesizer;
-		}
-	}()},
+	soundInstrument{dispatchSoundInstrument(soundType)},
 	randomSoundPicker(SoundTable::makeRandomSoundPicker(seed)),
+	baseHueOffset{paramBaseHueOffset},
 	trailEdge(getMazeSearchIterator().getHistory().cend())
 {
 	assert(not mazeVariant.valueless_by_exception());

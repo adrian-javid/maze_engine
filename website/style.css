@@ -29,14 +29,24 @@ html, body {
 .main_container {
 	display: flex;
 	flex-direction: column; /* Default to vertical layout for portrait mode */
-	justify-content: center;
+	justify-content: space-between; /* Ensure spacing is distributed between items */
 	align-items: center;
+	height: 100vh; /* Ensure the container takes the full height of the viewport */
 	padding: 20px; /* Add some padding around the container */
 	box-sizing: border-box; /* Ensure padding is included in width/height */
+	overflow-y: auto; /* Allow scrolling if content exceeds the screen height */
+}
+
+#loading_message {
+	margin-top: 45vh;
 }
 
 /* Landscape mode: Form inputs to the left of the canvas */
 @media (min-aspect-ratio: 16/9) {
+	#loading_message {
+		margin-top: 0vh;
+	}
+
 	.main_container {
 		flex-direction: row; /* Align items horizontally */
 		justify-content: flex-start; /* Align items to the start of the row */
@@ -44,19 +54,9 @@ html, body {
 	}
 }
 
-.user_input_container {
-	display: flex;
-	flex-direction: column; /* Stack form and button vertically */
-	align-items: center; /* Center the button horizontally */
-	width: 100%; /* Ensure container takes full width */
-	box-sizing: border-box; /* Ensure padding is included in width/height */
-}
-
 /* Portrait mode: Form inputs underneath the canvas */
 @media (max-aspect-ratio: 9/16) {
-	.user_input_container {
-		margin-bottom: 20px; /* Space between form and canvas */
-	}
+
 }
 
 input {
@@ -65,10 +65,9 @@ input {
 
 input:focus {
 	outline: 2px solid blue;
-
 }
 
-#maze_form {
+#maze_engine_form {
 	display: grid;
 	grid-template-columns: auto 1fr; /* Labels on the left, inputs on the right */
 	grid-gap: 10px;
@@ -79,20 +78,34 @@ input:focus {
 	max-width: 400px; /* Ensure form doesn’t get too wide */
 	width: 100%;
 	box-sizing: border-box; /* Include padding and border in width */
+	overflow: auto;
 }
 
-#maze_form label {
+@media (max-width: 480px) {
+	#maze_engine_form {
+		width: 100%; /* Ensure form takes full width on small screens */
+	}
+	#maze_engine_form input[type="number"],
+	#maze_engine_form select {
+		font-size: 14px; /* Adjust font size for smaller screens */
+	}
+}
+
+#maze_engine_form label {
 	margin: 0;
 	font-size: clamp(12px, min(3.75vw, 3.75vh), 110%);
 	color: #333;
 	text-align: right; /* Align labels to the right */
 }
 
-#maze_form input[type="number"],
-#maze_form select {
+#maze_engine_form > * {
+	padding: 0.09rem;
+}
+
+#maze_engine_form input[type="number"],
+#maze_engine_form select {
 	width: 100%;
 	max-width: 100%; /* Ensure inputs don't exceed form container */
-	padding: 0.4rem;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	font-size: clamp(11px, min(3.75vw, 3.75vh), 100%);
@@ -100,27 +113,42 @@ input:focus {
 	box-sizing: border-box; /* Include padding and border in width */
 }
 
-#maze_form input[type="checkbox"] {
+#maze_engine_form input[type="checkbox"] {
 	width: auto;
 	margin-right: 0.5rem;
 }
 
-#maze_form div {
+#maze_engine_form div {
 	display: flex;
 	align-items: center;
 }
 
-#maze_form span {
+.input_with_units {
+	display: flex;
+	width: 100%;
+}
+
+.input_with_units > * {
+	flex: 1;
+}
+
+.input_with_units span {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#maze_engine_form span {
 	margin-left: 0.5rem;
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 100%);
 	color: #333;
 }
 
-#maze_form button {
+#maze_engine_form button {
 	background-color: #66cdaa;
 	color: white;
 	border: none;
-	padding: 0.7rem 1.2rem;
+	padding: 0.6rem 1.2rem;
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
 	border-radius: 5px;
 	cursor: pointer;
@@ -128,12 +156,12 @@ input:focus {
 	margin-top: 10px;
 }
 
-#maze_form p {
+#maze_engine_form p {
 	text-align: center;
 	grid-column: span 2;
 }
 
-#maze_form button:hover {
+#maze_engine_form button:hover {
 	background-color: #5bb497;
 }
 
@@ -141,7 +169,7 @@ input:focus {
 #fullscreen_button {
 	background-color: #4682b4;
 	color: white;
-	padding: 0.7rem 1.2rem;
+	padding: 0.6rem 1.2rem;
 	border-radius: 5px;
 	cursor: pointer;
 	font-size: clamp(10px, min(3.75vw, 3.75vh), 110%);
@@ -154,5 +182,5 @@ input:focus {
 }
 
 #canvas {
-	margin-top: 20px; /* Default margin for portrait mode */
+	margin-top: 15px; /* Default margin for portrait mode */
 }

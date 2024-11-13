@@ -2,6 +2,7 @@
 #define Application_Performer_hpp
 
 #include <variant>
+#include <type_traits>
 
 #include "maze_engine/maze/square.hpp"
 #include "maze_engine/maze/hexagon.hpp"
@@ -12,6 +13,7 @@
 #include "simple_directmedia_layer.hpp"
 #include "timer.hpp"
 #include "sound_table.hpp"
+#include "color.hpp"
 #include "maze_engine/maze_generation_iterator.hpp"
 
 namespace App {
@@ -30,10 +32,34 @@ class App::Performer {
 		static_assert(SoundType{} == SoundType::none);
 
 		using SeedInt = unsigned int;
+		static_assert(std::is_integral_v<SeedInt>);
 
-		static SoundTable piano;
+		using HueFloat = decltype(HslaColor({}).getHue());
+		static_assert(std::is_floating_point_v<HueFloat>);
+		static_assert(std::is_same_v<HueFloat, double>);
+		static_assert(std::is_fundamental_v<HueFloat>);
 
+		static SoundTable piano      ;
 		static SoundTable synthesizer;
+
+		[[nodiscard]] static constexpr
+		SoundTable const * dispatchSoundInstrument(SoundType const soundType) {
+			switch (soundType) {
+				case SoundType::none:
+					return nullptr;
+
+				case SoundType::piano:
+					return &piano;
+
+				default:
+					std::cerr << "Invalid sound type: " << MazeEngine::Aux::Enum::asInt(soundType) << '.' << '\n';
+					assert(false);
+					[[fallthrough]];
+
+				case SoundType::synthesizer:
+					return &synthesizer;
+			}
+		}
 
 		enum struct State : std::uint_least8_t {
 			generating = 1u, searching, backtracking, complete,
@@ -63,6 +89,7 @@ class App::Performer {
 		*/
 		SoundTable const *soundInstrument;
 		decltype(SoundTable::makeRandomSoundPicker({})) randomSoundPicker;
+		HueFloat baseHueOffset{0.0};
 		/*
 			`trailEdge->first` is the child vertex
 			`trailEdge->second` is the parent vertex
@@ -87,9 +114,22 @@ class App::Performer {
 			std::size_t const excessWallPruneCountdown,
 			SearchType const searchType,
 			SoundType const soundType,
+			HueFloat const paramBaseHueOffset,
 			UnsignedMilliseconds const sleepTimeMilliseconds,
 			bool const showMazeGeneration
 		);
+
+		constexpr void setSoundInstrument(SoundType const soundType) {
+			soundInstrument = dispatchSoundInstrument(soundType);
+		}
+
+		constexpr void setBaseHueOffset(HueFloat const paramBaseHueOffset) {
+			baseHueOffset = paramBaseHueOffset;
+		}
+
+		constexpr void setTimeUpdateInterval(UnsignedMilliseconds const interval) {
+			timer.interval = interval;
+		}
 
 		Performer() = delete;
 		Performer(Performer const &) = delete;
@@ -98,6 +138,9 @@ class App::Performer {
 		Performer & operator=(Performer &&) = delete;
 
 		[[nodiscard]] FORCE_INLINE constexpr State getState() const { return state; }
+
+		[[nodiscard]] FORCE_INLINE constexpr
+		HueFloat getBaseHueOffset() const { return baseHueOffset; }
 
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::Vector2 const & getMazeStart() const {
@@ -142,7 +185,7 @@ class App::Performer {
 		[[nodiscard]] FORCE_INLINE
 		MazeEngine::MazeSearchIterator const & getMazeSearchIterator() const {
 			return std::visit(
-				[](auto and(mazeSearchIterator)) -> MazeEngine::MazeSearchIterator const & {
+				[](MazeEngine::MazeSearchIterator const &mazeSearchIterator) -> MazeEngine::MazeSearchIterator const & {
 					return mazeSearchIterator;
 				},
 				mazeSearchIteratorVariant
