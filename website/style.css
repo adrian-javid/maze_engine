@@ -46,6 +46,11 @@ button {
 #loading_message {
 	/* Put the loading message near the center of the screen. */
 	margin-top: 45vh;
+
+	/* Landscape mode. */
+	@media (min-aspect-ratio: 16/9) {
+		margin-top: 0vh;
+	}
 }
 
 .main_container {
@@ -56,23 +61,13 @@ button {
 	min-height: 100vh; /* Ensure the container takes the full height of the viewport */
 	padding: 20px; /* Add some padding around the container */
 	box-sizing: border-box; /* Ensure padding is included in width/height */
-	overflow-y: auto; /* Allow scrolling if content exceeds the screen height */
-}
 
-/* Landscape mode: Form inputs to the left of the canvas */
-@media (min-aspect-ratio: 16/9) {
-	#loading_message {
-		margin-top: 0vh;
-	}
-
-	.main_container {
+	/* Landscape mode. */
+	@media (min-aspect-ratio: 16/9) {
 		flex-direction: row; /* Align items horizontally */
 		justify-content: flex-start; /* Align items to the start of the row */
 	}
 }
-
-/* Portrait mode: Form inputs underneath the canvas */
-@media (max-aspect-ratio: 9/16) {}
 
 #maze_engine_form {
 	display: grid;
@@ -82,8 +77,6 @@ button {
 	padding: 1.5% 2%;
 	width: 100%;
 	max-width: 400px; /* Ensure form doesn't get too wide */
-
-	overflow: auto;
 
 	background-color: #f0f0f0;
 	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
