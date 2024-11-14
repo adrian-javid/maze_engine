@@ -67,8 +67,8 @@ html, body {
 			gap: 2svh;
 		}
 
-		/* Landscape mode with small screen. */
-		@media (max-height: 450px) and (orientation: landscape) {
+		/* Small screen. */
+		@media (max-height: 450px) {
 			gap: 1svh;
 		}
 
