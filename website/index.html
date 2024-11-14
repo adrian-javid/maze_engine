@@ -79,13 +79,6 @@
 				<option value="a_star">A* Search</option>
 			</select>
 
-			<label for="sound_type">Sound</label>
-			<select id="sound_type" name="sound_type">
-				<option value="none">None</option>
-				<option value="piano">Piano</option>
-				<option value="synthesizer" selected>Synthesizer</option>
-			</select>
-
 			<label for="base_hue_offset">Base&nbsp;Hue</label>
 			<div class="input_with_units">
 				<input type="range" id="base_hue_offset" name="base_hue_offset" min="0" max="360" step="1" value="0">
@@ -97,6 +90,13 @@
 				<input type="number" id="delay" name="delay" min="0" max="5000" step="1" value="60" required>
 				<span>milliseconds</span>
 			</div>
+
+			<label for="sound_type">Sound</label>
+			<select id="sound_type" name="sound_type">
+				<option value="none">None</option>
+				<option value="piano">Piano</option>
+				<option value="synthesizer" selected>Synthesizer</option>
+			</select>
 
 			<p id="error_message" data-default-display="flex" style="display: none; color: red;"></p>
 
