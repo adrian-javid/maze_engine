@@ -73,7 +73,6 @@ html, body {
 		}
 
 		label {
-			margin: 0;
 			font-size: clamp(12px, min(3.75svw, 3.75svh), 110%);
 			color: #333;
 			text-align: right; /* Align labels to the right */
@@ -89,7 +88,6 @@ html, body {
 
 			&[type="checkbox"] {
 				width: auto;
-				margin-right: 0.5rem;
 			}
 		}
 
