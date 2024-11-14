@@ -60,6 +60,7 @@ html, body {
 		box-shadow: 0 5px 15px rgb(0 0 0 / 10%);
 		border-radius: 15px;
 
+		/* Default gap for portrait mode. */
 		gap: 8px;
 
 		@media (orientation: landscape) {
