@@ -68,7 +68,7 @@ html, body {
 		}
 
 		/* Small screen. */
-		@media (max-height: 450px) {
+		@media (max-height: 440px) {
 			gap: 1svh;
 		}
 
