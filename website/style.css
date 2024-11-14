@@ -61,7 +61,7 @@ html, body {
 		box-shadow: 0 5px 15px rgb(0 0 0 / 10%);
 		border-radius: 15px;
 
-		gap: 6px;
+		gap: 8px;
 
 		/* Landscape mode. */
 		@media (min-aspect-ratio: 16/9) {
