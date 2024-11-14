@@ -25,7 +25,12 @@ var Module = {
 	})(),
 };
 
-function resizeCanvas() {
+function resizeCanvasFromWindowDimensions() {
+	const length = Math.min(window.innerWidth, window.innerHeight) * 0.80;
+	Module.Window_setSize(length, length);
+}
+
+function resizeCanvasFromViewportDimensions() {
 	const length = Math.min(window.visualViewport.width, window.visualViewport.height) * 0.80;
 	Module.Window_setSize(length, length);
 }
