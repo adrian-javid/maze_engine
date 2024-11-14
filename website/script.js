@@ -78,13 +78,13 @@ function onMazeEngineApplicationInitialized() {
 	document.getElementById("maze_engine_form").style.display = "";
 
 	try {
-		resizeCanvas();
+		resizeCanvasFromViewportDimensions();
 	} catch (error) {
 		console.error("Error when resizing canvas for the first time. ", error);
 	}
 
 	try {
-		window.visualViewport.addEventListener("resize", resizeCanvas);
+		window.addEventListener("resize", resizeCanvasFromViewportDimensions);
 	} catch (error) {
 		console.error("Error when adding \"resize canvas\" event listener for \"resize\" event of visual viewport.");
 	}
