@@ -25,8 +25,13 @@ var Module = {
 	})(),
 };
 
-function resizeCanvas() {
+function resizeCanvasFromWindowDimensions() {
 	const length = Math.min(window.innerWidth, window.innerHeight) * 0.80;
+	Module.Window_setSize(length, length);
+}
+
+function resizeCanvasFromViewportDimensions() {
+	const length = Math.min(window.visualViewport.width, window.visualViewport.height) * 0.80;
 	Module.Window_setSize(length, length);
 }
 
@@ -41,21 +46,27 @@ function userAgentIsHandheld() {
 }
 
 function fallbackForGecko() {
+	const inputElement = document.getElementById("base_hue_offset");
+	assert(inputElement !== null);
+
 	/*
 		It seems something about Emscripten
-		causes this `input` element of type "range" to by glitchy on
-		Firefox desktop?
+		causes this `input` element of type "range" to be glitchy on Firefox desktop?
 
 		That is why we are changing the type to "number" here for Gecko browsers.
 	*/
-	document.getElementById("base_hue_offset").type = "number";
+	inputElement.type = "number";
+
+	inputElement.required = true;
 
 	document.getElementById("base_hue_offset_units").style.display = "";
 }
 
 function onMazeEngineApplicationInitialized() {
-	if (userAgentIsGenuineGecko() && !(userAgentIsHandheld())) {
+	if (userAgentIsGenuineGecko() && !(userAgentIsHandheld())) try {
 		fallbackForGecko();
+	} catch(error) {
+		console.error("Failed to use fallback for Gecko. ", error);
 	}
 
 	const loadingMessage = document.getElementById("loading_message");
@@ -66,13 +77,21 @@ function onMazeEngineApplicationInitialized() {
 	// Reset the maze form's display to default.
 	document.getElementById("maze_engine_form").style.display = "";
 
-	resizeCanvas();
+	try {
+		resizeCanvasFromViewportDimensions();
+	} catch (error) {
+		console.error("Error when resizing canvas for the first time. ", error);
+	}
 
-	window.addEventListener("resize", resizeCanvas);
+	try {
+		window.addEventListener("resize", resizeCanvasFromViewportDimensions);
+	} catch (error) {
+		console.error("Error when adding \"resize canvas\" event listener for \"resize\" event of visual viewport.");
+	}
 
-	const mazeForm = document.getElementById("maze_engine_form");
+	const mazeEngineForm = document.getElementById("maze_engine_form");
 
-	if (!mazeForm) console.error("The maze form doesn't exist.");
+	if (!mazeEngineForm) console.error("The maze engine form doesn't exist.");
 
 	const errorMessage = document.getElementById("error_message");
 	const submitButton = document.getElementById("submit_button");
@@ -105,7 +124,7 @@ function onMazeEngineApplicationInitialized() {
 		const firstSentence = label ? `Error for "${label?.textContent}".` : "Error.";
 
 		errorMessage.textContent = `${firstSentence} ${field?.validationMessage}`;
-		errorMessage.style.display = errorMessage.dataset?.defaultDisplay;
+		errorMessage.style.display = errorMessage.dataset?.defaultDisplay ?? "flex";
 	}
 
 	inputFieldList.forEach(inputField => {
@@ -150,7 +169,7 @@ function onMazeEngineApplicationInitialized() {
 		}
 	}
 
-	mazeForm?.addEventListener("submit", function(event) {
+	mazeEngineForm?.addEventListener("submit", function(event) {
 		// Stop the page from reloading.
 		event.preventDefault();
 
