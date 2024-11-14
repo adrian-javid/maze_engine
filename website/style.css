@@ -44,8 +44,7 @@ html, body {
 
 	gap: calc(12 * min(1svw, 1svh));
 
-	/* Landscape mode. */
-	@media (min-aspect-ratio: 16/9) {
+	@media (orientation: landscape) {
 		flex-direction: row; /* Align items horizontally */
 	}
 
@@ -63,8 +62,7 @@ html, body {
 
 		gap: 8px;
 
-		/* Landscape mode. */
-		@media (min-aspect-ratio: 16/9) {
+		@media (orientation: landscape) {
 			gap: 2svh;
 		}
 
