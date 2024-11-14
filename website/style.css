@@ -42,7 +42,7 @@ html, body {
 	min-height: 100svh;
 	padding: 20px;
 
-	gap: calc(12 * min(1vw, 1vh));
+	gap: calc(12 * min(1svw, 1svh));
 
 	/* Landscape mode. */
 	@media (min-aspect-ratio: 16/9) {
@@ -65,7 +65,7 @@ html, body {
 
 		/* Landscape mode. */
 		@media (min-aspect-ratio: 16/9) {
-			gap: 2vh;
+			gap: 2svh;
 		}
 
 		label {
