@@ -34,7 +34,7 @@ html, body {
 
 .main_container {
 	display: flex;
-	flex-direction: column;
+	flex-direction: column; /* Align items vertically. */
 
 	justify-content: center;
 	align-items: center;
