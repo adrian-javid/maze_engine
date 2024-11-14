@@ -1,6 +1,17 @@
-html, body {
-	box-sizing: border-box; /* Ensure padding and border are included in width & height */
+/*
+	Reset.
 
+	I think it is okay
+	to use the wildcard selector here
+	because the webpage is small.
+*/
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box; /* Ensure padding and border are included in width & height */
+}
+
+html, body {
 	/* Shape */
 	margin: 0;
 	padding: 0;
