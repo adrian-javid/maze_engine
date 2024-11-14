@@ -84,8 +84,9 @@ function onMazeEngineApplicationInitialized() {
 		console.error("Error when adding \"resize canvas\" event listener for \"resize\" event of visual viewport.");
 	}
 
+	const mazeEngineForm = document.getElementById("maze_engine_form");
 
-	if (!mazeForm) console.error("The maze form doesn't exist.");
+	if (!mazeEngineForm) console.error("The maze engine form doesn't exist.");
 
 	const errorMessage = document.getElementById("error_message");
 	const submitButton = document.getElementById("submit_button");
@@ -163,7 +164,7 @@ function onMazeEngineApplicationInitialized() {
 		}
 	}
 
-	mazeForm?.addEventListener("submit", function(event) {
+	mazeEngineForm?.addEventListener("submit", function(event) {
 		// Stop the page from reloading.
 		event.preventDefault();
 
