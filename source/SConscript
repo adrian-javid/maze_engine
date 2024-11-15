@@ -6,7 +6,7 @@ def dive(directory: str, depth: int):
 	if depth <= 0: return []
 	return Glob(F"{directory}{'/*' * depth}.cpp") + dive(directory, depth - 1)
 
-mainSourceList = dive(directory="maze_engine", depth=2) + dive(directory="application", depth=3)
+mainSourceList = dive(directory="maze_engine", depth=2) + dive(directory="application", depth=4)
 
 mainProgram = mainEnv.Program(target="run/maze_engine", source=[main_cpp] + mainSourceList)
 
