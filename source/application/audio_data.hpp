@@ -6,21 +6,25 @@
 namespace App::AudioData {
 	using SimpleSound = std::array<unsigned char, std::size_t{783406u}>;
 
-	namespace Piano::Low {
-		extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+	namespace Piano {
+		namespace Low {
+			extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+		}
+		namespace High {
+			extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+		}
 	}
 
-	namespace Synthesizer::Low {
-		extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+
+	namespace Synthesizer {
+		namespace Low {
+			extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+		}
+		namespace High {
+			extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+		}
 	}
 
-	namespace Piano::High {
-		extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
-	}
-
-	namespace Synthesizer::High {
-		extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
-	}
 }
 
 #endif
