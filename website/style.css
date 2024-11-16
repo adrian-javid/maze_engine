@@ -89,6 +89,22 @@ html, body {
 			&[type="checkbox"] {
 				width: auto;
 			}
+
+			
+			/*
+				It seems on Chrome that the spin buttons for `input` elements
+				of the type "number" are glitchy with Emscripten such that
+				they may continue incrementing or decrementing
+				the value even if the mouse is not pressed on it.
+
+				That is why I am removing the spin buttons here.
+			*/
+			&[type=number]::-webkit-inner-spin-button,
+			&[type=number]::-webkit-outer-spin-button {
+				-webkit-appearance: none;
+				appearance: none;
+				margin: 0;
+			}
 		}
 
 		input[type="number"], select {
