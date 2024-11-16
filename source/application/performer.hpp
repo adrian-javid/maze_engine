@@ -230,22 +230,24 @@ class App::Performer {
 			assert(soundInstrument != nullptr);
 			if (soundInstrument == nullptr) return;
 
+			constexpr std::size_t offset{0};
+
 			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
 				switch (direction) {
-					case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;
-					case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
-					case MazeEngine::Maze::Direction::south: soundInstrument->play(0u); break;
-					case MazeEngine::Maze::Direction::west : soundInstrument->play(2u); break;
+					case MazeEngine::Maze::Direction::north: soundInstrument->play(3u + offset); break;
+					case MazeEngine::Maze::Direction::east : soundInstrument->play(1u + offset); break;
+					case MazeEngine::Maze::Direction::south: soundInstrument->play(0u + offset); break;
+					case MazeEngine::Maze::Direction::west : soundInstrument->play(2u + offset); break;
 					default: break;
 				}
 			} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
 				switch (direction) {
-					case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u); break;
-					case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u); break;
-					case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u); break;
-					case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u); break;
-					case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u); break;
-					case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u); break;
+					case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u + offset); break;
+					case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u + offset); break;
+					case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u + offset); break;
+					case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u + offset); break;
+					case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u + offset); break;
+					case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u + offset); break;
 					default: break;
 				}
 			}
