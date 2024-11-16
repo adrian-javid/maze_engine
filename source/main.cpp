@@ -139,24 +139,37 @@ int main(int const argc, char *argv[]) {
 
 	/* configure the sound tables with audio data */ {
 		using namespace App::AudioData;
-
-		static constexpr std::size_t byteCount{std::tuple_size_v<SimpleSound> * sizeof(SimpleSound::value_type)};
-
 		using AudioDataView = App::SoundTable::AudioDataView;
+		static constexpr std::size_t byteCount{std::tuple_size_v<SimpleSound> * sizeof(SimpleSound::value_type)};
+		static constexpr std::size_t sectionOffset{6u};
 
-		App::Performer::piano      .put(0u, AudioDataView(Piano      ::Low::    first.data(), byteCount));
-		App::Performer::piano      .put(1u, AudioDataView(Piano      ::Low::    third.data(), byteCount));
-		App::Performer::piano      .put(2u, AudioDataView(Piano      ::Low::    fifth.data(), byteCount));
-		App::Performer::piano      .put(3u, AudioDataView(Piano      ::Low::highFirst.data(), byteCount));
-		App::Performer::piano      .put(4u, AudioDataView(Piano      ::Low::highThird.data(), byteCount));
-		App::Performer::piano      .put(5u, AudioDataView(Piano      ::Low::highFifth.data(), byteCount));
+		App::Performer::piano      .put(0u,                 AudioDataView(Piano      ::Low::    first.data(), byteCount));
+		App::Performer::piano      .put(1u,                 AudioDataView(Piano      ::Low::    third.data(), byteCount));
+		App::Performer::piano      .put(2u,                 AudioDataView(Piano      ::Low::    fifth.data(), byteCount));
+		App::Performer::piano      .put(3u,                 AudioDataView(Piano      ::Low::highFirst.data(), byteCount));
+		App::Performer::piano      .put(4u,                 AudioDataView(Piano      ::Low::highThird.data(), byteCount));
+		App::Performer::piano      .put(5u,                 AudioDataView(Piano      ::Low::highFifth.data(), byteCount));
 
-		App::Performer::synthesizer.put(0u, AudioDataView(Synthesizer::Low::    first.data(), byteCount));
-		App::Performer::synthesizer.put(1u, AudioDataView(Synthesizer::Low::    third.data(), byteCount));
-		App::Performer::synthesizer.put(2u, AudioDataView(Synthesizer::Low::    fifth.data(), byteCount));
-		App::Performer::synthesizer.put(3u, AudioDataView(Synthesizer::Low::highFirst.data(), byteCount));
-		App::Performer::synthesizer.put(4u, AudioDataView(Synthesizer::Low::highThird.data(), byteCount));
-		App::Performer::synthesizer.put(5u, AudioDataView(Synthesizer::Low::highFifth.data(), byteCount));
+		App::Performer::synthesizer.put(0u,                 AudioDataView(Synthesizer::Low::    first.data(), byteCount));
+		App::Performer::synthesizer.put(1u,                 AudioDataView(Synthesizer::Low::    third.data(), byteCount));
+		App::Performer::synthesizer.put(2u,                 AudioDataView(Synthesizer::Low::    fifth.data(), byteCount));
+		App::Performer::synthesizer.put(3u,                 AudioDataView(Synthesizer::Low::highFirst.data(), byteCount));
+		App::Performer::synthesizer.put(4u,                 AudioDataView(Synthesizer::Low::highThird.data(), byteCount));
+		App::Performer::synthesizer.put(5u,                 AudioDataView(Synthesizer::Low::highFifth.data(), byteCount));
+
+		App::Performer::piano      .put(0u + sectionOffset, AudioDataView(Piano      ::High::    first.data(), byteCount));
+		App::Performer::piano      .put(1u + sectionOffset, AudioDataView(Piano      ::High::    third.data(), byteCount));
+		App::Performer::piano      .put(2u + sectionOffset, AudioDataView(Piano      ::High::    fifth.data(), byteCount));
+		App::Performer::piano      .put(3u + sectionOffset, AudioDataView(Piano      ::High::highFirst.data(), byteCount));
+		App::Performer::piano      .put(4u + sectionOffset, AudioDataView(Piano      ::High::highThird.data(), byteCount));
+		App::Performer::piano      .put(5u + sectionOffset, AudioDataView(Piano      ::High::highFifth.data(), byteCount));
+
+		App::Performer::synthesizer.put(0u + sectionOffset, AudioDataView(Synthesizer::High::    first.data(), byteCount));
+		App::Performer::synthesizer.put(1u + sectionOffset, AudioDataView(Synthesizer::High::    third.data(), byteCount));
+		App::Performer::synthesizer.put(2u + sectionOffset, AudioDataView(Synthesizer::High::    fifth.data(), byteCount));
+		App::Performer::synthesizer.put(3u + sectionOffset, AudioDataView(Synthesizer::High::highFirst.data(), byteCount));
+		App::Performer::synthesizer.put(4u + sectionOffset, AudioDataView(Synthesizer::High::highThird.data(), byteCount));
+		App::Performer::synthesizer.put(5u + sectionOffset, AudioDataView(Synthesizer::High::highFifth.data(), byteCount));
 	}
 
 	static constexpr char const *windowTitle{"Maze Engine"};
