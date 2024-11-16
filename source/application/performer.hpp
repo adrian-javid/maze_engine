@@ -123,6 +123,10 @@ class App::Performer {
 			soundInstrument = dispatchSoundInstrument(soundType);
 		}
 
+		constexpr App::SoundTable const * getSoundInstrument() const {
+			return soundInstrument;
+		}
+
 		constexpr void setBaseHueOffset(HueFloat const paramBaseHueOffset) {
 			baseHueOffset = paramBaseHueOffset;
 		}

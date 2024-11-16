@@ -63,6 +63,27 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 		App::performer->setTimeUpdateInterval(intervalMilliseconds);
 	});
 
+	emscripten::function("MazeEngine_playSound", +[](unsigned int const index) -> void {
+		if (index >= std::tuple_size_v<App::SoundTable::Data>) {
+			std::cerr <<
+				"Bad sound index `" << index << "` for size `" <<
+				std::tuple_size_v<App::SoundTable::Data> << "`.\n";
+			return;
+		}
+
+		if (not App::performer.has_value()) {
+			std::cerr << "Performer is null.\n";
+			return;
+		}
+
+		if (App::performer->getSoundInstrument() == nullptr) {
+			std::cout << "Performer's sound instrument is null.\n";
+			return;
+		}
+
+		App::performer->getSoundInstrument()->play(index);
+	});
+
 }
 
 #endif
