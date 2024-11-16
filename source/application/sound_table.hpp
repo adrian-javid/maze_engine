@@ -12,7 +12,7 @@ namespace App { class SoundTable; }
 class App::SoundTable {
 
 	public:
-		using Data = std::array<Mix_Chunk *, 6u>;
+		using Data = std::array<Mix_Chunk *, std::size_t{6u * 2u}>;
 		static_assert(std::tuple_size_v<Data> <= std::numeric_limits<int>::max());
 
 
