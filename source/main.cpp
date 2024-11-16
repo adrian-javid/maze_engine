@@ -113,6 +113,13 @@ int main(int const argc, char *argv[]) {
 	#endif
 
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) != 0) {
+		std::cerr << "The default SDL Mixer configuration failed to open.\n";
+
+		// Try backup configuration.
+		if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 1, 2048) != 0) {
+			App::errorExit("SDL Mixer failed to open.");
+		}
+	}
 
 	if (
 		int channelCount{Mix_AllocateChannels(std::tuple_size_v<App::SoundTable::Data>)};
