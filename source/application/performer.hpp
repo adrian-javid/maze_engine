@@ -231,6 +231,7 @@ class App::Performer {
 			if (soundInstrument == nullptr) return;
 
 			constexpr std::size_t offset{std::tuple_size_v<SoundTable::Data> / 2u};
+			static_assert(offset == 6u);
 
 			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
 				switch (direction) {
