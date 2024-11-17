@@ -15,7 +15,7 @@ var Module = {
 		const canvas = document.getElementById('canvas');
 		canvas.addEventListener("webglcontextlost", (event) => {
 				event.preventDefault();
-				alert("The Web Graphics Library context has been lost. The page must reload in order to restore functionality.");
+				alert("The Web Graphics Library context has been lost. The page will need to reload to restore functionality.");
 				window.location.reload();
 			},
 			false
