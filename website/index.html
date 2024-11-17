@@ -63,7 +63,7 @@
 			<input type="number" id="seed" name="seed" min="0" max="65535" step="1" value="0" required>
 
 			<label for="wall_prune_countdown">Prune&nbsp;Extra&nbsp;Walls</label>
-			<input type="number" id="wall_prune_countdown" name="wall_prune_countdown" min="0" max="16384" step=1 value="0" required>
+			<input type="number" id="wall_prune_countdown" name="wall_prune_countdown" min="0" max="16384" step="1" value="0" required>
 
 			<label for="maze_wrap">Wrap&nbsp;Edges</label>
 			<input type="checkbox" id="maze_wrap" name="maze_wrap">
@@ -103,7 +103,7 @@
 			<button id="submit_button" type="submit" disabled>Start</button>
 		</form>
 
-		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" width="0" height="0" tabindex=-1>
+		<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" width="0" height="0" tabindex="-1">
 			(Your browser does not support the HTML <code>&lt;canvas&gt;</code> tag.)
 		</canvas>
 	</div>
