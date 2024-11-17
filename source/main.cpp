@@ -266,7 +266,7 @@ int main(int const argc, char *argv[]) {
 		`simulate_infinite_loop` is `true`, so will not continue execution after this function ends.
 
 		"...if simulate_infinite_loop is false, and you created an object on the stack,
-		it will be cleaned up before the main loop is called for the first time.""
+		it will be cleaned up before the main loop is called for the first time."
 		(https://emscripten.org/docs/api_reference/emscripten.h.html#id3)
 	*/
 	emscripten_set_main_loop(&App::mainLoop, -1, true);
