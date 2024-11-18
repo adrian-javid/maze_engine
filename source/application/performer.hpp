@@ -62,7 +62,7 @@ class App::Performer {
 		}
 
 		enum struct State : std::uint_least8_t {
-			generating = 1u, searching, backtracking, complete,
+			generating = 1u, searching, backtracking, celebrating, complete,
 		};
 
 	private /* member state; initialized by the constructor */:
