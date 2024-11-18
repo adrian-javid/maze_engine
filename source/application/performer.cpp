@@ -325,11 +325,11 @@ void App::Performer::update() {
 			/* process vertex */ {
 				MazeEngine::Vector2 const &vertex{getMazeSearchIterator().getVector()};
 
-				playSound(vertex);
-
 				markedTileSet.insert(MazeEngine::Vector2(vertex));
 
 				if (vertex == mazeEnd) goto switchToBacktracking;
+
+				playSound(vertex);
 			}
 
 			getMazeSearchIterator().advance();
