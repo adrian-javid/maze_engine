@@ -9,7 +9,7 @@ const requestWakeLock = async function() {
 		console.error(`Failed to get wake lock. ${error}`);
 	}
 
-	wakeLock.addEventListener("release", () => {
+	wakeLock?.addEventListener("release", () => {
 		console.log("Wake Lock released.");
 	});
 	
