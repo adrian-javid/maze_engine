@@ -317,9 +317,9 @@ void App::Performer::update() {
 
 			// Skip presenting the first maze tile.
 			for (
-				MazeEngine::Vector2 const vertex{getMazeSearchIterator().getVector()};
+				MazeEngine::Vector2 vertex{getMazeSearchIterator().getVector()};
 				vertex == mazeStart and not getMazeSearchIterator().isDone();
-				getMazeSearchIterator().advance()
+				getMazeSearchIterator().advance(), vertex = getMazeSearchIterator().getVector()
 			) {
 				markedTileSet.insert(vertex);
 			}
