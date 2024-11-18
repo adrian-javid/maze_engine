@@ -164,6 +164,8 @@ void App::Window::refresh() {
 		assert(performer.has_value());
 		switch (performer->getState()) {
 			case Performer::State::generating: {
+				if (performer->getMazeGenerationIterator().isDone()) goto defaultWallColors;
+
 				if (
 					auto const &markedWalls{performer->getMarkedWallSet()};
 					markedWalls.find(principalWall) != markedWalls.cend()
@@ -173,7 +175,7 @@ void App::Window::refresh() {
 					return getColorTriplet(colorScheme.wallHue, /* luminance */double{0.10});
 				}
 			}
-			default: return getColorTriplet(colorScheme.wallHue);
+			default: defaultWallColors: return getColorTriplet(colorScheme.wallHue);
 		}
 
 	});
