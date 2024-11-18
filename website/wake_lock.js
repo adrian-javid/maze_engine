@@ -11,6 +11,8 @@ const requestWakeLock = async function() {
 	} catch (error) {
 		console.error(`Failed to get wake lock. ${error}`);
 	}
+
+	console.log("Wake Lock obtained.");
 }
 
 requestWakeLock();
