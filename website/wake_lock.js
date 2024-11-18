@@ -10,10 +10,10 @@ const requestWakeLock = async function() {
 	}
 
 	wakeLock?.addEventListener("release", () => {
-		console.log("Wake Lock released.");
+		console.log("Wake lock released.");
 	});
 	
-	console.log("Wake Lock obtained.");
+	console.log("Wake lock obtained.");
 }
 
 requestWakeLock();
