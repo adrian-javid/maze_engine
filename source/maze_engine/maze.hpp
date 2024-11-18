@@ -81,10 +81,10 @@ struct MazeEngine::Maze {
 
 	virtual std::size_t getTileCount() const = 0;
 
-	virtual Tile &at(Vector2 const &key) = 0;
-	virtual Tile const &at(Vector2 const &key) const = 0;
+	virtual Tile &at(Vector2 const key) = 0;
+	virtual Tile const &at(Vector2 const key) const = 0;
 
-	virtual void forEachKey(std::function<void(Vector2 const &)> const &) const = 0;
+	virtual void forEachKey(std::function<void(Vector2 const)> const &) const = 0;
 
 	virtual void forEachPrincipalDirection(std::function<void(Direction const)> const &) const = 0;
 
@@ -95,7 +95,7 @@ struct MazeEngine::Maze {
 		bool hasWall;
 		// This function is to address narrowing conversion to `bool`.
 		template <typename ConvertableToBoolT>
-		constexpr /* implicit on purpose */ TileAdjacency(Vector2 const &tileKey, ConvertableToBoolT const wallFlag):
+		constexpr /* implicit on purpose */ TileAdjacency(Vector2 const tileKey, ConvertableToBoolT const wallFlag):
 			key(tileKey), hasWall{static_cast<bool>(wallFlag)}
 		{ static_assert(std::is_convertible_v<ConvertableToBoolT, bool>); }
 	};
@@ -114,12 +114,12 @@ struct MazeEngine::Maze {
 	*/
 	virtual TileAdjacency checkAdjacent(Vector2 const tileKey, Direction const direction) const = 0;
 
-	virtual Vector2 const &getOffset(Direction const direction) const = 0;
-	virtual bool isInBounds(Vector2 const &key) const = 0;
+	virtual Vector2 getOffset(Direction const direction) const = 0;
+	virtual bool isInBounds(Vector2 const key) const = 0;
 
-	virtual int length(Vector2 const &key) const = 0;
+	virtual int length(Vector2 const key) const = 0;
 
-	void forEachNeighbor(Vector2 const &, std::function<void(Vector2 const &)> const &) const;
+	void forEachNeighbor(Vector2 const, std::function<void(Vector2 const)> const &) const;
 
 	[[deprecated("Can use a maze generation iterator instead.")]]
 	void generate(unsigned int const seed, bool const wrap=true);

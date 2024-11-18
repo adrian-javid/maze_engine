@@ -147,12 +147,12 @@ class App::Performer {
 		HueFloat getBaseHueOffset() const { return baseHueOffset; }
 
 		[[nodiscard]] FORCE_INLINE
-		MazeEngine::Vector2 const & getMazeStart() const {
+		MazeEngine::Vector2 getMazeStart() const {
 			return mazeStart;
 		}
 
 		[[nodiscard]] FORCE_INLINE
-		MazeEngine::Vector2 const & getMazeEnd() const {
+		MazeEngine::Vector2 getMazeEnd() const {
 			return mazeEnd;
 		}
 

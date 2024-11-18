@@ -15,7 +15,7 @@
 namespace App {
 	using ColorTriplet = std::tuple<SDL_Color, SDL_Color, SDL_Color>;
 
-	using TileColorTripletGetter = std::function<ColorTriplet(MazeEngine::Vector2 const &)>;
+	using TileColorTripletGetter = std::function<ColorTriplet(MazeEngine::Vector2 const)>;
 	using WallColorTripletGetter = std::function<ColorTriplet(MazeEngine::MazeGenerationIterator::Wall const &)>;
 
 	inline constexpr SDL_Color

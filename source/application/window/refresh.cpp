@@ -115,7 +115,7 @@ void App::Window::refresh() {
 	assert(cyclicPercentage <  1.0);
 
 	auto const tileColorTripletGetter([](
-		MazeEngine::Vector2 const &tileKey
+		MazeEngine::Vector2 const tileKey
 	) -> ColorTriplet {
 		ColorScheme const colorScheme(ColorScheme::make(tileKey));
 

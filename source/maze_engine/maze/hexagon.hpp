@@ -51,22 +51,22 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 
 		std::size_t getTileCount() const override;
 
-		Tile &at(Vector2 const &key) override;
-		Tile const &at(Vector2 const &key) const override;
+		Tile &at(Vector2 const key) override;
+		Tile const &at(Vector2 const key) const override;
 
-		void forEachKey(std::function<void(Vector2 const &)> const &) const override;
+		void forEachKey(std::function<void(Vector2 const)> const &) const override;
 
 		void forEachPrincipalDirection(std::function<void(Direction const)> const &) const override;
 
 		TileAdjacency checkAdjacent(Vector2 key, Direction const direction) const override;
 
-		Vector2 const &getOffset(Direction const direction) const override;
+		Vector2 getOffset(Direction const direction) const override;
 
-		bool isInBounds(Vector2 const &key) const override;
+		bool isInBounds(Vector2 const key) const override;
 
-		int length(Vector2 const &key) const override;
+		int length(Vector2 const key) const override;
 
-		Vector2 wrapKey(Vector2 const &key) const;
+		Vector2 wrapKey(Vector2 const key) const;
 };
 
 #endif

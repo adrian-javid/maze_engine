@@ -220,7 +220,7 @@ void App::Performer::playSound(MazeEngine::Vector2 const mainVertex) const {
 		The direction is what we will use to determine what sound effect will be played;
 		each direction is assigned a sound effect.
 	*/
-	MazeEngine::Vector2 const &parentVertex{edge->/* parent vertex */second};
+	MazeEngine::Vector2 const parentVertex{edge->/* parent vertex */second};
 
 	/*
 		If there was no wraparound, this offset vector represents the direction in a vector form.
@@ -331,7 +331,7 @@ void App::Performer::update() {
 			if (getMazeSearchIterator().isDone()) goto switchToBacktracking;
 
 			/* process vertex */ {
-				MazeEngine::Vector2 const &vertex{getMazeSearchIterator().getVector()};
+				MazeEngine::Vector2 const vertex{getMazeSearchIterator().getVector()};
 
 				markedTileSet.insert(MazeEngine::Vector2(vertex));
 

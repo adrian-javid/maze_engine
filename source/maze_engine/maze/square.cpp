@@ -22,15 +22,15 @@ auto SquareMaze::getTable() const -> std::vector<Tile> const & { return table; }
 
 std::size_t SquareMaze::getTileCount() const { return table.size(); }
 
-auto SquareMaze::at(Vector2 const &tileKey) -> Tile & {
+auto SquareMaze::at(Vector2 const tileKey) -> Tile & {
 	return table.at(getFlatIndex(wrapKey(tileKey)));
 }
 
-auto SquareMaze::at(Vector2 const &tileKey) const -> Tile const & {
+auto SquareMaze::at(Vector2 const tileKey) const -> Tile const & {
 	return table.at(getFlatIndex(wrapKey(tileKey)));
 }
 
-void SquareMaze::forEachKey(std::function<void(Vector2 const &)> const &forThisKey) const {
+void SquareMaze::forEachKey(std::function<void(Vector2 const)> const &forThisKey) const {
 	for (Vector2 key(0, 0); key.value1 < rowCount; ++key.value1)
 		for (key.value2 = 0; key.value2 < columnCount; ++key.value2)
 			forThisKey(key);
@@ -79,7 +79,7 @@ std::ostream &MazeEngine::operator<<(std::ostream &outputStream, SquareMaze cons
 	outputStream << squareGrid.toString(); return outputStream;
 }
 
-Vector2 const &SquareMaze::getOffset(Direction const direction) const {
+Vector2 SquareMaze::getOffset(Direction const direction) const {
 	switch (direction) {
 		case Direction::north: return northOffset;
 		case Direction::east : return  eastOffset;
@@ -91,13 +91,13 @@ Vector2 const &SquareMaze::getOffset(Direction const direction) const {
 	}
 }
 
-bool SquareMaze::isInBounds(Vector2 const &key) const {
+bool SquareMaze::isInBounds(Vector2 const key) const {
 	return
 		0 <= key.value1 and key.value1 < rowCount and
 		0 <= key.value2 and key.value2 < columnCount
 	;
 }
 
-int SquareMaze::length(Vector2 const &key) const {
+int SquareMaze::length(Vector2 const key) const {
 	return key.manhattanLength();
 }

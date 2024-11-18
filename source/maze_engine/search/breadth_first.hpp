@@ -17,7 +17,7 @@ namespace MazeEngine {
 	 */
 	[[deprecated]]
 	Vector2::HashMap<Vector2> breadthFirstSearch(
-		Maze const &maze, Vector2 const &start, std::function<bool(Vector2 const &)> const processKey=nullptr
+		Maze const &maze, Vector2 const start, std::function<bool(Vector2 const)> const processKey=nullptr
 	);
 
 	struct BreadthFirstSearchIterator : AbstractSearchIterator<std::queue<Vector2>> {

@@ -5,8 +5,8 @@
 
 auto MazeEngine::aStarSearch(
 	Maze const &maze,
-	Vector2 const &start, Vector2 const &end,
-	std::function<bool(Vector2 const &)> const processKey
+	Vector2 const start, Vector2 const end,
+	std::function<bool(Vector2 const)> const processKey
 ) -> Vector2::HashMap<Vector2> {
 	using MetaVertex = AStarSearchIterator::MetaVertex;
 
@@ -22,7 +22,7 @@ auto MazeEngine::aStarSearch(
 
 		if (processKey != nullptr and processKey(tileKey.vector)) break;
 
-		maze.forEachNeighbor(tileKey.vector, [&tileKey, &costMap, &frontier, &upTree, &maze, &end](Vector2 const &neighbor) {
+		maze.forEachNeighbor(tileKey.vector, [tileKey, &costMap, &frontier, &upTree, &maze, end](Vector2 const neighbor) {
 			int const derivedCost{costMap.at(tileKey.vector) + /* cost to move adjacent */1};
 
 			if (costMap.find(neighbor) == costMap.end() or derivedCost < costMap.at(neighbor)) {

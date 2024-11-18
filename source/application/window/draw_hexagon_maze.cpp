@@ -117,7 +117,7 @@ void App::Window::drawHexagonMaze(
 				&tileColorTripletGetter, &wallColorTripletGetter,
 				hexagonCenterX, hexagonWidth, hexagonHeight,
 				&maze
-			](MazeEngine::Vector2 const &tileKey, float const hexagonCenterY) -> void {
+			](MazeEngine::Vector2 const tileKey, float const hexagonCenterY) -> void {
 				auto const [tileColor1, tileColor2, tileColor3]{tileColorTripletGetter(tileKey)};
 				auto const &&[
 					outerNorthwestPoint, outerNorthPoint, outerNortheastPoint,

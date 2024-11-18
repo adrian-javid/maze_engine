@@ -9,8 +9,8 @@ namespace MazeEngine {
 	[[deprecated]]
 	Vector2::HashMap<Vector2> aStarSearch(
 		Maze const &maze,
-		Vector2 const &start, Vector2 const &end,
-		std::function<bool(Vector2 const &)> const processKey=nullptr
+		Vector2 const start, Vector2 const end,
+		std::function<bool(Vector2 const)> const processKey=nullptr
 	);
 
 	class AStarSearchIterator : public MazeSearchIterator {
@@ -45,7 +45,7 @@ namespace MazeEngine {
 				currentTileKey = frontier.top().vector;
 				frontier.pop();
 
-				maze->forEachNeighbor(currentTileKey, [this](Vector2 const &neighbor) {
+				maze->forEachNeighbor(currentTileKey, [this](Vector2 const neighbor) {
 					int const derivedCost{costMap.at(currentTileKey) + /* cost to move adjacent */1};
 
 					if (costMap.find(neighbor) == costMap.end() or derivedCost < costMap.at(neighbor)) {
@@ -57,7 +57,7 @@ namespace MazeEngine {
 				});
 			}
 
-			[[nodiscard]] Vector2 const &getVector() const override { return currentTileKey; }
+			[[nodiscard]] Vector2 getVector() const override { return currentTileKey; }
 			[[nodiscard]] bool isDone() const override { return frontier.empty(); }
 			[[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const override { return upTree; }
 

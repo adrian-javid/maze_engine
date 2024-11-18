@@ -13,7 +13,7 @@ static Vector2 calculateMirrorCenter(int const index, int const radius) {
 	return rotatedPosition;
 }
 
-Vector2 HexagonMaze::wrapKey(Vector2 const &key) const {
+Vector2 HexagonMaze::wrapKey(Vector2 const key) const {
 	// return early if key is in table
 	auto iterator(table.find(key));
 	if (iterator != table.end())
@@ -75,11 +75,11 @@ HexagonMaze::HexagonMaze(int const setRadius, Tile const tileFillValue):
 
 std::size_t HexagonMaze::getTileCount() const { return table.size(); }
 
-auto HexagonMaze::at(Vector2 const &key) -> Tile & { return table.at(HexagonMaze::wrapKey(key)); }
+auto HexagonMaze::at(Vector2 const key) -> Tile & { return table.at(HexagonMaze::wrapKey(key)); }
 
-auto HexagonMaze::at(Vector2 const &key) const -> Tile const & { return table.at(HexagonMaze::wrapKey(key)); }
+auto HexagonMaze::at(Vector2 const key) const -> Tile const & { return table.at(HexagonMaze::wrapKey(key)); }
 
-void HexagonMaze::forEachKey(std::function<void(Vector2 const &)> const &forThisKey) const {
+void HexagonMaze::forEachKey(std::function<void(Vector2 const)> const &forThisKey) const {
 	for (auto const &pair : table) forThisKey(pair.first);
 }
 
@@ -113,7 +113,7 @@ auto HexagonMaze::checkAdjacent(Vector2 key, Direction const direction) const ->
 	}
 }
 
-Vector2 const &HexagonMaze::getOffset(Direction const direction) const {
+Vector2 HexagonMaze::getOffset(Direction const direction) const {
 	switch (direction) {
 		case northeast: return northeastOffset;
 		case east     : return      eastOffset;
@@ -127,10 +127,10 @@ Vector2 const &HexagonMaze::getOffset(Direction const direction) const {
 	}
 }
 
-bool HexagonMaze::isInBounds(Vector2 const &key) const {
+bool HexagonMaze::isInBounds(Vector2 const key) const {
 	return table.find(key) != table.end();
 }
 
-int HexagonMaze::length(Vector2 const &key) const {
+int HexagonMaze::length(Vector2 const key) const {
 	return key.hexManhattanLength();
 }

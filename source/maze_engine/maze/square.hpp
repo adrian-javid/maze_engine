@@ -61,29 +61,29 @@ class MazeEngine::SquareMaze : public MazeEngine::Maze {
 
 		std::size_t getTileCount() const override;
 
-		Tile &at(Vector2 const &) override;
-		Tile const &at(Vector2 const &) const override;
+		Tile &at(Vector2 const) override;
+		Tile const &at(Vector2 const) const override;
 
-		void forEachKey(std::function<void(Vector2 const &)> const &) const override;
+		void forEachKey(std::function<void(Vector2 const)> const &) const override;
 
 		void forEachPrincipalDirection(std::function<void(Direction const)> const &) const override;
 
 		TileAdjacency checkAdjacent(Vector2, Direction const) const override;
 
-		constexpr Vector2 wrapKey(Vector2 const &key) const { return key.wrap(rowCount, columnCount); }
+		constexpr Vector2 wrapKey(Vector2 const key) const { return key.wrap(rowCount, columnCount); }
 
-		constexpr std::size_t getFlatIndex(Vector2 const &key) const {
+		constexpr std::size_t getFlatIndex(Vector2 const key) const {
 			int const flatIndex{/* row */key.value1 * columnCount + /* column */key.value2};
 			return static_cast<std::size_t>(flatIndex);
 		}
 
 		std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
-		Vector2 const &getOffset(Direction const direction) const override;
+		Vector2 getOffset(Direction const direction) const override;
 
-		bool isInBounds(Vector2 const &key) const override;
+		bool isInBounds(Vector2 const key) const override;
 
-		int length(Vector2 const &key) const override;
+		int length(Vector2 const key) const override;
 };
 
 #endif

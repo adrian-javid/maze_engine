@@ -14,9 +14,9 @@ namespace MazeEngine {
 	[[deprecated]]
 	Vector2::HashMap<Vector2> abstractSearch(
 		Maze const &maze,
-		Vector2 const &start,
+		Vector2 const start,
 		StorageT &storage,
-		std::function<bool(Vector2 const &)> const processKey
+		std::function<bool(Vector2 const)> const processKey
 	);
 
 	class MazeSearchIterator;
@@ -28,9 +28,9 @@ namespace MazeEngine {
 template <typename StorageT>
 auto MazeEngine::abstractSearch(
 	Maze const &maze,
-	Vector2 const &start,
+	Vector2 const start,
 	StorageT &storage,
-	std::function<bool(Vector2 const &)> const processKey
+	std::function<bool(Vector2 const)> const processKey
 ) -> Vector2::HashMap<Vector2> {
 
 	Vector2::HashMap<Vector2> history;
@@ -39,7 +39,7 @@ auto MazeEngine::abstractSearch(
 	history.insert({start, start});
 
 	while (not storage.empty()) {
-		Vector2 const key([&storage]() constexpr -> Vector2 const & {
+		Vector2 const key([&storage]() constexpr -> Vector2 {
 			if constexpr (std::is_same_v<StorageT, std::stack<Vector2>>)
 				return storage.top();
 			else if constexpr (std::is_same_v<StorageT, std::queue<Vector2>>)
@@ -51,7 +51,7 @@ auto MazeEngine::abstractSearch(
 
 		if (processKey != nullptr and processKey(key)) break;
 
-		maze.forEachNeighbor(key, [&history, &key, &storage](Vector2 const &neighbor) {
+		maze.forEachNeighbor(key, [&history, key, &storage](Vector2 const neighbor) {
 			if (history.find(neighbor) == history.end()) {
 				history.insert({neighbor, key});
 				storage.push(neighbor);
@@ -65,7 +65,7 @@ auto MazeEngine::abstractSearch(
 class MazeEngine::MazeSearchIterator {
 	public:
 		virtual void advance() = 0;
-		[[nodiscard]] virtual Vector2 const & getVector() const = 0;
+		[[nodiscard]] virtual Vector2 getVector() const = 0;
 		[[nodiscard]] virtual bool isDone() const = 0;
 		[[nodiscard]] virtual Vector2::HashMap<Vector2> const & getHistory() const = 0;
 		[[nodiscard]] explicit MazeSearchIterator() = default;
@@ -82,7 +82,7 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 		Vector2::HashMap<Vector2> history;
 
 		FORCE_INLINE void gatherNeighbors() {
-			maze->forEachNeighbor(key, [this](Vector2 const &neighbor) {
+			maze->forEachNeighbor(key, [this](Vector2 const neighbor) {
 				if (this->history.find(neighbor) == this->history.end()) {
 					this->history.insert({neighbor, this->key});
 					this->storage.push(neighbor);
@@ -132,7 +132,7 @@ class MazeEngine::AbstractSearchIterator : public MazeSearchIterator {
 			gatherNeighbors();
 		}
 
-		[[nodiscard]] Vector2 const &getVector() const override { return key; }
+		[[nodiscard]] Vector2 getVector() const override { return key; }
 
 		[[nodiscard]] Vector2::HashMap<Vector2> const &getHistory() const override { return history; }
 
