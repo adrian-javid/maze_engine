@@ -1,11 +1,12 @@
 #ifndef MazeEngine_Vector2_hpp
 #define MazeEngine_Vector2_hpp
 
-#include <functional>
-#include <string>
 #include <unordered_set>
 #include <unordered_map>
 #include <array>
+#include <cstdint>
+#include <ostream>
+
 #include "auxiliary.hpp"
 
 namespace MazeEngine { struct Vector2; }
@@ -136,14 +137,10 @@ struct MazeEngine::Vector2 {
 	 * @tparam T value mapped from `Vector2`
 	 */
 	template<typename T> using HashMap = std::unordered_map<Vector2, T, Hash>;
-
-	std::string toString() const;
 };
 
 namespace MazeEngine {
-
 	std::ostream& operator<<(std::ostream &outputStream, Vector2 const vector);
-
 }
 
 #endif
