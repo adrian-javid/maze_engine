@@ -19,7 +19,7 @@ namespace MazeEngine {
 				Vector2 vector{};
 				// Smaller priority is better.
 				int priority{};
-				inline bool operator>(MetaVertex const &vertex) const {
+				inline bool operator>(MetaVertex const vertex) const {
 					return priority > vertex.priority;
 				}
 			};
