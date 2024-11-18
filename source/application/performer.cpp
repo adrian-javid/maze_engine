@@ -339,8 +339,13 @@ void App::Performer::update() {
 
 		switchToBacktracking: {
 			std::cout << "Explored count: " << markedTileSet.size() << '\n';
-			trailEdge = getMazeSearchIterator().getHistory().find(mazeEnd);
 			state = State::backtracking;
+			MazeEngine::Vector2::HashMap<MazeEngine::Vector2> const &history{getMazeSearchIterator().getHistory()};
+			trailEdge = history.find(mazeEnd);
+			if (trailEdge != history.cend()) {
+				pathTileSet.insert(trailEdge->/* child vertex */first);
+				trailEdge = history.find(trailEdge->/* parent vertex */second);
+			}
 
 			[[fallthrough]];
 		}
