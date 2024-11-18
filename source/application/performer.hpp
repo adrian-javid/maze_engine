@@ -15,6 +15,7 @@
 #include "sound_table.hpp"
 #include "color.hpp"
 #include "maze_engine/maze_generation_iterator.hpp"
+#include "celebration_song.hpp"
 
 namespace App {
 	class Performer;
@@ -97,11 +98,10 @@ class App::Performer {
 		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge;
 
 	private /* member state; initialized here */:
-
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::MazeGenerationIterator::Wall::HashSet markedWallSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
-
+		CelebrationSong celebrationSong;
 		State state{State::generating};
 
 	public:
