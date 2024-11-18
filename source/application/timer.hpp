@@ -10,18 +10,25 @@ struct App::Timer {
 
 	UnsignedMilliseconds accumulatedTime, interval;
 
-	[[nodiscard]] explicit Timer(UnsignedMilliseconds const initInterval):
+	[[nodiscard]] constexpr explicit Timer(UnsignedMilliseconds const initInterval):
 		accumulatedTime{0u}, interval{initInterval}
 	{}
+
+	enum struct Modifier : std::uint_least8_t { none = 0u, compensateLostTime = 1u };
 
 	/*
 		Return `true` if spanned interval, otherwise `false`.
 	*/
-	inline bool update() {
+	template <Modifier modifier=Modifier::none>
+	constexpr bool update() {
 		accumulatedTime += getDeltaTime();
 
 		if (accumulatedTime >= interval) {
-			accumulatedTime -= interval;
+			if constexpr (modifier == Modifier::compensateLostTime) {
+				accumulatedTime -= interval;
+			} else {
+				accumulatedTime = 0u;
+			}
 			return true;
 		}
 
