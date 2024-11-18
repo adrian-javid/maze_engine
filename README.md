@@ -1,7 +1,5 @@
 # Maze Engine
-It is a program that generates and solves mazes.
-
-It generates a maze based on a seed, then displays a window displaying a specified search algorithm solving the maze in real time.
+A program that visualizes the process of generating and solving mazes.
 
 ## Running
 
@@ -68,13 +66,16 @@ The JSON compilation database is put at `build/<platform>/<build_type>/compile_c
 Also, if you would like to build a specific file,
 you can run `scons <file>` where `<file>` is a file you want to build.
 For example, to build only the compilation database for the debug build on Windows,
-you would run `scons .\build\Windows\debug\compile_commands.json`.
+you would run this:
+```PowerShell
+scons .\build\Windows\debug\compile_commands.json
+```
 
 To clean the build, run `scons -c` or `scons -c .`, for the default target or all targets, respectively.
 
 > Note: If you want to move the Windows executable `maze_engine.exe` to a different location,
-move `SDL2.dll` along with it to the same directory.
-The executable needs that dynamic-link library to run.
+move `SDL2.dll` and `SDL2_mixer.dll` along with it to the same directory.
+The executable needs those dynamic-link libraries to run.
 
 ## Dependencies
 
@@ -97,11 +98,13 @@ This project uses [SCons](https://scons.org/) as its build system, so [Python](h
 SCons and other Python dependencies are listed in [`requirements.txt`](./requirements.txt) at the root of the project. You can use [`pip`](https://pip.pypa.io/en/stable/) to install them.
 
 #### SCons for Windows
+> Windows usually uses `py` for Python.
 ```PowerShell
 py -m pip install --requirement requirements.txt
 ```
 
 #### SCons for Linux & Unix
+> Linux usually uses `python3` for Python.
 ```bash
 python3 -m pip install --requirement requirements.txt
 ```
