@@ -129,7 +129,12 @@ html, body {
 			background-color: #66cdaa;
 
 			&:hover {
-				background-color: #5bb497;
+				background-color: #80d1b4;
+			}
+
+			&:active {
+				background-color: #4ca589;
+				box-shadow: inset 2px 2px 3px rgb(0 0 0 / 60%);
 			}
 		}
 
