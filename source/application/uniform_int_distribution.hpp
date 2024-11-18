@@ -3,6 +3,10 @@
 
 #include <random>
 
+/*
+	This is simply a wrapper around
+	`std::uniform_int_distribution` to make it simpler to use.
+*/
 namespace App { template <typename> class UniformIntDistribution; }
 
 template <typename IntT>

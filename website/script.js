@@ -13,17 +13,27 @@ var Module = {
 	},
 	canvas: (() => {
 		const canvas = document.getElementById('canvas');
-		canvas.addEventListener(
-			"webglcontextlost",
-			(event) => {
-				alert('WebGL context lost. You will need to reload the page.');
+		canvas.addEventListener("webglcontextlost", (event) => {
 				event.preventDefault();
+				alert("The Web Graphics Library context has been lost. The page will need to reload to restore functionality.");
+				window.location.reload();
 			},
 			false
 		);
 		return canvas;
 	})(),
 };
+
+/*
+	This function is just for fun in the debug console.
+	It's not used anywhere.
+*/
+async function celebrate(delayMilliseconds=90) {
+	for (let i = 0; i < 12; ++i) {
+		Module.MazeEngine_playSound(i);
+		await new Promise(resolve => setTimeout(resolve, delayMilliseconds));
+	}
+}
 
 function resizeCanvasFromWindowDimensions() {
 	const length = Math.min(window.innerWidth, window.innerHeight) * 0.80;

@@ -6,13 +6,23 @@
 namespace App::AudioData {
 	using SimpleSound = std::array<unsigned char, std::size_t{783406u}>;
 
-	namespace Piano {
-		extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
-	}
+	struct Piano {
+		struct Low {
+			static SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+		};
+		struct High {
+			static SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+		};
+	};
 
-	namespace Synthesizer {
-		extern SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
-	}
+	struct Synthesizer {
+		struct Low {
+			static SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+		};
+		struct High {
+			static SimpleSound const first, third, fifth, highFirst, highThird, highFifth;
+		};
+	};
 }
 
 #endif

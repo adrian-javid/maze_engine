@@ -113,7 +113,22 @@ int main(int const argc, char *argv[]) {
 	#endif
 
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) != 0) {
-		App::errorExit("SDL Mixer failed to open.");
+		std::cerr << "The default SDL Mixer configuration failed to open.\n";
+
+		// Try backup configuration.
+		if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 1, 2048) != 0) {
+			App::errorExit("SDL Mixer failed to open.");
+		}
+	}
+
+	if (
+		int channelCount{Mix_AllocateChannels(std::tuple_size_v<App::SoundTable::Data>)};
+		channelCount != int{std::tuple_size_v<App::SoundTable::Data>}
+	) {
+		std::cerr <<
+			"The channel count \"" << channelCount <<
+			"\" does not match the requested channel count \"" <<
+			int{std::tuple_size_v<App::SoundTable::Data>} << "\".\n";
 	}
 
 	/*
@@ -137,26 +152,9 @@ int main(int const argc, char *argv[]) {
 		SDL_Quit();
 	});
 
-	/* configure the sound tables with audio data */ {
-		using namespace App::AudioData;
-
-		static constexpr std::size_t byteCount{std::tuple_size_v<SimpleSound> * sizeof(SimpleSound::value_type)};
-
-		using AudioDataView = App::SoundTable::AudioDataView;
-
-		App::Performer::piano      .put(0u, AudioDataView(Piano      ::    first.data(), byteCount));
-		App::Performer::piano      .put(1u, AudioDataView(Piano      ::    third.data(), byteCount));
-		App::Performer::piano      .put(2u, AudioDataView(Piano      ::    fifth.data(), byteCount));
-		App::Performer::piano      .put(3u, AudioDataView(Piano      ::highFirst.data(), byteCount));
-		App::Performer::piano      .put(4u, AudioDataView(Piano      ::highThird.data(), byteCount));
-		App::Performer::piano      .put(5u, AudioDataView(Piano      ::highFifth.data(), byteCount));
-
-		App::Performer::synthesizer.put(0u, AudioDataView(Synthesizer::    first.data(), byteCount));
-		App::Performer::synthesizer.put(1u, AudioDataView(Synthesizer::    third.data(), byteCount));
-		App::Performer::synthesizer.put(2u, AudioDataView(Synthesizer::    fifth.data(), byteCount));
-		App::Performer::synthesizer.put(3u, AudioDataView(Synthesizer::highFirst.data(), byteCount));
-		App::Performer::synthesizer.put(4u, AudioDataView(Synthesizer::highThird.data(), byteCount));
-		App::Performer::synthesizer.put(5u, AudioDataView(Synthesizer::highFifth.data(), byteCount));
+	/* populate sound tables */ {
+		App::Performer::piano      .populateSelfFromSoundInstrument<App::AudioData::Piano      >();
+		App::Performer::synthesizer.populateSelfFromSoundInstrument<App::AudioData::Synthesizer>();
 	}
 
 	static constexpr char const *windowTitle{"Maze Engine"};
@@ -268,7 +266,7 @@ int main(int const argc, char *argv[]) {
 		`simulate_infinite_loop` is `true`, so will not continue execution after this function ends.
 
 		"...if simulate_infinite_loop is false, and you created an object on the stack,
-		it will be cleaned up before the main loop is called for the first time.""
+		it will be cleaned up before the main loop is called for the first time."
 		(https://emscripten.org/docs/api_reference/emscripten.h.html#id3)
 	*/
 	emscripten_set_main_loop(&App::mainLoop, -1, true);

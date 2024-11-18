@@ -15,6 +15,7 @@
 #include "sound_table.hpp"
 #include "color.hpp"
 #include "maze_engine/maze_generation_iterator.hpp"
+#include "celebration_song.hpp"
 
 namespace App {
 	class Performer;
@@ -62,7 +63,7 @@ class App::Performer {
 		}
 
 		enum struct State : std::uint_least8_t {
-			generating = 1u, searching, backtracking, complete,
+			generating = 1u, searching, backtracking, celebrating, complete,
 		};
 
 	private /* member state; initialized by the constructor */:
@@ -97,11 +98,10 @@ class App::Performer {
 		MazeEngine::Vector2::HashMap<MazeEngine::Vector2>::const_iterator trailEdge;
 
 	private /* member state; initialized here */:
-
 		MazeEngine::Vector2::HashSet markedTileSet;
 		MazeEngine::MazeGenerationIterator::Wall::HashSet markedWallSet;
 		MazeEngine::Vector2::HashSet pathTileSet;
-
+		CelebrationSong celebrationSong;
 		State state{State::generating};
 
 	public:
@@ -121,6 +121,10 @@ class App::Performer {
 
 		constexpr void setSoundInstrument(SoundType const soundType) {
 			soundInstrument = dispatchSoundInstrument(soundType);
+		}
+
+		constexpr App::SoundTable const * getSoundInstrument() const {
+			return soundInstrument;
 		}
 
 		constexpr void setBaseHueOffset(HueFloat const paramBaseHueOffset) {
@@ -226,22 +230,25 @@ class App::Performer {
 			assert(soundInstrument != nullptr);
 			if (soundInstrument == nullptr) return;
 
+			constexpr std::size_t offset{std::tuple_size_v<SoundTable::Data> / 2u};
+			static_assert(offset == 6u);
+
 			if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>) {
 				switch (direction) {
-					case MazeEngine::Maze::Direction::north: soundInstrument->play(3u); break;
-					case MazeEngine::Maze::Direction::east : soundInstrument->play(1u); break;
-					case MazeEngine::Maze::Direction::south: soundInstrument->play(0u); break;
-					case MazeEngine::Maze::Direction::west : soundInstrument->play(2u); break;
+					case MazeEngine::Maze::Direction::north: soundInstrument->play(3u + offset); break;
+					case MazeEngine::Maze::Direction::east : soundInstrument->play(1u + offset); break;
+					case MazeEngine::Maze::Direction::south: soundInstrument->play(0u + offset); break;
+					case MazeEngine::Maze::Direction::west : soundInstrument->play(2u + offset); break;
 					default: break;
 				}
 			} else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>) {
 				switch (direction) {
-					case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u); break;
-					case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u); break;
-					case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u); break;
-					case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u); break;
-					case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u); break;
-					case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u); break;
+					case MazeEngine::Maze::Direction::northeast: soundInstrument->play(4u + offset); break;
+					case MazeEngine::Maze::Direction::     east: soundInstrument->play(2u + offset); break;
+					case MazeEngine::Maze::Direction::southeast: soundInstrument->play(0u + offset); break;
+					case MazeEngine::Maze::Direction::southwest: soundInstrument->play(1u + offset); break;
+					case MazeEngine::Maze::Direction::     west: soundInstrument->play(3u + offset); break;
+					case MazeEngine::Maze::Direction::northwest: soundInstrument->play(5u + offset); break;
 					default: break;
 				}
 			}

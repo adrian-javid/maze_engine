@@ -28,7 +28,8 @@ void ::App::SoundTable::put(std::size_t const identifier, AudioDataView const vi
 		Mix_FreeChunk(table[identifier]);
 	}
 
-	table[identifier] = Mix_LoadWAV_RW(audioSource, SDL_TRUE);
+	table[identifier] = Mix_LoadWAV_RW(audioSource, /* free audio source */SDL_TRUE);
+	assert(table[identifier] != nullptr);
 }
 
 void ::App::SoundTable::play(std::size_t const identifier) const {

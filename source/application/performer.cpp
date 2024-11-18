@@ -63,6 +63,27 @@ EMSCRIPTEN_BINDINGS(MazeEngine) {
 		App::performer->setTimeUpdateInterval(intervalMilliseconds);
 	});
 
+	emscripten::function("MazeEngine_playSound", +[](unsigned int const index) -> void {
+		if (index >= std::tuple_size_v<App::SoundTable::Data>) {
+			std::cerr <<
+				"Bad sound index `" << index << "` for size `" <<
+				std::tuple_size_v<App::SoundTable::Data> << "`.\n";
+			return;
+		}
+
+		if (not App::performer.has_value()) {
+			std::cerr << "Performer is null.\n";
+			return;
+		}
+
+		if (App::performer->getSoundInstrument() == nullptr) {
+			std::cout << "Performer's sound instrument is null.\n";
+			return;
+		}
+
+		App::performer->getSoundInstrument()->play(index);
+	});
+
 }
 
 #endif
@@ -326,7 +347,7 @@ void App::Performer::update() {
 
 			if (trailEdge == history.cend()) return;
 
-			if (trailEdge->/* child vertex */first == mazeStart) goto switchToComplete;
+			if (trailEdge->/* child vertex */first == mazeStart) goto switchToCelebrating;
 
 			/* process edge */ {
 				pathTileSet.insert(trailEdge->/* child vertex */first);
@@ -338,9 +359,24 @@ void App::Performer::update() {
 			return;
 		}
 
-		switchToComplete: {
+		switchToCelebrating: {
 			pathTileSet.insert(mazeStart); // include corner
 			std::cout << "Path length: " << pathTileSet.size() << '\n';
+			state = State::celebrating;
+			timer = Timer(App::UnsignedMilliseconds{90u});
+
+			[[fallthrough]];
+		}
+
+		case State::celebrating: {
+			if (celebrationSong.isDone()) goto switchToComplete;
+
+			celebrationSong.advance(soundInstrument);
+
+			return;
+		}
+
+		switchToComplete: {
 			state = State::complete;
 
 			[[fallthrough]];
