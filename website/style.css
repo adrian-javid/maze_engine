@@ -90,7 +90,7 @@ html, body {
 				width: auto;
 			}
 
-			
+
 			/*
 				It seems on Chrome that the spin buttons for `input` elements
 				of the type "number" are glitchy with Emscripten such that
@@ -124,8 +124,9 @@ html, body {
 			color: white;
 			cursor: pointer;
 
-			background-color: #66cdaa;
 			grid-column: span 2; /* Makes buttons span across both columns */
+			
+			background-color: #66cdaa;
 
 			&:hover {
 				background-color: #5bb497;
