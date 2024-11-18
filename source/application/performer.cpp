@@ -347,7 +347,7 @@ void App::Performer::update() {
 
 			if (trailEdge == history.cend()) return;
 
-			if (trailEdge->/* child vertex */first == mazeStart) goto switchToComplete;
+			if (trailEdge->/* child vertex */first == mazeStart) goto switchToCelebrating;
 
 			/* process edge */ {
 				pathTileSet.insert(trailEdge->/* child vertex */first);
@@ -359,9 +359,24 @@ void App::Performer::update() {
 			return;
 		}
 
-		switchToComplete: {
+		switchToCelebrating: {
 			pathTileSet.insert(mazeStart); // include corner
 			std::cout << "Path length: " << pathTileSet.size() << '\n';
+			state = State::celebrating;
+			timer = Timer(App::UnsignedMilliseconds{90u});
+
+			[[fallthrough]];
+		}
+
+		case State::celebrating: {
+			if (celebrationSong.isDone()) goto switchToComplete;
+
+			celebrationSong.advance(soundInstrument);
+
+			return;
+		}
+
+		switchToComplete: {
 			state = State::complete;
 
 			[[fallthrough]];
