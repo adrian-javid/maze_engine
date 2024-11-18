@@ -93,10 +93,12 @@ int main(int const argc, char *argv[]) {
 	App::performer->pause();
 	#endif
 
+	#ifndef __EMSCRIPTEN__
 	// Print the parameter values.
 	for (auto const &<:name, param:> : config) {
 		App::println(name, ": ", param.argument);
 	}
+	#endif
 
 	// Initialize the Simple Directmedia Layer library.
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
