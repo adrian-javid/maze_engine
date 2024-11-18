@@ -10,6 +10,6 @@ std::string Vector2::toString() const {
 	return buffer.str();
 }
 
-std::ostream& MazeEngine::operator<<(std::ostream &outputStream, Vector2 const &vector) {
+std::ostream& MazeEngine::operator<<(std::ostream &outputStream, Vector2 const vector) {
 	outputStream << vector.toString(); return outputStream;
 }
