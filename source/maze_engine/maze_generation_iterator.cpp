@@ -23,8 +23,6 @@ MazeEngine::MazeGenerationIterator::MazeGenerationIterator(
 	std::shuffle(wallList.begin(), wallList.end(), randomNumberGenerator);
 
 	wallIterator = wallList.cbegin();
-
-	App::println("wall count: ", wallList.size());
 }
 
 /*
