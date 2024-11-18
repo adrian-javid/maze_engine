@@ -178,7 +178,6 @@ App::Performer::Performer(
 
 	if (showMazeGeneration == false) {
 		for (; not mazeGenerationIterator.isDone(); mazeGenerationIterator.advance());
-		state = State::searching;
 	}
 }
 
@@ -315,6 +314,15 @@ void App::Performer::update() {
 			std::cout << "Finished generating the maze.\n";
 
 			state = State::searching;
+
+			// Skip presenting the first maze tile.
+			for (
+				MazeEngine::Vector2 const vertex{getMazeSearchIterator().getVector()};
+				vertex == mazeStart and not getMazeSearchIterator().isDone();
+				getMazeSearchIterator().advance()
+			) {
+				markedTileSet.insert(vertex);
+			}
 
 			[[fallthrough]];
 		}
