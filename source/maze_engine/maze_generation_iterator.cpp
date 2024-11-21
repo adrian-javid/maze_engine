@@ -1,9 +1,5 @@
 #include "maze_generation_iterator.hpp"
 
-#if true
-#include "application/print.hpp"
-#endif
-
 MazeEngine::MazeGenerationIterator::MazeGenerationIterator(
 	Maze &paramMaze, unsigned int const seed, bool const wrap, std::size_t const paramExcessWallPruneCountdown
 ):
