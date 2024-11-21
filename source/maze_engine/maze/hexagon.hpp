@@ -43,29 +43,41 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 
 		static constexpr char const *errorMessageForInvalidDirection{"Invalid direction for hexagon maze."};
 
+		[[nodiscard]]
 		explicit HexagonMaze(int const radiusValue=0, Tile const tileFillValue=emptyTile);
 
+		[[nodiscard]]
 		constexpr int getRadius() const { return radius; }
 
-		constexpr Vector2::HashMap<Maze::Tile> const &getTable() const { return table; }
+		[[nodiscard]]
+		constexpr Vector2::HashMap<Maze::Tile> const & getTable() const { return table; }
 
+		[[nodiscard]]
 		std::size_t getTileCount() const override;
 
+		[[nodiscard]]
 		Tile &at(Vector2 const key) override;
+
+		[[nodiscard]]
 		Tile const &at(Vector2 const key) const override;
 
 		void forEachKey(std::function<void(Vector2 const)> const &) const override;
 
 		void forEachPrincipalDirection(std::function<void(Direction const)> const &) const override;
 
-		TileAdjacency checkAdjacent(Vector2 key, Direction const direction) const override;
+		[[nodiscard]]
+		TileAdjacency checkAdjacent(Vector2 const key, Direction const direction) const override;
 
+		[[nodiscard]]
 		Vector2 getOffset(Direction const direction) const override;
 
+		[[nodiscard]]
 		bool isInBounds(Vector2 const key) const override;
 
+		[[nodiscard]]
 		int length(Vector2 const key) const override;
 
+		[[nodiscard]]
 		Vector2 wrapKey(Vector2 const key) const;
 };
 
