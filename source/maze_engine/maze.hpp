@@ -9,7 +9,7 @@
 
 namespace MazeEngine {
 	struct Maze;
-	class SquareMaze;	
+	class SquareMaze;
 	class HexagonMaze;
 }
 
