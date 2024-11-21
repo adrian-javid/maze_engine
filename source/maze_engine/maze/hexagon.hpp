@@ -61,6 +61,28 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 		[[nodiscard]]
 		Tile const &at(Vector2 const key) const override;
 
+		[[nodiscard]]
+		void forEachKeyInRing(
+			Vector2 const center, Vector2::Value const ringRadius,
+			std::function<void(Vector2 const)> forThisKeyInRing
+		) const {
+			assert(ringRadius >= 0);
+
+			if (ringRadius == 0u) return static_cast<void>(forThisKeyInRing(center));
+
+			forEachValidDirection([this, &forThisKeyInRing, center, ringRadius](
+				Direction const direction
+			) -> void {
+				Vector2 const entry(getOffset(direction));
+				Vector2 const key(entry * ringRadius);
+				Vector2 const flank(entry.hexagonalRotate(2));
+
+				for (Vector2::Value index{0}; index < ringRadius; ++index) {
+					forThisKeyInRing(key + flank * index);
+				}
+			});
+		}
+
 		void forEachKey(std::function<void(Vector2 const)> const &) const override;
 
 		void forEachPrincipalDirection(std::function<void(Direction const)> const &) const override;
@@ -70,6 +92,17 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 
 		[[nodiscard]]
 		Vector2 getOffset(Direction const direction) const override;
+
+		[[nodiscard]]
+		static constexpr bool isSimpleOffsetVector(Vector2 const vector) {
+			return
+				vector == northwestOffset or
+				vector == northeastOffset or
+				vector ==      eastOffset or
+				vector == southeastOffset or
+				vector == southwestOffset or
+				vector ==      westOffset;
+		}
 
 		[[nodiscard]]
 		bool isInBounds(Vector2 const key) const override;
