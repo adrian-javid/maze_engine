@@ -53,36 +53,56 @@ class MazeEngine::SquareMaze : public MazeEngine::Maze {
 
 	public:
 
+		[[nodiscard]]
 		explicit SquareMaze();
+		
+		[[nodiscard]]
 		explicit SquareMaze(int const rowCount, int const columnCount, Tile const tileFillValue=emptyTile);
+		
+		[[nodiscard]]
 		int getRowCount() const;
+		
+		[[nodiscard]]
 		int getColumnCount() const;
+
+		[[nodiscard]]
 		std::vector<Tile> const &getTable() const;
 
+		[[nodiscard]]
 		std::size_t getTileCount() const override;
 
+		[[nodiscard]]
 		Tile &at(Vector2 const) override;
+
+		[[nodiscard]]
 		Tile const &at(Vector2 const) const override;
 
 		void forEachKey(std::function<void(Vector2 const)> const &) const override;
 
 		void forEachPrincipalDirection(std::function<void(Direction const)> const &) const override;
 
+		[[nodiscard]]
 		TileAdjacency checkAdjacent(Vector2, Direction const) const override;
 
+		[[nodiscard]]
 		constexpr Vector2 wrapKey(Vector2 const key) const { return key.wrap(rowCount, columnCount); }
 
+		[[nodiscard]]
 		constexpr std::size_t getFlatIndex(Vector2 const key) const {
 			int const flatIndex{/* row */key.value1 * columnCount + /* column */key.value2};
 			return static_cast<std::size_t>(flatIndex);
 		}
 
+		[[nodiscard]]
 		std::string toString(char const wallSymbol='#', char const emptySymbol='.') const;
 
+		[[nodiscard]]
 		Vector2 getOffset(Direction const direction) const override;
 
+		[[nodiscard]]
 		bool isInBounds(Vector2 const key) const override;
 
+		[[nodiscard]]
 		int length(Vector2 const key) const override;
 };
 
