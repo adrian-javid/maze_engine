@@ -19,6 +19,7 @@ struct MazeEngine::Vector2 {
 	Value value1{0};
 	Value value2{0};
 
+	[[nodiscard]]
 	constexpr Value thirdAxis() const { return -value1 - value2; }
 
 	/*
@@ -40,12 +41,14 @@ struct MazeEngine::Vector2 {
 	}
 
 	template<Value index, Value upperBound>
+	[[nodiscard]]
 	static constexpr std::size_t rotateIndex(Value const indexOffsetter) {
 		static_assert(index >= 0);
 		static_assert(index < upperBound);
 		return static_cast<std::size_t>(Aux::wrap(index - indexOffsetter, upperBound));
 	}
 
+	[[nodiscard]]
 	constexpr Vector2 hexagonalRotate(Value const indexDegree60) const {
 		std::array<Value, 3> vector{};
 		Value const signFactor{indexDegree60 % 2 == 0 ? 1 : -1};
@@ -58,6 +61,7 @@ struct MazeEngine::Vector2 {
 	/**
 	 * @brief Create a vector with zero-initialized values.
 	 */
+	[[nodiscard]]
 	constexpr Vector2(): value1{0}, value2{0} {}
 
 	/**
@@ -65,16 +69,20 @@ struct MazeEngine::Vector2 {
 	 * @param paramValue1 assign `value1`
 	 * @param paramValue2 assign `value2`
 	*/
+	[[nodiscard]]
 	constexpr Vector2(Value paramValue1, Value paramValue2): value1{paramValue1}, value2{paramValue2} {}
 
+	[[nodiscard]]
 	constexpr Value manhattanLength() const {
 		return Aux::abs(value1) + Aux::abs(value2);
 	}
 
+	[[nodiscard]]
 	constexpr Value hexManhattanLength() const {
 		return (manhattanLength() + Aux::abs(thirdAxis())) / 2;
 	}
 
+	[[nodiscard]]
 	constexpr Vector2 operator+(Vector2 const vector) const {
 		return {value1 + vector.value1, value2 + vector.value2};
 	}
@@ -83,6 +91,7 @@ struct MazeEngine::Vector2 {
 		return (*this = *this + vector);
 	}
 
+	[[nodiscard]]
 	constexpr Vector2 operator-(Vector2 const vector) const {
 		return {value1 - vector.value1, value2 - vector.value2};
 	}
@@ -91,12 +100,15 @@ struct MazeEngine::Vector2 {
 		return (*this = *this - vector);
 	}
 
+	[[nodiscard]]
 	constexpr bool operator==(Vector2 const vector) const {
 		return value1 == vector.value1 and value2 == vector.value2;
 	}
 
+	[[nodiscard]]
 	constexpr bool operator!=(Vector2 const vector) const { return not(*this == vector); }
 
+	[[nodiscard]]
 	constexpr bool operator<(Vector2 const vector) const {
 		if (value1 != vector.value1)
 			return value1 < vector.value1;
@@ -104,16 +116,21 @@ struct MazeEngine::Vector2 {
 			return value2 < vector.value2;
 	}
 
+	[[nodiscard]]
 	constexpr bool operator>=(Vector2 const vector) const { return not(*this < vector); }
 
+	[[nodiscard]]
 	constexpr bool operator>(Vector2 const vector) const { return vector < *this; }
 
+	[[nodiscard]]
 	constexpr bool operator<=(Vector2 const vector) const { return not(vector < *this); }
 
+	[[nodiscard]]
 	constexpr Vector2 operator*(Value const scalar) const {
 		return Vector2(this->value1 * scalar, this->value2 * scalar);
 	}
 
+	[[nodiscard]]
 	constexpr Vector2 wrap(Value const rowCount, Value const columnCount) const {
 		return Vector2(Aux::wrap(value1, rowCount), Aux::wrap(value2, columnCount));
 	}
