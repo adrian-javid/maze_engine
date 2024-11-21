@@ -157,6 +157,11 @@ struct MazeEngine::Vector2 {
 };
 
 namespace MazeEngine {
+	[[nodiscard]]
+	constexpr Vector2 operator*(Vector2::Value const scalar, Vector2 const vector) {
+		return vector.operator*(scalar);
+	}
+
 	std::ostream& operator<<(std::ostream &outputStream, Vector2 const vector);
 }
 
