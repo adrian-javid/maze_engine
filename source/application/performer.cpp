@@ -100,7 +100,7 @@ App::Performer::Performer(
 ):
 	mazeVariant([mazeType, mazeSizeHint]() -> decltype(Performer::mazeVariant) {
 		static constexpr MazeEngine::Maze::Tile mazeFillValue{0xFFu};
-		static constexpr int mazeSizeMin{1}, mazeSizeMax{1 << 6};
+		static constexpr int mazeSizeMin{1}, mazeSizeMax{1 << 5};
 
 		assert(mazeSizeHint >= mazeSizeMin);
 		assert(mazeSizeHint <= mazeSizeMax);
