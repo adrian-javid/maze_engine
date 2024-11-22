@@ -4,9 +4,9 @@
 
 using namespace MazeEngine;
 
-static constexpr Vector2 calculateMirrorCenter(int const index, int const radius) {
+static constexpr Vector2 calculateMirrorCenter(Vector2::Value const index, Vector2::Value const outerRadius) {
 	constexpr Vector2 center(0, 0);
-	Vector2 const startPosition{2 * radius + 1, -radius};
+	Vector2 const startPosition{2 * outerRadius + 1, -outerRadius};
 	Vector2 const difference(startPosition - center);
 	Vector2 const rotatedDifference(difference.hexagonalRotate(index));
 	Vector2 const rotatedPosition(rotatedDifference + center);
@@ -56,15 +56,15 @@ HexagonMaze::HexagonMaze(Vector2::Value const setRadius, Tile const tileFillValu
 		calculateMirrorCenter(4, setRadius),
 		calculateMirrorCenter(5, setRadius),
 	},
-	radius{setRadius}
+	outerRadius{setRadius}
 {
-	assert(radius >= 0);
+	assert(outerRadius >= 0);
 
 	static constexpr Vector2 center(0, 0);
 
-	for (int q{-radius}; q <= radius; ++q) {
-		int r1{std::max<int>(-radius, -q - radius)};
-		int r2{std::min<int>( radius, -q + radius)};
+	for (int q{-outerRadius}; q <= outerRadius; ++q) {
+		int r1{std::max<int>(-outerRadius, -q - outerRadius)};
+		int r2{std::min<int>( outerRadius, -q + outerRadius)};
 
 		for (int r{r1}; r <= r2; ++r) {
 			Vector2 const key(center + Vector2(q, r));

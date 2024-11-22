@@ -83,12 +83,12 @@ void App::Window::drawHexagonMaze(
 	TileColorTripletGetter const tileColorTripletGetter,
 	WallColorTripletGetter const wallColorTripletGetter
 ) {
-	int const radius{maze.getRadius()};
+	int const outerRadius{maze.getOuterRadius()};
 
-	// Radius of 0 draws 1 hexagon.
-	assert(radius >= 0);
+	// Outer radius of 0 draws 1 hexagon.
+	assert(outerRadius >= 0);
 
-	int const diameter{radius + 1 + radius};
+	int const diameter{outerRadius + 1 + outerRadius};
 	float const diameterValue{static_cast<float>(diameter)};
 
 	float const hexagonWidth{width / diameterValue};
@@ -99,7 +99,7 @@ void App::Window::drawHexagonMaze(
 	float const threeQuartersHexagonHeight{(3 * hexagonHeight) / 4};
 	float const halfHexagonWidth{hexagonWidth / 2};
 
-	for (int verticalIndex{0}; verticalIndex <= radius; ++verticalIndex) {
+	for (int verticalIndex{0}; verticalIndex <= outerRadius; ++verticalIndex) {
 		float const verticalIndexValue{static_cast<float>(verticalIndex)};
 
 		float const topHexagonCenterY{center.y - verticalIndexValue * threeQuartersHexagonHeight};
@@ -111,7 +111,7 @@ void App::Window::drawHexagonMaze(
 		int const bottomAxis2{verticalIndex};
 
 		for (int horizontalIndex{0}; horizontalIndex < diameter - verticalIndex; ++horizontalIndex) {
-			float const hexagonCenterX{center.x + static_cast<float>(horizontalIndex - radius) * hexagonWidth + horizontalOffset};
+			float const hexagonCenterX{center.x + static_cast<float>(horizontalIndex - outerRadius) * hexagonWidth + horizontalOffset};
 
 			auto const drawTile([
 				&tileColorTripletGetter, &wallColorTripletGetter,
@@ -214,10 +214,10 @@ void App::Window::drawHexagonMaze(
 			});
 
 			/* top hexagon */
-			drawTile({horizontalIndex - radius + verticalIndex, topAxis2}, topHexagonCenterY);
+			drawTile({horizontalIndex - outerRadius + verticalIndex, topAxis2}, topHexagonCenterY);
 
 			/* bottom hexagon */
-			drawTile({horizontalIndex - radius, bottomAxis2}, bottomHexagonCenterY);
+			drawTile({horizontalIndex - outerRadius, bottomAxis2}, bottomHexagonCenterY);
 		}
 
 	}

@@ -128,7 +128,7 @@ App::Performer::Performer(
 		if constexpr (std::is_same_v<MazeT, MazeEngine::SquareMaze>)
 			return {0, 0};
 		else if constexpr (std::is_same_v<MazeT, MazeEngine::HexagonMaze>)
-			return {0, -(maze.getRadius())};
+			return {0, -(maze.getOuterRadius())};
 	}, mazeVariant )),
 	mazeEnd(std::visit([mazeWrap](auto and(maze)) -> MazeEngine::Vector2 {
 		using MazeT = std::decay_t<decltype(maze)>;
@@ -142,7 +142,7 @@ App::Performer::Performer(
 			if (mazeWrap)
 				return {0, 0};
 			else
-				return {0, maze.getRadius()};
+				return {0, maze.getOuterRadius()};
 		}
 	}, mazeVariant)),
 	mazeGenerationIterator(getMaze(), seed, mazeWrap, excessWallPruneCountdown),

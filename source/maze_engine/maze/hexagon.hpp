@@ -13,8 +13,8 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 
 		Vector2::HashMap<Maze::Tile> table;
 		std::array<Vector2, std::size_t{/* A hexagon has six sides. */6u}> mirrorCenterTable;
-		// (Doesn't count center tile as part of radius.)
-		int radius;
+		// This does not include the center tile.
+		Vector2::Value outerRadius;
 
 	public:
 
@@ -46,8 +46,11 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 		[[nodiscard]]
 		explicit HexagonMaze(Vector2::Value const radiusValue=0, Tile const tileFillValue=emptyTile);
 
+		/*
+			This does not include the center tile.
+		*/
 		[[nodiscard]]
-		constexpr Vector2::Value getRadius() const { return radius; }
+		constexpr Vector2::Value getOuterRadius() const { return outerRadius; }
 
 		[[nodiscard]]
 		constexpr Vector2::HashMap<Maze::Tile> const & getTable() const { return table; }
