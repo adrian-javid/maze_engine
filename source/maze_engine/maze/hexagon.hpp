@@ -25,6 +25,15 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 		static Vector2 constexpr southwestOffset{-1, +1};
 		static Vector2 constexpr      westOffset{-1,  0};
 
+		static constexpr std::array<Vector2, 6u> offsetList{
+			/* 0 */ northeastOffset,
+			/* 1 */      eastOffset,
+			/* 2 */ southeastOffset,
+			/* 3 */ southwestOffset,
+			/* 4 */      westOffset,
+			/* 5 */ northwestOffset,
+		};
+
 		static constexpr std::array<std::array<Direction, 3u>, 3u> directionMatrix{
 			/*    */                          /* -1 */         /*  0 */              /* +1 */
 			/* -1 */ std::array{ Direction::     none, Direction::west, Direction::southwest, },
