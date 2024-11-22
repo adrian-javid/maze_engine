@@ -53,11 +53,9 @@ namespace App::Window {
 	/**
 	 * @note Draws hexagons with "pointy top" style. That is, the hexagons have a point northward.
 	 * 
-	 * @param center pixel location of center of maze
-	 * @param radius 
-	 * @param width pixel width
-	 * @param height pixel height
-	 * @param getColorTriplet
+	 * @param center pixelwise center
+	 * @param width  pixelwise width
+	 * @param height pixelwise height
 	 */
 	void drawHexagonMaze(
 		MazeEngine::HexagonMaze const &maze,
