@@ -8,6 +8,7 @@ MazeEngine::MazeGenerationIterator::MazeGenerationIterator(
 	UnionFinder::Identifier indentifierCount{0};
 
 	maze.forEachKey([this, wrap, &indentifierCount](Vector2 const key) {
+		assert(identity.find(key) == identity.end());
 		identity.insert({key, indentifierCount++});
 		maze.forEachPrincipalDirection([this, wrap, key](Maze::Direction const direction) {
 			if (not wrap and not maze.isInBounds(key + maze.getOffset(direction))) return;
