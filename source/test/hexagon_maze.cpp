@@ -3,18 +3,20 @@
 #include "maze_engine/maze/hexagon.hpp"
 
 #include <array>
+#include <unordered_set>
 
 TEST_CASE("Hexagon Ring", "[HexagonMaze]") {
 
 	MazeEngine::HexagonMaze maze(3);
 
-	std::size_t keyCount{0u};
 
-	SECTION("lone center vector: ring radius 0") {
+	SECTION("lone center vector: ring index 0") {
 		static constexpr MazeEngine::Vector2 const center{0, 0};
-		static constexpr MazeEngine::Vector2::Value const ringRadius{0};
+		static constexpr MazeEngine::Vector2::Value const ringIndex{0};
 
-		maze.forEachKeyInRing(center, ringRadius, [&keyCount](MazeEngine::Vector2 const key) {
+		std::size_t keyCount{0u};
+
+		maze.forEachKeyInRing(center, ringIndex, [&keyCount](MazeEngine::Vector2 const key) {
 			CHECK(key == center);
 			++keyCount;
 			REQUIRE(keyCount <= 1);
@@ -23,18 +25,20 @@ TEST_CASE("Hexagon Ring", "[HexagonMaze]") {
 		CHECK(keyCount == 1u);
 	}
 
-	SECTION("simple vectors: ring radius 1") {
+	SECTION("simple vectors: ring index 1") {
 		static constexpr MazeEngine::Vector2 const center{0, 0};
-		static constexpr MazeEngine::Vector2::Value const ringRadius{1};
+		static constexpr MazeEngine::Vector2::Value const ringIndex{1};
 
-		maze.forEachKeyInRing(center, ringRadius, [&keyCount](MazeEngine::Vector2 const key) -> void {
+		MazeEngine::Vector2::HashSet obtainedKeys;
+
+		maze.forEachKeyInRing(center, ringIndex, [&obtainedKeys](MazeEngine::Vector2 const key) -> void {
 			INFO("key in ring: " << key);
 			CHECK(MazeEngine::HexagonMaze::isSimpleOffsetVector(key));
-			++keyCount;
-			REQUIRE(keyCount <= 6u);
+			obtainedKeys.insert(key);
+			REQUIRE(obtainedKeys.size() <= 6u);
 		});
 
-		CHECK(keyCount == 6u);
+		CHECK(obtainedKeys.size() == 6u);
 	}
 
 }
