@@ -44,10 +44,10 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 		static constexpr char const *errorMessageForInvalidDirection{"Invalid direction for hexagon maze."};
 
 		[[nodiscard]]
-		explicit HexagonMaze(int const radiusValue=0, Tile const tileFillValue=emptyTile);
+		explicit HexagonMaze(Vector2::Value const radiusValue=0, Tile const tileFillValue=emptyTile);
 
 		[[nodiscard]]
-		constexpr int getRadius() const { return radius; }
+		constexpr Vector2::Value getRadius() const { return radius; }
 
 		[[nodiscard]]
 		constexpr Vector2::HashMap<Maze::Tile> const & getTable() const { return table; }
