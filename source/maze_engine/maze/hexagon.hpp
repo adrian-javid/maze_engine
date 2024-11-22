@@ -74,27 +74,21 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 		Tile const &at(Vector2 const key) const override;
 
 		template <typename CallableT>
-		inline std::enable_if_t<std::is_invocable_v<CallableT, Vector2 const>, void> forEachKeyInRing(
+		constexpr std::enable_if_t<std::is_invocable_v<CallableT, Vector2 const>, void> forEachKeyInRing(
 			Vector2 const center, Vector2::Value const ringIndex, CallableT &&(forThisKeyInRing)
 		) const {
 			assert(ringIndex >= 0);
 
 			if (ringIndex == 0u) return static_cast<void>(std::forward<CallableT>(forThisKeyInRing)(center));
 
-			forEachValidDirection([
-				this, forThisKeyInRing=std::forward<CallableT>(forThisKeyInRing),
-				center, ringIndex
-			](
-				Direction const direction
-			) -> void {
-				Vector2 const entry(getOffset(direction));
+			for (Vector2 const entry : offsetList) {
 				Vector2 const key(entry * ringIndex);
 				Vector2 const flank(entry.hexagonalRotate(2));
 
 				for (Vector2::Value index{0}; index < ringIndex; ++index) {
 					forThisKeyInRing(key + flank * index);
 				}
-			});
+			}
 		}
 
 		void forEachKey(std::function<void(Vector2 const)> const &) const override;
