@@ -117,8 +117,7 @@ App::Performer::Performer(
 			}
 
 			case MazeType::hexagon: {
-				// Doesn't count center hexagon as part of the radius.
-				int const hexagonRadius{mazeSize >= 1 ? mazeSize - 1 : 0};
+				MazeEngine::Vector2::Value const hexagonRadius{mazeSize};
 				return MazeEngine::HexagonMaze(hexagonRadius, mazeFillValue);
 			}
 		}
