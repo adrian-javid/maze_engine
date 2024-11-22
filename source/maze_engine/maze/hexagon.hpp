@@ -12,9 +12,9 @@ class MazeEngine::HexagonMaze : public MazeEngine::Maze {
 	private:
 
 		Vector2::HashMap<Maze::Tile> table;
-		std::array<Vector2, std::size_t{/* A hexagon has six sides. */6u}> mirrorCenterTable;
 		// This does not include the center tile.
 		Vector2::Value outerRadius;
+		std::array<Vector2, std::size_t{/* A hexagon has six sides. */6u}> mirrorCenterTable;
 
 	public:
 

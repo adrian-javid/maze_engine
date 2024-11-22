@@ -48,17 +48,17 @@ Vector2 HexagonMaze::wrapKey(Vector2 const key) const {
 
 HexagonMaze::HexagonMaze(Vector2::Value const setRadius, Tile const tileFillValue):
 	table(),
+	outerRadius{setRadius >= 1 ? setRadius - 1 : 0},
 	mirrorCenterTable{
-		calculateMirrorCenter(0, setRadius),
-		calculateMirrorCenter(1, setRadius),
-		calculateMirrorCenter(2, setRadius),
-		calculateMirrorCenter(3, setRadius),
-		calculateMirrorCenter(4, setRadius),
-		calculateMirrorCenter(5, setRadius),
-	},
-	outerRadius{setRadius}
+		calculateMirrorCenter(0, outerRadius),
+		calculateMirrorCenter(1, outerRadius),
+		calculateMirrorCenter(2, outerRadius),
+		calculateMirrorCenter(3, outerRadius),
+		calculateMirrorCenter(4, outerRadius),
+		calculateMirrorCenter(5, outerRadius),
+	}
 {
-	assert(outerRadius >= 0);
+	assert(setRadius >= 0);
 
 	static constexpr Vector2 center(0, 0);
 
